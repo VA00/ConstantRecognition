@@ -20,21 +20,16 @@ int main(int argc, char** argv)
   
   char amino[STACKSIZE];
   
-  double var, best, bestOfn[STACKSIZE], previousBest;
+  double var, best;
   double complex computedX;
   
-  const double complex targetX=1.0175451652862630105139924352308;
+  const double complex targetX=1.0175451652862630105139924352308+1;
    
   int K, test, ULP;
   const int n=INSTR_NUM;
   int omp_cancel_flag=0, cpu_id=1, ncpus=1;
   
-  
   FILE  *flagfile;  
-
-  
-  pthread_t threadID;
-  time_t timer;
   char buff[26];
 
 
@@ -44,9 +39,9 @@ int main(int argc, char** argv)
     sscanf(argv[2],"%d",&ncpus);
   }
 
-    time_t now = time (0);
-    strftime (buff, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
-    printf ("%s\n", buff);
+    //time_t now = time (0);
+    //strftime (buff, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
+    //printf ("%s\n", buff);
  
   setlinebuf(stdout); //disable 4kB stdout buffer
   
@@ -65,9 +60,23 @@ int main(int argc, char** argv)
 	
 	if(k1%(ipow(10,6))==0){ //co 10^6 sprawdza plik, czy inne zadanie nie znalazlo wzoru
 	
-	  	  flagfile = fopen("found.txt","r");
-          fscanf(flagfile, "%d", &omp_cancel_flag);
-          fclose(flagfile);
+	  	  //flagfile = fopen("found.txt","r");
+          //fscanf(flagfile, "%d", &omp_cancel_flag);
+          //fclose(flagfile);
+
+
+          flagfile = fopen("found.txt","r");
+          if (flagfile != NULL) {
+              if (fscanf(flagfile, "%d", &omp_cancel_flag) != 1) {
+                  printf("Unable to read found.txt Thread %d exit.\n",cpu_id); exit(0);// Handle error if fscanf fails to read an integer
+              }
+              fclose(flagfile);
+          } else {
+              printf("File found.txt do not exist. Thread %d exit.\n",cpu_id); exit(0);// Handle the case where the file doesn't exist or couldn't be opened
+          }
+
+
+
 		  if(omp_cancel_flag==1){ printf("EXIT JOB %d\n",cpu_id); exit(0); }
 	}
 	
@@ -131,9 +140,10 @@ int main(int argc, char** argv)
   ULP=0;
   while( (computedX!=targetX) && abs(ULP) <1024*4 ){ ULP++; computedX=nextafter(computedX,targetX);}
     
-  printf("Total codes/formulae tested:\t%llu,%llu\tULP=%d\n",k1,k2, (ULP<1024*4) ? ULP : -1 );
-  strftime (buff, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
-  printf ("%s\n", buff);
+  printf("Total valid formulae [all codes] tested by thread %d:\t%llu,%llu\n",cpu_id,k1,k2);
+  printf("Minimal error in ULP=%d\n", (ULP<1024*4) ? ULP : -1 );
+  //strftime (buff, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
+  //printf ("%s\n", buff);
 
 
   printf("\nB.O.A.T. from %d:\t%le\tj=%llu\tCODE:\t%s\n",
@@ -144,7 +154,7 @@ int main(int argc, char** argv)
   print_code_mathematica(amino,K);
   printf("\n\n");
 
-  printf("END\n\n");
+  printf("END of search for thread %d\n\n", cpu_id);
 
 return 0;
 
