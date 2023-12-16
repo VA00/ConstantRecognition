@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 
   
 
-  double complex targetX = 299792.0;//parseComplex(str);
+  double complex targetX = parseComplex(str);
 
   //printf("%lf + %lf*I\n",creal(casin(2.0)), cimag(casin(2.0)));
 
