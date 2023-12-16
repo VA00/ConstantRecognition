@@ -12,4 +12,4 @@ constantRecognition: $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f $(OBJ) constantRecognition
+	rm -f $(OBJ) constantRecognition found.txt
