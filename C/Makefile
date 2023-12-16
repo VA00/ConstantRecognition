@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -fopenmp -lm
+CFLAGS=-Wall -fopenmp -lm
 DEPS = constant4.c itoa.c mathematica4.c math2.c
 OBJ = constantRecognition_batch.o $(DEPS:.c=.o)
 
