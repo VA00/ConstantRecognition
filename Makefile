@@ -11,3 +11,6 @@ clean:
 	for dir in $(SUBDIRS); do \
 		$(MAKE) -C $$dir clean; \
 	done
+
+	rm -f found.txt
+	rm -f search_log_*

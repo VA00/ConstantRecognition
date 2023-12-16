@@ -49,8 +49,8 @@ int main(int argc, char** argv)
   const int n=INSTR_NUM;
   int omp_cancel_flag=0, cpu_id=1, ncpus=1;
   
-  FILE  *flagfile, *output;  
-  char str[123];
+  FILE  *flagfile, *search_log_file;  
+  char str[137], output_filename[137], timestamp[26];;
 
 
   if(!(argv[1]==NULL))
@@ -60,13 +60,19 @@ int main(int argc, char** argv)
     sscanf(argv[3],"%d",&ncpus);
   }
 
-  //printf("%s\n",str);
-  //exit(0);
-
-
   double complex targetX = parseComplex(str);
 
+  time_t now = time (0);
+  strftime (timestamp, 13, "%Y-%m-%d", localtime (&now));
+  snprintf(output_filename, sizeof(output_filename), "search_log_%d_%s.txt", cpu_id,timestamp);
+  search_log_file = fopen(output_filename, "w");
+    if (search_log_file == NULL) {
+        perror("Error opening search_log_file!");
+        exit(EXIT_FAILURE);
+    }
 
+  fprintf(search_log_file,"%-20s\t%-20s\t%-20s\t%s\t%s\t%-8s\t%-8s\t%s\t%28s\t%-26s\t%s\n","Counter","Code number","Formula number",
+"ULP", "Error/DBL_EPS", "Re(X)","Im(X)","cpu_id","Short code","Timestamp", "Full RPN code");
 
   setlinebuf(stdout); //disable 4kB stdout buffer
 
@@ -81,10 +87,6 @@ int main(int argc, char** argv)
 	
 	if(k1%(ipow(10,6))==0){ //co 10^6 sprawdza plik, czy inne zadanie nie znalazlo wzoru
 	
-	  	  //flagfile = fopen("found.txt","r");
-          //fscanf(flagfile, "%d", &omp_cancel_flag);
-          //fclose(flagfile);
-
 
           flagfile = fopen("found.txt","r");
           if (flagfile != NULL) {
@@ -98,7 +100,7 @@ int main(int argc, char** argv)
 
 
 
-		  if(omp_cancel_flag==1){ printf("EXIT JOB %d\n",cpu_id); exit(0); }
+		  if(omp_cancel_flag==1){ printf("EXIT JOB %d\n",cpu_id);  fclose(search_log_file); exit(0); }
 	}
 	
 	K = 1;
@@ -128,12 +130,13 @@ int main(int argc, char** argv)
       ULP=0;
       while( (computedX!=targetX) && abs(ULP) <1024*4 ){ ULP++; computedX=nextafter(computedX,targetX);}
        
-      printf("%20llu\t%20llu\t%20llu\t%d\t%e\t%lf\t%lf\t%d\t",j,k1,k2,(ULP<1024*4) ? ULP : -1, best/DBL_EPSILON, creal(computedX),cimag(computedX),cpu_id);
+      fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%e\t%lf\t%lf\t%-6d\t%-28s\t",j,k1,k2,(ULP<1024*4) ? ULP : -1, best/DBL_EPSILON, creal(computedX),cimag(computedX),cpu_id,amino);
 
-      char buff[26];
+      
       time_t now = time (0);
-      strftime (buff, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
-      printf ("%s\n", buff);
+      strftime (timestamp, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
+      fprintf(search_log_file, "%s\t", timestamp);
+
 
       //printf("\nBest_of_the_best from %d:\t%le\tj=%llu\tCODE:\t%s\n",
 	  //cpu_id, best/DBL_EPSILON, j,amino);
@@ -166,6 +169,7 @@ int main(int argc, char** argv)
 		  flagfile = fopen("found.txt","w");
           fprintf(flagfile, "%d", omp_cancel_flag);
           fclose(flagfile);
+          fclose(search_log_file);
 
 		  exit(0);//break;
      }
@@ -193,6 +197,7 @@ int main(int argc, char** argv)
   printf("\n\n");
 
   printf("END of search for thread %d\n\n", cpu_id);
+  fclose(search_log_file);
 
 return 0;
 
