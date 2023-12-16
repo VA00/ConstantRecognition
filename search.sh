@@ -7,7 +7,7 @@ echo "0" > found.txt
 
 for i in $(seq 1 $NCPUS)
 do
-   ../C/constantRecognition $i $NCPUS &
+   ./C/constantRecognition $i $NCPUS &
 done
 
 wait
