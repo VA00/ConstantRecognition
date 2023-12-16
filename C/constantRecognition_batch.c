@@ -45,7 +45,7 @@ int main(int argc, char** argv)
   
   char amino[STACKSIZE];
   
-  double var, best, input_number;
+  double var, best;
   double complex computedX;
   
   //const double complex targetX=1.0+1.4634181403788164189078391170022I;
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 
   
 
-  double complex targetX = parseComplex(str);
+  double complex targetX = 299792.0;//parseComplex(str);
 
   //printf("%lf + %lf*I\n",creal(casin(2.0)), cimag(casin(2.0)));
 
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
       
       time_t now = time (0);
       strftime (timestamp, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
-      fprintf(search_log_file, "%s\t", timestamp);
+      fprintf(search_log_file, "%s\n", timestamp);
 
 
       //printf("\nBest_of_the_best from %d:\t%le\tj=%llu\tCODE:\t%s\n",
@@ -191,23 +191,6 @@ int main(int argc, char** argv)
   }
   
   
-  ULP=0;
-  while( (computedX!=targetX) && abs(ULP) <1024*4 ){ ULP++; computedX=nextafter(computedX,targetX);}
-    
-  printf("Total valid formulae [all codes] tested by thread %d:\t%llu,%llu\n",cpu_id,k1,k2);
-  printf("Minimal error in ULP=%d\n", (ULP<1024*4) ? ULP : -1 );
-  //strftime (buff, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
-  //printf ("%s\n", buff);
-
-
-  printf("\nB.O.A.T. from %d:\t%le\tj=%llu\tCODE:\t%s\n",
-  cpu_id, best/DBL_EPSILON, j,amino);
-  printf("Re=%.18lf\t",creal(computedX));
-  printf("Im=%.18lf\t",cimag(computedX));
-  
-  print_code_mathematica(amino,K);
-  printf("\n\n");
-
   printf("END of search for thread %d\n\n", cpu_id);
   fclose(search_log_file);
 

@@ -1,14 +1,14 @@
 #!/bin/bash
 
-#NCPUS=$(nproc --all)
-NCPUS=1
+NCPUS=$(nproc --all)
+#NCPUS=1
 START_TIME=$(date +%s)
 echo "Search started at $(date '+%Y-%m-%d %H:%M') using $NCPUS CPUs."
 echo "0" > found.txt
 
 for i in $(seq 1 $NCPUS)
 do
-   ./C/constantRecognition 1.5707963267948966192313216916398-1.3169578969248167086250463473080I $i $NCPUS &
+   ./C/constantRecognition 299792458 $i $NCPUS &
 done
 
 wait
@@ -22,7 +22,7 @@ FOUND=$(cat found.txt)
 if [ "$FOUND" -eq 1 ]; then
     RESULT_MESSAGE="Search succeeded."
 else
-    RESULT_MESSAGE="Search did not succeed."
+    RESULT_MESSAGE="Search did not succeed. Check log files."
 fi
 
 echo "Search finished at $(date '+%Y-%m-%d %H:%M')."
