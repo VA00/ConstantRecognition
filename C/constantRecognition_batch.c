@@ -14,19 +14,25 @@
 #include <time.h>
 
 double complex parseComplex(const char *str) {
-    double realPart, imagPart;
+    double realPart = 0.0, imagPart = 0.0;
     double complex result;
+    char sign = '+';
+    int count;
 
-    // Try reading as a complex number (real + imaginary)
-    if (sscanf(str, "%lf + %lfI", &realPart, &imagPart) == 2 ||
-        sscanf(str, "%lf - %lfI", &realPart, &imagPart) == 2) {
+    // Try reading as a complex number (real part + sign + imaginary part)
+    count = sscanf(str, "%lf %c %lfi", &realPart, &sign, &imagPart);
+    
+    if (count == 3) {
+        if (sign == '-') {
+            imagPart = -imagPart;
+        }
         result = realPart + imagPart * I;
     }
     // Try reading as a purely real number
     else if (sscanf(str, "%lf", &realPart) == 1) {
         result = realPart + 0.0 * I;
     } else {
-        // Return NaN + NaN * I to indicate error
+        // Return NAN + NAN * I to indicate error
         result = NAN + NAN * I;
     }
 
@@ -60,7 +66,13 @@ int main(int argc, char** argv)
     sscanf(argv[3],"%d",&ncpus);
   }
 
+  
+
   double complex targetX = parseComplex(str);
+
+  //printf("%lf + %lf*I\n",creal(casin(2.0)), cimag(casin(2.0)));
+
+  if(cpu_id==1) printf("Search target:%.18lf%+.18lfI\n", creal(targetX), cimag(targetX));
 
   time_t now = time (0);
   strftime (timestamp, 13, "%Y-%m-%d", localtime (&now));
@@ -158,8 +170,8 @@ int main(int argc, char** argv)
           printf("Total valid formulae [all codes] tested by thread %d:\t%llu [%llu]\n",cpu_id,k2,k1);
           printf("Minimal error in ULP=%d\n", (ULP<1024*4) ? ULP : -1 );
 
-	      printf("Re=%.18lf\t",creal(computedX));
-	      printf("Im=%.18lf\t\n",cimag(computedX));
+	      printf("Re=%.18lf\n",creal(computedX));
+	      printf("Im=%.18lf\n",cimag(computedX));
 	      
           printf("RPN CODE:\t");
           print_code_mathematica(amino,K);
