@@ -83,7 +83,7 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-  fprintf(search_log_file,"%-20s\t%-20s\t%-20s\t%s\t%s\t%-8s\t%-8s\t%s\t%28s\t%-26s\t%s\n","Counter","Code number","Formula number",
+  fprintf(search_log_file,"%-20s\t%-20s\t%-20s\t%s\t%s\t%-24s\t%-24s\t%s\t%-27s\t%-26s\t%s\n","Counter","Code number","Formula number",
 "ULP", "Error/DBL_EPS", "Re(X)","Im(X)","cpu_id","Short code","Timestamp", "Full RPN code");
 
   setlinebuf(stdout); //disable 4kB stdout buffer
@@ -142,21 +142,17 @@ int main(int argc, char** argv)
       ULP=0;
       while( (computedX!=targetX) && abs(ULP) <1024*4 ){ ULP++; computedX=nextafter(computedX,targetX);}
        
-      fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%e\t%lf\t%lf\t%-6d\t%-28s\t",j,k1,k2,(ULP<1024*4) ? ULP : -1, best/DBL_EPSILON, creal(computedX),cimag(computedX),cpu_id,amino);
+      fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%e\t%.18e\t%.18e\t%-6d\t%-28s\t",j,k1,k2,(ULP<1024*4) ? ULP : -1, best/DBL_EPSILON, creal(computedX),cimag(computedX),cpu_id,amino);
 
       
       time_t now = time (0);
       strftime (timestamp, 26, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
-      fprintf(search_log_file, "%s\n", timestamp);
+      fprintf(search_log_file, "%s\t", timestamp);
+      print_code_mathematica(amino,K,RPN_full_Code);
+      fprintf(search_log_file,"{%s}\n",RPN_full_Code);
 
 
-      //printf("\nBest_of_the_best from %d:\t%le\tj=%llu\tCODE:\t%s\n",
-	  //cpu_id, best/DBL_EPSILON, j,amino);
-	  //printf("Re=  %.32lf\t",creal(computedX));
-	  //printf("Im=  %.32lf\t",cimag(computedX));
-	  //
-      //print_code_mathematica(amino,K);
-	  //printf("\n\n");
+
 	 }
   
 	 if(best<=16*DBL_EPSILON) //jezeli znalazl, wychodzi z petli i zapisuje plik dla innych procesow
