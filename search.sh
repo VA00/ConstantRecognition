@@ -8,7 +8,7 @@ echo "0" > found.txt
 
 for i in $(seq 1 $NCPUS)
 do
-   ./C/constantRecognition 137.035999206 $i $NCPUS &
+   ./C/constantRecognition 0.0+0.82555127909671579183186040404351I $i $NCPUS &
 done
 
 wait
@@ -29,7 +29,7 @@ fi
 
 # Define the output file
 output_file="search_combined_log.txt"
-touch "$output_file"
+> "$output_file"
 
 # Counter to keep track of the first file
 first_file=1
