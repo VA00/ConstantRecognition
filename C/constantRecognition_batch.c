@@ -13,6 +13,22 @@
 #include "math2.h"
 #include <time.h>
 
+int compute_ULP_distance(double computedX, double targetX) {
+
+    double tempX = computedX;
+    int ULP = 0;
+
+    while ((tempX != targetX) && abs(ULP) < 4096) {
+        ULP++;
+        tempX = nextafter(tempX, targetX);
+    }
+
+    if(ULP<4096) 
+      return ULP;
+    else
+      return -1;
+}
+
 double complex parseComplex(const char *str) {
     double realPart = 0.0, imagPart = 0.0;
     double complex result;
@@ -92,7 +108,7 @@ int main(int argc, char** argv)
   
 
 // LOOP UNROLL  j -> K, k
-  for(j=cpu_id;j<ipow(36,7);j=j+ncpus)
+  for(j=cpu_id;j<ipow(36,6);j=j+ncpus)
   {		
 
 	k1++;
@@ -139,10 +155,10 @@ int main(int argc, char** argv)
     if(var<best) 
      {
       best = var;
-      ULP=0;
-      while( (computedX!=targetX) && abs(ULP) <1024*4 ){ ULP++; computedX=nextafter(computedX,targetX);}
+
+      ULP = compute_ULP_distance(computedX, targetX);
        
-      fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%e\t%.18e\t%.18e\t%-6d\t%-28s\t",j,k1,k2,(ULP<1024*4) ? ULP : -1, best/DBL_EPSILON, creal(computedX),cimag(computedX),cpu_id,amino);
+      fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%e\t%.18e\t%.18e\t%-6d\t%-28s\t",j,k1,k2,ULP, best/DBL_EPSILON, creal(computedX),cimag(computedX),cpu_id,amino);
 
       
       time_t now = time (0);
@@ -160,11 +176,10 @@ int main(int argc, char** argv)
 		  
           printf("\nConstant recognized by thread %d:\tError in $MachineEps=%le\tCode number=%llu\tSHORT CODE:\t%s\n",cpu_id, best/DBL_EPSILON,j,amino);
 
-          ULP=0;
-          while( (computedX!=targetX) && abs(ULP) <1024*4 ){ ULP++; computedX=nextafter(computedX,targetX);}
-            
+          ULP = compute_ULP_distance(computedX, targetX);
+
           printf("Total valid formulae [all codes] tested by thread %d:\t%llu [%llu]\n",cpu_id,k2,k1);
-          printf("Minimal error in ULP=%d\n", (ULP<1024*4) ? ULP : -1 );
+          printf("Minimal error in ULP=%d\n", ULP );
 
 	      printf("Re=%.18lf\n",creal(computedX));
 	      printf("Im=%.18lf\n",cimag(computedX));
