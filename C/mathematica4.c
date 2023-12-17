@@ -1,8 +1,9 @@
+
 #include <string.h>
 #include <stdio.h>
 
 
-void print_code_mathematica(const char * amino, const int aminoLength)
+void print_code_mathematica(const char * amino, const int aminoLength, char *RPN_full_Code)
 {
 
 
@@ -10,119 +11,124 @@ void print_code_mathematica(const char * amino, const int aminoLength)
 int ii;
 char instr;
 
+RPN_full_Code[0] = '\0';
+
   for(ii=0;ii<aminoLength;ii++)
    {
 	instr = amino[ii];
     switch(instr)
 	 {
 case '0':
-printf("PI, ");
+strcat(RPN_full_Code,"PI, ");
 break;
 case '1':
-printf("EULER, ");
+strcat(RPN_full_Code,"EULER, ");
 break;
 case '2':
-printf("IMG, ");
+strcat(RPN_full_Code,"IMG, ");
 break;
 case '3':
-printf("LOG, ");
+strcat(RPN_full_Code,"LOG, ");
 break;
 case '4':
-printf("EXP, ");
+strcat(RPN_full_Code,"EXP, ");
 break;
 case '5':
-printf("PLUS, ");
+strcat(RPN_full_Code,"PLUS, ");
 break;
 case '6':
-printf("TIMES, ");
+strcat(RPN_full_Code,"TIMES, ");
 break;
 case '7':
-printf("INV, ");
+strcat(RPN_full_Code,"INV, ");
 break;
 case '8':
-printf("MINUS, ");
+strcat(RPN_full_Code,"MINUS, ");
 break;
 case '9':
-printf("SQRT, ");
+strcat(RPN_full_Code,"SQRT, ");
 break;
 case 'a':
-printf("SQR, ");
+strcat(RPN_full_Code,"SQR, ");
 break;
 case 'b':
-printf("SIN, ");
+strcat(RPN_full_Code,"SIN, ");
 break;
 case 'c':
-printf("ARCSIN, ");
+strcat(RPN_full_Code,"ARCSIN, ");
 break;
 case 'd':
-printf("COS, ");
+strcat(RPN_full_Code,"COS, ");
 break;
 case 'e':
-printf("ARCCOS, ");
+strcat(RPN_full_Code,"ARCCOS, ");
 break;
 case 'f':
-printf("TAN, ");
+strcat(RPN_full_Code,"TAN, ");
 break;
 case 'g':
-printf("ARCTAN, ");
+strcat(RPN_full_Code,"ARCTAN, ");
 break;
 case 'h':
-printf("SINH, ");
+strcat(RPN_full_Code,"SINH, ");
 break;
 case 'i':
-printf("ARCSINH, ");
+strcat(RPN_full_Code,"ARCSINH, ");
 break;
 case 'j':
-printf("COSH, ");
+strcat(RPN_full_Code,"COSH, ");
 break;
 case 'k':
-printf("ARCCOSH, ");
+strcat(RPN_full_Code,"ARCCOSH, ");
 break;
 case 'l':
-printf("TANH, ");
+strcat(RPN_full_Code,"TANH, ");
 break;
 case 'm':
-printf("ARCTANH, ");
+strcat(RPN_full_Code,"ARCTANH, ");
 break;
 case 'n':
-printf("ONE, ");
+strcat(RPN_full_Code,"ONE, ");
 break;
 case 'o':
-printf("TWO, ");
+strcat(RPN_full_Code,"TWO, ");
 break;
 case 'p':
-printf("THREE, ");
+strcat(RPN_full_Code,"THREE, ");
 break;
 case 'q':
-printf("FOUR, ");
+strcat(RPN_full_Code,"FOUR, ");
 break;
 case 'r':
-printf("FIVE, ");
+strcat(RPN_full_Code,"FIVE, ");
 break;
 case 's':
-printf("SIX, ");
+strcat(RPN_full_Code,"SIX, ");
 break;
 case 't':
-printf("SEVEN, ");
+strcat(RPN_full_Code,"SEVEN, ");
 break;
 case 'u':
-printf("EIGHT, ");
+strcat(RPN_full_Code,"EIGHT, ");
 break;
 case 'v':
-printf("NINE, ");
+strcat(RPN_full_Code,"NINE, ");
 break;
 case 'w':
-printf("GOLDENRATIO, ");
+strcat(RPN_full_Code,"GOLDENRATIO, ");
 break;
 case 'x':
-printf("SUBTRACT, ");
+strcat(RPN_full_Code,"SUBTRACT, ");
 break;
 case 'y':
-printf("DIVIDE, ");
+strcat(RPN_full_Code,"DIVIDE, ");
 break;
 case 'z':
-printf("POWER, ");
+strcat(RPN_full_Code,"POWER, ");
 break;
 }}
-printf("\n");
+    size_t len = strlen(RPN_full_Code);
+    if (len > 2) {
+        RPN_full_Code[len - 2] = '\0';
+    }
 }

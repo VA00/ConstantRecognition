@@ -1,1 +1,1 @@
-void print_code_mathematica(const char *, const int);
+void print_code_mathematica(const char *, const int, char *);

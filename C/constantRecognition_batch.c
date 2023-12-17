@@ -56,7 +56,7 @@ int main(int argc, char** argv)
   int omp_cancel_flag=0, cpu_id=1, ncpus=1;
   
   FILE  *flagfile, *search_log_file;  
-  char str[137], output_filename[137], timestamp[26];;
+  char str[137], output_filename[137], timestamp[26], RPN_full_Code[1024];
 
 
   if(!(argv[1]==NULL))
@@ -173,8 +173,9 @@ int main(int argc, char** argv)
 	      printf("Re=%.18lf\n",creal(computedX));
 	      printf("Im=%.18lf\n",cimag(computedX));
 	      
-          printf("RPN CODE:\t");
-          print_code_mathematica(amino,K);
+          
+          print_code_mathematica(amino,K,RPN_full_Code);
+          printf("RPN CODE:\t{%s}\t",RPN_full_Code);
 	      printf("\n\n");
 
           omp_cancel_flag = 1;
