@@ -92,7 +92,7 @@ int main(int argc, char** argv)
   
 
 // LOOP UNROLL  j -> K, k
-  for(j=cpu_id;j<ipow(36,6);j=j+ncpus)
+  for(j=cpu_id;j<ipow(36,7);j=j+ncpus)
   {		
 
 	k1++;
