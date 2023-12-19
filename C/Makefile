@@ -1,15 +1,19 @@
-CC=gcc
-CFLAGS=-Wall -fopenmp -lm
-DEPS = constant4.c itoa.c mathematica4.c math2.c
-OBJ = constantRecognition_batch.o $(DEPS:.c=.o)
+CC=icx
+CFLAGS=-Wall
+DEPS = constant.c itoa.c mathematica.c math2.c
+OBJ_REAL = RealConstantRecognition_batch.o $(DEPS:.c=.o)
+OBJ_CPLX = ComplexConstantRecognition_batch.o $(DEPS:.c=.o)
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-constantRecognition: $(OBJ)
+RealConstantRecognition: $(OBJ_REAL)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+ComplexConstantRecognition: $(OBJ_CPLX)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
 
 clean:
-	rm -f $(OBJ) constantRecognition found.txt
+	rm -f $(OBJ_REAL) $(OBJ_CPLX) RealConstantRecognition ComplexConstantRecognition found.txt
