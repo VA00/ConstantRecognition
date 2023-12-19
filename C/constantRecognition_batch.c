@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     sscanf(argv[3],"%d",&ncpus);
   }
 
-  
+  //printf("%*.*lf\n", 18, 6, M_PI);
 
   double complex targetX = parseComplex(str);
 
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-  fprintf(search_log_file,"%-20s\t%-20s\t%-20s\t%s\t%s\t%-24s\t%-24s\t%s\t%-27s\t%-26s\t%s\n","Counter","Code number","Formula number",
+  fprintf(search_log_file,"%-20s\t%-20s\t%-20s\t%s\t%22s\t%-24s\t%-24s\t%s\t%-27s\t%-26s\t%s\n","Counter","Code number","Formula number",
 "ULP", "Error/DBL_EPS", "Re(X)","Im(X)","cpu_id","Short code","Timestamp", "Full RPN code");
 
   setlinebuf(stdout); //disable 4kB stdout buffer
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
 
       ULP = compute_ULP_distance(computedX, targetX);
        
-      fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%e\t%.18e\t%.18e\t%-6d\t%-28s\t",j,k1,k2,ULP, best/DBL_EPSILON, creal(computedX),cimag(computedX),cpu_id,amino);
+      fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, creal(computedX),cimag(computedX),cpu_id,amino);
 
       
       time_t now = time (0);
