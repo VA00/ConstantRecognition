@@ -145,8 +145,9 @@ int main(int argc, char** argv)
         
     computedX = cconstant(amino, K);
 		  
-    if(computedX!=computedX) continue;  // skip NaN
-	
+    //if(computedX!=computedX) continue;  // skip NaN
+	if (isnan(computedX)) continue;  // Skip NaN
+
 	k2++;
 	
     var = cabs( computedX/targetX - 1.0 );			
