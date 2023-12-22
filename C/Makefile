@@ -1,5 +1,5 @@
 CC=icx
-CFLAGS=-Wall
+CFLAGS=-Wall -O0
 DEPS = constant.c itoa.c mathematica.c math2.c utils.c
 SRC = ConstantRecognition_batch.c
 OBJ_REAL = RealConstantRecognition_batch.o $(DEPS:.c=.o)

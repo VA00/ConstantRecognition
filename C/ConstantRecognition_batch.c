@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
-//#include <complex.h>
+#include <complex.h>
 #include <fenv.h>
 #include <omp.h>
 #include <float.h>
@@ -16,7 +16,6 @@
 
 
 #ifdef USE_COMPLEX
-  #include <complex.h>
   #define NUM_TYPE double complex
 #else
   #define NUM_TYPE double
@@ -117,7 +116,7 @@ int main(int argc, char** argv)
 
 #ifdef USE_COMPLEX         
     computedX = cconstant(amino, K);
-	if (isnan_complex(computedX)) continue;  // Skip NaN	
+	if (isnan(creal(computedX)) || isnan(cimag(computedX))) continue;  // Skip NaN	
 	k2++;
     var = cabs( computedX/targetX - 1.0 );	  
 #else
