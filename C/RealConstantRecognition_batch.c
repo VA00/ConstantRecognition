@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
-//#include <complex.h>
+#include <complex.h>
 #include <fenv.h>
 #include <omp.h>
 #include <float.h>
@@ -11,23 +11,10 @@
 #include "itoa.h"
 #include "mathematica.h"
 #include "math2.h"
+#include "utils.h"
 #include <time.h>
 
-int compute_ULP_distance(double computedX, double targetX) {
 
-    double tempX = computedX;
-    int ULP = 0;
-
-    while ((tempX != targetX) && abs(ULP) < 4096) {
-        ULP++;
-        tempX = nextafter(tempX, targetX);
-    }
-
-    if(ULP<4096) 
-      return ULP;
-    else
-      return -1;
-}
 
 
 int main(int argc, char** argv)
@@ -37,7 +24,7 @@ int main(int argc, char** argv)
   char amino[STACKSIZE];
   
   double var, best;
-  double computedX;
+  double computedX, targetX;
   
 
    
@@ -55,10 +42,6 @@ int main(int argc, char** argv)
     sscanf(argv[2],"%d",&cpu_id);
     sscanf(argv[3],"%d",&ncpus);
   }
-
-  
-
-  double targetX;
 
   sscanf(str, "%lf", &targetX);
 
@@ -119,10 +102,8 @@ int main(int argc, char** argv)
         
     computedX = constant(amino, K);
 		  
-    //if(computedX!=computedX) continue;  // skip NaN
-    if (isnan(computedX)) continue;  // Skip NaN
-	
 
+	if (isnan(computedX)) continue;  // Skip NaN
 
 	k2++;
 	

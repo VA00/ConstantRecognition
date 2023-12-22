@@ -11,49 +11,17 @@
 #include "itoa.h"
 #include "mathematica.h"
 #include "math2.h"
+#include "utils.h"
 #include <time.h>
 
-int compute_ULP_distance(double computedX, double targetX) {
+#ifdef USE_COMPLEX
+#include <complex.h>
+#define NUM_TYPE double complex
+#else
+#define NUM_TYPE double
+#endif
 
-    double tempX = computedX;
-    int ULP = 0;
 
-    while ((tempX != targetX) && abs(ULP) < 4096) {
-        ULP++;
-        tempX = nextafter(tempX, targetX);
-    }
-
-    if(ULP<4096) 
-      return ULP;
-    else
-      return -1;
-}
-
-double complex parseComplex(const char *str) {
-    double realPart = 0.0, imagPart = 0.0;
-    double complex result;
-    char sign = '+';
-    int count;
-
-    // Try reading as a complex number (real part + sign + imaginary part)
-    count = sscanf(str, "%lf %c %lfi", &realPart, &sign, &imagPart);
-    
-    if (count == 3) {
-        if (sign == '-') {
-            imagPart = -imagPart;
-        }
-        result = realPart + imagPart * I;
-    }
-    // Try reading as a purely real number
-    else if (sscanf(str, "%lf", &realPart) == 1) {
-        result = realPart + 0.0 * I;
-    } else {
-        // Return NAN + NAN * I to indicate error
-        result = NAN + NAN * I;
-    }
-
-    return result;
-}
 
 int main(int argc, char** argv)
 {
@@ -62,9 +30,8 @@ int main(int argc, char** argv)
   char amino[STACKSIZE];
   
   double var, best;
-  double complex computedX;
+  double complex computedX, targetX;
   
-  //const double complex targetX=1.0+1.4634181403788164189078391170022I;
 
    
   int K, test, ULP;
@@ -82,11 +49,7 @@ int main(int argc, char** argv)
     sscanf(argv[3],"%d",&ncpus);
   }
 
-  //printf("%*.*lf\n", 18, 6, M_PI);
-
-  double complex targetX = parseComplex(str);
-
-  //printf("%lf + %lf*I\n",creal(casin(2.0)), cimag(casin(2.0)));
+  targetX = parseComplex(str);
 
   if(cpu_id==1) printf("Search target:%.18lf%+.18lfI\n", creal(targetX), cimag(targetX));
 
@@ -145,8 +108,8 @@ int main(int argc, char** argv)
         
     computedX = cconstant(amino, K);
 		  
-    //if(computedX!=computedX) continue;  // skip NaN
-	if (isnan(computedX)) continue;  // Skip NaN
+    
+	if (isnan_complex(computedX)) continue;  // Skip NaN
 
 	k2++;
 	
