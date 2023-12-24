@@ -1,14 +1,31 @@
 #!/bin/bash
 
+# Assign the input to a variable
+x="$1"
+# Set K (max. Kolmogorov complexity, RPN code length), to the second argument or default to 6 if not provided
+K="${2:-6}"
+
 NCPUS=$(nproc --all)
 #NCPUS=1
+
+
+
+# Determine if the input is complex based on the presence of 'i' or 'I'.
+if [[ "$x" == *"i"* || "$x" == *"I"* ]]; then
+  PROGRAM="./C/ComplexConstantRecognition"
+else
+  PROGRAM="./C/RealConstantRecognition"
+fi
+
 START_TIME=$(date +%s)
 echo "Search started at $(date '+%Y-%m-%d %H:%M') using $NCPUS CPUs."
+echo "Using $PROGRAM"
 echo "0" > found.txt
+
 
 for i in $(seq 1 $NCPUS)
 do
-   ./C/ComplexConstantRecognition 0.54111559793651082889293569336129+0.0I $i $NCPUS &
+   $PROGRAM "$x" $i $NCPUS $K &
 done
 
 wait

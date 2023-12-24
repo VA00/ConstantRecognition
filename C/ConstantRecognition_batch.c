@@ -34,7 +34,7 @@ int main(int argc, char** argv)
   
 
    
-  int K, test, ULP;
+  int K, test, ULP, MaxCodeLength=6;
   const int n=INSTR_NUM;
   int omp_cancel_flag=0, cpu_id=1, ncpus=1;
   
@@ -47,6 +47,7 @@ int main(int argc, char** argv)
     sscanf(argv[1],"%s", str);
     sscanf(argv[2],"%d",&cpu_id);
     sscanf(argv[3],"%d",&ncpus);
+    sscanf(argv[4],"%d",&MaxCodeLength);
   }
 
 #ifdef USE_COMPLEX
@@ -71,7 +72,7 @@ int main(int argc, char** argv)
     }
 
   fprintf(search_log_file,"%-20s\t%-20s\t%-20s\t%s\t%22s\t%-24s\t%-24s\t%s\t%-27s\t%-26s\t%s\n","Counter","Code number","Formula number",
-"ULP", "Error/DBL_EPS", "Re(X)","Im(X)","cpu_id","Short code","Timestamp", "Full RPN code");
+" ULP ", "Error/DBL_EPS", "Re(X)","Im(X)","cpu_id","Short code","Timestamp", "Full RPN code");
 
   setlinebuf(stdout); //disable 4kB stdout buffer
 
@@ -79,7 +80,7 @@ int main(int argc, char** argv)
   
 
 // LOOP UNROLL  j -> K, k
-  for(j=cpu_id;j<ipow(36,6);j=j+ncpus)
+  for(j=cpu_id;j<ipow(36,MaxCodeLength);j=j+ncpus)
   {		
 
 	k1++;

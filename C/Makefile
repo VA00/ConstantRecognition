@@ -1,5 +1,18 @@
-CC=icx
-CFLAGS=-Wall -O0
+# Default compiler
+CC=gcc
+
+# Conditional flags based on the compiler
+ifeq ($(CC),icx)
+    # For ICX: Include specific flags needed to prevent NaN's with complex.h
+    CFLAGS=-Wall -O0 -ipo
+else
+    # For GCC: Standard setup with math library linking
+    CFLAGS=-Wall -lm
+endif
+
+# Rest of your Makefile...
+
+
 DEPS = constant.c itoa.c mathematica.c math2.c utils.c
 SRC = ConstantRecognition_batch.c
 OBJ_REAL = RealConstantRecognition_batch.o $(DEPS:.c=.o)
