@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 	k2++;
     var = cabs( computedX/targetX - 1.0 );	  
 #else
-    computedX = cconstant(amino, K);
+    computedX = constant(amino, K);
 	if (isnan(computedX)) continue;  // Skip NaN
     k2++;
     var = fabs( computedX/targetX - 1.0 );	  
