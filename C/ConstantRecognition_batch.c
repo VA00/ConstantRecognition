@@ -80,7 +80,7 @@ int main(int argc, char** argv)
   
 
 // LOOP UNROLL  j -> K, k
-  for(j=cpu_id;j<ipow(36,MaxCodeLength);j=j+ncpus)
+  for(j=cpu_id;j<ipow(INSTR_NUM,MaxCodeLength);j=j+ncpus)
   {		
 
 	k1++;
