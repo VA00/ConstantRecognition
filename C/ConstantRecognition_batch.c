@@ -21,7 +21,7 @@
   #define NUM_TYPE double
 #endif
 
-
+#define DBL_EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
 
 int main(int argc, char** argv)
 {
@@ -103,21 +103,22 @@ int main(int argc, char** argv)
 		  if(omp_cancel_flag==1){ printf("EXIT JOB %d\n",cpu_id);  fclose(search_log_file); exit(0); }
 	}
 	
+	/* Loop unrolling j->(k,K) */
 	K = 1;
     while(j > (-n + ipow(n,1+K) - K + n*K)/(-1 + n) ) K++;
     
 	
 	k = ipow(n,K)-( (-n + ipow(n,1 + K) - K + n*K)/(-1 + n)) + j;
   
-
+    /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
     itoa(k, amino, n, K);
         
-    test = checkSyntax (amino, K);
+    test = checkSyntax (amino, K); //check if RPN code is valid 
     if (!test) continue;
 
 #ifdef USE_COMPLEX         
     computedX = cconstant(amino, K);
-	if (isnan(creal(computedX)) || isnan(cimag(computedX))) continue;  // Skip NaN	
+	if (isnan(creal(computedX)) || isnan(cimag(computedX))) continue;  // Skip NaN
 	k2++;
     var = cabs( computedX/targetX - 1.0 );	  
 #else
@@ -152,7 +153,7 @@ int main(int argc, char** argv)
 
 	 }
   
-	 if(best<=16*DBL_EPSILON) //jezeli znalazl, wychodzi z petli i zapisuje plik dla innych procesow
+	 if(best<=DBL_EPS_MAX*DBL_EPSILON) //jezeli znalazl, wychodzi z petli i zapisuje plik dla innych procesow
 	 {
 		  
           printf("\nConstant recognized by thread %d:\tError in $MachineEps=%le\tCode number=%llu\tSHORT CODE:\t%s\n",cpu_id, best/DBL_EPSILON,j,amino);
