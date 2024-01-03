@@ -1,12 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WASM RPN Calculator</title>
+  <title>WASM RPN Inverse Calculator</title>
 </head>
 <body>
+
+<h1> Constant Recognizer </h1>
+
+  <p>
+  Below we have a picture of the "standard" 36-button scientific RPN calculator. 
+ </p>
+  <p>
+  <IMG width=600px src="CALC4.png"> 
+  </p>
+ 
+  <p>
+  Enter any real number to find out, if some sequence of the above buttons could re-discover it.
+  Use floating-point format, e.g:
+  <UL>
+   <LI> 1e3
+   <LI> 0.22222222222
+   <LI> 137
+   <LI> -0.0833333333333
+  <UL> 
+  </p>
+  
+  <p>
   <input id="numberInput" type="number" placeholder="Enter a number">
   <button onclick="calculate()">Calculate RPN</button>
+  </p>
+ 
+  <p>
   <div id="result"></div>
+  </p>
+
+  
+<h1> NOTE </h1>
+  <p>
+  Search is currently limited to code length of 5, performed using single thread and real numbers. 
+  To use longer sequences, custom calculators, complex numbers, recognition of functions and massively multi-threaded search, wait for new version
+  or contact author at andrzej.odrzywolek@uj.edu.pl 
+  </p>
 
   <script src="rpn_function.js"></script>
   <script>
@@ -22,5 +56,6 @@
       resultDiv.innerText = `RPN Code: ${rpnCode}`;
     }
   </script>
+
 </body>
 </html>

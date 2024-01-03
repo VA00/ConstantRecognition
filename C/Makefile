@@ -10,8 +10,6 @@ else
     CFLAGS=-Wall -lm
 endif
 
-# Rest of your Makefile...
-
 
 DEPS = constant.c itoa.c mathematica.c math2.c utils.c
 SRC = ConstantRecognition_batch.c
