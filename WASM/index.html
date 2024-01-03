@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WASM RPN Calculator</title>
+</head>
+<body>
+  <input id="numberInput" type="number" placeholder="Enter a number">
+  <button onclick="calculate()">Calculate RPN</button>
+  <div id="result"></div>
+
+  <script src="rpn_function.js"></script>
+  <script>
+    const input = document.getElementById('numberInput');
+    const resultDiv = document.getElementById('result');
+
+    // Define the calculate function that calls the WebAssembly function
+    function calculate() {
+      const z = parseFloat(input.value);
+      // Use ccall to call the WebAssembly function
+      //const rpnCode = Module.ccall('calculateRPN', 'string', ['number'], [z]);
+      const rpnCode = Module.ccall('search_RPN', 'string', ['number'], [z]);
+      resultDiv.innerText = `RPN Code: ${rpnCode}`;
+    }
+  </script>
+</body>
+</html>
