@@ -1,4 +1,4 @@
-/* Andrzej Odrzywolek, 15.12.2024, andrzej.odrzywolek@uj.edu.pl */
+/* Andrzej Odrzywolek, 15.12.2023, andrzej.odrzywolek@uj.edu.pl */
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
