@@ -78,38 +78,44 @@ int main(int argc, char** argv)
 
   best  = DBL_MAX;
   
-
+  j=cpu_id;
+  for(K=1;K<=MaxCodeLength;K++)
+  for(k=cpu_id;k<=ipow(INSTR_NUM,K);k=k+ncpus)
+    
 // LOOP UNROLL  j -> K, k
-  for(j=cpu_id;j<ipow(INSTR_NUM,MaxCodeLength);j=j+ncpus)
+ // int jMAX=(ipow(INSTR_NUM,MaxCodeLength)-1)*INSTR_NUM/(INSTR_NUM-1); 
+ // for(j=cpu_id;j<=jMAX;j=j+ncpus) //This is BUG: max j should include all previous code length searches!
   {		
-
+	j=j+ncpus; //if(j>ipow(INSTR_NUM,MaxCodeLength)) break;
 	k1++;
 	
 	if(k1%(ipow(10,6))==0){ //co 10^6 sprawdza plik, czy inne zadanie nie znalazlo wzoru
-	
 
           flagfile = fopen("found.txt","r");
-          if (flagfile != NULL) {
-              if (fscanf(flagfile, "%d", &omp_cancel_flag) != 1) {
-                  printf("Unable to read found.txt Thread %d exit.\n",cpu_id); exit(0);// Handle error if fscanf fails to read an integer
-              }
-              fclose(flagfile);
-          } else {
-              printf("File found.txt do not exist. Thread %d exit.\n",cpu_id); exit(0);// Handle the case where the file doesn't exist or couldn't be opened
+          if (flagfile == NULL){ // Handle the case where the file doesn't exist or couldn't be opened
+            printf("File found.txt do not exist. Thread %d exit.\n",cpu_id); 
+            exit(0);
           }
-
-
-
-		  if(omp_cancel_flag==1){ printf("EXIT JOB %d\n",cpu_id);  fclose(search_log_file); exit(0); }
+          if (fscanf(flagfile, "%d", &omp_cancel_flag) != 1) { // Handle error if fscanf fails to read an integer
+            printf("Unable to read found.txt Thread %d exit.\n",cpu_id); 
+            fclose(flagfile); 
+            exit(0);
+          }
+          if(omp_cancel_flag==1){ 
+            printf("EXIT JOB %d\n",cpu_id);  
+            fclose(flagfile); 
+            fclose(search_log_file); 
+            exit(0); 
+          }
+          fclose(flagfile);
 	}
 	
 	/* Loop unrolling j->(k,K) */
+/*
 	K = 1;
-    while(j > (-n + ipow(n,1+K) - K + n*K)/(-1 + n) ) K++;
-    
-	
-	k = ipow(n,K)-( (-n + ipow(n,1 + K) - K + n*K)/(-1 + n)) + j;
-  
+    while( j >  (-n + ipow(n,1+K) - K + n*K)/(-1 + n) ) K++;
+k = ipow(n,K)-( (-n + ipow(n,1+K) - K + n*K)/(-1 + n)) + j;
+  */
     /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
     itoa(k, amino, n, K);
         
@@ -190,6 +196,7 @@ int main(int argc, char** argv)
   
   
   printf("END of search for thread %d\n\n", cpu_id);
+  
   fclose(search_log_file);
 
 return 0;

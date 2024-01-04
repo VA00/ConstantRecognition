@@ -58,21 +58,24 @@ char* search_RPN(double z) {
 
   best  = DBL_MAX;
   
-
+  j=cpu_id;
+  for(K=1;K<=MaxCodeLength;K++)
+  for(k=cpu_id;k<=ipow(INSTR_NUM,K);k=k+ncpus)
 // LOOP UNROLL  j -> K, k
-  for(j=cpu_id;j<ipow(INSTR_NUM,MaxCodeLength);j=j+ncpus)
+  //for(j=cpu_id;j<ipow(INSTR_NUM,MaxCodeLength);j=j+ncpus)
   {		
-
+    j=j+ncpus;
 	k1++;
 	
 	
 	/* Loop unrolling j->(k,K) */
+    /*
 	K = 1;
     while(j > (-n + ipow(n,1+K) - K + n*K)/(-1 + n) ) K++;
     
 	
 	k = ipow(n,K)-( (-n + ipow(n,1 + K) - K + n*K)/(-1 + n)) + j;
-  
+    */
     /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
     itoa(k, amino, n, K);
         
