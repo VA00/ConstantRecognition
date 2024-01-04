@@ -1,0 +1,22 @@
+.title {
+    font-size: 24px; /* Or larger, depending on your preference */
+    text-align: center;
+    margin-top: 10px; /* Adjust as needed */
+}
+
+.input-box {
+    width: 90%; /* Makes it almost screen-wide */
+    font-size: 18px; /* Larger font for better readability */
+    margin: 10px auto; /* Centers the box with some margin */
+    padding: 10px; /* Adds some space inside the box */
+}
+
+.content {
+    width: 100%;
+    padding: 10px;
+}
+
+img {
+    max-width: 100%; /* Ensures images are never larger than the screen */
+    height: auto; /* Keeps the aspect ratio of images */
+}
