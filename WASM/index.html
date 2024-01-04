@@ -2,13 +2,29 @@
 <html>
 <head>
   <title>WASM RPN Inverse Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="rpn.css">
 </head>
 <body>
 
-<h1> Constant Recognizer </h1>
+<h1 class="title"> Constant Recognizer </h1>
 
   <p>
-  Below we have a picture of the "standard" 36-button scientific RPN calculator. 
+   Enter the number to identify or approximate:
+  </p>
+  <p>
+  <input class="input_box" id="numberInput" type="number" placeholder="137.036">
+  = <span id="result"></span>
+  </p>
+ 
+  <p>
+  <button onclick="calculate()">Identify constant</button> <span id="timing"></span>
+  </p>
+
+  
+
+  <p>
+  Search use the "standard" 36-button scientific RPN calculator. 
  </p>
   <p>
   <IMG width=600px src="CALC4.png"> 
@@ -22,18 +38,9 @@
    <LI> 0.22222222222
    <LI> 137
    <LI> -0.0833333333333
-  <UL> 
+  </UL> 
   </p>
   
-  <p>
-  <input id="numberInput" type="number" placeholder="Enter a number">
-  <button onclick="calculate()">Calculate RPN</button>
-  </p>
- 
-  <p>
-  <div id="result"></div>
-  </p>
-
   
 <h1> NOTE </h1>
   <p>
@@ -47,17 +54,32 @@
     const input = document.getElementById('numberInput');
     const resultDiv = document.getElementById('result');
 
+
+
     // Define the calculate function that calls the WebAssembly function
     function calculate() {
+
+      // Capture start time
+      var startTime = new Date();
+
       const z = parseFloat(input.value);
       // Use ccall to call the WebAssembly function
       //const rpnCode = Module.ccall('calculateRPN', 'string', ['number'], [z]);
       const rpnCode = Module.ccall('search_RPN', 'string', ['number'], [z]);
-      resultDiv.innerText = `RPN Code: ${rpnCode}`;
+      resultDiv.innerText = ` ${rpnCode}`;
+
+      // Capture end time
+      var endTime = new Date();
+
+      // Calculate the difference in milliseconds
+      var timeTaken = endTime - startTime;
+
+      document.getElementById('timing').innerText = timeTaken/1000 + " sec"
+
     }
   </script>
 
 
-<p> UPDATED: 2024-01-03 18:41 </p>
+<p> UPDATED: 2024-01-04 13:05 </p>
 </body>
 </html>

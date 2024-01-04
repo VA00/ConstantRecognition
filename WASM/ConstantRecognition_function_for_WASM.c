@@ -24,11 +24,8 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 #include "../C/utils.h"
 
 
-#ifdef USE_COMPLEX
-  #define NUM_TYPE double complex
-#else
-  #define NUM_TYPE double
-#endif
+#define NUM_TYPE double
+
 
 #define DBL_EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
 
@@ -43,7 +40,7 @@ char* search_RPN(double z) {
   
   char amino[STACKSIZE];
   
-  double var, best;
+  NUM_TYPE var, best;
   NUM_TYPE computedX, targetX;
   
 
@@ -82,17 +79,11 @@ char* search_RPN(double z) {
     test = checkSyntax (amino, K); //check if RPN code is valid 
     if (!test) continue;
 
-#ifdef USE_COMPLEX         
-    computedX = cconstant(amino, K);
-	if (isnan(creal(computedX)) || isnan(cimag(computedX))) continue;  // Skip NaN
-	k2++;
-    var = cabs( computedX/targetX - 1.0 );	  
-#else
+
     computedX = constant(amino, K);
-	if (isnan(computedX)) continue;  // Skip NaN
+	if (isnanf(computedX)) continue;  // Skip NaN
     k2++;
     var = fabs( computedX/targetX - 1.0 );	  
-#endif
 		
 					  
     
@@ -104,7 +95,7 @@ char* search_RPN(double z) {
 
 	 }
   
-	 if(best<=DBL_EPS_MAX*DBL_EPSILON) //jezeli znalazl, wychodzi z petli i zapisuje plik dla innych procesow
+	 if(best<=DBL_EPS_MAX*DBL_EPSILON) //jezeli znalazl, wychodzi z petli 
 	 {
 	  break;
      }
