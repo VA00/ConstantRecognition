@@ -1,4 +1,4 @@
-SUBDIRS = C
+SUBDIRS = C WASM
 
 .PHONY: subdirs $(SUBDIRS)
 
