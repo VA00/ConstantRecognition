@@ -40,7 +40,7 @@ const namedFunctions = {
 
 const namedOperators = {
     "PLUS": "+",
-    "MINUS": "-",
+    "SUBTRACT": "-",
     "TIMES": "*",
     "DIVIDE": "/",
     "POWER":  "^"
