@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>WASM RPN Inverse Calculator</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="rpn.css">
 </head>
@@ -14,13 +15,14 @@
   </p>
   <p>
   <input class="input_box" id="numberInput" type="number" placeholder="137.036">
-  = <span id="result"></span>
+  = <span id="resultInfix"></span>
   </p>
  
   <p>
   <button onclick="calculate()">Identify constant</button> <span id="timing"></span>
   </p>
 
+  <div id="resultRPN"></div>
   
 
   <p>
@@ -50,9 +52,11 @@
   </p>
 
   <script src="rpn_function.js"></script>
+  <script src="RPN_interpreter.js"></script>
   <script>
     const input = document.getElementById('numberInput');
-    const resultDiv = document.getElementById('result');
+    const resultDiv = document.getElementById('resultRPN');
+    const resultSpan = document.getElementById('resultInfix');
 
 
 
@@ -76,10 +80,17 @@
 
       document.getElementById('timing').innerText = timeTaken/1000 + " sec"
 
+      let rpnExpression = rpnCode.split(", ")
+      let infixExpression = rpnToInfix(rpnExpression); // Assuming this is your function converting RPN to infix
+      let simplifiedExpression = removeRedundantParentheses(infixExpression);
+      resultSpan.innerText = ` ${simplifiedExpression}`;
+
+
+      console.log(simplifiedExpression);
     }
   </script>
 
 
-<p> UPDATED: 2024-01-04 13:05 </p>
+<p> UPDATED: 2024-01-05 20:39 </p>
 </body>
 </html>
