@@ -78,15 +78,16 @@
       // Calculate the difference in milliseconds
       var timeTaken = endTime - startTime;
 
+
+
+      const rpnExpression = rpnCode.split(", ")
+      const infixExpression = rpnToInfix(rpnExpression); // Assuming this is your function converting RPN to infix
+      const simplifiedExpression = removeRedundantParentheses(infixExpression);
+      resultSpan.innerText = ` ${simplifiedExpression}`;
+      
       document.getElementById('timing').innerText = timeTaken/1000 + " sec"
 
-      let rpnExpression = rpnCode.split(", ")
-      let infixExpression = rpnToInfix(rpnExpression); // Assuming this is your function converting RPN to infix
-      let simplifiedExpression = removeRedundantParentheses(infixExpression);
-      resultSpan.innerText = ` ${simplifiedExpression}`;
-
-
-      console.log(simplifiedExpression);
+      //console.log(simplifiedExpression);
     }
   </script>
 
