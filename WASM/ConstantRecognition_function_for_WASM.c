@@ -115,7 +115,7 @@ char* search_RPN(double z) {
   //FILE  *flagfile, *search_log_file;  
   //char str[137], output_filename[137], timestamp[26], RPN_full_Code[1024];
 
-  targetX = z;
+  targetX = ( NUM_TYPE ) z;
   
 
 
@@ -161,9 +161,11 @@ char* search_RPN(double z) {
 
 	 }
   
-	 if(best<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli 
+	 if(best<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli i funkcji !
 	 {
-	  break;
+	  itoa(k_best, amino, n, K_best);
+      print_code_mathematica(amino,K_best,RPN_full_Code);
+      return RPN_full_Code;
      }
     
 	
