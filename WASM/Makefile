@@ -11,7 +11,7 @@ SOURCES := ConstantRecognition_function_for_WASM.c \
 
 # Compiler and flags
 EMCC := emcc
-CFLAGS := -Wall
+CFLAGS := -Wall -O2
 EMFLAGS := -s WASM=1 \
            -s EXPORTED_FUNCTIONS='["_search_RPN", "_free"]' \
            -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'

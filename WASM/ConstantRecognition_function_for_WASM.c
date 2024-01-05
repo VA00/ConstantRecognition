@@ -23,11 +23,74 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 #include "../C/math2.h"
 #include "../C/utils.h"
 
+// Define your type options
+#define REAL_FLT  1
+#define REAL_DBL  2
+#define REAL_LDBL 3
+#define CPLX_FLT  4
+#define CPLX_DBL  5
+#define CPLX_LDBL 6
 
-#define NUM_TYPE double
+#define SEARCH_TYPE REAL_FLT
+
+#if   SEARCH_TYPE == REAL_FLT
+  #define NUM_TYPE float
+  #define ERR_TYPE float
+  #define MAX_NUMBER FLT_MAX
+  #define ABS fabsf
+  #define CONSTANT constantf
+  #define EPSILON FLT_EPSILON
+  #define ONE 1.0f
+  #define IS_NAN isnanf
+#elif SEARCH_TYPE == REAL_DBL
+  #define NUM_TYPE double
+  #define ERR_TYPE double
+  #define MAX_NUMBER DBL_MAX
+  #define ABS fabs
+  #define CONSTANT constant 
+  #define EPSILON DBL_EPSILON
+  #define ONE 1.0
+  #define IS_NAN isnan
+#elif SEARCH_TYPE == REAL_LDBL
+  #define NUM_TYPE long double
+  #define ERR_TYPE long double
+  #define MAX_NUMBER LDBL_MAX
+  #define ABS fabsl
+  #define CONSTANT constantl
+  #define EPSILON LDBL_EPSILON
+  #define ONE 1.0l
+  #define IS_NAN isnanl
+#elif SEARCH_TYPE == CPLX_FLT
+  #define NUM_TYPE complex float
+  #define ERR_TYPE float
+  #define MAX_NUMBER FLT_MAX
+  #define ABS cabsf
+  #define CONSTANT cconstantf
+  #define EPSILON FLT_EPSILON
+  #define ONE 1.0f
+  #define IS_NAN isnanf
+#elif SEARCH_TYPE == CPLX_DBL
+  #define NUM_TYPE complex double
+  #define ERR_TYPE double
+  #define MAX_NUMBER DBL_MAX
+  #define ABS cabs
+  #define CONSTANT cconstantf
+  #define EPSILON DBL_EPSILON
+  #define ONE 1.0
+  #define IS_NAN isnan
+#elif SEARCH_TYPE == CPLX_LDBL
+  #define NUM_TYPE complex long double
+  #define ERR_TYPE long double
+  #define MAX_NUMBER LDBL_MAX
+  #define ABS cabsl
+  #define CONSTANT cconstantl
+  #define EPSILON LDBL_EPSILON
+  #define ONE 1.0l
+  #define IS_NAN isnanl
+#endif
 
 
-#define DBL_EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
+#define EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
 
 char* search_RPN(double z) {
 
@@ -40,7 +103,7 @@ char* search_RPN(double z) {
   
   char amino[STACKSIZE];
   
-  NUM_TYPE var, best;
+  ERR_TYPE var, best;
   NUM_TYPE computedX, targetX;
   
 
@@ -56,7 +119,7 @@ char* search_RPN(double z) {
   
 
 
-  best  = DBL_MAX;
+  best  = MAX_NUMBER;
   
   j=cpu_id;
   for(K=1;K<=MaxCodeLength;K++)
@@ -83,10 +146,10 @@ char* search_RPN(double z) {
     if (!test) continue;
 
 
-    computedX = constant(amino, K);
-	if (isnanf(computedX)) continue;  // Skip NaN
+    computedX = CONSTANT(amino, K);
+	if (IS_NAN(computedX)) continue;  // Skip NaN
     k2++;
-    var = fabs( computedX/targetX - 1.0 );	  
+    var = ABS( computedX/targetX - ONE );	  
 		
 					  
     
@@ -98,7 +161,7 @@ char* search_RPN(double z) {
 
 	 }
   
-	 if(best<=DBL_EPS_MAX*DBL_EPSILON) //jezeli znalazl, wychodzi z petli 
+	 if(best<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli 
 	 {
 	  break;
      }
