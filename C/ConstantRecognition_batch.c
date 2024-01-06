@@ -14,14 +14,84 @@
 #include "utils.h"
 #include <time.h>
 
-
+/*
 #ifdef USE_COMPLEX
   #define NUM_TYPE double complex
 #else
   #define NUM_TYPE double
 #endif
+*/
+// Define your type options
+#define REAL_FLT  1
+#define REAL_DBL  2
+#define REAL_LDBL 3
+#define CPLX_FLT  4
+#define CPLX_DBL  5
+#define CPLX_LDBL 6
 
-#define DBL_EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
+//#define SEARCH_TYPE REAL_FLT
+
+#if   SEARCH_TYPE == REAL_FLT
+  #define NUM_TYPE float
+  #define ERR_TYPE float
+  #define MAX_NUMBER FLT_MAX
+  #define ABS fabsf
+  #define CONSTANT constantf
+  #define EPSILON FLT_EPSILON
+  #define ONE 1.0f
+  #define IS_NAN isnanf
+#elif SEARCH_TYPE == REAL_DBL
+  #define NUM_TYPE double
+  #define ERR_TYPE double
+  #define MAX_NUMBER DBL_MAX
+  #define ABS fabs
+  #define CONSTANT constant 
+  #define EPSILON DBL_EPSILON
+  #define ONE 1.0
+  #define IS_NAN isnan
+#elif SEARCH_TYPE == REAL_LDBL
+  #define NUM_TYPE long double
+  #define ERR_TYPE long double
+  #define MAX_NUMBER LDBL_MAX
+  #define ABS fabsl
+  #define CONSTANT constantl
+  #define EPSILON LDBL_EPSILON
+  #define ONE 1.0l
+  #define IS_NAN isnanl
+#elif SEARCH_TYPE == CPLX_FLT
+  #define USE_COMPLEX
+  #define NUM_TYPE complex float
+  #define ERR_TYPE float
+  #define MAX_NUMBER FLT_MAX
+  #define ABS cabsf
+  #define CONSTANT cconstantf
+  #define EPSILON FLT_EPSILON
+  #define ONE 1.0f
+  #define IS_NAN isnanf
+#elif SEARCH_TYPE == CPLX_DBL
+  #define USE_COMPLEX
+  #define NUM_TYPE complex double
+  #define ERR_TYPE double
+  #define MAX_NUMBER DBL_MAX
+  #define ABS cabs
+  #define CONSTANT cconstantf
+  #define EPSILON DBL_EPSILON
+  #define ONE 1.0
+  #define IS_NAN isnan
+#elif SEARCH_TYPE == CPLX_LDBL
+  #define USE_COMPLEX
+  #define NUM_TYPE complex long double
+  #define ERR_TYPE long double
+  #define MAX_NUMBER LDBL_MAX
+  #define ABS cabsl
+  #define CONSTANT cconstantl
+  #define EPSILON LDBL_EPSILON
+  #define ONE 1.0l
+  #define IS_NAN isnanl
+#endif
+
+
+#define EPS_MAX 4 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
 
 int main(int argc, char** argv)
 {
@@ -29,7 +99,8 @@ int main(int argc, char** argv)
   
   char amino[STACKSIZE];
   
-  double var, best;
+  double z;
+  ERR_TYPE var, best;
   NUM_TYPE computedX, targetX;
   
 
@@ -53,13 +124,14 @@ int main(int argc, char** argv)
 #ifdef USE_COMPLEX
   targetX = parseComplex(str);
 #else
-  sscanf(str, "%lf", &targetX);
+  sscanf(str, "%lf", &z);
+  targetX = (ERR_TYPE) z;
 #endif
   
 #ifdef USE_COMPLEX
   if(cpu_id==1) printf("Search target:%.18lf%+.18lfI\n", creal(targetX), cimag(targetX));
 #else 
-  if(cpu_id==1) printf("Search target:%.18lf\n", targetX);
+  if(cpu_id==1) printf("Search target:%.18lf\n", z);
 #endif
 
   time_t now = time (0);
@@ -71,12 +143,12 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-  fprintf(search_log_file,"%-20s\t%-20s\t%-20s\t%s\t%22s\t%-24s\t%-24s\t%s\t%-27s\t%-26s\t%s\n","Counter","Code number","Formula number",
+  fprintf(search_log_file,"%-20s\t%-20s\t%-20s\t%s\t%22s\t%-24s\t%-24s\t%s\t%-27s\t%-26s\t%s\n","Counter j","Code number k1","Formula number k2",
 " ULP ", "Error/DBL_EPS", "Re(X)","Im(X)","cpu_id","Short code","Timestamp", "Full RPN code");
 
   setlinebuf(stdout); //disable 4kB stdout buffer
 
-  best  = DBL_MAX;
+  best  = MAX_NUMBER;
   
   j=cpu_id;
   for(K=1;K<=MaxCodeLength;K++)
@@ -87,7 +159,7 @@ int main(int argc, char** argv)
  // for(j=cpu_id;j<=jMAX;j=j+ncpus) //This is BUG: max j should include all previous code length searches!
   {		
 	j=j+ncpus; //if(j>ipow(INSTR_NUM,MaxCodeLength)) break;
-	k1++;
+
 	
 	if(k1%(ipow(10,6))==0){ //co 10^6 sprawdza plik, czy inne zadanie nie znalazlo wzoru
 
@@ -122,16 +194,18 @@ k = ipow(n,K)-( (-n + ipow(n,1+K) - K + n*K)/(-1 + n)) + j;
     test = checkSyntax (amino, K); //check if RPN code is valid 
     if (!test) continue;
 
+	k1++;
+
 #ifdef USE_COMPLEX         
-    computedX = cconstant(amino, K);
-	if (isnan(creal(computedX)) || isnan(cimag(computedX))) continue;  // Skip NaN
+    computedX = CONSTANT(amino, K);
+	if (IS_NAN(creal(computedX)) || IS_NAN(cimag(computedX))) continue;  // Skip NaN
 	k2++;
-    var = cabs( computedX/targetX - 1.0 );	  
+    var = ABS( computedX/targetX - ONE );	  
 #else
-    computedX = constant(amino, K);
-	if (isnan(computedX)) continue;  // Skip NaN
+    computedX = CONSTANT(amino, K);
+	if (IS_NAN(computedX)) continue;  // Skip NaN
     k2++;
-    var = fabs( computedX/targetX - 1.0 );	  
+    var = ABS( computedX/targetX - ONE );	  
 #endif
 
 		
@@ -159,7 +233,7 @@ k = ipow(n,K)-( (-n + ipow(n,1+K) - K + n*K)/(-1 + n)) + j;
 
 	 }
   
-	 if(best<=DBL_EPS_MAX*DBL_EPSILON) //jezeli znalazl, wychodzi z petli i zapisuje plik dla innych procesow
+	 if(best<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli i zapisuje plik dla innych procesow
 	 {
 		  
           printf("\nConstant recognized by thread %d:\tError in $MachineEps=%le\tCode number=%llu\tSHORT CODE:\t%s\n",cpu_id, best/DBL_EPSILON,j,amino);

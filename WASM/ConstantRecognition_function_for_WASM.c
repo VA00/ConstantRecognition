@@ -128,7 +128,7 @@ char* search_RPN(double z) {
   //for(j=cpu_id;j<ipow(INSTR_NUM,MaxCodeLength);j=j+ncpus)
   {		
     j=j+ncpus;
-	k1++;
+
 	
 	
 	/* Loop unrolling j->(k,K) */
@@ -144,7 +144,7 @@ char* search_RPN(double z) {
         
     test = checkSyntax (amino, K); //check if RPN code is valid 
     if (!test) continue;
-
+	k1++;
 
     computedX = CONSTANT(amino, K);
 	if (IS_NAN(computedX)) continue;  // Skip NaN

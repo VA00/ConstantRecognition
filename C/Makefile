@@ -19,10 +19,10 @@ OBJ_CPLX = ComplexConstantRecognition_batch.o $(DEPS:.c=.o)
 all: RealConstantRecognition ComplexConstantRecognition
 
 RealConstantRecognition_batch.o: $(SRC) $(DEPS)
-	$(CC) -c -o $@ $(SRC) $(CFLAGS)
+	$(CC) -c -o $@ $(SRC) $(CFLAGS) -DSEARCH_TYPE=REAL_DBL
 
 ComplexConstantRecognition_batch.o: $(SRC) $(DEPS)
-	$(CC) -c -o $@ $(SRC) $(CFLAGS) -DUSE_COMPLEX
+	$(CC) -c -o $@ $(SRC) $(CFLAGS) -DSEARCH_TYPE=CPLX_DBL
 
 RealConstantRecognition: $(OBJ_REAL)
 	$(CC) -o $@ $^ $(CFLAGS)
