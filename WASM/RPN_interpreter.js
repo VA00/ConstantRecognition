@@ -85,6 +85,17 @@ function removeRedundantParentheses(expression) {
     return newExpression;
 }
 
+function removeOutermostParentheses(expression) {
+    // Regular expression to match an expression enclosed in outermost parentheses
+    const outermostParenthesesRegex = /^\((.*)\)$/;
+
+    let match = outermostParenthesesRegex.exec(expression);
+    if (match) {
+        return match[1]; // Return the inner expression
+    }
+    return expression; // Return the original expression unchanged if no outermost parentheses
+}
+
 // Example usage:
 //let rpnExpression = "GOLDENRATIO, PI, PLUS, EXP".split(", ")
 //let rpnExpression = ["GOLDENRATIO", "PI", "PLUS", "EXP"];
