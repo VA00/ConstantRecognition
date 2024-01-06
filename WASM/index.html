@@ -14,7 +14,7 @@
    Enter the number to identify or approximate:
   </p>
   <p>
-  <input class="input_box" id="numberInput" type="number" placeholder="137.036">
+  <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.036">
   = <span id="resultInfix"></span>
   </p>
  
@@ -22,7 +22,10 @@
   <button onclick="calculate()">Identify constant</button> <span id="timing"></span>
   </p>
 
-  <div id="resultRPN"></div>
+  <p>
+    <b>RPN</b>: <span id="resultRPN"></span><BR>
+    <i>Mathematica</i>: <span id="resultMathematica"></span><BR>
+  </p>
   
 
   <p>
@@ -53,10 +56,12 @@
 
   <script src="rpn_function.js"></script>
   <script src="RPN_interpreter.js"></script>
+  <script src="RPN_to_Mma_interpreter.js"></script>
   <script>
     const input = document.getElementById('numberInput');
     const resultDiv = document.getElementById('resultRPN');
     const resultSpan = document.getElementById('resultInfix');
+    const resultMma = document.getElementById('resultMathematica');
 
 
 
@@ -81,10 +86,13 @@
 
 
       const rpnExpression = rpnCode.split(", ")
-      const infixExpression = rpnToInfix(rpnExpression); // Assuming this is your function converting RPN to infix
-      const simplifiedExpression = removeRedundantParentheses(infixExpression);
+      var infixExpression = rpnToInfix(rpnExpression); // Assuming this is your function converting RPN to infix
+      var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
       resultSpan.innerText = ` ${simplifiedExpression}`;
-      
+      infixExpression = rpnToMma(rpnExpression); // Assuming this is your function converting RPN to infix
+      simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
+      resultMma.innerText = ` ${simplifiedExpression}`;
+
       document.getElementById('timing').innerText = timeTaken/1000 + " sec"
 
       //console.log(simplifiedExpression);
