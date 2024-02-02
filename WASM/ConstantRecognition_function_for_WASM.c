@@ -92,7 +92,7 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 
 #define EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
 
-char* search_RPN(double z) {
+char* search_RPN(double z, int MaxCodeLength) {
 
 
   // Allocate memory for the output string
@@ -108,7 +108,7 @@ char* search_RPN(double z) {
   
 
    
-  int K, K_best, test, MaxCodeLength=5;
+  int K, K_best, test;
   const int n=INSTR_NUM;
   int omp_cancel_flag=0, cpu_id=1, ncpus=1;
   

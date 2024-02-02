@@ -17,7 +17,14 @@
   <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.036">
   = <span id="resultInfix"></span>
   </p>
- 
+
+
+<label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator."> Max Code Length: <span id="searchDepthValue">5</span></label>
+<input id="searchDepth" type="range" value="5" min="2" max="9" step="1" oninput="updateSearchDepthValue(this.value)">
+
+
+
+
   <p>
   <button onclick="calculate()">Identify constant</button> <span id="timing"></span>
   </p>
@@ -49,11 +56,19 @@
   
 <h1> NOTE </h1>
   <p>
-  Search is currently limited to code length of 5, performed using single thread and real numbers. 
-  To use longer sequences, custom calculators, complex numbers, recognition of functions and massively multi-threaded search, wait for new version
+  User now can use slider to change default code length of 5, with runtime of roughly 1 second. 
+  Every step up increase search time 36x, so be patient. 
+  Search is performed using single thread and real numbers. 
+  To use longer sequences, custom calculators, complex numbers, recognition of functions and massively 
+  multi-threaded search, see <a href="https://github.com/VA00/ConstantRecognition"> native C code on GitHub </a>
   or contact author at andrzej.odrzywolek@uj.edu.pl. <B> ENJOY! </B> 
   </p>
 
+  <script>
+  function updateSearchDepthValue(value) {
+      document.getElementById('searchDepthValue').innerText = value;
+  }
+  </script>
   <script src="rpn_function.js"></script>
   <script src="RPN_interpreter.js"></script>
   <script src="RPN_to_Mma_interpreter.js"></script>
@@ -72,9 +87,13 @@
       var startTime = new Date();
 
       const z = parseFloat(input.value);
+      const MaxCodeLength = parseInt(document.getElementById('searchDepth').value, 10);
+
       // Use ccall to call the WebAssembly function
-      //const rpnCode = Module.ccall('calculateRPN', 'string', ['number'], [z]);
-      const rpnCode = Module.ccall('search_RPN', 'string', ['number'], [z]);
+      
+      //const rpnCode = Module.ccall('search_RPN', 'string', ['number'], [z]);
+      const rpnCode = Module.ccall('search_RPN', 'string', ['number', 'number'], [z, MaxCodeLength]);
+       
       resultDiv.innerText = ` ${rpnCode}`;
 
       // Capture end time
@@ -100,6 +119,6 @@
   </script>
 
 
-<p> UPDATED: 2024-01-05 20:39 </p>
+<p> UPDATED: 2024-02-02 13:06 </p>
 </body>
 </html>
