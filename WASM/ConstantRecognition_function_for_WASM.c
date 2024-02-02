@@ -31,7 +31,7 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 #define CPLX_DBL  5
 #define CPLX_LDBL 6
 
-#define SEARCH_TYPE REAL_FLT
+#define SEARCH_TYPE REAL_DBL
 
 #if   SEARCH_TYPE == REAL_FLT
   #define NUM_TYPE float
