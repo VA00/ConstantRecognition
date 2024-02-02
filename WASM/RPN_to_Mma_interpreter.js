@@ -71,7 +71,7 @@ function rpnToMma(rpn) {
         } else if (namedOperatorsMma.hasOwnProperty(token)) {
             let left = stack.pop();
             let right = stack.pop();
-            stack.push("(" + left + " " + namedOperatorsMma[token] + " " + right + ")");
+            stack.push("((" + left + ") " + namedOperatorsMma[token] + " (" + right + "))");
         } else {
             // If it's neither, handle it as an error or special case
             throw new Error("Unrecognized token: " + token);
