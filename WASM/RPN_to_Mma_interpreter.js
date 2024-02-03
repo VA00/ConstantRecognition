@@ -13,15 +13,14 @@ const namedConstantsMma = {
  "POL"   : "1/2",
  "PI"    : "Pi",
  "EULER" : "E",
- "GOLDENRATIO": "GoldenRatio"
+ "GOLDENRATIO": "GoldenRatio",
+ "EULERGAMMA": "EulerGamma"
 }
 
 
 const namedFunctionsMma = {
 "EXP"    : "Exp", 
 "LOG"    : "Log", 
-//"INV"    : "(1/#&)",
-//"MINUS"  : "Minus",
 "SIN"    : "Sin", 
 "ARCSIN" : "ArcSin",
 "COS"    : "Cos", 
@@ -34,8 +33,7 @@ const namedFunctionsMma = {
 "ARCCOSH": "ArcCosh",
 "TANH"   : "Tanh",
 "ARCTANH": "ArcTanh",
-"SQRT"   : "Sqrt"//,
-//"SQR"    : "(#^2&)"
+"SQRT"   : "Sqrt"
 }
 
 // Define a mapping for unnamed functions to Mathematica equivalents or expressions
