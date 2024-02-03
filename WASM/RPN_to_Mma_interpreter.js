@@ -80,5 +80,15 @@ function rpnToMma(rpn) {
 }
 
 
+if (typeof process !== 'undefined') {
 
 
+  if (process.argv.length > 2) {
+      // Skip the first two elements and pass the rest as the RPN array
+      const rpnArray = process.argv.slice(2);
+      console.log(rpnToMma(rpnArray));
+  } else {
+      console.log("Please provide an RPN expression as arguments.");
+  }
+
+}
