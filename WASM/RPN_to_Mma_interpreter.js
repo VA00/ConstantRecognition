@@ -1,5 +1,5 @@
 const namedConstantsMma = {
- "NEG"   : "-1",
+ "NEG"   : "(-1)", //PreDecrement::rvalue: 1 is not a variable with a value, so its value cannot be changed.
  "ZERO"  : "0",
  "ONE"   : "1",
  "TWO"   : "2",
