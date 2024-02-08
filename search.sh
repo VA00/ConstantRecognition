@@ -23,7 +23,8 @@ echo "Using $PROGRAM"
 echo "0" > found.txt
 
 
-for i in $(seq 1 $NCPUS)
+#for i in $(seq 1 $NCPUS)
+for i in $(seq 0 $((NCPUS - 1)))
 do
    $PROGRAM "$x" $i $NCPUS $K &
 done
