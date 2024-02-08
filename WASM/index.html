@@ -92,7 +92,7 @@
       // Use ccall to call the WebAssembly function
       
       //const rpnCode = Module.ccall('search_RPN', 'string', ['number'], [z]);
-      const rpnCode = Module.ccall('search_RPN', 'string', ['number', 'number'], [z, MaxCodeLength]);
+      const rpnCode = Module.ccall('search_RPN', 'string', ['number', 'number','number', 'number'], [z, MaxCodeLength,0,1]);
        
       resultDiv.innerText = ` ${rpnCode}`;
 
