@@ -104,7 +104,7 @@
 
 
 
-      const rpnExpression = rpnCode.split(", ")
+      const rpnExpression = rpnCode.split(", ").slice(0,-1)
       var infixExpression = rpnToInfix(rpnExpression); // Assuming this is your function converting RPN to infix
       var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
       resultSpan.innerText = ` ${simplifiedExpression}`;
@@ -119,6 +119,6 @@
   </script>
 
 
-<p> UPDATED: 2024-02-02 13:06 </p>
+<p> UPDATED: 2024-02-08 15:57 </p>
 </body>
 </html>
