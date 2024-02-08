@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WASM RPN Inverse Calculator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="rpn.css">
+</head>
+<body>
+
+<h1 class="title"> Constant Recognizer </h1>
+
+  <p>
+   Enter the number to identify or approximate:
+  </p>
+  <p>
+  <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.036">
+  = <span id="resultInfix"></span>
+  </p>
+
+
+<label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator."> Max Code Length: <span id="searchDepthValue">5</span></label>
+<input id="searchDepth" type="range" value="5" min="2" max="9" step="1" oninput="updateSearchDepthValue(this.value)">
+
+
+
+
+  <p>
+  <button onclick="calculate()">Identify constant</button> <span id="timing"></span>
+  </p>
+
+  <p>
+    <b>RPN</b>: <span id="resultRPN"></span><BR>
+    <i>Mathematica</i>: <span id="resultMathematica"></span><BR>
+  </p>
+  
+
+  <p>
+  Search use the "standard" 36-button scientific RPN calculator. 
+ </p>
+  <p>
+  <IMG width=600px src="CALC4.png"> 
+  </p>
+ 
+  <p>
+  Enter any real number to find out, if some sequence of the above buttons could re-discover it.
+  Use floating-point format, e.g:
+  <UL>
+   <LI> 1e3
+   <LI> 0.22222222222
+   <LI> 137
+   <LI> -0.0833333333333
+  </UL> 
+  </p>
+  
+  
+<h1> NOTE </h1>
+  <p>
+  User now can use slider to change default code length of 5, with runtime of roughly 1 second. 
+  Every step up increase search time 36x, so be patient. 
+  Search is performed using single thread and real numbers. 
+  To use longer sequences, custom calculators, complex numbers, recognition of functions and massively 
+  multi-threaded search, see <a href="https://github.com/VA00/ConstantRecognition"> native C code on GitHub </a>
+  or contact author at andrzej.odrzywolek@uj.edu.pl. <B> ENJOY! </B> 
+  </p>
+
+  <script>
+  function updateSearchDepthValue(value) {
+      document.getElementById('searchDepthValue').innerText = value;
+  }
+  </script>
+  <script src="rpn_function.js"></script>
+  <script src="RPN_interpreter.js"></script>
+  <script src="RPN_to_Mma_interpreter.js"></script>
+  <!-- <script src="worker.js"> </script> -->
+  <script>
+
+    //Module={};
+    const input = document.getElementById('numberInput');
+    const resultDiv = document.getElementById('resultRPN');
+    const resultSpan = document.getElementById('resultInfix');
+    const resultMma = document.getElementById('resultMathematica');
+    const rpnCode="EULER";
+
+    //console.log(rpnCode);
+
+    // Define the calculate function that calls the WebAssembly function
+    function calculate() {
+
+      var startTime = new Date(); // Capture start time
+
+      const z = parseFloat(input.value);
+      const MaxCodeLength = parseInt(document.getElementById('searchDepth').value, 10);
+      //const cpuId = 1;
+      const ncpus = 3; // Default number of workers. For good load balance, this should be prime number: 3,5,7,11,13 
+      let solutionFound = false;
+
+      const workers = [];      // Array to keep track of workers
+   
+      for (let cpuId = 0; cpuId < ncpus; cpuId++) {
+        const worker = new Worker('worker.js');
+        workers.push(worker);
+      }
+
+
+      for (let cpuId = 0; cpuId < ncpus; cpuId++) {
+
+               workers[cpuId].onmessage = (e) => {
+                   if (!solutionFound) {
+                       solutionFound = true; // Prevent handling further results
+                       const rpnCode = e.data; // This is the solution from the worker
+                       console.log(`Solution found by worker ${cpuId}:`, rpnCode);
+	           
+                       // Optionally, terminate all workers now that a solution is found
+                       workers.forEach(w => w.terminate());
+                       
+                       // Process the solution as needed
+
+                       resultDiv.textContent = rpnCode;
+                       
+                       const rpnExpression = rpnCode.split(", ").slice(0,-1)
+                       var infixExpression = rpnToInfix(rpnExpression); // Function converting RPN to infix (standard math)
+                       var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
+                       resultSpan.innerText = ` ${simplifiedExpression}`;
+                       infixExpression = rpnToMma(rpnExpression); // Function converting RPN to Mathematica
+                       simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
+                       resultMma.innerText = ` ${simplifiedExpression}`;
+	                   
+                       // Capture end time
+                       var endTime = new Date();
+	                   
+                       // Calculate the difference in milliseconds
+                       var timeTaken = endTime - startTime;
+                       document.getElementById('timing').innerText = timeTaken/1000 + " sec"
+
+                   }
+               };
+
+       }
+
+      for (let cpuId = 0; cpuId < ncpus; cpuId++) {
+        // Start the worker with a delay to initialize Module.asm
+        const initDelay = 1000*Math.random(); // Different times for demonstration
+        //const initDelay = 0; 
+        workers[cpuId].postMessage({ initDelay, z, MaxCodeLength, cpuId, ncpus });
+      }
+
+
+      
+     
+
+      //setTimeout(() => console.log("1 down:",rpnCode), 1000);
+      //setTimeout(() => console.log("2 down:",rpnCode), 2000);
+      //setTimeout(() => console.log("3 down:",rpnCode), 3000);
+      //setTimeout(() => console.log("4 down:",rpnCode), 4000);
+
+
+      //resultDiv.innerText = ` ${rpnCode}`;
+
+
+
+
+      //console.log(simplifiedExpression);
+    }
+  </script>
+
+
+<p> UPDATED: 2024-02-08 12:59 </p>
+</body>
+</html>
