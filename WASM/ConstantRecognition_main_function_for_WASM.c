@@ -16,5 +16,5 @@ int main(int argc, char** argv)
     sscanf(argv[2],"%d" , &depth);
   }
 
-  printf("%s\n",search_RPN(z,depth));
+  printf("%s\n",search_RPN(z,depth,0,1));
 }

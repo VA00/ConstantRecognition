@@ -92,14 +92,14 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 
 #define EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
 
-char* search_RPN(double z, int MaxCodeLength) {
+char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 
 
   // Allocate memory for the output string
   char* RPN_full_Code = (char*)malloc(32*16 * sizeof(char));
   if (RPN_full_Code == NULL) return "Error allocating memory";
   
-  unsigned long long int j, k, k_best, k1=0, k2=0;
+  unsigned long long int j, k, k_best=0, k1=0, k2=0;
   
   char amino[STACKSIZE];
   
@@ -108,9 +108,9 @@ char* search_RPN(double z, int MaxCodeLength) {
   
 
    
-  int K, K_best, test;
+  int K, K_best=1, test;
   const int n=INSTR_NUM;
-  int omp_cancel_flag=0, cpu_id=1, ncpus=1;
+  //int omp_cancel_flag=0, cpu_id=0, ncpus=1;
   
   //FILE  *flagfile, *search_log_file;  
   //char str[137], output_filename[137], timestamp[26], RPN_full_Code[1024];
@@ -165,14 +165,21 @@ char* search_RPN(double z, int MaxCodeLength) {
 	 {
 	  itoa(k_best, amino, n, K_best);
       print_code_mathematica(amino,K_best,RPN_full_Code);
+      strcat(RPN_full_Code, ", SUCCESS");
       return RPN_full_Code;
      }
     
 	
   }
 
+
+  /* WARNING: it is possible for search to find NOTHING! 
+     Returning k=0, K=1 in this cases as fallback.
+  */
+  
   itoa(k_best, amino, n, K_best);
   print_code_mathematica(amino,K_best,RPN_full_Code);
+  strcat(RPN_full_Code, ", FAILURE");
 
   return RPN_full_Code;
 
