@@ -1,12 +1,17 @@
 #!/bin/bash
 
+# USAGE: ./search.sh targetNumber Komplexity
+# EXAMPLE: ./search 2.4207177617493614932545182839801 5
+
 # Assign the input to a variable
 x="$1"
 # Set K (max. Kolmogorov complexity, RPN code length), to the second argument or default to 6 if not provided
 K="${2:-6}"
 
+
+# Beware of non-prime number NCPUS !
 NCPUS=$(nproc --all)
-#NCPUS=1
+#NCPUS=12 
 
 
 
