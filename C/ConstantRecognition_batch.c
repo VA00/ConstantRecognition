@@ -152,7 +152,7 @@ int main(int argc, char** argv)
   
   j=cpu_id;
   for(K=1;K<=MaxCodeLength;K++)
-  for(k=cpu_id;k<=ipow(INSTR_NUM,K);k=k+ncpus)
+  for(k=cpu_id;k<ipow(INSTR_NUM,K);k=k+ncpus)
     
 // LOOP UNROLL  j -> K, k
  // int jMAX=(ipow(INSTR_NUM,MaxCodeLength)-1)*INSTR_NUM/(INSTR_NUM-1); 
