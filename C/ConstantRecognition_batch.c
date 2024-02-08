@@ -95,11 +95,14 @@
 
 int main(int argc, char** argv)
 {
-  unsigned long long int j, k, k1=0, k2=0;
+  unsigned long long int j=0, k=0, k1=0, k2=0;
   
   char amino[STACKSIZE];
-  
+  #ifdef USE_COMPLEX
+  // DO NOTHING...
+  #else
   double z;
+  #endif
   ERR_TYPE var, best;
   NUM_TYPE computedX, targetX;
   
@@ -148,6 +151,12 @@ int main(int argc, char** argv)
 
   setlinebuf(stdout); //disable 4kB stdout buffer
 
+  //printf("DEBUG: z = %.18lf\n", targetX);
+  //printf("DEBUG: cpu_id = %d\n", cpu_id);
+  //printf("DEBUG: ncpus  = %d\n", ncpus);
+  //printf("DEBUG: K  = %d\n", MaxCodeLength);
+  
+
   best  = MAX_NUMBER;
   
   j=cpu_id;
@@ -161,7 +170,8 @@ int main(int argc, char** argv)
 	j=j+ncpus; //if(j>ipow(INSTR_NUM,MaxCodeLength)) break;
 
 	
-	if(k1%(ipow(10,6))==0){ //co 10^6 sprawdza plik, czy inne zadanie nie znalazlo wzoru
+	//if(k1%(ipow(10,6))==0){ //co 10^6 sprawdza plik, czy inne zadanie nie znalazlo wzoru
+      if( k1 != 0 && k1 % ipow(10, 6) == 0 ){ //Op. order %, !=/==, &&
 
           flagfile = fopen("found.txt","r");
           if (flagfile == NULL){ // Handle the case where the file doesn't exist or couldn't be opened
@@ -268,7 +278,11 @@ k = ipow(n,K)-( (-n + ipow(n,1+K) - K + n*K)/(-1 + n)) + j;
 	
   }
   
-  
+  //printf("DEBUG: j   = %llu\n", j); 
+  //printf("DEBUG: k   = %llu\n", k); 
+  //printf("DEBUG: k1  = %llu\n", k1); 
+  //printf("DEBUG: k2  = %llu\n", k2); 
+ 
   printf("END of search for thread %d\n\n", cpu_id);
   
   fclose(search_log_file);
