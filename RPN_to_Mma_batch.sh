@@ -1,6 +1,9 @@
 #!/bin/bash
+# Script convert RPN code and add Mathematica readable formulas at the EOL 
+# USAGE: ./RPN_to_Mma_batch.sh search_combined_log.txt
 
-# Open output file for writing
+
+
 exec 3> search_combined_log_mma.txt
 
 while IFS= read -r line
