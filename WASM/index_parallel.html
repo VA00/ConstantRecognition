@@ -19,8 +19,8 @@
   </p>
 
 
-<label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator."> Max Code Length: <span id="searchDepthValue">5</span></label>
-<input id="searchDepth" type="range" value="5" min="2" max="9" step="1" oninput="updateSearchDepthValue(this.value)">
+<label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator."> Max Code Length: <span id="searchDepthValue">6</span></label>
+<input id="searchDepth" type="range" value="6" min="2" max="9" step="1" oninput="updateSearchDepthValue(this.value)">
 
 
 
@@ -92,7 +92,7 @@
       const z = parseFloat(input.value);
       const MaxCodeLength = parseInt(document.getElementById('searchDepth').value, 10);
       //const cpuId = 1;
-      const ncpus = 3; // Default number of workers. For good load balance, this should be prime number: 3,5,7,11,13 
+      const ncpus = 7; // Default number of workers. For good load balance, this should be prime number: 3,5,7,11,13 
       let solutionFound = false;
 
       const workers = [];      // Array to keep track of workers
