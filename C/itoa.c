@@ -30,29 +30,17 @@ void itoa(unsigned long long int value, char* str, const int base, const int pad
 	char* wstr=str;
 	int k;
 	
-	
 //	int sign;
-	
-
-	
 	// Validate base
-	
 //	if (base<2 || base>35){ *wstr='\0'; return; }
-	
-
 	
 	// Take care of sign
 	
 //	if ((sign=value) < 0) value = -value;
-	
-       
-	
-	
 
 		// padding with zeros
 	for(k=0;k<padding;k++) *(wstr+k) = '0';
 	*(wstr+padding) = '\0';
-	
 	
 	// Conversion. Number is reversed.
 	
@@ -61,8 +49,6 @@ void itoa(unsigned long long int value, char* str, const int base, const int pad
 //	if(sign<0) *wstr++='-';
 	
 	//*wstr='\0';
-
-	
 }
 
 void itoaFAST(unsigned int value, char* str, unsigned const int base, unsigned const int padding) {

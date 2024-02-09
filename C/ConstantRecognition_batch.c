@@ -95,7 +95,7 @@
 
 int main(int argc, char** argv)
 {
-  unsigned long long int j=0, k=0, k1=0, k2=0;
+  unsigned long long int j=0, k=0, k1=0, k2=0, kMAX;
   
   char amino[STACKSIZE];
   #ifdef USE_COMPLEX
@@ -160,8 +160,9 @@ int main(int argc, char** argv)
   best  = MAX_NUMBER;
   
   j=cpu_id;
-  for(K=1;K<=MaxCodeLength;K++)
-  for(k=cpu_id;k<ipow(INSTR_NUM,K);k=k+ncpus)
+  for(K=1;K<=MaxCodeLength;K++){
+    kMAX=ipow(INSTR_NUM,K);
+    for(k=cpu_id;k<kMAX;k=k+ncpus)
     
 // LOOP UNROLL  j -> K, k
  // int jMAX=(ipow(INSTR_NUM,MaxCodeLength)-1)*INSTR_NUM/(INSTR_NUM-1); 
@@ -171,7 +172,7 @@ int main(int argc, char** argv)
 
 	
 	//if(k1%(ipow(10,6))==0){ //co 10^6 sprawdza plik, czy inne zadanie nie znalazlo wzoru
-      if( k1 != 0 && k1 % ipow(10, 6) == 0 ){ //Op. order %, !=/==, &&
+      if( k1 != 0 && k1 % 1000000 == 0 ){ //Op. order %, !=/==, &&
 
           flagfile = fopen("found.txt","r");
           if (flagfile == NULL){ // Handle the case where the file doesn't exist or couldn't be opened
@@ -276,12 +277,12 @@ k = ipow(n,K)-( (-n + ipow(n,1+K) - K + n*K)/(-1 + n)) + j;
 
     
 	
+    }
   }
-  
-  //printf("DEBUG: j   = %llu\n", j); 
-  //printf("DEBUG: k   = %llu\n", k); 
-  //printf("DEBUG: k1  = %llu\n", k1); 
-  //printf("DEBUG: k2  = %llu\n", k2); 
+  printf("DEBUG: j   = %llu\n", j); 
+  printf("DEBUG: k   = %llu\n", k); 
+  printf("DEBUG: k1  = %llu\n", k1); 
+  printf("DEBUG: k2  = %llu\n", k2); 
  
   printf("END of search for thread %d\n\n", cpu_id);
   
