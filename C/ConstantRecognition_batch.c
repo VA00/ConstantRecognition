@@ -279,10 +279,10 @@ k = ipow(n,K)-( (-n + ipow(n,1+K) - K + n*K)/(-1 + n)) + j;
 	
     }
   }
-  printf("DEBUG: j   = %llu\n", j); 
-  printf("DEBUG: k   = %llu\n", k); 
-  printf("DEBUG: k1  = %llu\n", k1); 
-  printf("DEBUG: k2  = %llu\n", k2); 
+  //printf("DEBUG: j   = %llu\n", j); 
+  //printf("DEBUG: k   = %llu\n", k); 
+  //printf("DEBUG: k1  = %llu\n", k1); 
+  //printf("DEBUG: k2  = %llu\n", k2); 
  
   printf("END of search for thread %d\n\n", cpu_id);
   
