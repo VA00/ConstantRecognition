@@ -7,11 +7,11 @@ ifeq ($(CC),icx)
     CFLAGS=-Wall -O0 -ipo
 else
     # For GCC: Standard setup with math library linking
-    CFLAGS=-Wall -lm
+    CFLAGS=-O2 -Wall -lm -fopt-info
 endif
 
 
-DEPS = constant.c itoa.c mathematica.c math2.c utils.c
+DEPS = constant.c mathematica.c math2.c utils.c itoa.c 
 SRC = ConstantRecognition_batch.c
 OBJ_REAL = RealConstantRecognition_batch.o $(DEPS:.c=.o)
 OBJ_CPLX = ComplexConstantRecognition_batch.o $(DEPS:.c=.o)
