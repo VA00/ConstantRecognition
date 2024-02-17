@@ -69,3 +69,28 @@ void itoaFAST(unsigned int value, char* str, unsigned const int base, unsigned c
 
 	
 }
+
+#if 0
+
+inline static void itoa_update(unsigned long long int value, unsigned char *str, const int base, const int padding) {
+	
+
+  for(int i=0;i<padding;i++)
+  {
+
+    if ( str[i] != (num[base-1]) ) {
+      if (str[i] <= '9') {
+       str[i] = num[str[i] - '0' + 1];
+      } else {
+       str[i] = num[str[i] - 'a' + 11];
+      }
+	  return;
+    } else {
+      str[i]=num[0];
+    }
+  
+  }
+  
+}
+
+#endif
