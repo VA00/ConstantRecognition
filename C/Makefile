@@ -7,7 +7,7 @@ ifeq ($(CC),icx)
     CFLAGS=-Wall -O0 -ipo
 else
     # For GCC: Standard setup with math library linking
-    CFLAGS=-O2 -Wall -lm -fopt-info
+    CFLAGS=-O2 -Wall -lm #-fopt-info
 endif
 
 
