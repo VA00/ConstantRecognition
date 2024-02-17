@@ -5,12 +5,14 @@
 
 # Assign the input to a variable
 x="$1"
-# Set K (max. Kolmogorov complexity, RPN code length), to the second argument or default to 6 if not provided
-K="${2:-6}"
+# Set K (max. Kolmogorov complexity, RPN code length), to the second argument or default to 7 if not provided
+K="${2:-7}"
 
 
 # Beware of non-prime number NCPUS !
-NCPUS=$(nproc --all)
+#NCPUS=$(nproc --all)
+# getconf work on both Linux and Mac
+NCPUS=$(getconf _NPROCESSORS_ONLN)
 #NCPUS=12 
 
 
