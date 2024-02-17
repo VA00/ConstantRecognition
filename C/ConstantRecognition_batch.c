@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <complex.h>
 #include <fenv.h>
-#include <omp.h>
+//#include <omp.h>
 #include <float.h>
 #include "constant.h"
 #include "itoa.h"
