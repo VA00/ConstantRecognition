@@ -99,7 +99,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   char* RPN_full_Code = (char*)malloc(32*16 * sizeof(char));
   if (RPN_full_Code == NULL) return "Error allocating memory";
   
-  unsigned long long int j, k, k_best=0, k1=0, k2=0,kMAX;
+  unsigned long long int j, k, k_best=0, k1=0, k2=0,kMAX,chunk_size,start,end;
   
   char amino[STACKSIZE];
   
@@ -125,11 +125,16 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   for(K=1;K<=MaxCodeLength;K++)
   {
     kMAX=ipow(INSTR_NUM,K);
-    
-    for(k=cpu_id;k<kMAX;k=k+ncpus)
+    chunk_size = (kMAX/ncpus)+0;
+    start=cpu_id*chunk_size;
+    end = (cpu_id == ncpus-1) ? kMAX : start+chunk_size-1;
+
+    for(k=start;k<end;k++)
+    //for(k=cpu_id;k<kMAX;k=k+ncpus)
     {		
-      if(k==cpu_id) itoa(cpu_id, amino, n, K); else itoa_update(k, amino, n, K);
-      j=j+ncpus;
+      if(k==start) itoa(start, amino, n, K); else itoa_update(k, amino, n, K);
+      //j=j+ncpus;
+      j=j+1;
       /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
       //itoa(k, amino, n, K);
           
