@@ -125,13 +125,16 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   for(K=1;K<=MaxCodeLength;K++)
   {
     kMAX=ipow(INSTR_NUM,K);
-    for(k=cpu_id;k<=kMAX;k=k+ncpus)
+    
+    for(k=cpu_id;k<kMAX;k=k+ncpus)
     {		
+      if(k==cpu_id) itoa(cpu_id, amino, n, K); else itoa_update(k, amino, n, K);
       j=j+ncpus;
       /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
-      itoa(k, amino, n, K);
+      //itoa(k, amino, n, K);
           
       test = checkSyntax (amino, K); //check if RPN code is valid 
+      
       if (!test) continue;
 	  k1++;
     
@@ -154,6 +157,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
         strcat(RPN_full_Code, ", SUCCESS");
         return RPN_full_Code;
        }
+       
 	  
     }
   }
