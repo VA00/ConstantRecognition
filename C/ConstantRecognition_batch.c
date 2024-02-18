@@ -8,7 +8,7 @@
 //#include <omp.h>
 #include <float.h>
 #include "constant.h"
-#include "itoa.h"
+#include "itoa.c"
 #include "mathematica.h"
 #include "math2.h"
 #include "utils.h"

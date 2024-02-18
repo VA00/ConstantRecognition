@@ -11,7 +11,7 @@ else
 endif
 
 
-DEPS = constant.c mathematica.c math2.c utils.c itoa.c 
+DEPS = constant.c mathematica.c math2.c utils.c# itoa.c 
 SRC = ConstantRecognition_batch.c
 OBJ_REAL = RealConstantRecognition_batch.o $(DEPS:.c=.o)
 OBJ_CPLX = ComplexConstantRecognition_batch.o $(DEPS:.c=.o)

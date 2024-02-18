@@ -18,7 +18,7 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 #include <fenv.h>
 #include <float.h>
 #include "../C/constant.h"
-#include "../C/itoa.h"
+#include "../C/itoa.c"
 #include "../C/mathematica.h"
 #include "../C/math2.h"
 #include "../C/utils.h"
@@ -99,7 +99,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   char* RPN_full_Code = (char*)malloc(32*16 * sizeof(char));
   if (RPN_full_Code == NULL) return "Error allocating memory";
   
-  unsigned long long int j, k, k_best=0, k1=0, k2=0;
+  unsigned long long int j, k, k_best=0, k1=0, k2=0,kMAX;
   
   char amino[STACKSIZE];
   
@@ -123,55 +123,40 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   
   j=cpu_id;
   for(K=1;K<=MaxCodeLength;K++)
-  for(k=cpu_id;k<=ipow(INSTR_NUM,K);k=k+ncpus)
-// LOOP UNROLL  j -> K, k
-  //for(j=cpu_id;j<ipow(INSTR_NUM,MaxCodeLength);j=j+ncpus)
-  {		
-    j=j+ncpus;
-
-	
-	
-	/* Loop unrolling j->(k,K) */
-    /*
-	K = 1;
-    while(j > (-n + ipow(n,1+K) - K + n*K)/(-1 + n) ) K++;
+  {
+    kMAX=ipow(INSTR_NUM,K);
+    for(k=cpu_id;k<=kMAX;k=k+ncpus)
+    {		
+      j=j+ncpus;
+      /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
+      itoa(k, amino, n, K);
+          
+      test = checkSyntax (amino, K); //check if RPN code is valid 
+      if (!test) continue;
+	  k1++;
     
-	
-	k = ipow(n,K)-( (-n + ipow(n,1 + K) - K + n*K)/(-1 + n)) + j;
-    */
-    /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
-    itoa(k, amino, n, K);
-        
-    test = checkSyntax (amino, K); //check if RPN code is valid 
-    if (!test) continue;
-	k1++;
-
-    computedX = CONSTANT(amino, K);
-	if (IS_NAN(computedX)) continue;  // Skip NaN
-    k2++;
-    var = ABS( computedX/targetX - ONE );	  
-		
-					  
+      computedX = CONSTANT(amino, K);
+	  if (IS_NAN(computedX)) continue;  // Skip NaN
+      k2++;
+      var = ABS( computedX/targetX - ONE );	  
+      
+      if(var<best) 
+       {
+        best = var;
+        K_best=K;
+        k_best=k;
+	   }
     
-    if(var<best) 
-     {
-      best = var;
-      K_best=K;
-      k_best=k;
-
-	 }
-  
-	 if(best<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli i funkcji !
-	 {
-	  itoa(k_best, amino, n, K_best);
-      print_code_mathematica(amino,K_best,RPN_full_Code);
-      strcat(RPN_full_Code, ", SUCCESS");
-      return RPN_full_Code;
-     }
-    
-	
+	   if(best<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli i funkcji !
+	   {
+	    itoa(k_best, amino, n, K_best);
+        print_code_mathematica(amino,K_best,RPN_full_Code);
+        strcat(RPN_full_Code, ", SUCCESS");
+        return RPN_full_Code;
+       }
+	  
+    }
   }
-
 
   /* WARNING: it is possible for search to find NOTHING! 
      Returning k=0, K=1 in this cases as fallback.

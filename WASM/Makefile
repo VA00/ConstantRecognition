@@ -5,9 +5,9 @@ TARGET := rpn_function.js
 # Source files
 SOURCES := ConstantRecognition_function_for_WASM.c \
            $(SRC_DIR)/constant.c \
-           $(SRC_DIR)/itoa.c \
            $(SRC_DIR)/mathematica.c \
-           $(SRC_DIR)/math2.c
+           $(SRC_DIR)/math2.c \
+           #$(SRC_DIR)/itoa.c 
 
 # Compiler and flags
 EMCC := emcc

@@ -1,5 +1,6 @@
 #include <math.h>
 #include "itoa.h"
+const char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
 
 unsigned long long int ipow(int b, int n)
 {
@@ -25,26 +26,18 @@ int ilog(int base, unsigned long long int n)
 /* http://www.jb.man.ac.uk/~slowe/cpp/itoa.html */	
 void itoa(unsigned long long int value, char* str, const int base, const int padding) {
 	
-	const char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+	//const char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
 	
-	char* wstr=str;
+	//char* wstr=str;
 	int k;
 	
-//	int sign;
-	// Validate base
-//	if (base<2 || base>35){ *wstr='\0'; return; }
-	
-	// Take care of sign
-	
-//	if ((sign=value) < 0) value = -value;
-
-		// padding with zeros
-	for(k=0;k<padding;k++) *(wstr+k) = '0';
-	*(wstr+padding) = '\0';
+	// padding with zeros
+	for(k=0;k<padding;k++) *(str+k) = '0';
+	*(str+padding) = '\0';
 	
 	// Conversion. Number is reversed.
 	
-	do *wstr++ = num[value%base]; while(value/=base);
+	do *str++ = num[value%base]; while(value/=base);
 	
 //	if(sign<0) *wstr++='-';
 	
@@ -53,7 +46,7 @@ void itoa(unsigned long long int value, char* str, const int base, const int pad
 
 void itoaFAST(unsigned int value, char* str, unsigned const int base, unsigned const int padding) {
 	
-	const char num[] = "0123";//456789abcdefghijklmnopqrstuvwxyz";
+	//const char num[] = "0123";//456789abcdefghijklmnopqrstuvwxyz";
 	
 	char* wstr=str;
 	int k;
@@ -70,9 +63,7 @@ void itoaFAST(unsigned int value, char* str, unsigned const int base, unsigned c
 	
 }
 
-#if 0
-
-inline static void itoa_update(unsigned long long int value, unsigned char *str, const int base, const int padding) {
+void itoa_update(unsigned long long int value, char *str, const int base, const int padding) {
 	
 
   for(int i=0;i<padding;i++)
@@ -93,4 +84,4 @@ inline static void itoa_update(unsigned long long int value, unsigned char *str,
   
 }
 
-#endif
+
