@@ -15,11 +15,11 @@ Unary functions:
 {{LOG, Log}, {EXP, Exp}, {INV, -- & }, {MINUS, Minus}, {SQRT, Sqrt}, {SQR, #1  & }, {SIN, Sin}, {ARCSIN, ArcSin}, {COS, Cos}, {ARCCOS, ArcCos}, {TAN, Tan}, {ARCTAN, ArcTan}, {SINH, Sinh}, {ARCSINH, ArcSinh}, {COSH, Cosh}, {ARCCOSH, ArcCosh}, {TANH, Tanh}, {ARCTANH, ArcTanh}}
                                #1
 Push on stack:
-{{PI, Pi}, {EULER, E}, {NEG, -1}, {ONE, 1}, {TWO, 2}, {THREE, 3}, {FOUR, 4}, {FIVE, 5}, {SIX, 6}, {SEVEN, 7}, {EIGHT, 8}, {NINE, 9}, {GOLDENRATIO, GoldenRatio}}
+{{PI, Pi}, {EULER, E}, {NEG, -1}, {GOLDENRATIO, GoldenRatio}, {ONE, 1}, {TWO, 2}, {THREE, 3}, {FOUR, 4}, {FIVE, 5}, {SIX, 6}, {SEVEN, 7}, {EIGHT, 8}, {NINE, 9}}
 Binary operators:
 {{PLUS, Plus}, {TIMES, Times}, {SUBTRACT, Subtract}, {DIVIDE, Divide}, {POWER, Power}}
 
-{0 -> PI, 1 -> EULER, 2 -> NEG, 3 -> LOG, 4 -> EXP, 5 -> PLUS, 6 -> TIMES, 7 -> INV, 8 -> MINUS, 9 -> SQRT, a -> SQR, b -> SIN, c -> ARCSIN, d -> COS, e -> ARCCOS, f -> TAN, g -> ARCTAN, h -> SINH, i -> ARCSINH, j -> COSH, k -> ARCCOSH, l -> TANH, m -> ARCTANH, n -> ONE, o -> TWO, p -> THREE, q -> FOUR, r -> FIVE, s -> SIX, t -> SEVEN, u -> EIGHT, v -> NINE, w -> GOLDENRATIO, x -> SUBTRACT, y -> DIVIDE, z -> POWER}
+{0 -> PI, 1 -> EULER, 2 -> NEG, 3 -> GOLDENRATIO, 4 -> LOG, 5 -> EXP, 6 -> PLUS, 7 -> TIMES, 8 -> INV, 9 -> MINUS, a -> SQRT, b -> SQR, c -> SIN, d -> ARCSIN, e -> COS, f -> ARCCOS, g -> TAN, h -> ARCTAN, i -> SINH, j -> ARCSINH, k -> COSH, l -> ARCCOSH, m -> TANH, n -> ARCTANH, o -> ONE, p -> TWO, q -> THREE, r -> FOUR, s -> FIVE, t -> SIX, u -> SEVEN, v -> EIGHT, w -> NINE, x -> SUBTRACT, y -> DIVIDE, z -> POWER}
 
 */
 float constantf(const char * , const int);

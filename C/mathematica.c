@@ -28,94 +28,94 @@ case '2':
 strcat(RPN_full_Code,"NEG, ");
 break;
 case '3':
-strcat(RPN_full_Code,"LOG, ");
+strcat(RPN_full_Code,"GOLDENRATIO, ");
 break;
 case '4':
-strcat(RPN_full_Code,"EXP, ");
+strcat(RPN_full_Code,"LOG, ");
 break;
 case '5':
-strcat(RPN_full_Code,"PLUS, ");
+strcat(RPN_full_Code,"EXP, ");
 break;
 case '6':
-strcat(RPN_full_Code,"TIMES, ");
+strcat(RPN_full_Code,"PLUS, ");
 break;
 case '7':
-strcat(RPN_full_Code,"INV, ");
+strcat(RPN_full_Code,"TIMES, ");
 break;
 case '8':
-strcat(RPN_full_Code,"MINUS, ");
+strcat(RPN_full_Code,"INV, ");
 break;
 case '9':
-strcat(RPN_full_Code,"SQRT, ");
+strcat(RPN_full_Code,"MINUS, ");
 break;
 case 'a':
-strcat(RPN_full_Code,"SQR, ");
+strcat(RPN_full_Code,"SQRT, ");
 break;
 case 'b':
-strcat(RPN_full_Code,"SIN, ");
+strcat(RPN_full_Code,"SQR, ");
 break;
 case 'c':
-strcat(RPN_full_Code,"ARCSIN, ");
+strcat(RPN_full_Code,"SIN, ");
 break;
 case 'd':
-strcat(RPN_full_Code,"COS, ");
+strcat(RPN_full_Code,"ARCSIN, ");
 break;
 case 'e':
-strcat(RPN_full_Code,"ARCCOS, ");
+strcat(RPN_full_Code,"COS, ");
 break;
 case 'f':
-strcat(RPN_full_Code,"TAN, ");
+strcat(RPN_full_Code,"ARCCOS, ");
 break;
 case 'g':
-strcat(RPN_full_Code,"ARCTAN, ");
+strcat(RPN_full_Code,"TAN, ");
 break;
 case 'h':
-strcat(RPN_full_Code,"SINH, ");
+strcat(RPN_full_Code,"ARCTAN, ");
 break;
 case 'i':
-strcat(RPN_full_Code,"ARCSINH, ");
+strcat(RPN_full_Code,"SINH, ");
 break;
 case 'j':
-strcat(RPN_full_Code,"COSH, ");
+strcat(RPN_full_Code,"ARCSINH, ");
 break;
 case 'k':
-strcat(RPN_full_Code,"ARCCOSH, ");
+strcat(RPN_full_Code,"COSH, ");
 break;
 case 'l':
-strcat(RPN_full_Code,"TANH, ");
+strcat(RPN_full_Code,"ARCCOSH, ");
 break;
 case 'm':
-strcat(RPN_full_Code,"ARCTANH, ");
+strcat(RPN_full_Code,"TANH, ");
 break;
 case 'n':
-strcat(RPN_full_Code,"ONE, ");
+strcat(RPN_full_Code,"ARCTANH, ");
 break;
 case 'o':
-strcat(RPN_full_Code,"TWO, ");
+strcat(RPN_full_Code,"ONE, ");
 break;
 case 'p':
-strcat(RPN_full_Code,"THREE, ");
+strcat(RPN_full_Code,"TWO, ");
 break;
 case 'q':
-strcat(RPN_full_Code,"FOUR, ");
+strcat(RPN_full_Code,"THREE, ");
 break;
 case 'r':
-strcat(RPN_full_Code,"FIVE, ");
+strcat(RPN_full_Code,"FOUR, ");
 break;
 case 's':
-strcat(RPN_full_Code,"SIX, ");
+strcat(RPN_full_Code,"FIVE, ");
 break;
 case 't':
-strcat(RPN_full_Code,"SEVEN, ");
+strcat(RPN_full_Code,"SIX, ");
 break;
 case 'u':
-strcat(RPN_full_Code,"EIGHT, ");
+strcat(RPN_full_Code,"SEVEN, ");
 break;
 case 'v':
-strcat(RPN_full_Code,"NINE, ");
+strcat(RPN_full_Code,"EIGHT, ");
 break;
 case 'w':
-strcat(RPN_full_Code,"GOLDENRATIO, ");
+strcat(RPN_full_Code,"NINE, ");
 break;
 case 'x':
 strcat(RPN_full_Code,"SUBTRACT, ");
