@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WASM RPN Inverse Calculator</title>
+  <title>EXPERIMENTAL parallel WASM RPN Inverse Calculator</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="rpn.css">
 </head>
 <body>
 
-<h1 class="title"> Constant Recognizer </h1>
+<h1 class="title"> Constant Recognizer (experimental) </h1>
+
+  <p>
+  Detected <span id="detectedCPUs"></span> logical CPU's.
+  </p>
 
   <p>
    Enter the number to identify or approximate:
@@ -81,6 +85,25 @@
     const resultSpan = document.getElementById('resultInfix');
     const resultMma = document.getElementById('resultMathematica');
     const rpnCode="EULER";
+    const rpnExpression = ["EULER"];
+    
+    const resultCPUs = document.getElementById('detectedCPUs');
+    //const ncpus = 3; // Default number of workers. For good load balance, this should be prime number: 3,5,7,11,13 
+    //const ncpus = navigator.hardwareConcurrency || 3; // Default to 3 if hardwareConcurrency is not available
+    const ncpus = navigator.hardwareConcurrency; 
+    
+    if(ncpus !== undefined) {
+       console.log(`Detected ${ncpus} logical CPU cores.`);
+    }
+    else
+    {
+       ncpus=5;
+       console.log(`Unable to detect logical CPU cores. Using ncpus=${ncpus}`);
+    }
+    
+    resultCPUs.innerText = ncpus;
+
+    const failedResults = new Array(ncpus).fill("EULER"); //Array to store failed search results
 
     //console.log(rpnCode);
 
@@ -92,11 +115,10 @@
       const z = parseFloat(input.value);
       const MaxCodeLength = parseInt(document.getElementById('searchDepth').value, 10);
       //const cpuId = 1;
-      const ncpus = 7; // Default number of workers. For good load balance, this should be prime number: 3,5,7,11,13 
-      let solutionFound = false;
+      let solutionFound = false;   
 
       const workers = [];      // Array to keep track of workers
-   
+ 
       for (let cpuId = 0; cpuId < ncpus; cpuId++) {
         const worker = new Worker('worker.js');
         workers.push(worker);
@@ -105,20 +127,38 @@
 
       for (let cpuId = 0; cpuId < ncpus; cpuId++) {
 
-               workers[cpuId].onmessage = (e) => {
-                   if (!solutionFound) {
-                       solutionFound = true; // Prevent handling further results
+               workers[cpuId].onmessage = (e) => { //Jeżeli któryś worker.js skończył
+
+                   if (!solutionFound) { //Jeżeli żaden inny nie znalazł rozwiązania
+
                        const rpnCode = e.data; // This is the solution from the worker
-                       console.log(`Solution found by worker ${cpuId}:`, rpnCode);
+                       //console.log(`Search finished by worker ${cpuId}:`, rpnCode);
+                       const rpnExpression = rpnCode.split(", ").slice(0,-1);
+                       const searchOutcome = rpnCode.split(", ")[rpnExpression.length];
+                       //console.log(searchOutcome,solutionFound);
+                       if(searchOutcome=="SUCCESS"){ 
+                           solutionFound=true;
+                           console.log(`Search succedeed by worker ${cpuId}:`, rpnCode);
+                           // Optionally, terminate all workers now that a solution is found
+                           workers.forEach(w => w.terminate());
+                       }
+                       if(searchOutcome=="FAILURE"){ 
+                           //solutionFound=false;
+                           failedResults[cpuId] = rpnExpression; 
+                           console.log(`Search finished by worker ${cpuId} but failed:`, rpnCode);
+                           // Optionally, terminate all workers now that a solution is found
+                           
+                       }
+                       //console.log(searchOutcome,solutionFound);
+                       
 	           
-                       // Optionally, terminate all workers now that a solution is found
-                       workers.forEach(w => w.terminate());
+                       
                        
                        // Process the solution as needed
 
                        resultDiv.textContent = rpnCode;
                        
-                       const rpnExpression = rpnCode.split(", ").slice(0,-1)
+                       
                        var infixExpression = rpnToInfix(rpnExpression); // Function converting RPN to infix (standard math)
                        var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
                        resultSpan.innerText = ` ${simplifiedExpression}`;
@@ -165,6 +205,6 @@
   </script>
 
 
-<p> UPDATED: 2024-02-08 12:59 </p>
+<p> UPDATED: 2024-02-19 12:02 </p>
 </body>
 </html>
