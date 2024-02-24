@@ -26,7 +26,7 @@
 
 
   <p>
-  <button onclick="calculate()">Identify constant</button> <span id="timing"></span>
+  <button id="calculateButton" onclick="calculate()">Identify constant</button> <span id="timing"></span>
   </p>
 
   <p>
@@ -73,15 +73,28 @@
   <script src="RPN_interpreter.js"></script>
   <script src="RPN_to_Mma_interpreter.js"></script>
   <script>
+
     const input = document.getElementById('numberInput');
     const resultDiv = document.getElementById('resultRPN');
     const resultSpan = document.getElementById('resultInfix');
     const resultMma = document.getElementById('resultMathematica');
 
 
+    function clearResults() {
+      
+      console.log("Starting clearing");
+      // Clear previous results
+           input.value  = " ";
+       resultDiv.innerText  = " ";
+      resultSpan.innerText  = " ";
+       resultMma.innerText  = " ";
+     console.log("Finished clearing");
+    }
 
     // Define the calculate function that calls the WebAssembly function
     function calculate() {
+
+      resultSpan.innerText = "Computing..."; // This replaces the content of resultInfix with the text
 
       // Capture start time
       var startTime = new Date();
@@ -89,11 +102,15 @@
       const z = parseFloat(input.value);
       const MaxCodeLength = parseInt(document.getElementById('searchDepth').value, 10);
 
+
+
+
       // Use ccall to call the WebAssembly function
       
       //const rpnCode = Module.ccall('search_RPN', 'string', ['number'], [z]);
       const rpnCode = Module.ccall('search_RPN', 'string', ['number', 'number','number', 'number'], [z, MaxCodeLength,0,1]);
-       
+      //rpnCode = "EULER, FAILURE";
+
       resultDiv.innerText = ` ${rpnCode}`;
 
       // Capture end time
@@ -105,20 +122,21 @@
 
 
       const rpnExpression = rpnCode.split(", ").slice(0,-1)
-      var infixExpression = rpnToInfix(rpnExpression); // Assuming this is your function converting RPN to infix
+      var infixExpression = rpnToInfix(rpnExpression); // Function converting RPN to infix
       var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
       resultSpan.innerText = ` ${simplifiedExpression}`;
-      infixExpression = rpnToMma(rpnExpression); // Assuming this is your function converting RPN to infix
+      infixExpression = rpnToMma(rpnExpression); // Function converting RPN to Mathematica
       simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
       resultMma.innerText = ` ${simplifiedExpression}`;
 
       document.getElementById('timing').innerText = timeTaken/1000 + " sec"
 
       //console.log(simplifiedExpression);
+
     }
   </script>
 
 
-<p> UPDATED: 2024-02-08 15:57 </p>
+<p> UPDATED: 2024-02-24 12:56 </p>
 </body>
 </html>
