@@ -82,4 +82,13 @@ echo "Log files combined into sorted $output_file"
 echo "Search finished at $(date '+%Y-%m-%d %H:%M')."
 echo "Total elapsed time: $ELAPSED_TIME seconds."
 echo "$RESULT_MESSAGE"
+
+# Check if 'js' command is available
+if command -v js &> /dev/null; then
+    echo "Parsing RPN codes to Mathematica..."
+    ./RPN_to_Mma_batch.sh "$output_file"
+else
+    echo "'js' command (JavaScript) could not be found. Unable to parse RPN to Mathematica. Proceeding without parsing."
+fi
+
 exit 0
