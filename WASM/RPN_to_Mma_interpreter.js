@@ -14,7 +14,8 @@ const namedConstantsMma = {
  "PI"    : "Pi",
  "EULER" : "E",
  "GOLDENRATIO": "GoldenRatio",
- "EULERGAMMA": "EulerGamma"
+ "EULERGAMMA": "EulerGamma",
+ "TWOZEROTWOFOUR": "2024"
 }
 
 
