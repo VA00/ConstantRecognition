@@ -53,7 +53,7 @@ fi
 
 
 # Define the output file
-output_file="search_combined_log.txt"
+output_file="search_combined_log_$(date +%F).txt"
 > "$output_file"
 
 # Counter to keep track of the first file
