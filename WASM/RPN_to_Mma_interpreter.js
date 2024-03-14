@@ -40,10 +40,14 @@ const namedFunctionsMma = {
 // Define a mapping for unnamed functions to Mathematica equivalents or expressions
 const unnamedFunctionsMma = {
     //"SQR": (x) => "Power[" + x + ", 2]",  // Converts to Power[x,2] which is x^2
-    "SQR": (x) => "(" + x + ")^2",  // Converts directly to(x)^2
+    "SQR":   (x) => "(" + x + ")^2",  // Converts directly to(x)^2
     //"INV": (x) => "Power[" + x + ", -1]"  // Converts to Power[x,-1] which is 1/x
-    "INV": (x) => "1/(" + x + ")",  // Converts directly to 1/x
-    "MINUS": (x) => "(-" + x + ")" // Converts directly to -x
+    "INV":   (x) => "1/(" + x + ")",  // Converts directly to 1/x
+    "MINUS": (x) => "(-" + x + ")", // Converts directly to -x
+    "HALF":  (x) => "(" + x + "/2)",
+    "DBL":   (x) => "(2*" + x + ")",
+    "PRE":   (x) => "(" + x + "-1)",
+    "SUC":   (x) => "(" + x + "+1)"
 };
 
 const namedOperatorsMma = {
