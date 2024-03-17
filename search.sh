@@ -13,7 +13,7 @@ K="${2:-7}"
 #NCPUS=$(nproc --all)
 # getconf work on both Linux and Mac
 NCPUS=$(getconf _NPROCESSORS_ONLN)
-#NCPUS=12 
+#NCPUS=7
 
 
 

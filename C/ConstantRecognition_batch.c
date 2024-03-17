@@ -14,6 +14,7 @@
 #include "utils.h"
 #include <time.h>
 
+
 /*
 #ifdef USE_COMPLEX
   #define NUM_TYPE double complex
@@ -74,7 +75,7 @@
   #define ERR_TYPE double
   #define MAX_NUMBER DBL_MAX
   #define ABS cabs
-  #define CONSTANT cconstantf
+  #define CONSTANT cconstant
   #define EPSILON DBL_EPSILON
   #define ONE 1.0
   #define IS_NAN isnan
@@ -155,7 +156,11 @@ int main(int argc, char** argv)
   //printf("DEBUG: cpu_id = %d\n", cpu_id);
   //printf("DEBUG: ncpus  = %d\n", ncpus);
   //printf("DEBUG: K  = %d\n", MaxCodeLength);
-  
+  srand(cpu_id);
+  unsigned long long int miliard = 1000000000ULL; 
+  unsigned long long int found_check_period = miliard + ( (unsigned long long int) rand() );
+  //printf("DEBUG: check period = %llu\n", found_check_period);
+  //printf("DEBUG: RAND_MAX = %d\n", RAND_MAX);
 
   best  = MAX_NUMBER;
   
@@ -163,17 +168,11 @@ int main(int argc, char** argv)
   for(K=1;K<=MaxCodeLength;K++){
     kMAX=ipow(INSTR_NUM,K);
     for(k=cpu_id;k<kMAX;k=k+ncpus)
+    {		
+	j=j+ncpus;
     
-// LOOP UNROLL  j -> K, k
- // int jMAX=(ipow(INSTR_NUM,MaxCodeLength)-1)*INSTR_NUM/(INSTR_NUM-1); 
- // for(j=cpu_id;j<=jMAX;j=j+ncpus) //This is BUG: max j should include all previous code length searches!
-  {		
-	j=j+ncpus; //if(j>ipow(INSTR_NUM,MaxCodeLength)) break;
-
-	
-	//if(k1%(ipow(10,6))==0){ //co 10^6 sprawdza plik, czy inne zadanie nie znalazlo wzoru
-      if( k1 != 0 && k1 % 1000000 == 0 ){ //Op. order %, !=/==, &&
-
+      if(  ((j-cpu_id)/ncpus) % (found_check_period) == 0 ){ //Op. order %, !=/==, &&
+          //printf("DEBUG: checking flagfile from thread %d at j=%llu\n",cpu_id,j);  
           flagfile = fopen("found.txt","r");
           if (flagfile == NULL){ // Handle the case where the file doesn't exist or couldn't be opened
             printf("File found.txt do not exist. Thread %d exit.\n",cpu_id); 
@@ -191,14 +190,9 @@ int main(int argc, char** argv)
             exit(0); 
           }
           fclose(flagfile);
-	}
+	  }
 	
-	/* Loop unrolling j->(k,K) */
-/*
-	K = 1;
-    while( j >  (-n + ipow(n,1+K) - K + n*K)/(-1 + n) ) K++;
-k = ipow(n,K)-( (-n + ipow(n,1+K) - K + n*K)/(-1 + n)) + j;
-  */
+
     /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
     itoa(k, amino, n, K);
         
@@ -279,10 +273,10 @@ k = ipow(n,K)-( (-n + ipow(n,1+K) - K + n*K)/(-1 + n)) + j;
 	
     }
   }
-  //printf("DEBUG: j   = %llu\n", j); 
-  //printf("DEBUG: k   = %llu\n", k); 
-  //printf("DEBUG: k1  = %llu\n", k1); 
-  //printf("DEBUG: k2  = %llu\n", k2); 
+  //printf("DEBUG: from thread %d \t j   = %llu\n", cpu_id, j); 
+  //printf("DEBUG: from thread %d \t k   = %llu\n", cpu_id, k); 
+  //printf("DEBUG: from thread %d \t k1  = %llu\n", cpu_id, k1); 
+  //printf("DEBUG: from thread %d \t k2  = %llu\n", cpu_id, k2); 
  
   printf("END of search for thread %d\n\n", cpu_id);
   
