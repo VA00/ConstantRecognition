@@ -40,6 +40,16 @@
   
 
   <p>
+    Failed Results: <select id="failedResultsDropdown"></select>
+    <select id="displayFormat">
+      <option value="Mma">Mathematica</option>
+      <option value="Infix">Infix</option>
+      <option value="RPN">Native RPN</option>
+    </select>
+  </p>
+
+
+  <p>
   Search use the "standard" 36-button scientific RPN calculator. 
  </p>
   <p>
@@ -118,6 +128,7 @@
       let solutionFound = false;   
 
       const workers = [];      // Array to keep track of workers
+      let finishedWorkers = 0; // Initialize counter for finished workers
  
       for (let cpuId = 0; cpuId < ncpus; cpuId++) {
         const worker = new Worker('worker.js');
@@ -128,6 +139,9 @@
       for (let cpuId = 0; cpuId < ncpus; cpuId++) {
 
                workers[cpuId].onmessage = (e) => { //Jeżeli któryś worker.js skończył
+
+
+
 
                    if (!solutionFound) { //Jeżeli żaden inny nie znalazł rozwiązania
 
@@ -150,13 +164,8 @@
                        }
                        //console.log(searchOutcome,solutionFound);
                        
-	           
-                       
-                       
-                       // Process the solution as needed
 
                        resultDiv.textContent = rpnCode;
-                       
                        
                        var infixExpression = rpnToInfix(rpnExpression); // Function converting RPN to infix (standard math)
                        var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
@@ -173,13 +182,55 @@
                        document.getElementById('timing').innerText = timeTaken/1000 + " sec"
 
                    }
+
+                    finishedWorkers++; // Increment counter whenever a worker finishes
+                       if (finishedWorkers >= ncpus) {
+                         console.log("All workers have finished their jobs.");
+                                    // Here you can handle the case when no solutions were found
+                         const randomIndex = Math.floor(Math.random() * ncpus);
+                         resultDiv.textContent = failedResults[randomIndex];
+                         resultSpan.innerText = ` ${removeOutermostParentheses(removeRedundantParentheses(rpnToInfix(failedResults[randomIndex])))}`;
+                         resultMma.innerText = ` ${removeOutermostParentheses(removeRedundantParentheses(rpnToMma(failedResults[randomIndex])))}`;
+
+
+                         // Find the dropdown list by its ID
+                             const dropdown = document.getElementById('failedResultsDropdown');
+                             dropdown.innerHTML = ''; // Clear existing options
+                             const formatDropdown = document.getElementById('displayFormat');
+                         
+                             // Populate the dropdown with failed results
+                             failedResults.forEach((result, index) => {
+                                 // Assuming result is the value you want to display; adjust as needed
+                                 const option = document.createElement('option');
+                                 option.value = index; // Use the array index as the value, or customize as needed
+
+                                 // Decide the format based on the selected option in the format dropdown
+                                 switch (formatDropdown.value) {
+                                   case 'Mma':
+                                     option.textContent = rpnToMma(result); 
+                                     break;
+                                   case 'Infix':
+                                     option.textContent = rpnToInfix(result); 
+                                     break;
+                                   case 'RPN':
+                                     option.textContent = result; 
+                                     break;
+                                 }
+
+                                 
+                                 dropdown.appendChild(option);
+                             });
+
+
+                        }
+
                };
 
        }
 
       for (let cpuId = 0; cpuId < ncpus; cpuId++) {
         // Start the worker with a delay to initialize Module.asm
-        const initDelay = 1000*Math.random(); // Different times for demonstration
+        const initDelay = 1000*Math.random()+100; // Different times for demonstration
         //const initDelay = 0; 
         workers[cpuId].postMessage({ initDelay, z, MaxCodeLength, cpuId, ncpus });
       }
@@ -188,18 +239,12 @@
       //setTimeout(() => console.log("2 down:",rpnCode), 2000);
       //setTimeout(() => console.log("3 down:",rpnCode), 3000);
       //setTimeout(() => console.log("4 down:",rpnCode), 4000);
-
-
       //resultDiv.innerText = ` ${rpnCode}`;
-
-
-
-
       //console.log(simplifiedExpression);
     }
   </script>
 
 
-<p> UPDATED: 2024-02-19 12:02 </p>
+<p> UPDATED: 2024-04-06 17:16 </p>
 </body>
 </html>
