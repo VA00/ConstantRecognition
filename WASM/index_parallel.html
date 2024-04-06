@@ -146,7 +146,6 @@
                            //solutionFound=false;
                            failedResults[cpuId] = rpnExpression; 
                            console.log(`Search finished by worker ${cpuId} but failed:`, rpnCode);
-                           // Optionally, terminate all workers now that a solution is found
                            
                        }
                        //console.log(searchOutcome,solutionFound);
@@ -184,10 +183,6 @@
         //const initDelay = 0; 
         workers[cpuId].postMessage({ initDelay, z, MaxCodeLength, cpuId, ncpus });
       }
-
-
-      
-     
 
       //setTimeout(() => console.log("1 down:",rpnCode), 1000);
       //setTimeout(() => console.log("2 down:",rpnCode), 2000);
