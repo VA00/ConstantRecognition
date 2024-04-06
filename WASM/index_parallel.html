@@ -38,7 +38,7 @@
     <i>Mathematica</i>: <span id="resultMathematica"></span><BR>
   </p>
   
-
+<!--
   <p>
     Failed Results: <select id="failedResultsDropdown"></select>
     <select id="displayFormat">
@@ -47,6 +47,24 @@
       <option value="RPN">Native RPN</option>
     </select>
   </p>
+-->
+
+
+<h3> Failed search intermediate results </h3>
+<table id="resultsTable">
+  <thead>
+    <tr>
+      <th>CPU ID</th>
+      <th>Result</th>
+      <th>Mathematica</th>
+      <th>RPN code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Results will be inserted here -->
+  </tbody>
+</table>
+
 
 
   <p>
@@ -100,7 +118,7 @@
     const resultCPUs = document.getElementById('detectedCPUs');
     //const ncpus = 3; // Default number of workers. For good load balance, this should be prime number: 3,5,7,11,13 
     //const ncpus = navigator.hardwareConcurrency || 3; // Default to 3 if hardwareConcurrency is not available
-    const ncpus = navigator.hardwareConcurrency; 
+    const ncpus = navigator.hardwareConcurrency-1; 
     
     if(ncpus !== undefined) {
        console.log(`Detected ${ncpus} logical CPU cores.`);
@@ -112,6 +130,7 @@
     }
     
     resultCPUs.innerText = ncpus;
+    //ncpus = ncpus - 1;
 
     const failedResults = new Array(ncpus).fill("EULER"); //Array to store failed search results
 
@@ -192,7 +211,7 @@
                          resultSpan.innerText = ` ${removeOutermostParentheses(removeRedundantParentheses(rpnToInfix(failedResults[randomIndex])))}`;
                          resultMma.innerText = ` ${removeOutermostParentheses(removeRedundantParentheses(rpnToMma(failedResults[randomIndex])))}`;
 
-
+/*
                          // Find the dropdown list by its ID
                              const dropdown = document.getElementById('failedResultsDropdown');
                              dropdown.innerHTML = ''; // Clear existing options
@@ -219,6 +238,24 @@
 
                                  
                                  dropdown.appendChild(option);
+                             });
+*/
+                             // Find the table body by its ID
+                             const tableBody = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+                             tableBody.innerHTML = ''; // Clear existing rows
+	                         
+                             // Populate the table with failed results
+                             failedResults.forEach((result, index) => {
+                                 const row = tableBody.insertRow();
+                                 const cell0 = row.insertCell(0);
+                                 const cell1 = row.insertCell(1);
+                                 const cell2 = row.insertCell(2);
+                                 const cell3 = row.insertCell(3);
+	                         
+                                 cell0.textContent = `${index}`;
+                                 cell1.textContent = rpnToInfix(result); // Convert result to a string if necessary, adjust for format
+                                 cell2.textContent = rpnToMma(result); // Convert result to a string if necessary, adjust for format
+                                 cell3.textContent = result; 
                              });
 
 
