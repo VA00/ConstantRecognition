@@ -125,9 +125,11 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   for(K=1;K<=MaxCodeLength;K++)
   {
     kMAX=ipow(INSTR_NUM,K);
-    chunk_size = (kMAX/ncpus)+0;
+    chunk_size = (kMAX/ncpus)+0ULL;
     start=cpu_id*chunk_size;
     end = (cpu_id == ncpus-1) ? kMAX : start+chunk_size-1;
+
+    //printf("K=%d,\tkMAX=%llu,\tchunk_size=%llu, start=%llu, end=%llu\n",K,kMAX,chunk_size, start,end);
 
     for(k=start;k<end;k++)
     //for(k=cpu_id;k<kMAX;k=k+ncpus)
@@ -165,6 +167,15 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
        
 	  
     }
+    if((k1<=12ULL) && (j>1000000ULL) && (K>4) ) //Early exit if basically NOTHING was found so far; Further search seems pointless. Used values are for 36-button CALC4
+    {
+      itoa(k_best, amino, n, K_best);
+      print_code_mathematica(amino,K_best,RPN_full_Code);
+      strcat(RPN_full_Code, ", FAILURE");
+      //printf("\nk1=%llu\tj=%llu\n",k1,j);
+      return RPN_full_Code;
+    }
+
   }
 
   /* WARNING: it is possible for search to find NOTHING! 
@@ -174,6 +185,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   itoa(k_best, amino, n, K_best);
   print_code_mathematica(amino,K_best,RPN_full_Code);
   strcat(RPN_full_Code, ", FAILURE");
+  //printf("\nk1=%llu\tj=%llu\n",k1,j);
 
   return RPN_full_Code;
 
