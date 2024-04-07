@@ -148,6 +148,10 @@
 
       const workers = [];      // Array to keep track of workers
       let finishedWorkers = 0; // Initialize counter for finished workers
+
+      // Find the table body by its ID
+      const tableBody = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = ''; // Clear existing rows
  
       for (let cpuId = 0; cpuId < ncpus; cpuId++) {
         const worker = new Worker('worker.js');
@@ -248,9 +252,7 @@
                                  dropdown.appendChild(option);
                              });
 */
-                             // Find the table body by its ID
-                             const tableBody = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
-                             tableBody.innerHTML = ''; // Clear existing rows
+
 	                         
                              // Populate the table with failed results
                              failedResults.forEach((result, index) => {
