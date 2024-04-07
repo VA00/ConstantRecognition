@@ -97,7 +97,9 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 
   // Allocate memory for the output string
   char* RPN_full_Code = (char*)malloc(32*16 * sizeof(char));
-  if (RPN_full_Code == NULL) return "Error allocating memory";
+  char* JSON_output =  (char*)malloc(2048 * sizeof(char));
+
+  if( (RPN_full_Code == NULL) || (JSON_output == NULL) ) return "Error allocating memory";
   
   unsigned long long int j, k, k_best=0, k1=0, k2=0,kMAX,chunk_size,start,end;
   
@@ -161,8 +163,10 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 	   {
 	    itoa(k_best, amino, n, K_best);
         print_code_mathematica(amino,K_best,RPN_full_Code);
-        strcat(RPN_full_Code, ", SUCCESS");
-        return RPN_full_Code;
+        //strcat(RPN_full_Code, ", SUCCESS");
+        sprintf(JSON_output, "{\"result\":\"SUCCESS\", \"RPN\":\"%s\"}",RPN_full_Code);
+
+        return JSON_output;
        }
        
 	  
@@ -171,9 +175,10 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
     {
       itoa(k_best, amino, n, K_best);
       print_code_mathematica(amino,K_best,RPN_full_Code);
-      strcat(RPN_full_Code, ", FAILURE");
+      //strcat(RPN_full_Code, ", FAILURE");
       //printf("\nk1=%llu\tj=%llu\n",k1,j);
-      return RPN_full_Code;
+      sprintf(JSON_output, "{\"result\":\"ABORTED\", \"RPN\":\"%s\"}",RPN_full_Code);
+      return JSON_output;
     }
 
   }
@@ -184,9 +189,10 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   
   itoa(k_best, amino, n, K_best);
   print_code_mathematica(amino,K_best,RPN_full_Code);
-  strcat(RPN_full_Code, ", FAILURE");
+  //strcat(RPN_full_Code, ", FAILURE");
   //printf("\nk1=%llu\tj=%llu\n",k1,j);
+  sprintf(JSON_output, "{\"result\":\"FAILURE\", \"RPN\":\"%s\"}",RPN_full_Code);
 
-  return RPN_full_Code;
+  return JSON_output;
 
 }

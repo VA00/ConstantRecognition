@@ -160,14 +160,16 @@
                workers[cpuId].onmessage = (e) => { //Jeżeli któryś worker.js skończył
 
 
-
+                   //console.log("Message e:", e);
 
                    if (!solutionFound) { //Jeżeli żaden inny nie znalazł rozwiązania
-
-                       const rpnCode = e.data; // This is the solution from the worker
-                       //console.log(`Search finished by worker ${cpuId}:`, rpnCode);
-                       const rpnExpression = rpnCode.split(", ").slice(0,-1);
-                       const searchOutcome = rpnCode.split(", ")[rpnExpression.length];
+                       
+                       const messageJSON = JSON.parse(e.data);
+                       const rpnCode = messageJSON.RPN;// This is the solution from the worker
+                       console.log(`Search finished by worker ${cpuId}:`, rpnCode);
+                       const rpnExpression = rpnCode.split(", ");//.slice(0,-1);
+                       //const searchOutcome = rpnCode.split(", ")[rpnExpression.length];
+                       const searchOutcome = messageJSON.result;;
                        //console.log(searchOutcome,solutionFound);
                        if(searchOutcome=="SUCCESS"){ 
                            solutionFound=true;
@@ -181,10 +183,16 @@
                            console.log(`Search finished by worker ${cpuId} but failed:`, rpnCode);
                            
                        }
+                       if(searchOutcome=="ABORTED"){ 
+                           //solutionFound=false;
+                           failedResults[cpuId] = rpnExpression; 
+                           console.log(`Search by worker ${cpuId} terminated:`, rpnCode);
+                           
+                       }
                        //console.log(searchOutcome,solutionFound);
                        
 
-                       resultDiv.textContent = rpnCode;
+                       resultDiv.textContent = ` ${rpnCode}`;
                        
                        var infixExpression = rpnToInfix(rpnExpression); // Function converting RPN to infix (standard math)
                        var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));

@@ -108,7 +108,11 @@
       // Use ccall to call the WebAssembly function
       
       //const rpnCode = Module.ccall('search_RPN', 'string', ['number'], [z]);
-      const rpnCode = Module.ccall('search_RPN', 'string', ['number', 'number','number', 'number'], [z, MaxCodeLength,0,1]);
+      //const rpnCode = Module.ccall('search_RPN', 'string', ['number', 'number','number', 'number'], [z, MaxCodeLength,0,1]);
+      const result = JSON.parse( Module.ccall('search_RPN', 'string', ['number', 'number','number', 'number'], [z, MaxCodeLength,0,1]) );
+      const rpnCode = result.RPN;
+      console.log(result);
+      console.log(rpnCode);
       //rpnCode = "EULER, FAILURE";
 
       resultDiv.innerText = ` ${rpnCode}`;
@@ -121,7 +125,8 @@
 
 
 
-      const rpnExpression = rpnCode.split(", ").slice(0,-1)
+      //const rpnExpression = rpnCode.split(", ").slice(0,-1);
+      const rpnExpression = rpnCode.split(", ");
       var infixExpression = rpnToInfix(rpnExpression); // Function converting RPN to infix
       var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
       resultSpan.innerText = ` ${simplifiedExpression}`;
@@ -137,6 +142,6 @@
   </script>
 
 
-<p> UPDATED: 2024-02-24 12:56 </p>
+<p> UPDATED: 2024-04-07 08:29 </p>
 </body>
 </html>

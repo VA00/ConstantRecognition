@@ -20,10 +20,10 @@ onmessage = async function(e) {
     const { initDelay, z, MaxCodeLength, cpuId, ncpus } = e.data;
     //console.log(`Worker (worker.js) ${cpuId} of ${ncpus} starting work for z=${z}, MaxCodeLength=${MaxCodeLength}`);
     const resultString = await doWork(initDelay, z, MaxCodeLength, cpuId, ncpus);
-    const resultArray = resultString.split(", ");
-    
+    //const resultArray = resultString.split(", ");
+    const resultJSON = JSON.parse(resultString);
     //console.log(`Worker (worker.js) ${cpuId} finished work with result ${resultString}`);
     //console.log(resultArray[resultArray.length-1]);
 
-    postMessage(`${resultString}`);
+    postMessage(resultJSON);
 };
