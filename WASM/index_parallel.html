@@ -58,6 +58,7 @@
       <th>Result</th>
       <th>Mathematica</th>
       <th>RPN code</th>
+      <th>Search status</th>
     </tr>
   </thead>
   <tbody>
@@ -133,6 +134,7 @@
     //ncpus = ncpus - 1;
 
     const failedResults = new Array(ncpus).fill("EULER"); //Array to store failed search results
+    const searchStatus  = new Array(ncpus).fill("RUNNING"); //Array to store failed search results
 
     //console.log(rpnCode);
 
@@ -174,7 +176,8 @@
                        console.log(`Search finished by worker ${cpuId}:`, rpnCode);
                        const rpnExpression = rpnCode.split(", ");//.slice(0,-1);
                        //const searchOutcome = rpnCode.split(", ")[rpnExpression.length];
-                       const searchOutcome = messageJSON.result;;
+                       const searchOutcome = messageJSON.result;
+                       searchStatus[cpuId] = searchOutcome;
                        //console.log(searchOutcome,solutionFound);
                        if(searchOutcome=="SUCCESS"){ 
                            solutionFound=true;
@@ -224,36 +227,6 @@
                          resultSpan.innerText = ` ${removeOutermostParentheses(removeRedundantParentheses(rpnToInfix(failedResults[randomIndex])))}`;
                          resultMma.innerText = ` ${removeOutermostParentheses(removeRedundantParentheses(rpnToMma(failedResults[randomIndex])))}`;
 
-/*
-                         // Find the dropdown list by its ID
-                             const dropdown = document.getElementById('failedResultsDropdown');
-                             dropdown.innerHTML = ''; // Clear existing options
-                             const formatDropdown = document.getElementById('displayFormat');
-                         
-                             // Populate the dropdown with failed results
-                             failedResults.forEach((result, index) => {
-                                 // Assuming result is the value you want to display; adjust as needed
-                                 const option = document.createElement('option');
-                                 option.value = index; // Use the array index as the value, or customize as needed
-
-                                 // Decide the format based on the selected option in the format dropdown
-                                 switch (formatDropdown.value) {
-                                   case 'Mma':
-                                     option.textContent = rpnToMma(result); 
-                                     break;
-                                   case 'Infix':
-                                     option.textContent = rpnToInfix(result); 
-                                     break;
-                                   case 'RPN':
-                                     option.textContent = result; 
-                                     break;
-                                 }
-
-                                 
-                                 dropdown.appendChild(option);
-                             });
-*/
-
 	                         
                              // Populate the table with failed results
                              failedResults.forEach((result, index) => {
@@ -262,11 +235,13 @@
                                  const cell1 = row.insertCell(1);
                                  const cell2 = row.insertCell(2);
                                  const cell3 = row.insertCell(3);
+                                 const cell4 = row.insertCell(4);
 	                         
                                  cell0.textContent = `${index}`;
                                  cell1.textContent = rpnToInfix(result); // Convert result to a string if necessary, adjust for format
                                  cell2.textContent = rpnToMma(result); // Convert result to a string if necessary, adjust for format
                                  cell3.textContent = result; 
+                                 cell4.textContent = searchStatus[index]; 
                              });
 
 
