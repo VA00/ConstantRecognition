@@ -136,7 +136,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
     for(k=start;k<end;k++)
     //for(k=cpu_id;k<kMAX;k=k+ncpus)
     {		
-      if(k==start) itoa(start, amino, n, K); else itoa_update(k, amino, n, K);
+      if(k==start) itoa(start, amino, n, K); else itoa_update(amino, n, K);
       //j=j+ncpus;
       j=j+1;
       /* Convert number 'k' into string 'amino' in base-n number of length 'K' including leading zeros */
@@ -169,7 +169,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
         return JSON_output;
        }
        
-	  
+
     }
     if((k1<=12ULL) && (j>1000000ULL) && (K>4) ) //Early exit if basically NOTHING was found so far; Further search seems pointless. Used values are for 36-button CALC4
     {

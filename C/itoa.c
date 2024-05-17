@@ -63,7 +63,8 @@ void itoaFAST(unsigned int value, char* str, unsigned const int base, unsigned c
 	
 }
 
-void itoa_update(unsigned long long int value, char *str, const int base, const int padding) {
+
+void itoa_update(char *str, const int base, const int padding) {
 	
 
   for(int i=0;i<padding;i++)
@@ -83,5 +84,7 @@ void itoa_update(unsigned long long int value, char *str, const int base, const 
   }
   
 }
+
+
 
 
