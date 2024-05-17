@@ -164,11 +164,12 @@
                workers[cpuId].onmessage = (e) => { //Jeżeli któryś worker.js skończył
 
 
-                   //console.log("Message e:", e);
+                   console.log("Message e:", e.data);
 
                    if (!solutionFound) { //Jeżeli żaden inny nie znalazł rozwiązania
                        
-                       const messageJSON = JSON.parse(e.data);
+                       //const messageJSON = JSON.parse(e.data);
+                       const messageJSON = e.data;
                        const rpnCode = messageJSON.RPN;// This is the solution from the worker
                        console.log(`Search finished by worker ${cpuId}:`, rpnCode);
                        const rpnExpression = rpnCode.split(", ");//.slice(0,-1);
