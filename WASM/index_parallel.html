@@ -1,273 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>EXPERIMENTAL parallel WASM RPN Inverse Calculator</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="rpn.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constant Recognizer (Parallel)</title>
+    <link rel="stylesheet" href="rpn.css">
 </head>
 <body>
+    <h1 id="constant-recognizer-experimental" class="title">Constant Recognizer (experimental)</h1>
 
-<h1 class="title"> Constant Recognizer (experimental) </h1>
+    <p>Detected <span id="detectedCPUs"></span> logical CPU's.</p>
 
-  <p>
-  Detected <span id="detectedCPUs"></span> logical CPU's.
-  </p>
+    <p>Enter the number to identify or approximate:</p>
+    <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.036">
+    = <span id="resultInfix"></span>
 
-  <p>
-   Enter the number to identify or approximate:
-  </p>
-  <p>
-  <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.036">
-  = <span id="resultInfix"></span>
-  </p>
+    <p>
+        <label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator.">
+            Max Code Length: <span id="searchDepthValue">6</span>
+        </label>
+        <input id="searchDepth" type="range" value="6" min="2" max="9" step="1">
+    </p>
 
+    <button id="calculateButton">Identify constant <span id="timing"></span></button>
 
-<label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator."> Max Code Length: <span id="searchDepthValue">6</span></label>
-<input id="searchDepth" type="range" value="6" min="2" max="9" step="1" oninput="updateSearchDepthValue(this.value)">
+    <p><strong>RPN:</strong> <span id="resultRPN"></span></p>
+    <p><em>Mathematica:</em> <span id="resultMathematica"></span></p>
 
+    <h3>Failed search intermediate results</h3>
+    <table id="resultsTable">
+        <tr>
+            <th>CPU ID</th>
+            <th>Result</th>
+            <th>Mathematica</th>
+            <th>RPN code</th>
+            <th>Search status</th>
+        </tr>
+    </table>
 
-
-
-  <p>
-  <button onclick="calculate()">Identify constant</button> <span id="timing"></span>
-  </p>
-
-  <p>
-    <b>RPN</b>: <span id="resultRPN"></span><BR>
-    <i>Mathematica</i>: <span id="resultMathematica"></span><BR>
-  </p>
-  
-<!--
-  <p>
-    Failed Results: <select id="failedResultsDropdown"></select>
-    <select id="displayFormat">
-      <option value="Mma">Mathematica</option>
-      <option value="Infix">Infix</option>
-      <option value="RPN">Native RPN</option>
-    </select>
-  </p>
--->
-
-
-<h3> Failed search intermediate results </h3>
-<table id="resultsTable">
-  <thead>
-    <tr>
-      <th>CPU ID</th>
-      <th>Result</th>
-      <th>Mathematica</th>
-      <th>RPN code</th>
-      <th>Search status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Results will be inserted here -->
-  </tbody>
-</table>
-
-
-
-  <p>
-  Search use the "standard" 36-button scientific RPN calculator. 
- </p>
-  <p>
-  <IMG width=600px src="CALC4.png"> 
-  </p>
- 
-  <p>
-  Enter any real number to find out, if some sequence of the above buttons could re-discover it.
-  Use floating-point format, e.g:
-  <UL>
-   <LI> 1e3
-   <LI> 0.22222222222
-   <LI> 137
-   <LI> -0.0833333333333
-  </UL> 
-  </p>
-  
-  
-<h1> NOTE </h1>
-  <p>
-  User now can use slider to change default code length of 5, with runtime of roughly 1 second. 
-  Every step up increase search time 36x, so be patient. 
-  Search is performed using single thread and real numbers. 
-  To use longer sequences, custom calculators, complex numbers, recognition of functions and massively 
-  multi-threaded search, see <a href="https://github.com/VA00/ConstantRecognition"> native C code on GitHub </a>
-  or contact author at andrzej.odrzywolek@uj.edu.pl. <B> ENJOY! </B> 
-  </p>
-
-  <script>
-  function updateSearchDepthValue(value) {
-      document.getElementById('searchDepthValue').innerText = value;
-  }
-  </script>
-  <script src="rpn_function.js"></script>
-  <script src="RPN_interpreter.js"></script>
-  <script src="RPN_to_Mma_interpreter.js"></script>
-  <!-- <script src="worker.js"> </script> -->
-  <script>
-
-    //Module={};
-    const input = document.getElementById('numberInput');
-    const resultDiv = document.getElementById('resultRPN');
-    const resultSpan = document.getElementById('resultInfix');
-    const resultMma = document.getElementById('resultMathematica');
-    const rpnCode="EULER";
-    const rpnExpression = ["EULER"];
-    
-    const resultCPUs = document.getElementById('detectedCPUs');
-    //const ncpus = 3; // Default number of workers. For good load balance, this should be prime number: 3,5,7,11,13 
-    //const ncpus = navigator.hardwareConcurrency || 3; // Default to 3 if hardwareConcurrency is not available
-    const ncpus = navigator.hardwareConcurrency-1; 
-    
-    if(ncpus !== undefined) {
-       console.log(`Detected ${ncpus} logical CPU cores.`);
-    }
-    else
-    {
-       ncpus=5;
-       console.log(`Unable to detect logical CPU cores. Using ncpus=${ncpus}`);
-    }
-    
-    resultCPUs.innerText = ncpus;
-    //ncpus = ncpus - 1;
-
-    const failedResults = new Array(ncpus).fill("EULER"); //Array to store failed search results
-    const searchStatus  = new Array(ncpus).fill("RUNNING"); //Array to store failed search results
-
-    //console.log(rpnCode);
-
-    // Define the calculate function that calls the WebAssembly function
-    function calculate() {
-
-      var startTime = new Date(); // Capture start time
-
-      const z = parseFloat(input.value);
-      const MaxCodeLength = parseInt(document.getElementById('searchDepth').value, 10);
-      //const cpuId = 1;
-      let solutionFound = false;   
-
-      const workers = [];      // Array to keep track of workers
-      let finishedWorkers = 0; // Initialize counter for finished workers
-
-      // Find the table body by its ID
-      const tableBody = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
-      tableBody.innerHTML = ''; // Clear existing rows
- 
-      for (let cpuId = 0; cpuId < ncpus; cpuId++) {
-        const worker = new Worker('worker.js');
-        workers.push(worker);
-      }
-
-
-      for (let cpuId = 0; cpuId < ncpus; cpuId++) {
-
-               workers[cpuId].onmessage = (e) => { //Jeżeli któryś worker.js skończył
-
-
-                   console.log("Message e:", e.data);
-
-                   if (!solutionFound) { //Jeżeli żaden inny nie znalazł rozwiązania
-                       
-                       //const messageJSON = JSON.parse(e.data);
-                       const messageJSON = e.data;
-                       const rpnCode = messageJSON.RPN;// This is the solution from the worker
-                       console.log(`Search finished by worker ${cpuId}:`, rpnCode);
-                       const rpnExpression = rpnCode.split(", ");//.slice(0,-1);
-                       //const searchOutcome = rpnCode.split(", ")[rpnExpression.length];
-                       const searchOutcome = messageJSON.result;
-                       searchStatus[cpuId] = searchOutcome;
-                       //console.log(searchOutcome,solutionFound);
-                       if(searchOutcome=="SUCCESS"){ 
-                           solutionFound=true;
-                           console.log(`Search succedeed by worker ${cpuId}:`, rpnCode);
-                           // Optionally, terminate all workers now that a solution is found
-                           workers.forEach(w => w.terminate());
-                       }
-                       if(searchOutcome=="FAILURE"){ 
-                           //solutionFound=false;
-                           failedResults[cpuId] = rpnExpression; 
-                           console.log(`Search finished by worker ${cpuId} but failed:`, rpnCode);
-                           
-                       }
-                       if(searchOutcome=="ABORTED"){ 
-                           //solutionFound=false;
-                           failedResults[cpuId] = rpnExpression; 
-                           console.log(`Search by worker ${cpuId} terminated:`, rpnCode);
-                           
-                       }
-                       //console.log(searchOutcome,solutionFound);
-                       
-
-                       resultDiv.textContent = ` ${rpnCode}`;
-                       
-                       var infixExpression = rpnToInfix(rpnExpression); // Function converting RPN to infix (standard math)
-                       var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
-                       resultSpan.innerText = ` ${simplifiedExpression}`;
-                       infixExpression = rpnToMma(rpnExpression); // Function converting RPN to Mathematica
-                       simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
-                       resultMma.innerText = ` ${simplifiedExpression}`;
-	                   
-                       // Capture end time
-                       var endTime = new Date();
-	                   
-                       // Calculate the difference in milliseconds
-                       var timeTaken = endTime - startTime;
-                       document.getElementById('timing').innerText = timeTaken/1000 + " sec"
-
-                   }
-
-                    finishedWorkers++; // Increment counter whenever a worker finishes
-                       if (finishedWorkers >= ncpus) {
-                         console.log("All workers have finished their jobs.");
-                                    // Here you can handle the case when no solutions were found
-                         const randomIndex = Math.floor(Math.random() * ncpus);
-                         resultDiv.textContent = failedResults[randomIndex];
-                         resultSpan.innerText = ` ${removeOutermostParentheses(removeRedundantParentheses(rpnToInfix(failedResults[randomIndex])))}`;
-                         resultMma.innerText = ` ${removeOutermostParentheses(removeRedundantParentheses(rpnToMma(failedResults[randomIndex])))}`;
-
-	                         
-                             // Populate the table with failed results
-                             failedResults.forEach((result, index) => {
-                                 const row = tableBody.insertRow();
-                                 const cell0 = row.insertCell(0);
-                                 const cell1 = row.insertCell(1);
-                                 const cell2 = row.insertCell(2);
-                                 const cell3 = row.insertCell(3);
-                                 const cell4 = row.insertCell(4);
-	                         
-                                 cell0.textContent = `${index}`;
-                                 cell1.textContent = rpnToInfix(result); // Convert result to a string if necessary, adjust for format
-                                 cell2.textContent = rpnToMma(result); // Convert result to a string if necessary, adjust for format
-                                 cell3.textContent = result; 
-                                 cell4.textContent = searchStatus[index]; 
-                             });
-
-
-                        }
-
-               };
-
-       }
-
-      for (let cpuId = 0; cpuId < ncpus; cpuId++) {
-        // Start the worker with a delay to initialize Module.asm
-        const initDelay = 1000*Math.random()+100; // Different times for demonstration
-        //const initDelay = 0; 
-        workers[cpuId].postMessage({ initDelay, z, MaxCodeLength, cpuId, ncpus });
-      }
-
-      //setTimeout(() => console.log("1 down:",rpnCode), 1000);
-      //setTimeout(() => console.log("2 down:",rpnCode), 2000);
-      //setTimeout(() => console.log("3 down:",rpnCode), 3000);
-      //setTimeout(() => console.log("4 down:",rpnCode), 4000);
-      //resultDiv.innerText = ` ${rpnCode}`;
-      //console.log(simplifiedExpression);
-    }
-  </script>
-
-
-<p> UPDATED: 2024-04-06 17:16 </p>
+    <!-- Load your main JavaScript module -->
+    <script type="module" src="main_parallel.js"></script>
 </body>
 </html>
