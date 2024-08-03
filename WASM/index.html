@@ -8,40 +8,58 @@
 </head>
 <body>
 
+
 <h1 class="title"> Constant Recognizer </h1>
 
   <p>
-   Enter the number to identify or approximate:
+   Enter <B>ANY</b> numeric in the first box to identify or approximate.
   </p>
+ 
+   <p>
+     <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.035999...">
+     = <input id="resultInfix" type="text" readonly placeholder="sqrt(137^2+pi^2)">
+     = <input id="resultNumeric" type="text" readonly placeholder="137.036...">
+   </p>
+
+
+    <label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator.">
+        Max Code Length: <span id="searchDepthValue">5</span>
+    </label>
+    <input id="searchDepth" type="range" value="5" min="2" max="9" step="1">
+
+
+
   <p>
-  <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.036">
-  = <span id="resultInfix"></span>
+  <button id="calculateButton">Identify constant</button>
   </p>
 
-
-<label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator."> Max Code Length: <span id="searchDepthValue">5</span></label>
-<input id="searchDepth" type="range" value="5" min="2" max="9" step="1" oninput="updateSearchDepthValue(this.value)">
-
-
-
-
-  <p>
-  <button id="calculateButton" onclick="calculate()">Identify constant</button> <span id="timing"></span>
-  </p>
+  <p>Time taken: <span id="timing"></span></p>
 
   <p>
     <b>RPN</b>: <span id="resultRPN"></span><BR>
     <i>Mathematica</i>: <span id="resultMathematica"></span><BR>
   </p>
   
+  <p> Try: mathematical constants, elementary numbers, physical constants, dates, phone numbers etc. </p>
+
+<h1> How it works? </h1>
+
 
   <p>
-  Search use the "standard" 36-button scientific RPN calculator. 
+  Search use the "standard" 36-button scientific RPN calculator. Usually, you enter formula, and get result. Here it works 
+  in opposite way:  you enter result, and formula comes out. 
  </p>
   <p>
   <IMG width=600px src="CALC4.png"> 
   </p>
  
+  <p> 
+   Imagine famous gedeanken experiment by Stanisław Lem, where room full of apes (or penguins) is randomly pressing all possible button 
+   combinations until desired result is found. Only, the calculator is not real, but virtual, there are no apes, but CPU's, and order is not random,
+   but sequential, with progressively increased sequence length. 
+  </p>
+
+
   <p>
   Enter any real number to find out, if some sequence of the above buttons could re-discover it.
   Use floating-point format, e.g:
@@ -50,6 +68,8 @@
    <LI> 0.22222222222
    <LI> 137
    <LI> -0.0833333333333
+   <LI> 1234 
+   <LI> 1111
   </UL> 
   </p>
   
@@ -64,84 +84,33 @@
   or contact author at andrzej.odrzywolek@uj.edu.pl. <B> ENJOY! </B> 
   </p>
 
-  <script>
-  function updateSearchDepthValue(value) {
-      document.getElementById('searchDepthValue').innerText = value;
-  }
-  </script>
-  <script src="rpn_function.js"></script>
-  <script src="RPN_interpreter.js"></script>
-  <script src="RPN_to_Mma_interpreter.js"></script>
-  <script>
-
-    const input = document.getElementById('numberInput');
-    const resultDiv = document.getElementById('resultRPN');
-    const resultSpan = document.getElementById('resultInfix');
-    const resultMma = document.getElementById('resultMathematica');
 
 
-    function clearResults() {
-      
-      console.log("Starting clearing");
-      // Clear previous results
-           input.value  = " ";
-       resultDiv.innerText  = " ";
-      resultSpan.innerText  = " ";
-       resultMma.innerText  = " ";
-     console.log("Finished clearing");
-    }
+  <p> UPDATED: 2024-08-02 20:06 </p>
 
-    // Define the calculate function that calls the WebAssembly function
-    function calculate() {
+<script>
+    // Set up a global promise that will be resolved when the module is ready
+    window.moduleReadyPromise = new Promise((resolve) => {
+        window.moduleReady = resolve;
+    });
 
-      resultSpan.innerText = "Computing..."; // This replaces the content of resultInfix with the text
+    var Module = {
+        onRuntimeInitialized: function() {
+            console.log("WebAssembly runtime initialized");
+            if (window.moduleReady) {
+                window.moduleReady(Module);
+            } else {
+                console.warn("moduleReady function not available yet");
+            }
+        }
+    };
+</script>
 
-      // Capture start time
-      var startTime = new Date();
+<!-- Load the Emscripten generated JavaScript file -->
+<script src="rpn_function.js"></script>
 
-      const z = parseFloat(input.value);
-      const MaxCodeLength = parseInt(document.getElementById('searchDepth').value, 10);
+<!-- Load your main JavaScript module -->
+<script type="module" src="main.js"></script>
 
-
-
-
-      // Use ccall to call the WebAssembly function
-      
-      //const rpnCode = Module.ccall('search_RPN', 'string', ['number'], [z]);
-      //const rpnCode = Module.ccall('search_RPN', 'string', ['number', 'number','number', 'number'], [z, MaxCodeLength,0,1]);
-      const result = JSON.parse( Module.ccall('search_RPN', 'string', ['number', 'number','number', 'number'], [z, MaxCodeLength,0,1]) );
-      const rpnCode = result.RPN;
-      console.log(result);
-      console.log(rpnCode);
-      //rpnCode = "EULER, FAILURE";
-
-      resultDiv.innerText = ` ${rpnCode}`;
-
-      // Capture end time
-      var endTime = new Date();
-
-      // Calculate the difference in milliseconds
-      var timeTaken = endTime - startTime;
-
-
-
-      //const rpnExpression = rpnCode.split(", ").slice(0,-1);
-      const rpnExpression = rpnCode.split(", ");
-      var infixExpression = rpnToInfix(rpnExpression); // Function converting RPN to infix
-      var simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
-      resultSpan.innerText = ` ${simplifiedExpression}`;
-      infixExpression = rpnToMma(rpnExpression); // Function converting RPN to Mathematica
-      simplifiedExpression = removeOutermostParentheses(removeRedundantParentheses(infixExpression));
-      resultMma.innerText = ` ${simplifiedExpression}`;
-
-      document.getElementById('timing').innerText = timeTaken/1000 + " sec"
-
-      //console.log(simplifiedExpression);
-
-    }
-  </script>
-
-
-<p> UPDATED: 2024-04-07 08:29 </p>
 </body>
 </html>
