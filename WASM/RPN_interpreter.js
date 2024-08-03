@@ -1,4 +1,4 @@
-const namedConstants = {
+export const namedConstants = {
  "NEG"   : "-1",
  "ZERO"  : "0",
  "ONE"   : "1",
@@ -17,7 +17,7 @@ const namedConstants = {
 }
 
 
-const namedFunctions = {
+export const namedFunctions = {
 "EXP"    : "exp", 
 "LOG"    : "ln", 
 "INV"    : "inv",
@@ -38,7 +38,7 @@ const namedFunctions = {
 "SQR"    : "sqr"
 }
 
-const namedOperators = {
+export const namedOperators = {
     "PLUS": "+",
     "SUBTRACT": "-",
     "TIMES": "*",
@@ -46,7 +46,7 @@ const namedOperators = {
     "POWER":  "^"
 };
 
-function rpnToInfix(rpn) {
+export function rpnToInfix(rpn) {
     let stack = [];
 
     rpn.forEach(token => {
@@ -68,7 +68,7 @@ function rpnToInfix(rpn) {
     return stack.pop();
 }
 
-function removeRedundantParentheses(expression) {
+export function removeRedundantParentheses(expression) {
     // Regular expression to match redundant parentheses around simple expressions
     // This is a simple example and might not cover all cases
     const redundantParenthesesRegex = /\(\(([^\(\)]+)\)\)/g;
@@ -85,7 +85,7 @@ function removeRedundantParentheses(expression) {
     return newExpression;
 }
 
-function removeOutermostParentheses(expression) {
+export function removeOutermostParentheses(expression) {
     // Regular expression to match an expression enclosed in outermost parentheses
     const outermostParenthesesRegex = /^\((.*)\)$/;
 

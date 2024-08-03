@@ -1,4 +1,4 @@
-const namedConstantsMma = {
+export const namedConstantsMma = {
  "NEG"   : "(-1)", //PreDecrement::rvalue: 1 is not a variable with a value, so its value cannot be changed.
  "ZERO"  : "0",
  "ONE"   : "1",
@@ -19,7 +19,7 @@ const namedConstantsMma = {
 }
 
 
-const namedFunctionsMma = {
+export const namedFunctionsMma = {
 "EXP"    : "Exp", 
 "LOG"    : "Log", 
 "SIN"    : "Sin", 
@@ -38,7 +38,7 @@ const namedFunctionsMma = {
 }
 
 // Define a mapping for unnamed functions to Mathematica equivalents or expressions
-const unnamedFunctionsMma = {
+export const unnamedFunctionsMma = {
     //"SQR": (x) => "Power[" + x + ", 2]",  // Converts to Power[x,2] which is x^2
     "SQR":   (x) => "(" + x + ")^2",  // Converts directly to(x)^2
     //"INV": (x) => "Power[" + x + ", -1]"  // Converts to Power[x,-1] which is 1/x
@@ -50,7 +50,7 @@ const unnamedFunctionsMma = {
     "SUC":   (x) => "(" + x + "+1)"
 };
 
-const namedOperatorsMma = {
+export const namedOperatorsMma = {
     "PLUS": "+",
     "SUBTRACT": "-",
     "TIMES": "*",
@@ -59,7 +59,7 @@ const namedOperatorsMma = {
     "LOGARITHM": "~Log~"
 };
 
-function rpnToMma(rpn) {
+export function rpnToMma(rpn) {
     let stack = [];
 
     rpn.forEach(token => {
