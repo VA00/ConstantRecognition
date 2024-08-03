@@ -191,7 +191,11 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   print_code_mathematica(amino,K_best,RPN_full_Code);
   //strcat(RPN_full_Code, ", FAILURE");
   //printf("\nk1=%llu\tj=%llu\n",k1,j);
-  sprintf(JSON_output, "{\"result\":\"FAILURE\", \"RPN\":\"%s\"}",RPN_full_Code);
+
+  char ABS_ERR_string[128];
+  sprintf(ABS_ERR_string, "%.17e",best);
+
+  sprintf(JSON_output, "{\"result\":\"FAILURE\", \"RPN\":\"%s\", \"ABS_ERR\":\"%s\"}",RPN_full_Code,ABS_ERR_string);
 
   return JSON_output;
 
