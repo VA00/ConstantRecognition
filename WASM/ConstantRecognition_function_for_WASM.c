@@ -104,6 +104,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   unsigned long long int j, k, k_best=0, k1=0, k2=0,kMAX,chunk_size,start,end;
   
   char amino[STACKSIZE];
+  char ABS_ERR_string[128];
   
   ERR_TYPE var, best;
   NUM_TYPE computedX, targetX;
@@ -164,7 +165,8 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 	    itoa(k_best, amino, n, K_best);
         print_code_mathematica(amino,K_best,RPN_full_Code);
         //strcat(RPN_full_Code, ", SUCCESS");
-        sprintf(JSON_output, "{\"result\":\"SUCCESS\", \"RPN\":\"%s\"}",RPN_full_Code);
+        sprintf(ABS_ERR_string, "%.17e",best);
+        sprintf(JSON_output, "{\"result\":\"SUCCESS\", \"RPN\":\"%s\", \"ABS_ERR\":\"%s\"}",RPN_full_Code,ABS_ERR_string);
 
         return JSON_output;
        }
@@ -177,7 +179,8 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
       print_code_mathematica(amino,K_best,RPN_full_Code);
       //strcat(RPN_full_Code, ", FAILURE");
       //printf("\nk1=%llu\tj=%llu\n",k1,j);
-      sprintf(JSON_output, "{\"result\":\"ABORTED\", \"RPN\":\"%s\"}",RPN_full_Code);
+      sprintf(ABS_ERR_string, "%.17e",best);
+      sprintf(JSON_output, "{\"result\":\"ABORTED\", \"RPN\":\"%s\", \"ABS_ERR\":\"%s\"}",RPN_full_Code,ABS_ERR_string);
       return JSON_output;
     }
 
@@ -192,9 +195,8 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   //strcat(RPN_full_Code, ", FAILURE");
   //printf("\nk1=%llu\tj=%llu\n",k1,j);
 
-  char ABS_ERR_string[128];
-  sprintf(ABS_ERR_string, "%.17e",best);
 
+  sprintf(ABS_ERR_string, "%.17e",best);
   sprintf(JSON_output, "{\"result\":\"FAILURE\", \"RPN\":\"%s\", \"ABS_ERR\":\"%s\"}",RPN_full_Code,ABS_ERR_string);
 
   return JSON_output;

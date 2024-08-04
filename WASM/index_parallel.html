@@ -11,10 +11,15 @@
 
     <p>Detected <span id="detectedCPUs"></span> logical CPU's.</p>
 
-    <p>Enter the number to identify or approximate:</p>
-    <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.036">
-    = <span id="resultInfix"></span>
-
+  <p>
+   Enter <B>ANY</b> numeric in the first box to identify or approximate.
+  </p>
+ 
+   <p>
+     <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.035999...">
+     = <input id="resultInfix" type="text" readonly placeholder="sqrt(137^2+pi^2)">
+     = <input id="resultNumeric" type="text" readonly placeholder="137.036...">
+   </p>
     <p>
         <label for="searchDepth" title="Adjust this slider to set the maximum search depth (2-9). This is equivalent to the number of keystrokes on calculator.">
             Max Code Length: <span id="searchDepthValue">6</span>
@@ -22,7 +27,10 @@
         <input id="searchDepth" type="range" value="6" min="2" max="9" step="1">
     </p>
 
-    <button id="calculateButton">Identify constant <span id="timing"></span></button>
+    <button id="calculateButton">Identify constant </button>
+
+
+  <p>Time taken: <span id="timing"></span></p>
 
     <p><strong>RPN:</strong> <span id="resultRPN"></span></p>
     <p><em>Mathematica:</em> <span id="resultMathematica"></span></p>
@@ -33,8 +41,10 @@
             <th>CPU ID</th>
             <th>Result</th>
             <th>Mathematica</th>
-            <th>RPN code</th>
             <th>Search status</th>
+            <th>Abs. error</th>
+            <th>Compression ratio</th>
+            <th>RPN code</th>
         </tr>
     </table>
 
