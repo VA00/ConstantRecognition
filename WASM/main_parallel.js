@@ -19,6 +19,9 @@ function extractPrecision(inputString) {
     // Remove any leading/trailing whitespace
     inputString = inputString.trim();
     
+    // Parse the input string to a number
+    let value = parseFloat(inputString);
+    
     // Handle scientific notation
     let parts = inputString.split(/e/i);
     let mainPart = parts[0];
@@ -26,18 +29,26 @@ function extractPrecision(inputString) {
     // Find the decimal point
     let decimalIndex = mainPart.indexOf('.');
     
+    let absolutePrecision;
     if (decimalIndex === -1) {
         // If there's no decimal point, precision is 1
-        return 1;
+        absolutePrecision = 1;
     } else {
         // Count the number of digits after the decimal point
         let fractionalPart = mainPart.slice(decimalIndex + 1);
         let significantDigits = fractionalPart.replace(/0+$/, '').length;
         
-        // Precision is 1 divided by 10 raised to the power of significant digits
-        return Math.pow(10, -significantDigits);
+        // Absolute precision is 1 divided by 10 raised to the power of significant digits
+        absolutePrecision = Math.pow(10, -significantDigits);
     }
+    
+    // Calculate relative precision
+    let relativePrecision = absolutePrecision / Math.abs(value);
+    
+    return relativePrecision;
 }
+
+
 
 async function calculate() {
     try {
@@ -63,8 +74,8 @@ async function calculate() {
         // Create and start workers
         workers = [];
         for (let i = 0; i < ncpus; i++) {
-            //const worker = new Worker('worker.js');
-            const worker = new Worker('worker.js?v=' + Date.now() + i);
+            const worker = new Worker('worker.js');
+            //const worker = new Worker('worker.js?v=' + Date.now() + i);
             workers.push(worker);
 
             worker.onmessage = function(e) {
@@ -122,10 +133,10 @@ function updateResultsTable(result) {
     row.insertCell(1).textContent = Evaluator.evaluateRPN(rpnCode) || "";
     row.insertCell(2).textContent = Mma.rpnToMma(rpnCode) || "";
     row.insertCell(3).textContent = result.result;
-    row.insertCell(4).textContent = result.ABS_ERR;
+    row.insertCell(4).textContent = result.REL_ERR;
     
-    const compressionRatio = calculateCompressionRatio(result.ABS_ERR, inputPrecision, K, n);
-    row.insertCell(5).textContent = compressionRatio.toFixed(2); // Display with 2 decimal places
+    const compressionRatio = calculateCompressionRatio(result.REL_ERR, inputPrecision, K, n);
+    row.insertCell(5).textContent = compressionRatio.toFixed(7); // Display with 2 decimal places
     
     row.insertCell(6).textContent = result.RPN;
 }
