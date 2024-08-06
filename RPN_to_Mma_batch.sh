@@ -14,7 +14,7 @@ while IFS= read -r line
 do
     # Extract text enclosed by {} and remove commas
     line2=$(echo "$line" | grep -oP '(?<=\{)[^\}]*(?=\})' | tr -d ',')
-    result=$(js WASM/RPN_to_Mma_interpreter.js $line2)
+    result=$(js WASM/RPN_to_Mma_interpreter.mjs $line2)
     
     # Write original line and result to output file with a tab separator
     echo -e "$line\t$result" >&3
