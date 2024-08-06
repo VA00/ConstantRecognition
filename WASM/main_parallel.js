@@ -58,7 +58,7 @@ async function calculate() {
         
         const z = document.getElementById('numberInput').value;
         const MaxCodeLength = parseInt(document.getElementById('searchDepthValue').textContent);
-        const ncpus = navigator.hardwareConcurrency || 4;
+        const ncpus = navigator.hardwareConcurrency || 7;
 
         // Extract precision from input
         inputPrecision = extractPrecision(z);
@@ -67,6 +67,7 @@ async function calculate() {
 
         // Clear previous results
         clearResultsTable();
+        clearResults();
 
         // Capture start time
         const startTime = new Date();
@@ -83,6 +84,7 @@ async function calculate() {
                 if (result.result === "SUCCESS") {
                     displayResult(result, startTime);
                     terminateAllWorkers();
+                    updateResultsTable(result);
                 } else {
                     updateResultsTable(result);
                 }
@@ -107,6 +109,14 @@ async function calculate() {
 function terminateAllWorkers() {
     workers.forEach(worker => worker.terminate());
     workers = [];
+}
+
+function clearResults() {
+    document.getElementById('resultInfix').value = '';
+    document.getElementById('resultRPN').textContent = '';
+    document.getElementById('resultMathematica').textContent = '';
+    document.getElementById('timing').textContent = '';
+    document.getElementById('resultNumeric').value = '';
 }
 
 function displayResult(result, startTime) {
