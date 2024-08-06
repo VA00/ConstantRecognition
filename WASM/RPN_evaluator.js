@@ -42,10 +42,10 @@ export const namedFunctions = {
 // Define our operators
 export const namedOperators = {
     "PLUS": (a, b) => a + b,
-    "SUBTRACT": (a, b) => a - b,  // Note the order: b - a
+    "SUBTRACT": (a, b) => a - b,  // Note the order: a - b
     "TIMES": (a, b) => a * b,
-    "DIVIDE": (a, b) => a / b,    // Note the order: b / a
-    "POWER": (a, b) => Math.pow(a, b)  // Note the order: b^a
+    "DIVIDE": (a, b) => a / b,    // Note the order: a / b
+    "POWER": (a, b) => Math.pow(a, b)  // Note the order: a^b
 };
 
 export function evaluateRPN(rpn) {
