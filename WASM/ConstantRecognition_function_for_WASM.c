@@ -177,6 +177,8 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
     {
       itoa(k_best, amino, n, K_best);
       print_code_mathematica(amino,K_best,RPN_full_Code);
+      computedX = CONSTANT(amino, K_best);
+	  best = ABS( computedX/targetX - ONE );	  
       //strcat(RPN_full_Code, ", FAILURE");
       //printf("\nk1=%llu\tj=%llu\n",k1,j);
       sprintf(REL_ERR_string, "%.17e",best);
