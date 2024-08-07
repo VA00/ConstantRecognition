@@ -2,9 +2,11 @@ import * as Interpreter from './RPN_interpreter.js';
 import * as Evaluator from './RPN_evaluator.js';
 import * as Mma from './RPN_to_Mma_interpreter.mjs';
 
+
 let Module;
 let workers = [];
 let inputPrecision;
+
 
 async function initializeModule() {
     Module = await window.moduleReadyPromise;
@@ -132,23 +134,32 @@ function displayResult(result, startTime) {
 }
 
 function updateResultsTable(result) {
-    const table = document.getElementById('resultsTable');
-    const row = table.insertRow(-1);
-    const rpnCode = result.RPN.split(", ");
-    const K = rpnCode.length; // RPN code length
-    const n = 36; // Number of calculator buttons
-    const sigma = 2.2e-16; // Machine epsilon (default error)
+    if (!window.dataTable) {
+        console.error('DataTable not initialized');
+        return;
+    }
     
-    row.insertCell(0).textContent = result.cpuId;
-    row.insertCell(1).textContent = Evaluator.evaluateRPN(rpnCode) || "";
-    row.insertCell(2).textContent = Mma.rpnToMma(rpnCode) || "";
-    row.insertCell(3).textContent = result.result;
-    row.insertCell(4).textContent = result.REL_ERR;
+    const rpnCode = result.RPN.split(", ");
+    const K = rpnCode.length;
+    const n = 36;
     
     const compressionRatio = calculateCompressionRatio(result.REL_ERR, inputPrecision, K, n);
-    row.insertCell(5).textContent = compressionRatio.toFixed(7); // Display with 2 decimal places
     
-    row.insertCell(6).textContent = result.RPN;
+    window.dataTable.row.add([
+        result.cpuId,
+        Evaluator.evaluateRPN(rpnCode) || "",
+        Mma.rpnToMma(rpnCode) || "",
+        result.result,
+        result.REL_ERR,
+        compressionRatio.toFixed(7),
+        result.RPN
+    ]).draw(false);
+}
+
+function clearResultsTable() {
+    if (window.dataTable) {
+        window.dataTable.clear().draw();
+    }
 }
 
 
@@ -159,12 +170,7 @@ function calculateCompressionRatio(epsilon, sigma, K, n) {
     return numerator / denominator;
 }
 
-function clearResultsTable() {
-    const table = document.getElementById('resultsTable');
-    while (table.rows.length > 1) {
-        table.deleteRow(1);
-    }
-}
+
 
 function setupEventListeners() {
     const calculateButton = document.getElementById('calculateButton');

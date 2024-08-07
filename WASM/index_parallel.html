@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constant Recognizer (Parallel)</title>
     <link rel="stylesheet" href="rpn.css">
+
+
 </head>
 <body>
     <h1 id="constant-recognizer-experimental" class="title">Constant Recognizer (experimental)</h1>
@@ -36,19 +38,43 @@
     <p><em>Mathematica:</em> <span id="resultMathematica"></span></p>
 
     <h3>Failed search intermediate results</h3>
-    <table id="resultsTable">
-        <tr>
-            <th>CPU ID</th>
-            <th>Numeric result</th>
-            <th>Mathematica</th>
-            <th>Search status</th>
-            <th>Relative error</th>
-            <th>Compression ratio</th>
-            <th>RPN code</th>
-        </tr>
-    </table>
+     <table id="resultsTable">
+       <thead>
+         <tr>
+           <th>CPU ID</th>
+           <th>Numeric result</th>
+           <th>Mathematica</th>
+           <th>Search status</th>
+           <th>Relative error</th>
+           <th>Compression ratio</th>
+           <th>RPN code</th>
+         </tr>
+       </thead>
+       <tbody>
+       </tbody>
+     </table>
 
     <!-- Load your main JavaScript module -->
     <script type="module" src="main_parallel.js"></script>
+
+
+<!-- <script src="jquery-3.5.1.js"></script> -->
+<!-- <script src="jquery.dataTables.js"></script> -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+<script>
+    $(document).ready(function() {
+        window.dataTable = $('#resultsTable').DataTable({
+            "order": [],
+            "columnDefs": [
+                { "type": "num", "targets": [0, 1, 4, 5] }
+            ]
+        });
+    });
+</script>
 </body>
 </html>
