@@ -18,7 +18,7 @@
   </p>
  
    <p>
-     <input class="input_box" id="numberInput" type="number" step="any" placeholder="137.035999...">
+     <input class="input_box" id="numberInput" type="text" placeholder="137.035999...">
      = <input id="resultInfix" type="text" readonly placeholder="sqrt(137^2+pi^2)">
      = <input id="resultNumeric" type="text" readonly placeholder="137.036...">
    </p>
@@ -70,6 +70,7 @@
     $(document).ready(function() {
         window.dataTable = $('#resultsTable').DataTable({
             "order": [],
+            "pageLength": 25,
             "columnDefs": [
                 { "type": "num", "targets": [0, 1, 4, 5] }
             ]

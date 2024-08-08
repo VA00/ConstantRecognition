@@ -5,6 +5,7 @@ import * as Mma from './RPN_to_Mma_interpreter.mjs';
 
 let Module;
 let workers = [];
+let activeWorkers = 0;
 let inputPrecision;
 
 
@@ -18,11 +19,14 @@ function updateSearchDepthValue(value) {
 }
 
 function extractPrecision(inputString) {
+
+    //console.log(inputString);
     // Remove any leading/trailing whitespace
-    inputString = inputString.trim();
+    //inputString = inputString.trim();
     
     // Parse the input string to a number
     let value = parseFloat(inputString);
+    //console.log(value);
     
     // Handle scientific notation
     let parts = inputString.split(/e/i);
@@ -30,23 +34,28 @@ function extractPrecision(inputString) {
     
     // Find the decimal point
     let decimalIndex = mainPart.indexOf('.');
+    //console.log(inputString);
     
     let absolutePrecision;
     if (decimalIndex === -1) {
-        // If there's no decimal point, precision is 1
-        absolutePrecision = 1;
+        // If there's no decimal point, use machine precision
+        absolutePrecision = Number.EPSILON;
     } else {
         // Count the number of digits after the decimal point
         let fractionalPart = mainPart.slice(decimalIndex + 1);
-        let significantDigits = fractionalPart.replace(/0+$/, '').length;
+        //let significantDigits = fractionalPart.replace(/0+$/, '').length;
+        let significantDigits = fractionalPart.length;
         
         // Absolute precision is 1 divided by 10 raised to the power of significant digits
-        absolutePrecision = Math.pow(10, -significantDigits);
+        absolutePrecision = 0.5*Math.pow(10, -significantDigits);
     }
     
     // Calculate relative precision
     let relativePrecision = absolutePrecision / Math.abs(value);
     
+    //console.log(absolutePrecision);    
+   // console.log(relativePrecision);    
+
     return relativePrecision;
 }
 
@@ -58,13 +67,17 @@ async function calculate() {
             await initializeModule();
         }
         
-        const z = document.getElementById('numberInput').value;
+        const inputElement = document.getElementById('numberInput');
+        const inputValue = inputElement.value;
+        const z = parseFloat(inputValue);
         const MaxCodeLength = parseInt(document.getElementById('searchDepthValue').textContent);
         const ncpus = navigator.hardwareConcurrency || 7;
 
         // Extract precision from input
-        inputPrecision = extractPrecision(z);
-        console.log(inputPrecision);
+        console.log("Input element:", inputElement);
+        console.log("Input value:", inputValue);
+        console.log("z=", z);
+        inputPrecision = extractPrecision(inputValue);
 
 
         // Clear previous results
@@ -76,6 +89,7 @@ async function calculate() {
 
         // Create and start workers
         workers = [];
+        activeWorkers = ncpus;
         for (let i = 0; i < ncpus; i++) {
             const worker = new Worker('worker.js');
             //const worker = new Worker('worker.js?v=' + Date.now() + i);
@@ -89,6 +103,12 @@ async function calculate() {
                     updateResultsTable(result);
                 } else {
                     updateResultsTable(result);
+                    activeWorkers--;
+                    console.log(activeWorkers);
+                    if (activeWorkers === 0) {
+                      // All workers have finished
+                      displayResult(result, startTime);
+                    }
                 }
             };
 
@@ -111,6 +131,7 @@ async function calculate() {
 function terminateAllWorkers() {
     workers.forEach(worker => worker.terminate());
     workers = [];
+    activeWorkers = 0;
 }
 
 function clearResults() {
@@ -126,11 +147,21 @@ function displayResult(result, startTime) {
     const endTime = new Date();
     const timeTaken = (endTime - startTime)/1000.0;
 
-    document.getElementById('resultInfix').value = Interpreter.removeRedundantParentheses(Interpreter.rpnToInfix(rpnCode.split(', ')));
-    document.getElementById('resultRPN').textContent = rpnCode;
-    document.getElementById('resultMathematica').textContent = Mma.rpnToMma(rpnCode.split(", ")) || "";
-    document.getElementById('timing').textContent = `${timeTaken} s`;
-    document.getElementById('resultNumeric').value = Evaluator.evaluateRPN(rpnCode.split(", "));
+
+
+    if (result.result === "SUCCESS") {
+      document.getElementById('resultInfix').value = Interpreter.removeRedundantParentheses(Interpreter.rpnToInfix(rpnCode.split(', ')));
+      document.getElementById('resultRPN').textContent = rpnCode;
+      document.getElementById('resultMathematica').textContent = Mma.rpnToMma(rpnCode.split(", ")) || "";
+      document.getElementById('timing').textContent = `${timeTaken} s`;
+      document.getElementById('resultNumeric').value = Evaluator.evaluateRPN(rpnCode.split(", "));
+    } else {
+      document.getElementById('resultInfix').value = 'Not found';
+      document.getElementById('resultRPN').textContent = 'PI PI PI PI PI PI PI PI .....';
+      document.getElementById('resultMathematica').textContent = '?';
+      document.getElementById('timing').textContent = `${timeTaken} s`;
+      document.getElementById('resultNumeric').value = 'Check table';
+    };
 }
 
 function updateResultsTable(result) {
@@ -186,6 +217,7 @@ function setupEventListeners() {
     } else {
         console.error("Search depth slider not found");
     }
+
 
     // Display number of CPUs
     const cpuSpan = document.getElementById('detectedCPUs');
