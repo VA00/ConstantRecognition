@@ -1,6 +1,6 @@
 import * as Interpreter from './RPN_interpreter.js';
 import * as Evaluator from './RPN_evaluator.js';
-import * as Mma from './RPN_to_Mma_interpreter.js';
+import * as Mma from './RPN_to_Mma_interpreter.mjs';
 
 let Module;
 
