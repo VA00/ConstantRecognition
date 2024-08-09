@@ -91,15 +91,31 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 
 
 #define EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
+#define JSON_BUFFER_SIZE (1024*1024)  // 1MB
 
 char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 
 
   // Allocate memory for the output string
   char* RPN_full_Code = (char*)malloc(32*16 * sizeof(char));
-  char* JSON_output =  (char*)malloc(2048 * sizeof(char));
+  char* JSON_output =  (char*)malloc(JSON_BUFFER_SIZE * sizeof(char));
+  
 
-  if( (RPN_full_Code == NULL) || (JSON_output == NULL) ) return "Error allocating memory";
+  if( (RPN_full_Code == NULL) || (JSON_output == NULL) ) return "Error allocating memory for JSON";
+
+    // Initialize JSON output
+    char* json_start = JSON_output;
+    int remaining = JSON_BUFFER_SIZE;
+    int written = snprintf(json_start, remaining, 
+        "{\"cpuId\":%d, \"results\": [", cpu_id);
+    json_start += written;
+    remaining -= written;
+
+
+
+    int result_count = 0;
+    //const int MAX_RESULTS = 128;  // Adjust as needed
+
   
   unsigned long long int j, k, k_best=0, k1=0, k2=0,kMAX,chunk_size,start,end;
   
@@ -158,6 +174,24 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
         best = var;
         K_best=K;
         k_best=k;
+        print_code_mathematica(amino,K_best,RPN_full_Code);
+        
+
+        if (result_count > 0) 
+         {
+          written = snprintf(json_start, remaining, ",");
+          json_start += written;
+          remaining -= written;
+         }
+         
+        written = snprintf(json_start, remaining, 
+            "{\"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"result\":\"INTERMEDIATE\", \"status\":\"RUNNING\", \"cpuId\":%d}",
+            RPN_full_Code, best, K_best,cpu_id);
+          json_start += written;
+          remaining -= written;
+
+        result_count++;
+
 	   }
     
 	   if(best<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli i funkcji !
@@ -165,9 +199,14 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 	    itoa(k_best, amino, n, K_best);
         print_code_mathematica(amino,K_best,RPN_full_Code);
         //strcat(RPN_full_Code, ", SUCCESS");
-        sprintf(REL_ERR_string, "%.17e",best);
-        sprintf(JSON_output, "{\"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":\"%s\"}",RPN_full_Code,REL_ERR_string);
-
+        //sprintf(REL_ERR_string, "%.17e",best);
+        //sprintf(JSON_output, "{\"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":\"%s\", \"status\":\"%s\"}",RPN_full_Code,REL_ERR_string,"FINISHED");
+        // Immediate success, finalize JSON and return
+          // Immediate success, finalize JSON and return
+          written = snprintf(json_start, remaining, 
+            "], \"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\"}",
+            RPN_full_Code, best);
+                    
         return JSON_output;
        }
        
@@ -181,8 +220,11 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 	  best = ABS( computedX/targetX - ONE );	  
       //strcat(RPN_full_Code, ", FAILURE");
       //printf("\nk1=%llu\tj=%llu\n",k1,j);
-      sprintf(REL_ERR_string, "%.17e",best);
-      sprintf(JSON_output, "{\"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":\"%s\"}",RPN_full_Code,REL_ERR_string);
+      //sprintf(REL_ERR_string, "%.17e",best);
+      //sprintf(JSON_output, "{\"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":\"%s\", \"status\":\"%s\"}",RPN_full_Code,REL_ERR_string,"FINISHED");
+       written = snprintf(json_start, remaining, 
+        "], \"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\"}",
+        RPN_full_Code, best);
       return JSON_output;
     }
 
@@ -198,9 +240,11 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   //printf("\nk1=%llu\tj=%llu\n",k1,j);
 
 
-  sprintf(REL_ERR_string, "%.17e",best);
-  sprintf(JSON_output, "{\"result\":\"FAILURE\", \"RPN\":\"%s\", \"REL_ERR\":\"%s\"}",RPN_full_Code,REL_ERR_string);
+  // Finalize JSON output for failure case
+  written = snprintf(json_start, remaining, 
+    "], \"result\":\"FAILURE\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\"}",
+    RPN_full_Code, best);
 
-  return JSON_output;
+    return JSON_output;
 
 }

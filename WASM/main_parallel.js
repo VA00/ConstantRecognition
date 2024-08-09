@@ -72,6 +72,7 @@ async function calculate() {
         const z = parseFloat(inputValue);
         const MaxCodeLength = parseInt(document.getElementById('searchDepthValue').textContent);
         const ncpus = navigator.hardwareConcurrency || 7;
+        //const ncpus = 2; // For debug
 
         // Extract precision from input
         console.log("Input element:", inputElement);
@@ -97,13 +98,25 @@ async function calculate() {
 
             worker.onmessage = function(e) {
                 const result = e.data;
+
+                if (result.results) {
+                    result.results.forEach(result => {
+                        updateResultsTable(result);
+                        //console.log("From message");
+                        //console.log(result);
+                    });
+                }
+
+
                 if (result.result === "SUCCESS") {
                     displayResult(result, startTime);
                     terminateAllWorkers();
                     updateResultsTable(result);
                 } else {
                     updateResultsTable(result);
+                    if (result.status === "FINISHED") {
                     activeWorkers--;
+                    }
                     console.log(activeWorkers);
                     if (activeWorkers === 0) {
                       // All workers have finished
@@ -165,6 +178,9 @@ function displayResult(result, startTime) {
 }
 
 function updateResultsTable(result) {
+
+    //console.log("From updateResultsTable");
+    //console.log(result);
     if (!window.dataTable) {
         console.error('DataTable not initialized');
         return;
