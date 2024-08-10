@@ -92,6 +92,7 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 
 #define EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
 #define JSON_BUFFER_SIZE (1024*1024)  // 1MB
+#define min(a,b) ((a)<(b)?(a):(b))
 
 char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 
@@ -143,16 +144,29 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   j=cpu_id;
   for(K=1;K<=MaxCodeLength;K++)
   {
-    kMAX=ipow(INSTR_NUM,K);
-    chunk_size = (kMAX/ncpus)+0ULL;
-    start=cpu_id*chunk_size;
-    end = (cpu_id == ncpus-1) ? kMAX : start+chunk_size-1;
+    //kMAX=ipow(INSTR_NUM,K);
+    //printf("DEBUG: %d\n\n",kMAX);
+    //chunk_size = (kMAX/ncpus)+0ULL;
+    //start=cpu_id*chunk_size;
+    //end = (cpu_id == ncpus-1) ? kMAX : start+chunk_size-1;
+
+
+    //kMAX = ipow(INSTR_NUM, K);
+    //chunk_size = (kMAX / ncpus) + (kMAX % ncpus ? 1 : 0); // Ensure all work is covered
+    //start = cpu_id * chunk_size;
+    //end = (cpu_id == ncpus - 1) ? kMAX : (start + chunk_size); // Last CPU takes any remainder
+
+    kMAX = ipow(INSTR_NUM, K);
+    chunk_size = (kMAX / ncpus) + ((kMAX % ncpus) > cpu_id ? 1 : 0);
+    start = cpu_id * (kMAX / ncpus) + min(cpu_id, kMAX % ncpus);
+    end = start + chunk_size;
 
     //printf("K=%d,\tkMAX=%llu,\tchunk_size=%llu, start=%llu, end=%llu\n",K,kMAX,chunk_size, start,end);
 
     for(k=start;k<end;k++)
     //for(k=cpu_id;k<kMAX;k=k+ncpus)
     {		
+      //printf("DEBUG: %d\n",k);
       if(k==start) itoa(start, amino, n, K); else itoa_update(amino, n, K);
       //j=j+ncpus;
       j=j+1;
