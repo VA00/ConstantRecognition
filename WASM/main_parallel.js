@@ -246,4 +246,16 @@ function setupEventListeners() {
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     initializeModule();
+
+    // New code for handling paste events to remove whitespaces
+    const inputElement = document.getElementById('numberInput');
+    
+    inputElement.addEventListener('paste', (event) => {
+        event.preventDefault();
+        let pastedText = (event.clipboardData || window.clipboardData).getData('text');
+        pastedText = pastedText.replace(/\s/g, '');
+        inputElement.value = pastedText;
+    });
+
+
 });
