@@ -35,7 +35,8 @@ export const namedFunctions = {
 "TANH"   : "tanh",
 "ARCTANH": "artanh",
 "SQRT"   : "sqrt",
-"SQR"    : "sqr"
+"SQR"    : "sqr",
+"GAMMA"  : "Γ"  // Using the actual Greek letter Γ
 }
 
 export const namedOperators = {

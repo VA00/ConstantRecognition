@@ -272,3 +272,19 @@ complex long double clnl(complex long double x, complex long double y)
 	return clogl(y)/clogl(x);
 }
 
+
+complex float ctgammaf(complex float x)
+{
+  return tgammaf(crealf(x))+0.0f*I;
+}
+
+complex double ctgamma(complex double x)
+{
+  return tgamma(creal(x))+0.0*I;
+}
+
+complex long double ctgammal(complex long double x)
+{
+  return tgammal(creall(x))+0.0l*I;
+}
+

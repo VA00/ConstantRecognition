@@ -36,7 +36,8 @@ export const namedFunctions = {
     "TANH": Math.tanh,
     "ARCTANH": Math.atanh,
     "SQRT": Math.sqrt,
-    "SQR": x => x * x
+    "SQR": x => x * x,
+    "GAMMA": math.gamma
 };
 
 // Define our operators

@@ -121,7 +121,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   unsigned long long int j, k, k_best=0, k1=0, k2=0,kMAX,chunk_size,start,end;
   
   char amino[STACKSIZE];
-  char REL_ERR_string[128];
+
   
   ERR_TYPE var, best;
   NUM_TYPE computedX, targetX;

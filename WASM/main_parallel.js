@@ -79,7 +79,7 @@ async function calculate() {
         console.log("Input value:", inputValue);
         console.log("z=", z);
         inputPrecision = extractPrecision(inputValue);
-
+        console.log("Δz/z=", inputPrecision);
 
         // Clear previous results
         clearResultsTable();

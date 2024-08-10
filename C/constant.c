@@ -9,14 +9,14 @@
 /*
 Unary functions:
                                1                                             2
-{{LOG, Log}, {EXP, Exp}, {INV, -- & }, {MINUS, Minus}, {SQRT, Sqrt}, {SQR, #1  & }, {SIN, Sin}, {ARCSIN, ArcSin}, {COS, Cos}, {ARCCOS, ArcCos}, {TAN, Tan}, {ARCTAN, ArcTan}, {SINH, Sinh}, {ARCSINH, ArcSinh}, {COSH, Cosh}, {ARCCOSH, ArcCosh}, {TANH, Tanh}, {ARCTANH, ArcTanh}}
+{{LOG, Log}, {EXP, Exp}, {INV, -- & }, {GAMMA, Gamma}, {SQRT, Sqrt}, {SQR, #1  & }, {SIN, Sin}, {ARCSIN, ArcSin}, {COS, Cos}, {ARCCOS, ArcCos}, {TAN, Tan}, {ARCTAN, ArcTan}, {SINH, Sinh}, {ARCSINH, ArcSinh}, {COSH, Cosh}, {ARCCOSH, ArcCosh}, {TANH, Tanh}, {ARCTANH, ArcTanh}}
                                #1
 Push on stack:
 {{PI, Pi}, {EULER, E}, {NEG, -1}, {GOLDENRATIO, GoldenRatio}, {ONE, 1}, {TWO, 2}, {THREE, 3}, {FOUR, 4}, {FIVE, 5}, {SIX, 6}, {SEVEN, 7}, {EIGHT, 8}, {NINE, 9}}
 Binary operators:
 {{PLUS, Plus}, {TIMES, Times}, {SUBTRACT, Subtract}, {DIVIDE, Divide}, {POWER, Power}}
 
-{0 -> PI, 1 -> EULER, 2 -> NEG, 3 -> GOLDENRATIO, 4 -> LOG, 5 -> EXP, 6 -> PLUS, 7 -> TIMES, 8 -> INV, 9 -> MINUS, a -> SQRT, b -> SQR, c -> SIN, d -> ARCSIN, e -> COS, f -> ARCCOS, g -> TAN, h -> ARCTAN, i -> SINH, j -> ARCSINH, k -> COSH, l -> ARCCOSH, m -> TANH, n -> ARCTANH, o -> ONE, p -> TWO, q -> THREE, r -> FOUR, s -> FIVE, t -> SIX, u -> SEVEN, v -> EIGHT, w -> NINE, x -> SUBTRACT, y -> DIVIDE, z -> POWER}
+{0 -> PI, 1 -> EULER, 2 -> NEG, 3 -> GOLDENRATIO, 4 -> LOG, 5 -> EXP, 6 -> PLUS, 7 -> TIMES, 8 -> INV, 9 -> GAMMA, a -> SQRT, b -> SQR, c -> SIN, d -> ARCSIN, e -> COS, f -> ARCCOS, g -> TAN, h -> ARCTAN, i -> SINH, j -> ARCSINH, k -> COSH, l -> ARCCOSH, m -> TANH, n -> ARCTANH, o -> ONE, p -> TWO, q -> THREE, r -> FOUR, s -> FIVE, t -> SIX, u -> SEVEN, v -> EIGHT, w -> NINE, x -> SUBTRACT, y -> DIVIDE, z -> POWER}
 
 */
 
@@ -123,7 +123,7 @@ case '8':
 	stos[position-1]=1.0f/(stos[position-1]);
 break;
 case '9':
-	stos[position-1]=-(stos[position-1]);
+	stos[position-1]=ctgammaf(stos[position-1]);
 break;
 case 'a':
 	stos[position-1]=csqrtf(stos[position-1]);
@@ -265,7 +265,7 @@ case '8':
 	stos[position-1]=1.0/(stos[position-1]);
 break;
 case '9':
-	stos[position-1]=-(stos[position-1]);
+	stos[position-1]=ctgamma(stos[position-1]);
 break;
 case 'a':
 	stos[position-1]=csqrt(stos[position-1]);
@@ -407,7 +407,7 @@ case '8':
 	stos[position-1]=1.0l/(stos[position-1]);
 break;
 case '9':
-	stos[position-1]=-(stos[position-1]);
+	stos[position-1]=ctgammal(stos[position-1]);
 break;
 case 'a':
 	stos[position-1]=csqrtl(stos[position-1]);
@@ -549,7 +549,7 @@ case '8':
 	stos[position-1]=1.0f/(stos[position-1]);
 break;
 case '9':
-	stos[position-1]=-(stos[position-1]);
+	stos[position-1]=tgammaf(stos[position-1]);
 break;
 case 'a':
 	stos[position-1]=sqrtf(stos[position-1]);
@@ -691,7 +691,7 @@ case '8':
 	stos[position-1]=1.0/(stos[position-1]);
 break;
 case '9':
-	stos[position-1]=-(stos[position-1]);
+	stos[position-1]=tgamma(stos[position-1]);
 break;
 case 'a':
 	stos[position-1]=sqrt(stos[position-1]);
@@ -833,7 +833,7 @@ case '8':
 	stos[position-1]=1.0l/(stos[position-1]);
 break;
 case '9':
-	stos[position-1]=-(stos[position-1]);
+	stos[position-1]=tgammal(stos[position-1]);
 break;
 case 'a':
 	stos[position-1]=sqrtl(stos[position-1]);

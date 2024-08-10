@@ -82,4 +82,6 @@ complex float clnf(complex float,complex float);
 complex double cln(complex double,complex double);
 complex long double clnl(complex long double, complex long double);
 
-
+complex float ctgammaf(complex float);
+complex double ctgamma(complex double);
+complex long double ctgammal(complex long double);

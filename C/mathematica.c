@@ -46,7 +46,7 @@ case '8':
 strcat(RPN_full_Code,"INV, ");
 break;
 case '9':
-strcat(RPN_full_Code,"MINUS, ");
+strcat(RPN_full_Code,"GAMMA, ");
 break;
 case 'a':
 strcat(RPN_full_Code,"SQRT, ");

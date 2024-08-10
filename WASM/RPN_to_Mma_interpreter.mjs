@@ -34,7 +34,8 @@ export const namedFunctionsMma = {
 "ARCCOSH": "ArcCosh",
 "TANH"   : "Tanh",
 "ARCTANH": "ArcTanh",
-"SQRT"   : "Sqrt"
+"SQRT"   : "Sqrt",
+"GAMMA"  : "Gamma"
 }
 
 // Define a mapping for unnamed functions to Mathematica equivalents or expressions
