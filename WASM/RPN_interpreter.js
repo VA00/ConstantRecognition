@@ -86,15 +86,46 @@ export function removeRedundantParentheses(expression) {
     return newExpression;
 }
 
-export function removeOutermostParentheses(expression) {
-    // Regular expression to match an expression enclosed in outermost parentheses
-    const outermostParenthesesRegex = /^\((.*)\)$/;
 
-    let match = outermostParenthesesRegex.exec(expression);
-    if (match) {
-        return match[1]; // Return the inner expression
+//export function removeOutermostParentheses(expression) {
+//    // Regular expression to match an expression enclosed in outermost parentheses
+//    const outermostParenthesesRegex = /^\((.*)\)$/;
+//
+//    let match = outermostParenthesesRegex.exec(expression);
+//    if (match) {
+//        return match[1]; // Return the inner expression
+//    }
+//    return expression; // Return the original expression unchanged if no outermost parentheses
+//}
+
+
+
+export function removeOutermostParentheses(expression) {
+    if (expression.startsWith('(') && expression.endsWith(')')) {
+        // Check if the parentheses are actually matching
+        let count = 0;
+        for (let i = 0; i < expression.length; i++) {
+            if (expression[i] === '(') count++;
+            if (expression[i] === ')') count--;
+            if (count === 0 && i < expression.length - 1) {
+                // If we reach 0 before the end, these are not the outermost parentheses
+                return expression;
+            }
+        }
+        // If we get here, the outermost parentheses match and can be removed
+        return expression.slice(1, -1);
     }
-    return expression; // Return the original expression unchanged if no outermost parentheses
+    return expression;
+}
+
+export function replaceGammaWithFactorial(formula) {
+    return formula.replace(/Γ\((\d+)\)/g, (match, number) => {
+        const n = parseInt(number, 10);
+        if (n > 1) {
+            return `${n-1}!`;  // Removed extra parentheses
+        }
+        return match;  // Return unchanged for Γ(1) or invalid inputs
+    });
 }
 
 // Example usage:

@@ -7,6 +7,7 @@ let Module;
 let workers = [];
 let activeWorkers = 0;
 let inputPrecision;
+let inputRelativePrecision;
 
 
 async function initializeModule() {
@@ -51,12 +52,12 @@ function extractPrecision(inputString) {
     }
     
     // Calculate relative precision
-    let relativePrecision = absolutePrecision / Math.abs(value);
+    //let relativePrecision = absolutePrecision / Math.abs(value);
     
     //console.log(absolutePrecision);    
    // console.log(relativePrecision);    
 
-    return relativePrecision;
+    return absolutePrecision;
 }
 
 
@@ -79,7 +80,16 @@ async function calculate() {
         console.log("Input value:", inputValue);
         console.log("z=", z);
         inputPrecision = extractPrecision(inputValue);
-        console.log("Δz/z=", inputPrecision);
+        inputRelativePrecision = inputPrecision/Math.abs(z);
+        console.log("Δz=", inputPrecision);
+        console.log("Δz/z=", inputRelativePrecision);
+
+        document.getElementById('z').textContent = z.toString();
+        document.getElementById('delta_z').textContent = inputPrecision.toString();
+        document.getElementById('rel_delta_z').textContent = inputRelativePrecision.toString();
+        document.getElementById('abs_delta_z').textContent = inputPrecision.toString();
+        
+
 
         // Clear previous results
         clearResultsTable();
@@ -163,14 +173,24 @@ function displayResult(result, startTime) {
 
 
     if (result.result === "SUCCESS") {
-      document.getElementById('resultInfix').value = Interpreter.removeRedundantParentheses(Interpreter.rpnToInfix(rpnCode.split(', ')));
+      //document.getElementById('resultInfix').value = Interpreter.replaceGammaWithFactorial(Interpreter.removeRedundantParentheses(Interpreter.rpnToInfix(rpnCode.split(', '))));
+      
+      const rpnArray = rpnCode.split(', ');
+      const infixExpression = Interpreter.rpnToInfix(rpnArray);
+      const cleanedExpression = Interpreter.removeRedundantParentheses(infixExpression);
+      const cleanedExpression2 = Interpreter.removeOutermostParentheses(infixExpression);
+      const finalExpression = Interpreter.replaceGammaWithFactorial(cleanedExpression2);
+      
+      document.getElementById('resultInfix').value = finalExpression;
+
+
       document.getElementById('resultRPN').textContent = rpnCode;
       document.getElementById('resultMathematica').textContent = Mma.rpnToMma(rpnCode.split(", ")) || "";
       document.getElementById('timing').textContent = `${timeTaken} s`;
       document.getElementById('resultNumeric').value = Evaluator.evaluateRPN(rpnCode.split(", "));
     } else {
       document.getElementById('resultInfix').value = 'Not found';
-      document.getElementById('resultRPN').textContent = 'PI PI PI PI PI PI PI PI .....';
+      document.getElementById('resultRPN').textContent = 'Nothing unambiguous found so far. Use larger K and be patient...';
       document.getElementById('resultMathematica').textContent = '?';
       document.getElementById('timing').textContent = `${timeTaken} s`;
       document.getElementById('resultNumeric').value = 'Check table';
@@ -190,10 +210,11 @@ function updateResultsTable(result) {
     const K = rpnCode.length;
     const n = 36;
     
-    const compressionRatio = calculateCompressionRatio(result.REL_ERR, inputPrecision, K, n);
+    const compressionRatio = calculateCompressionRatio(result.REL_ERR, inputRelativePrecision, K, n);
     
     window.dataTable.row.add([
         result.cpuId,
+        K,
         Evaluator.evaluateRPN(rpnCode) || "",
         Mma.rpnToMma(rpnCode) || "",
         result.result,
