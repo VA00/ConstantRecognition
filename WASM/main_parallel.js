@@ -150,6 +150,11 @@ async function calculate() {
     }
 }
 
+function createWolframAlphaLink(formula) {
+    const encodedFormula = encodeURIComponent(formula);
+    return `https://www.wolframalpha.com/input?i=${encodedFormula}`;
+}
+
 
 function terminateAllWorkers() {
     workers.forEach(worker => worker.terminate());
@@ -169,6 +174,7 @@ function displayResult(result, startTime) {
     const rpnCode = result.RPN;
     const endTime = new Date();
     const timeTaken = (endTime - startTime)/1000.0;
+    let mmaResult;
 
 
 
@@ -185,7 +191,11 @@ function displayResult(result, startTime) {
 
 
       document.getElementById('resultRPN').textContent = rpnCode;
-      document.getElementById('resultMathematica').textContent = Mma.rpnToMma(rpnCode.split(", ")) || "";
+      //document.getElementById('resultMathematica').textContent = Mma.rpnToMma(rpnCode.split(", ")) || "";
+      mmaResult =  Mma.rpnToMma(rpnCode.split(", ")) || "";
+
+      document.getElementById('resultMathematica').innerHTML = `<a href="${createWolframAlphaLink(mmaResult)}" target="_blank">${mmaResult}</a>`;
+
       document.getElementById('timing').textContent = `${timeTaken} s`;
       document.getElementById('resultNumeric').value = Evaluator.evaluateRPN(rpnCode.split(", "));
     } else {
@@ -209,14 +219,16 @@ function updateResultsTable(result) {
     const rpnCode = result.RPN.split(", ");
     const K = rpnCode.length;
     const n = 36;
-    
+    const mmaResult=Mma.rpnToMma(rpnCode) || "";
+    const wolframLink = createWolframAlphaLink(mmaResult);    
+
     const compressionRatio = calculateCompressionRatio(result.REL_ERR, inputRelativePrecision, K, n);
     
     window.dataTable.row.add([
         result.cpuId,
         K,
         Evaluator.evaluateRPN(rpnCode) || "",
-        Mma.rpnToMma(rpnCode) || "",
+        `<a href="${wolframLink}" target="_blank">${mmaResult}</a>`, // This line is modified
         result.result,
         result.REL_ERR,
         compressionRatio.toFixed(7),
