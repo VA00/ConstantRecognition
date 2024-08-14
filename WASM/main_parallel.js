@@ -232,6 +232,7 @@ function updateResultsTable(result) {
         result.result,
         result.REL_ERR,
         compressionRatio.toFixed(7),
+        result.HAMMING_DISTANCE,
         result.RPN
     ]).draw(false);
 }

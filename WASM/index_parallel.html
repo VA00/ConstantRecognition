@@ -53,6 +53,7 @@
            <th>Search status</th>
            <th title="Smaller is better">Relative error</th>
            <th title="Larger and >>1 is better">Compression ratio</th>
+           <th title="Smaller is better">Hamming distance</th>
            <th>RPN code</th>
          </tr>
        </thead>
@@ -80,9 +81,9 @@
     $(document).ready(function() {
         window.dataTable = $('#resultsTable').DataTable({
             "order": [],
-            "pageLength": 25,
+            "pageLength": 32,
             "columnDefs": [
-                { "type": "num", "targets": [0, 1, 2, 5, 6] }
+                { "type": "num", "targets": [0, 1, 2, 5, 6, 7] }
             ]
         });
     });

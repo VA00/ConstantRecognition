@@ -94,6 +94,46 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 #define JSON_BUFFER_SIZE (1024*1024)  // 1MB
 #define min(a,b) ((a)<(b)?(a):(b))
 
+
+
+union DoubleInt64 {
+    double d;
+    uint64_t i;
+};
+
+// Hamming distance for 64-bit integers
+int hamming_distance64(uint64_t x, uint64_t y)
+{
+    return __builtin_popcountll(x ^ y);
+}
+
+// Similarity function based on Hamming distance
+double hamming_distance(double a, double b)
+{
+    union DoubleInt64 ua, ub;
+    ua.d = a;
+    ub.d = b;
+    
+    int distance = hamming_distance64(ua.i, ub.i);
+    
+    // Convert distance to similarity (64 is the total number of bits)
+    return (double) distance;
+}
+
+ERR_TYPE rel_err(NUM_TYPE computedX, NUM_TYPE targetX)
+{
+  return ABS( computedX/targetX - ONE );
+}
+
+//typedef double (*RankingFunction)(NUM_TYPE computedX, NUM_TYPE targetX);
+
+ERR_TYPE rankFunc(NUM_TYPE computedX, NUM_TYPE targetX)
+{
+   
+   return rel_err(computedX, targetX);
+   //return hamming_distance(computedX, targetX);
+}
+
 char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 
 
@@ -123,7 +163,7 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   char amino[STACKSIZE];
 
   
-  ERR_TYPE var, best;
+  ERR_TYPE var, best, relative_error;
   NUM_TYPE computedX, targetX;
   
 
@@ -181,7 +221,8 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
       computedX = CONSTANT(amino, K);
 	  if (IS_NAN(computedX)) continue;  // Skip NaN
       k2++;
-      var = ABS( computedX/targetX - ONE );	  
+      //var = ABS( computedX/targetX - ONE );	  
+      var = rankFunc(computedX, targetX);	  
       
       if(var<best) 
        {
@@ -198,9 +239,11 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
           remaining -= written;
          }
          
+        relative_error = rel_err(computedX, targetX);
+
         written = snprintf(json_start, remaining, 
-            "{\"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"result\":\"INTERMEDIATE\", \"status\":\"RUNNING\", \"cpuId\":%d}",
-            RPN_full_Code, best, K_best,cpu_id);
+            "{\"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"result\":\"INTERMEDIATE\", \"status\":\"RUNNING\", \"cpuId\":%d, \"HAMMING_DISTANCE\":%lf}",
+            RPN_full_Code, relative_error, K_best,cpu_id, hamming_distance(computedX, targetX));
           json_start += written;
           remaining -= written;
 
@@ -208,18 +251,15 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
 
 	   }
     
-	   if(best<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli i funkcji !
+	   if(relative_error<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli i funkcji !
 	   {
 	    itoa(k_best, amino, n, K_best);
         print_code_mathematica(amino,K_best,RPN_full_Code);
-        //strcat(RPN_full_Code, ", SUCCESS");
-        //sprintf(REL_ERR_string, "%.17e",best);
-        //sprintf(JSON_output, "{\"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":\"%s\", \"status\":\"%s\"}",RPN_full_Code,REL_ERR_string,"FINISHED");
-        // Immediate success, finalize JSON and return
+
           // Immediate success, finalize JSON and return
           written = snprintf(json_start, remaining, 
-            "], \"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\"}",
-            RPN_full_Code, best);
+            "], \"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
+            RPN_full_Code, relative_error, hamming_distance(computedX, targetX));
                     
         return JSON_output;
        }
@@ -231,16 +271,19 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
       itoa(k_best, amino, n, K_best);
       print_code_mathematica(amino,K_best,RPN_full_Code);
       computedX = CONSTANT(amino, K_best);
-	  best = ABS( computedX/targetX - ONE );	  
+	  best = rankFunc(computedX, targetX);
       //strcat(RPN_full_Code, ", FAILURE");
       //printf("\nk1=%llu\tj=%llu\n",k1,j);
       //sprintf(REL_ERR_string, "%.17e",best);
       //sprintf(JSON_output, "{\"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":\"%s\", \"status\":\"%s\"}",RPN_full_Code,REL_ERR_string,"FINISHED");
        written = snprintf(json_start, remaining, 
-        "], \"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\"}",
-        RPN_full_Code, best);
+        "], \"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
+        RPN_full_Code, rel_err(computedX, targetX), hamming_distance(computedX, targetX));
       return JSON_output;
     }
+
+
+
 
   }
 
@@ -250,15 +293,16 @@ char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
   
   itoa(k_best, amino, n, K_best);
   print_code_mathematica(amino,K_best,RPN_full_Code);
-  //strcat(RPN_full_Code, ", FAILURE");
+  computedX = CONSTANT(amino, K_best);
+  
   //printf("\nk1=%llu\tj=%llu\n",k1,j);
 
 
   // Finalize JSON output for failure case
   written = snprintf(json_start, remaining, 
-    "], \"result\":\"FAILURE\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\"}",
-    RPN_full_Code, best);
+    "], \"result\":\"FAILURE\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
+    RPN_full_Code, rel_err(computedX, targetX), hamming_distance(computedX, targetX));
 
-    return JSON_output;
+  return JSON_output;
 
 }
