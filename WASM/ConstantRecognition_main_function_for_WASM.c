@@ -18,5 +18,5 @@ int main(int argc, char** argv)
     sscanf(argv[4],"%d",&ncpus);
   }
 
-  printf("%s\n",search_RPN(z,depth,cpu_id,ncpus));
+  printf("%s\n",search_RPN(z, 0.0, 1, depth,cpu_id,ncpus));
 }

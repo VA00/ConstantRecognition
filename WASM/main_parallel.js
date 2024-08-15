@@ -6,7 +6,6 @@ import * as Mma from './RPN_to_Mma_interpreter.mjs';
 let Module;
 let workers = [];
 let activeWorkers = 0;
-let inputPrecision;
 let inputRelativePrecision;
 
 
@@ -41,6 +40,7 @@ function extractPrecision(inputString) {
     if (decimalIndex === -1) {
         // If there's no decimal point, use machine precision
         absolutePrecision = Number.EPSILON;
+        absolutePrecision = 0.0;
     } else {
         // Count the number of digits after the decimal point
         let fractionalPart = mainPart.slice(decimalIndex + 1);
@@ -71,15 +71,18 @@ async function calculate() {
         const inputElement = document.getElementById('numberInput');
         const inputValue = inputElement.value;
         const z = parseFloat(inputValue);
+        const inputPrecision = extractPrecision(inputValue);
+        //const inputRelativePrecision;
+        const MinCodeLength = 1;
         const MaxCodeLength = parseInt(document.getElementById('searchDepthValue').textContent);
-        const ncpus = navigator.hardwareConcurrency || 7;
-        //const ncpus = 2; // For debug
+        //const ncpus = navigator.hardwareConcurrency || 7;
+        const ncpus = 2; // For debug
 
         // Extract precision from input
         console.log("Input element:", inputElement);
         console.log("Input value:", inputValue);
         console.log("z=", z);
-        inputPrecision = extractPrecision(inputValue);
+        //inputPrecision = extractPrecision(inputValue);
         inputRelativePrecision = inputPrecision/Math.abs(z);
         console.log("Δz=", inputPrecision);
         console.log("Δz/z=", inputRelativePrecision);
@@ -141,7 +144,7 @@ async function calculate() {
 
             // Include initDelay when starting the worker
             const initDelay =  1000*Math.random()+100; // 100ms delay between each worker start
-            worker.postMessage({initDelay, z, MaxCodeLength, cpuId: i, ncpus});
+            worker.postMessage({initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId: i, ncpus});
         }
 
     } catch (error) {

@@ -11,6 +11,7 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 
 
 #include <stdio.h>
+#include <stdint.h>
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -134,7 +135,7 @@ ERR_TYPE rankFunc(NUM_TYPE computedX, NUM_TYPE targetX)
    //return hamming_distance(computedX, targetX);
 }
 
-char* search_RPN(double z, int MaxCodeLength, int cpu_id, int ncpus) {
+char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength, int cpu_id, int ncpus) {
 
 
   // Allocate memory for the output string

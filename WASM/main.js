@@ -22,7 +22,9 @@ async function calculate() {
         const startTime = new Date();
 
         // Your calculation logic here
-        const result = JSON.parse(Module.ccall('search_RPN', 'string', ['number', 'number','number', 'number'], [z, MaxCodeLength, 0, 1]));
+        const result = JSON.parse(Module.ccall('search_RPN', 'string', 
+                                   ['number', 'number', 'number', 'number','number', 'number'], 
+                                   [z, 0, 1, MaxCodeLength, 0, 1]));
         const rpnCode = result.RPN;
 
         // Capture end time
