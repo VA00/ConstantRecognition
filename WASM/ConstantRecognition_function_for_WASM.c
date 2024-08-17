@@ -278,8 +278,8 @@ char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength,
       //sprintf(REL_ERR_string, "%.17e",best);
       //sprintf(JSON_output, "{\"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":\"%s\", \"status\":\"%s\"}",RPN_full_Code,REL_ERR_string,"FINISHED");
        written = snprintf(json_start, remaining, 
-        "], \"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
-        RPN_full_Code, rel_err(computedX, targetX), hamming_distance(computedX, targetX));
+        "], \"result\":\"ABORTED\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
+        RPN_full_Code, rel_err(computedX, targetX), K_best, hamming_distance(computedX, targetX));
       return JSON_output;
     }
 
@@ -319,8 +319,8 @@ char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength,
 
   // Finalize JSON output for failure case
   written = snprintf(json_start, remaining, 
-    "], \"result\":\"FAILURE\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
-    RPN_full_Code, rel_err(computedX, targetX), hamming_distance(computedX, targetX));
+    "], \"result\":\"FAILURE\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
+    RPN_full_Code, rel_err(computedX, targetX), K_best, hamming_distance(computedX, targetX));
 
   return JSON_output;
 
