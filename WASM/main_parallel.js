@@ -220,7 +220,7 @@ function updateResultsTable(result) {
     }
     
     const rpnCode = result.RPN.split(", ");
-    const K = rpnCode.length;
+    const K = parseInt(result.K);
     const n = 36;
     const mmaResult=Mma.rpnToMma(rpnCode) || "";
     const wolframLink = createWolframAlphaLink(mmaResult);    

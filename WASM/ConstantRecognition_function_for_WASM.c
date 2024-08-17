@@ -283,7 +283,25 @@ char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength,
       return JSON_output;
     }
 
+   if (result_count > 0) 
+    {
+     written = snprintf(json_start, remaining, ",");
+     json_start += written;
+     remaining -= written;
+    }
+    
+  
+  itoa(k_best, amino, n, K_best);
+  print_code_mathematica(amino,K_best,RPN_full_Code);
+  computedX = CONSTANT(amino, K_best);
+  relative_error = rel_err(computedX, targetX);
 
+   written = snprintf(json_start, remaining, 
+       "{\"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"result\":\"K_BEST\", \"status\":\"RUNNING\", \"cpuId\":%d, \"HAMMING_DISTANCE\":%lf}",
+       RPN_full_Code, relative_error, K, cpu_id, hamming_distance(computedX, targetX));
+     json_start += written;
+     remaining -= written;
+   result_count++;
 
 
   }
