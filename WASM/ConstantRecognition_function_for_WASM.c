@@ -91,7 +91,7 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 #endif
 
 
-#define EPS_MAX 16 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
+#define EPS_MAX 16 //Maximum error in DBL_EPSILON considered to be equality, use 0 or 1 to be "paranoid"
 #define JSON_BUFFER_SIZE (1024*1024)  // 1MB
 #define min(a,b) ((a)<(b)?(a):(b))
 
@@ -164,7 +164,7 @@ char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength,
   char amino[STACKSIZE];
 
   
-  ERR_TYPE var, best, relative_error;
+  ERR_TYPE var, best, relative_error, compression_ratio;
   NUM_TYPE computedX, targetX;
   
 
@@ -242,6 +242,19 @@ char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength,
          
         relative_error = rel_err(computedX, targetX);
 
+        if(Delta_z==0.0)
+         {
+
+          double base10DigitCount = floor(log10(fabs(targetX))) + 1.0;
+        // Adjust for the information content difference between base 10 and base 36
+          double adjustedBase10Count = base10DigitCount * log10(10) / log10(36);
+          compression_ratio = adjustedBase10Count / K;
+         }
+        else
+         {
+          compression_ratio = - log10( fmax(best,Delta_z)/z)/(K)/log10(INSTR_NUM);
+	     }	 
+
         written = snprintf(json_start, remaining, 
             "{\"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"result\":\"INTERMEDIATE\", \"status\":\"RUNNING\", \"cpuId\":%d, \"HAMMING_DISTANCE\":%lf}",
             RPN_full_Code, relative_error, K_best,cpu_id, hamming_distance(computedX, targetX));
@@ -252,15 +265,17 @@ char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength,
 
 	   }
     
-	   if(relative_error<=EPS_MAX*EPSILON) //jezeli znalazl, wychodzi z petli i funkcji !
+	   if(   (relative_error<=EPS_MAX*EPSILON)    
+           ||  ( ABS(computedX-targetX)<=2.0*Delta_z && compression_ratio>=1.05 ) 
+                                                          ) //jezeli znalazl, wychodzi z petli i funkcji !
 	   {
 	    itoa(k_best, amino, n, K_best);
         print_code_mathematica(amino,K_best,RPN_full_Code);
 
           // Immediate success, finalize JSON and return
           written = snprintf(json_start, remaining, 
-            "], \"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
-            RPN_full_Code, relative_error, K_best, hamming_distance(computedX, targetX));
+            "], \"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"INPUT_ABS_ERR\":%lf, \"COMPRESSION_RATIO\":%lf, \"K\":%d, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
+            RPN_full_Code, relative_error, Delta_z, compression_ratio, K_best, hamming_distance(computedX, targetX));
                     
         return JSON_output;
        }

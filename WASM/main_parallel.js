@@ -75,8 +75,8 @@ async function calculate() {
         //const inputRelativePrecision;
         const MinCodeLength = 1;
         const MaxCodeLength = parseInt(document.getElementById('searchDepthValue').textContent);
-        const ncpus = navigator.hardwareConcurrency || 7;
-        //const ncpus = 2; // For debug
+        //const ncpus = navigator.hardwareConcurrency || 7;
+        const ncpus = 2; // For debug
 
         // Extract precision from input
         console.log("Input element:", inputElement);
@@ -220,12 +220,13 @@ function updateResultsTable(result) {
     }
     
     const rpnCode = result.RPN.split(", ");
+    const z = parseFloat(document.getElementById('numberInput').value);
     const K = parseInt(result.K);
     const n = 36;
     const mmaResult=Mma.rpnToMma(rpnCode) || "";
     const wolframLink = createWolframAlphaLink(mmaResult);    
 
-    const compressionRatio = calculateCompressionRatio(result.REL_ERR, inputRelativePrecision, K, n);
+    const compressionRatio = calculateCompressionRatio(result.REL_ERR, inputRelativePrecision, K, n, z);
     
     window.dataTable.row.add([
         result.cpuId,
@@ -282,11 +283,25 @@ function setupFilterListeners() {
 }
 
 
-function calculateCompressionRatio(epsilon, sigma, K, n) {
-    const precision = Math.max(epsilon, sigma);
-    const numerator = -Math.log10(precision);
-    const denominator = K * Math.log10(n);
-    return numerator / denominator;
+function calculateCompressionRatio(epsilon, sigma, K, n, z) {
+    if (sigma === 0){
+        // For integers with perfect precision
+        const base10DigitCount = Math.floor(Math.log10(Math.abs(z))) + 1;
+        const base36DigitCount = K;
+
+        console.log(base10DigitCount);
+        
+        // Adjust for the information content difference between base 10 and base 36
+        const adjustedBase10Count = base10DigitCount * Math.log10(10) / Math.log10(36);
+        
+        return adjustedBase10Count / base36DigitCount;
+    } else {
+        const precision = Math.max(epsilon, sigma);
+        const z = document.getElementById('z').textContent; // Get the current z value
+        const numerator = -Math.log10(precision / z);
+        const denominator = K * Math.log10(n);
+        return numerator / denominator;
+    }
 }
 
 
