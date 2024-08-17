@@ -259,8 +259,8 @@ char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength,
 
           // Immediate success, finalize JSON and return
           written = snprintf(json_start, remaining, 
-            "], \"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
-            RPN_full_Code, relative_error, hamming_distance(computedX, targetX));
+            "], \"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
+            RPN_full_Code, relative_error, K_best, hamming_distance(computedX, targetX));
                     
         return JSON_output;
        }

@@ -238,12 +238,47 @@ function updateResultsTable(result) {
         result.HAMMING_DISTANCE,
         result.RPN
     ]).draw(false);
+
+    applyFilters(); // Add this line
 }
 
 function clearResultsTable() {
     if (window.dataTable) {
         window.dataTable.clear().draw();
     }
+}
+
+function applyFilters() {
+    let selectedStatuses = Array.from(document.querySelectorAll('#table-filters input:checked'))
+        .map(checkbox => checkbox.value);
+    
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            let status = data[4]; // Assuming status is in the 5th column
+            return selectedStatuses.includes(status);
+        }
+    );
+    
+    window.dataTable.draw();
+    
+    // Clear the custom filter
+    $.fn.dataTable.ext.search.pop();
+}
+
+function setupFilterListeners() {
+    document.querySelectorAll('#table-filters input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', applyFilters);
+    });
+
+    document.getElementById('clearFilters').addEventListener('click', () => {
+        document.querySelectorAll('#table-filters input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        applyFilters();
+    });
+
+    // Apply filters immediately when the page loads
+    //applyFilters();
 }
 
 
@@ -277,6 +312,8 @@ function setupEventListeners() {
     if (cpuSpan) {
         cpuSpan.textContent = navigator.hardwareConcurrency || 'Unknown';
     }
+
+    setupFilterListeners(); 
 }
 
 // Initialize everything when the DOM is ready
