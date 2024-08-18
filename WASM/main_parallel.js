@@ -75,8 +75,8 @@ async function calculate() {
         //const inputRelativePrecision;
         const MinCodeLength = 1;
         const MaxCodeLength = parseInt(document.getElementById('searchDepthValue').textContent);
-        //const ncpus = navigator.hardwareConcurrency || 7;
-        const ncpus = 2; // For debug
+        const ncpus = navigator.hardwareConcurrency || 7;
+        //const ncpus = 2; // For debug
 
         // Extract precision from input
         console.log("Input element:", inputElement);
