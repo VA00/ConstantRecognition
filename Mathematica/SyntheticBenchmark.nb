@@ -1,0 +1,2222 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 14.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     90455,       2214]
+NotebookOptionsPosition[     85750,       2148]
+NotebookOutlinePosition[     86184,       2165]
+CellTagsIndexPosition[     86141,       2162]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+   RowBox[{"https", ":"}], "//", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"en", ".", "wikipedia", ".", "org"}], "/", "wiki"}], "/", 
+     "List_of"}], "_mathematical", "_constants"}]}], " ", "*)"}]], "Input",
+ CellChangeTimes->{{3.9331292862876663`*^9, 
+  3.9331292924926777`*^9}},ExpressionUUID->"ab3adce2-80fc-ea4d-89ba-\
+24cb266a1251"],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+   RowBox[{"http", ":"}], "//", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"www", ".", "ebyte", ".", "it"}], "/", "library"}], "/", 
+      "educards"}], "/", "constants"}], "/", 
+    RowBox[{"MathConstants", ".", "html"}]}]}], " ", "*)"}]], "Input",
+ CellChangeTimes->{{3.9331293183109913`*^9, 
+  3.9331293207244663`*^9}},ExpressionUUID->"e89c5074-b44c-f34d-9db2-\
+a1097256f4ee"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"format", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<Name\>\"", ",", "Definition", ",", " ", "NumericalRef", ",", " ", 
+     RowBox[{"Formulas", "..."}]}], "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.933129908042095*^9, 3.9331299583371353`*^9}, {
+  3.933130224937441*^9, 
+  3.93313022638307*^9}},ExpressionUUID->"0ce156d3-a2e6-7d45-a146-\
+0523e12b7ee8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"wikiMathConstantList", "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<One\>\"", ",", "1", ",", "1.0"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Two\>\"", ",", "2", ",", "2.0"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Half\>\"", ",", 
+       RowBox[{"1", "/", "2"}], ",", "0.5"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Pi\>\"", ",", "Pi", ",", "3.14159265358979323846"}], "}"}],
+      ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Tau\>\"", ",", 
+       RowBox[{"2", "Pi"}], ",", "6.28318530717958647692"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Pythagoras constant\>\"", ",", 
+       RowBox[{"Sqrt", "[", "2", "]"}], ",", "1.41421356237309504880"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Theodorus constant\>\"", ",", 
+       RowBox[{"Sqrt", "[", "3", "]"}], ",", "1.73205080756887729352"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Sqrt 5\>\"", ",", " ", 
+       RowBox[{"Sqrt", "[", "5", "]"}], ",", "2.23606797749978969640"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Golden ratio\>\"", ",", "GoldenRatio", ",", 
+       "1.61803398874989484820", ",", 
+       RowBox[{
+        FractionBox["1", "2"], " ", 
+        RowBox[{"(", 
+         RowBox[{"1", "+", 
+          SqrtBox["5"]}], ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Silver ratio\>\"", ",", 
+       RowBox[{"1", "+", 
+        RowBox[{"Sqrt", "[", "2", "]"}]}], ",", "2.41421356237309504880"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Zero\>\"", ",", "0", ",", "0.0"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Neg\>\"", ",", " ", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1.0"}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Cube root of 2\>\"", ",", 
+       RowBox[{"CubeRoot", "[", "2", "]"}], ",", "1.25992104989487316476"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Cube root of 3\>\"", ",", 
+       RowBox[{"CubeRoot", "[", "3", "]"}], ",", "1.44224957030740838232"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Twelfth root of 2\>\"", ",", 
+       RowBox[{"2", "^", 
+        RowBox[{"(", 
+         RowBox[{"1", "/", "12"}], ")"}]}], ",", "1.05946309435929526456"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Supergolden ratio\>\"", ",", 
+       RowBox[{
+        RowBox[{"x", "/.", 
+         RowBox[{
+          RowBox[{"Solve", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"x", "^", "3"}], "==", 
+             RowBox[{
+              RowBox[{"x", "^", "2"}], "+", "1"}]}], ",", "x", ",", "Reals"}],
+            "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], "//", "ToRadicals"}], ",", 
+       "1.46557123187676802665"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Imaginary unit\>\"", ",", "I", ",", 
+       RowBox[{"1.0", "I"}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Connective constant\>\"", ",", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{"2", "+", 
+         RowBox[{"Sqrt", "[", "2", "]"}]}], "]"}], ",", 
+       "1.84775906502257351225"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Kepler\[Dash]Bouwkamp constant\>\"", ",", 
+       RowBox[{"Product", "[", 
+        RowBox[{
+         RowBox[{"Cos", "[", 
+          RowBox[{"Pi", "/", "n"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "3", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.11494204485329620070"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Wallis's constant \>\"", ",", 
+       RowBox[{
+        RowBox[{"x", "/.", 
+         RowBox[{
+          RowBox[{"Solve", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"x", "^", "3"}], "==", 
+             RowBox[{
+              RowBox[{"2", "x"}], "+", "5"}]}], ",", "x", ",", "Reals"}], 
+           "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], "//", "ToRadicals"}], ",", 
+       "2.09455148154232659148"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Euler number\>\"", ",", " ", "E", ",", "2.71828182845904523536"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Natural logarithm of 2\>\"", ",", 
+       RowBox[{"Log", "[", "2", "]"}], ",", "0.69314718055994530941"}], "}"}],
+      ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Lemniscate constant\>\"", ",", 
+       RowBox[{
+        RowBox[{"1", "/", "4"}], 
+        RowBox[{"Sqrt", "[", 
+         RowBox[{"2", "/", "Pi"}], "]"}], 
+        RowBox[{
+         RowBox[{"Gamma", "[", 
+          RowBox[{"1", "/", "4"}], "]"}], "^", "2"}]}], ",", 
+       "2.62205755429211981046"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Euler gamma\>\"", ",", "EulerGamma", ",", 
+       "0.57721566490153286060"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Erd\[ODoubleAcute]s\[Dash]Borwein constant\>\"", ",", 
+       RowBox[{"Sum", "[", 
+        RowBox[{
+         RowBox[{"1", "/", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"2", "^", "n"}], "-", "1"}], ")"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "1.60669515241529176378"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Omega constant\>\"", ",", 
+       RowBox[{"ProductLog", "[", "1", "]"}], ",", "0.56714329040978387299"}],
+       "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Ap\[EAcute]ry's constant\>\"", ",", 
+       RowBox[{"Zeta", "[", "3", "]"}], ",", "1.20205690315959428539"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Imaginary part of first non-trivial zero of zeta function\>\"", 
+       ",", 
+       RowBox[{"Im", "[", 
+        RowBox[{"ZetaZero", "[", "1", "]"}], "]"}], ",", 
+       "14.13472514173469379045"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Laplace limit\>\"", ",", 
+       InterpretationBox[
+        TemplateBox[{"Root", 
+          InterpretationBox[
+           StyleBox[
+            TemplateBox[{"\"0.663\"", 
+              DynamicBox[
+               FEPrivate`FrontEndResource[
+               "FEExpressions", "NumericalApproximationElider"], 
+               ImageSizeCache -> {
+                8.9560546875, {0.12744140625, 1.33154296875}}]}, 
+             "RowDefault"], ShowStringCharacters -> False], 
+           0.66274341934918157281941830660798586905`15.954589770191003, 
+           Editable -> False], 
+          TagBox[
+           RowBox[{"Root", "[", 
+             RowBox[{"{", 
+               RowBox[{
+                 RowBox[{
+                   RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{
+                    SuperscriptBox["\[ExponentialE]", 
+                    SqrtBox[
+                    RowBox[{"1", "+", 
+                    SuperscriptBox["#1", "2"]}]]], " ", "#1"}], "-", 
+                    SqrtBox[
+                    RowBox[{"1", "+", 
+                    SuperscriptBox["#1", "2"]}]]}], "&"}], ",", 
+                 "0.6627434193491815809747420971092529070562335491150224175204\
+`30."}], "}"}], "]"}], Short[#, 7]& ], 0.6627434193491816},
+         "NumericalApproximation"],
+        Root[{-1 + E^((1 + #^2)^Rational[1, 2]) # - (1 + #^2)^
+          Rational[1, 2]& , 
+          0.6627434193491815809747420971092529070562335491150224175204`30.}]],
+        ",", "0.66274341934918158097"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Soldner constant\>\"", ",", 
+       InterpretationBox[
+        TemplateBox[{"Root", 
+          InterpretationBox[
+           StyleBox[
+            TemplateBox[{"\"1.45\"", 
+              DynamicBox[
+               FEPrivate`FrontEndResource[
+               "FEExpressions", "NumericalApproximationElider"], 
+               ImageSizeCache -> {
+                8.9560546875, {0.12744140625, 1.33154296875}}]}, 
+             "RowDefault"], ShowStringCharacters -> False], 
+           1.45136923488338109855533275549532845616`15.954589770191003, 
+           Editable -> False], 
+          TagBox[
+           RowBox[{"Root", "[", 
+             RowBox[{"{", 
+               RowBox[{
+                 RowBox[{
+                   RowBox[{"LogIntegral", "[", "#1", "]"}], "&"}], ",", 
+                 "1.4513692348833810502839684858920274494930322836480158630931\
+`30."}], "}"}], "]"}], Short[#, 7]& ], 1.451369234883381},
+         "NumericalApproximation"],
+        Root[{
+         LogIntegral[#]& , 
+          1.4513692348833810502839684858920274494930322836480158630931`30.}]],
+        ",", "1.45136923488338105028"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Gauss's constant\>\"", ",", 
+       RowBox[{"1", "/", 
+        RowBox[{"ArithmeticGeometricMean", "[", 
+         RowBox[{"1", ",", 
+          RowBox[{"Sqrt", "[", "2", "]"}]}], "]"}]}], ",", 
+       "0.83462684167407318628"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Second Hermite constant\>\"", ",", 
+       RowBox[{"2", "/", 
+        RowBox[{"Sqrt", "[", "3", "]"}]}], ",", "1.15470053837925152901"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Liouville's constant\>\"", ",", 
+       RowBox[{"Sum", "[", 
+        RowBox[{
+         RowBox[{"1", "/", 
+          RowBox[{"10", "^", 
+           RowBox[{"(", 
+            RowBox[{"n", "!"}], ")"}]}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.11000100000000000000"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<First continued fraction constant\>\"", ",", 
+       RowBox[{
+        RowBox[{"BesselI", "[", 
+         RowBox[{"1", ",", "2"}], "]"}], "/", 
+        RowBox[{"BesselI", "[", 
+         RowBox[{"0", ",", "2"}], "]"}]}], ",", "0.69777465796400798201"}], 
+      "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Ramanujan's constant\>\"", ",", 
+       RowBox[{"Exp", "[", 
+        RowBox[{"Pi", " ", 
+         RowBox[{"Sqrt", "[", "163", "]"}]}], "]"}], ",", 
+       "262537412640768743.999999999999250073"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Glaisher-Kinkelin constant\>\"", ",", "Glaisher", ",", 
+       "1.28242712910062263687"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Catalan's constant\>\"", ",", "Catalan", ",", 
+       "0.91596559417721901505"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Dottie number\>\"", ",", 
+       InterpretationBox[
+        TemplateBox[{"Root", 
+          InterpretationBox[
+           StyleBox[
+            TemplateBox[{"\"0.739\"", 
+              DynamicBox[
+               FEPrivate`FrontEndResource[
+               "FEExpressions", "NumericalApproximationElider"], 
+               ImageSizeCache -> {
+                8.9560546875, {0.12744140625, 1.33154296875}}]}, 
+             "RowDefault"], ShowStringCharacters -> False], 
+           0.73908513321516067229310920083662495017`15.954589770191003, 
+           Editable -> False], 
+          TagBox[
+           RowBox[{"Root", "[", 
+             RowBox[{"{", 
+               RowBox[{
+                 RowBox[{
+                   RowBox[{
+                    RowBox[{"Cos", "[", "#1", "]"}], "-", "#1"}], "&"}], ",", 
+                 "0.7390851332151606416553120876738734040134117589007574649656\
+`30."}], "}"}], "]"}], Short[#, 7]& ], 0.7390851332151607},
+         "NumericalApproximation"],
+        Root[{
+         Cos[#] - #& , 
+          0.7390851332151606416553120876738734040134117589007574649656`30.}]],
+        ",", "0.73908513321516064165"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Meissel-Mertens constant\>\"", ",", 
+       RowBox[{"EulerGamma", "+", 
+        RowBox[{"Sum", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Log", "[", 
+            RowBox[{"1", "-", 
+             RowBox[{"1", "/", 
+              RowBox[{"Prime", "[", "n", "]"}]}]}], "]"}], "+", 
+           RowBox[{"1", "/", 
+            RowBox[{"Prime", "[", "n", "]"}]}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}]}], ",", 
+       "0.26149721284764278375"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Universal parabolic constant\>\"", ",", 
+       RowBox[{
+        RowBox[{"ArcSinh", "[", "1", "]"}], "+", 
+        RowBox[{"Sqrt", "[", "2", "]"}]}], ",", "2.29558714933926807403"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Cahen's constant\>\"", ",", "Undefined", ",", 
+       "0.64341054628833802618"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Gelfond's constant\>\"", ",", 
+       RowBox[{"E", "^", "Pi"}], ",", "23.14069263277926900572"}], "}"}], ",",
+      "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Gelfond-Schneider constant\>\"", ",", 
+       RowBox[{"2", "^", 
+        RowBox[{"Sqrt", "[", "2", "]"}]}], ",", "2.66514414269022518865"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Second Favard constant\>\"", ",", 
+       RowBox[{
+        RowBox[{"Pi", "^", "2"}], "/", "8"}], ",", "1.23370055013616982735"}],
+       "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Golden angle\>\"", ",", 
+       RowBox[{"2", " ", 
+        RowBox[{"Pi", "/", 
+         RowBox[{"GoldenRatio", "^", "2"}]}]}], ",", 
+       "2.39996322972865332223"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Golden angle degrees\>\"", ",", " ", 
+       RowBox[{"180", 
+        RowBox[{"(", 
+         RowBox[{"3", "-", 
+          RowBox[{"Sqrt", "[", "5", "]"}]}], ")"}]}], ",", 
+       "137.50776405003785464634873962837027762076"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Sierpi\:0144ski's constant\>\"", ",", 
+       RowBox[{"Pi", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"2", " ", "EulerGamma"}], "+", 
+          RowBox[{"4", " ", 
+           RowBox[{"Log", "[", 
+            RowBox[{"Gamma", "[", 
+             RowBox[{"3", "/", "4"}], "]"}], "]"}]}], "-", 
+          RowBox[{"Log", "[", "Pi", "]"}]}], ")"}]}], ",", 
+       "2.58498175957925321706"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Landau-Ramanujan constant\>\"", ",", "Undefined", ",", 
+       "0.76422365358920066299"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<First Nielsen-Ramanujan constant\>\"", ",", 
+       RowBox[{
+        RowBox[{"Pi", "^", "2"}], "/", "12"}], ",", 
+       "0.82246703342411321823"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Gieseking constant\>\"", ",", 
+       RowBox[{"3", 
+        RowBox[{
+         RowBox[{"Sqrt", "[", "3", "]"}], "/", "4"}], 
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          RowBox[{"Sum", "[", 
+           RowBox[{
+            RowBox[{"1", "/", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"3", "n"}], "+", "2"}], ")"}], "^", "2"}]}], ",", 
+            RowBox[{"{", 
+             RowBox[{"n", ",", "0", ",", "Infinity"}], "}"}]}], "]"}], "+", 
+          RowBox[{"Sum", "[", 
+           RowBox[{
+            RowBox[{"1", "/", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"3", "n"}], "+", "1"}], ")"}], "^", "2"}]}], ",", 
+            RowBox[{"{", 
+             RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}]}], 
+         ")"}]}], ",", "1.01494160640965362502"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Bernstein's constant\>\"", ",", "Undefined", ",", 
+       "0.28016949902386913303"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Tribonacci constant\>\"", ",", 
+       RowBox[{
+        FractionBox["1", "3"], " ", 
+        RowBox[{"(", 
+         RowBox[{"1", "+", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"19", "-", 
+             RowBox[{"3", " ", 
+              SqrtBox["33"]}]}], ")"}], 
+           RowBox[{"1", "/", "3"}]], "+", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"19", "+", 
+             RowBox[{"3", " ", 
+              SqrtBox["33"]}]}], ")"}], 
+           RowBox[{"1", "/", "3"}]]}], ")"}]}], ",", 
+       "1.83928675521416113255"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Brun's constant\>\"", ",", "Undefined", ",", "1.902160583104"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Twin primes constant\>\"", ",", "Undefined", ",", 
+       "0.66016181584686957392"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Plastic ratio\>\"", ",", 
+       RowBox[{
+        RowBox[{
+         FractionBox["1", "3"], " ", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox["27", "2"], "-", 
+            FractionBox[
+             RowBox[{"3", " ", 
+              SqrtBox["69"]}], "2"]}], ")"}], 
+          RowBox[{"1", "/", "3"}]]}], "+", 
+        FractionBox[
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox["1", "2"], " ", 
+            RowBox[{"(", 
+             RowBox[{"9", "+", 
+              SqrtBox["69"]}], ")"}]}], ")"}], 
+          RowBox[{"1", "/", "3"}]], 
+         SuperscriptBox["3", 
+          RowBox[{"2", "/", "3"}]]]}], ",", "1.32471795724474602596"}], "}"}],
+      ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Bloch constant lower limit\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Sqrt", "[", "3", "]"}], "/", "4"}], "+", 
+        RowBox[{"2", "*", 
+         RowBox[{"10", "^", 
+          RowBox[{"-", "4"}]}]}]}], ",", 
+       "0.433212701892219323381861585376468091735701313452595157014"}], "}"}],
+      ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Bloch constant upper limit\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"Sqrt", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Sqrt", "[", "3", "]"}], "-", "1"}], ")"}], "/", "2"}], 
+         "]"}], 
+        RowBox[{"Gamma", "[", 
+         RowBox[{"1", "/", "3"}], "]"}], 
+        RowBox[{
+         RowBox[{"Gamma", "[", 
+          RowBox[{"11", "/", "12"}], "]"}], "/", 
+         RowBox[{"Gamma", "[", 
+          RowBox[{"1", "/", "4"}], "]"}]}]}], ",", 
+       "0.4718616534526817848744687936113161490770126651520228692521"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Z score\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"Sqrt", "[", "2", "]"}], 
+        RowBox[{"InverseErf", "[", 
+         RowBox[{"95", "/", "100"}], "]"}]}], ",", "1.95996398454005423552"}],
+       "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Landau constant upper limit\>\"", ",", 
+       RowBox[{
+        RowBox[{"Gamma", "[", 
+         RowBox[{"1", "/", "3"}], "]"}], 
+        RowBox[{
+         RowBox[{"Gamma", "[", 
+          RowBox[{"5", "/", "6"}], "]"}], "/", 
+         RowBox[{"Gamma", "[", 
+          RowBox[{"1", "/", "6"}], "]"}]}]}], ",", 
+       "0.543258965342976706952728295300613231138863371313713010605"}], "}"}],
+      ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Prouhet\[Dash]Thue\[Dash]Morse constant\>\"", ",", "Undefined", 
+       ",", "0.41245403364010759778"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Golomb\[Dash]Dickman constant\>\"", ",", "Undefined", ",", " ", 
+       "0.62432998854355087099"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Asymptotic behavior of Lebesgue constants\>\"", ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"8", "/", 
+          RowBox[{"Pi", "^", "2"}]}], 
+         RowBox[{"Sum", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Log", "[", "k", "]"}], "/", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"4", 
+               RowBox[{"k", "^", "2"}]}], "-", "1"}], ")"}]}], ",", 
+           RowBox[{"{", 
+            RowBox[{"k", ",", "1", ",", "Infinity"}], "}"}]}], "]"}]}], "-", 
+        RowBox[{
+         RowBox[{"4", " ", "/", 
+          RowBox[{"Pi", "^", "2"}]}], 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Gamma", "'"}], "[", 
+           RowBox[{"1", "/", "2"}], "]"}], "/", 
+          RowBox[{"Gamma", "[", 
+           RowBox[{"1", "/", "2"}], "]"}]}]}]}], ",", 
+       "0.98943127383114695174"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Feller\[Dash]Tornier constant\>\"", ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"1", "/", "2"}], 
+         RowBox[{"Product", "[", 
+          RowBox[{
+           RowBox[{"1", "-", 
+            RowBox[{"2", "/", 
+             RowBox[{
+              RowBox[{"Prime", "[", "n", "]"}], "^", "2"}]}]}], ",", 
+           RowBox[{"{", 
+            RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}]}], "+", 
+        RowBox[{"1", "/", "2"}]}], ",", "0.6613170494696223352"}], "}"}], ",",
+      "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Champernowne constant\>\"", ",", " ", 
+       RowBox[{"ChampernowneNumber", "[", "]"}], ",", 
+       "0.12345678910111213141"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Salem constant[\>\"", ",", 
+       InterpretationBox[
+        TemplateBox[{"Root", 
+          InterpretationBox[
+           StyleBox[
+            TemplateBox[{"\"1.18\"", 
+              DynamicBox[
+               FEPrivate`FrontEndResource[
+               "FEExpressions", "NumericalApproximationElider"], 
+               ImageSizeCache -> {
+                8.9560546875, {0.12744140625, 1.33154296875}}]}, 
+             "RowDefault"], ShowStringCharacters -> False], 
+           1.17628081825991759323812857473967596889`15.954589770191003, 
+           Editable -> False], 
+          TagBox[
+           RowBox[{"Root", "[", 
+             RowBox[{
+               RowBox[{
+                 RowBox[{"1", "+", "#1", "-", 
+                   SuperscriptBox["#1", "3"], "-", 
+                   SuperscriptBox["#1", "4"], "-", 
+                   SuperscriptBox["#1", "5"], "-", 
+                   SuperscriptBox["#1", "6"], "-", 
+                   SuperscriptBox["#1", "7"], "+", 
+                   SuperscriptBox["#1", "9"], "+", 
+                   SuperscriptBox["#1", "10"]}], "&"}], ",", "2"}], "]"}], 
+           Short[#, 7]& ], 1.1762808182599176`},
+         "NumericalApproximation"],
+        Root[1 + # - #^3 - #^4 - #^5 - #^6 - #^7 + #^9 + #^10& , 2, 0]], ",", 
+       "1.17628081825991750654"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Khinchin's constant\>\"", ",", "Khinchin", ",", 
+       "2.68545200106530644530"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<L\[EAcute]vy's constant\>\"", ",", 
+       RowBox[{
+        RowBox[{"Pi", "^", "2"}], "/", 
+        RowBox[{"(", 
+         RowBox[{"12", " ", 
+          RowBox[{"Log", "[", "2", "]"}]}], ")"}]}], ",", 
+       "1.18656911041562545282"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<L\[EAcute]vy's constant 2\>\"", " ", ",", " ", 
+       RowBox[{"Exp", "[", 
+        RowBox[{
+         RowBox[{"Pi", "^", "2"}], "/", 
+         RowBox[{"(", 
+          RowBox[{"12", " ", 
+           RowBox[{"Log", "[", "2", "]"}]}], ")"}]}], "]"}], ",", 
+       "3.27582291872181115978"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Copeland\[Dash]Erd\[ODoubleAcute]s constant\>\"", ",", "Undefined",
+        ",", " ", "0.23571113171923293137"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Mills' constant\>\"", ",", "Undefined", ",", 
+       "1.30637788386308069046"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Gompertz constant\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"-", "\[ExponentialE]"}], " ", 
+        RowBox[{"ExpIntegralEi", "[", 
+         RowBox[{"-", "1"}], "]"}]}], ",", "0.59634736232319407434"}], "}"}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Van der Pauw constant\>\"", ",", 
+       RowBox[{"Pi", "/", 
+        RowBox[{"Log", "[", "2", "]"}]}], ",", "4.53236014182719380962"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Magic angle\>\"", ",", " ", 
+       RowBox[{"ArcCos", "[", 
+        RowBox[{"1", "/", 
+         RowBox[{"Sqrt", "[", "3", "]"}]}], "]"}], ",", 
+       "0.955316618124509278163"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Artin's constant\>\"", ",", 
+       RowBox[{"Product", "[", 
+        RowBox[{
+         RowBox[{"1", "-", 
+          RowBox[{
+           RowBox[{"1", "/", 
+            RowBox[{"Prime", "[", "n", "]"}]}], "/", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"Prime", "[", "n", "]"}], "-", "1"}], ")"}]}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.37395581361920228805"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Porter's constant\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"6", " ", 
+         RowBox[{
+          RowBox[{"Log", "[", "2", "]"}], "/", 
+          RowBox[{"Pi", "^", "2"}]}], 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"3", " ", 
+            RowBox[{"Log", "[", "2", "]"}]}], "+", 
+           RowBox[{"4", " ", "EulerGamma"}], "-", 
+           RowBox[{
+            RowBox[{"24", "/", 
+             RowBox[{"Pi", "^", "2"}]}], 
+            RowBox[{
+             RowBox[{"Zeta", "'"}], "[", "2", "]"}]}], "-", "2"}], ")"}]}], 
+        "-", 
+        RowBox[{"1", "/", "2"}]}], ",", "1.46707807943397547289"}], "}"}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Lochs constant\>\"", ",", " ", 
+       RowBox[{"6", " ", 
+        RowBox[{"Log", "[", "2", "]"}], 
+        RowBox[{
+         RowBox[{"Log", "[", "1", "]"}], "/", 
+         RowBox[{"Pi", "^", "2"}]}]}], ",", "0.97027011439203392574"}], "}"}],
+      ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<DeVicci's tesseract constant\>\"", ",", " ", 
+       InterpretationBox[
+        TemplateBox[{"Root", 
+          InterpretationBox[
+           StyleBox[
+            TemplateBox[{"\"1.01\"", 
+              DynamicBox[
+               FEPrivate`FrontEndResource[
+               "FEExpressions", "NumericalApproximationElider"], 
+               ImageSizeCache -> {
+                8.9560546875, {0.12744140625, 1.33154296875}}]}, 
+             "RowDefault"], ShowStringCharacters -> False], 
+           1.00743475688427941427960377041017636657`15.954589770191003, 
+           Editable -> False], 
+          TagBox[
+           RowBox[{"Root", "[", 
+             RowBox[{
+               RowBox[{
+                 RowBox[{"16", "+", 
+                   RowBox[{"16", " ", 
+                    SuperscriptBox["#1", "2"]}], "-", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "4"]}], "-", 
+                   RowBox[{"28", " ", 
+                    SuperscriptBox["#1", "6"]}], "+", 
+                   RowBox[{"4", " ", 
+                    SuperscriptBox["#1", "8"]}]}], "&"}], ",", "3"}], "]"}], 
+           Short[#, 7]& ], 1.0074347568842794`},
+         "NumericalApproximation"],
+        Root[16 + 16 #^2 - 7 #^4 - 28 #^6 + 4 #^8& , 3, 0]], ",", 
+       "1.00743475688427937609"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Lieb's square ice constant\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"8", "/", "3"}], "/", 
+        RowBox[{"Sqrt", "[", "3", "]"}]}], ",", "1.53960071783900203869"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Niven's constant\>\"", ",", " ", 
+       RowBox[{"1", "+", 
+        RowBox[{"Sum", "[", 
+         RowBox[{
+          RowBox[{"1", "-", 
+           RowBox[{"1", "/", 
+            RowBox[{"Zeta", "[", "n", "]"}]}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{"n", ",", "2", ",", "Infinity"}], "}"}]}], "]"}]}], ",", 
+       "1.70521114010536776428"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Stephens' constant\>\"", ",", " ", 
+       RowBox[{"Product", "[", 
+        RowBox[{
+         RowBox[{"1", "-", 
+          RowBox[{
+           RowBox[{"Prime", "[", "n", "]"}], "/", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Prime", "[", "n", "]"}], "^", "3"}], "-", "1"}], 
+            ")"}]}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.57595996889294543964"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Regular paperfolding sequence\>\"", ",", " ", 
+       RowBox[{"Sum", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"8", "^", 
+           RowBox[{"(", 
+            RowBox[{"2", "^", "n"}], ")"}]}], "/", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"2", "^", 
+             RowBox[{"(", 
+              RowBox[{"2", "^", 
+               RowBox[{"(", 
+                RowBox[{"n", "+", "2"}], ")"}]}], ")"}]}], "-", "1"}], 
+           ")"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "0", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.85073618820186726036"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Reciprocal Fibonacci constant\>\"", ",", 
+       RowBox[{"Sum", "[", 
+        RowBox[{
+         RowBox[{"1", "/", 
+          RowBox[{"Fibonacci", "[", "n", "]"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "3.35988566624317755317"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Feigenbaum delta\>\"", ",", "Undefined", ",", " ", 
+       "4.66920160910299067185"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Robbins constant\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"4", "+", 
+           RowBox[{"17", "*", 
+            RowBox[{"Sqrt", "[", "2", "]"}]}], "-", 
+           RowBox[{"6", "*", 
+            RowBox[{"Sqrt", "[", "3", "]"}]}], "-", 
+           RowBox[{"7", "*", "Pi"}]}], ")"}], "/", "105"}], "+", 
+        RowBox[{
+         RowBox[{"Log", "[", 
+          RowBox[{"1", "+", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}], "]"}], "/", "5"}], "+", 
+        RowBox[{"2", "*", 
+         RowBox[{
+          RowBox[{"Log", "[", 
+           RowBox[{"2", "+", 
+            RowBox[{"Sqrt", "[", "3", "]"}]}], "]"}], "/", "5"}]}]}], ",", 
+       "0.66170718226717623515"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Weierstrass constant\>\"", ",", 
+       RowBox[{
+        RowBox[{"2", "^", 
+         RowBox[{"(", 
+          RowBox[{"5", "/", "4"}], ")"}]}], 
+        RowBox[{"Sqrt", "[", "Pi", "]"}], 
+        RowBox[{
+         RowBox[{"Exp", "[", 
+          RowBox[{"Pi", "/", "8"}], "]"}], "/", 
+         RowBox[{
+          RowBox[{"Gamma", "[", 
+           RowBox[{"1", "/", "4"}], "]"}], "^", "2"}]}]}], ",", 
+       "0.47494937998792065033"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Frans\[EAcute]n\[Dash]Robinson constant\>\"", ",", 
+       RowBox[{"Integrate", "[", 
+        RowBox[{
+         RowBox[{"1", "/", 
+          RowBox[{"Gamma", "[", "x", "]"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "0", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "2.80777024202851936522"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Feigenbaum alpha\>\"", ",", "Undefined", ",", " ", 
+       "2.50290787509589282228"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Second du Bois-Reymond constant\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"E", "^", "2"}], "-", "7"}], ")"}], "/", "2"}], ",", 
+       "0.19452804946532511361"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Erd\[ODoubleAcute]s\[Dash]Tenenbaum\[Dash]Ford constant\>\"", ",", 
+       " ", 
+       RowBox[{"1", "-", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"1", "+", 
+           RowBox[{"Log", "[", 
+            RowBox[{"Log", "[", "2", "]"}], "]"}]}], ")"}], "/", 
+         RowBox[{"Log", "[", "2", "]"}]}]}], ",", "0.08607133205593420688"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Conway's constant\>\"", ",", 
+       InterpretationBox[
+        TemplateBox[{"Root", 
+          InterpretationBox[
+           StyleBox[
+            TemplateBox[{"\"1.30\"", 
+              DynamicBox[
+               FEPrivate`FrontEndResource[
+               "FEExpressions", "NumericalApproximationElider"], 
+               ImageSizeCache -> {
+                8.9560546875, {0.12744140625, 1.33154296875}}]}, 
+             "RowDefault"], ShowStringCharacters -> False], 
+           1.30357726903429638198872453358490020037`15.954589770191003, 
+           Editable -> False], 
+          TagBox[
+           RowBox[{"Root", "[", 
+             RowBox[{
+               RowBox[{
+                 RowBox[{
+                   RowBox[{"-", "6"}], "+", 
+                   RowBox[{"3", " ", "#1"}], "-", 
+                   RowBox[{"6", " ", 
+                    SuperscriptBox["#1", "2"]}], "+", 
+                   RowBox[{"12", " ", 
+                    SuperscriptBox["#1", "3"]}], "-", 
+                   RowBox[{"4", " ", 
+                    SuperscriptBox["#1", "4"]}], "+", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "5"]}], "-", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "6"]}], "+", 
+                   SuperscriptBox["#1", "7"], "+", 
+                   RowBox[{"5", " ", 
+                    SuperscriptBox["#1", "9"]}], "-", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "10"]}], "-", 
+                   RowBox[{"4", " ", 
+                    SuperscriptBox["#1", "11"]}], "-", 
+                   RowBox[{"12", " ", 
+                    SuperscriptBox["#1", "12"]}], "+", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "13"]}], "+", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "14"]}], "+", 
+                   RowBox[{"12", " ", 
+                    SuperscriptBox["#1", "15"]}], "-", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "16"]}], "-", 
+                   RowBox[{"10", " ", 
+                    SuperscriptBox["#1", "17"]}], "-", 
+                   RowBox[{"4", " ", 
+                    SuperscriptBox["#1", "18"]}], "+", 
+                   RowBox[{"3", " ", 
+                    SuperscriptBox["#1", "19"]}], "+", 
+                   RowBox[{"9", " ", 
+                    SuperscriptBox["#1", "20"]}], "-", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "21"]}], "-", 
+                   RowBox[{"8", " ", 
+                    SuperscriptBox["#1", "23"]}], "+", 
+                   RowBox[{"14", " ", 
+                    SuperscriptBox["#1", "24"]}], "-", 
+                   RowBox[{"3", " ", 
+                    SuperscriptBox["#1", "25"]}], "+", 
+                   RowBox[{"9", " ", 
+                    SuperscriptBox["#1", "26"]}], "+", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "27"]}], "-", 
+                   RowBox[{"3", " ", 
+                    SuperscriptBox["#1", "28"]}], "-", 
+                   RowBox[{"10", " ", 
+                    SuperscriptBox["#1", "29"]}], "-", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "30"]}], "-", 
+                   RowBox[{"6", " ", 
+                    SuperscriptBox["#1", "31"]}], "+", 
+                   SuperscriptBox["#1", "32"], "+", 
+                   RowBox[{"10", " ", 
+                    SuperscriptBox["#1", "33"]}], "-", 
+                   RowBox[{"3", " ", 
+                    SuperscriptBox["#1", "34"]}], "+", 
+                   SuperscriptBox["#1", "35"], "+", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "36"]}], "-", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "37"]}], "+", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "38"]}], "-", 
+                   RowBox[{"12", " ", 
+                    SuperscriptBox["#1", "39"]}], "-", 
+                   RowBox[{"5", " ", 
+                    SuperscriptBox["#1", "40"]}], "+", 
+                   RowBox[{"8", " ", 
+                    SuperscriptBox["#1", "41"]}], "+", 
+                   RowBox[{"6", " ", 
+                    SuperscriptBox["#1", "42"]}], "+", 
+                   RowBox[{"10", " ", 
+                    SuperscriptBox["#1", "43"]}], "-", 
+                   RowBox[{"8", " ", 
+                    SuperscriptBox["#1", "44"]}], "-", 
+                   RowBox[{"8", " ", 
+                    SuperscriptBox["#1", "45"]}], "-", 
+                   RowBox[{"7", " ", 
+                    SuperscriptBox["#1", "46"]}], "-", 
+                   RowBox[{"3", " ", 
+                    SuperscriptBox["#1", "47"]}], "+", 
+                   RowBox[{"9", " ", 
+                    SuperscriptBox["#1", "48"]}], "+", 
+                   SuperscriptBox["#1", "49"], "+", 
+                   RowBox[{"6", " ", 
+                    SuperscriptBox["#1", "50"]}], "+", 
+                   RowBox[{"6", " ", 
+                    SuperscriptBox["#1", "51"]}], "-", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "52"]}], "-", 
+                   RowBox[{"3", " ", 
+                    SuperscriptBox["#1", "53"]}], "-", 
+                   RowBox[{"10", " ", 
+                    SuperscriptBox["#1", "54"]}], "-", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "55"]}], "+", 
+                   RowBox[{"3", " ", 
+                    SuperscriptBox["#1", "56"]}], "+", 
+                   RowBox[{"5", " ", 
+                    SuperscriptBox["#1", "57"]}], "+", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "58"]}], "-", 
+                   SuperscriptBox["#1", "59"], "-", 
+                   SuperscriptBox["#1", "60"], "-", 
+                   SuperscriptBox["#1", "61"], "-", 
+                   SuperscriptBox["#1", "62"], "-", 
+                   SuperscriptBox["#1", "63"], "+", 
+                   SuperscriptBox["#1", "64"], "+", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "65"]}], "+", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "66"]}], "-", 
+                   SuperscriptBox["#1", "67"], "-", 
+                   RowBox[{"2", " ", 
+                    SuperscriptBox["#1", "68"]}], "-", 
+                   SuperscriptBox["#1", "69"], "+", 
+                   SuperscriptBox["#1", "71"]}], "&"}], ",", "3"}], "]"}], 
+           Short[#, 7]& ], 1.3035772690342964`},
+         "NumericalApproximation"],
+        Root[-6 + 3 # - 6 #^2 + 12 #^3 - 4 #^4 + 7 #^5 - 7 #^6 + #^7 + 5 #^9 - 
+         2 #^10 - 4 #^11 - 12 #^12 + 2 #^13 + 7 #^14 + 12 #^15 - 7 #^16 - 
+         10 #^17 - 4 #^18 + 3 #^19 + 9 #^20 - 7 #^21 - 8 #^23 + 14 #^24 - 
+         3 #^25 + 9 #^26 + 2 #^27 - 3 #^28 - 10 #^29 - 2 #^30 - 6 #^31 + #^32 + 
+         10 #^33 - 3 #^34 + #^35 + 7 #^36 - 7 #^37 + 7 #^38 - 12 #^39 - 
+         5 #^40 + 8 #^41 + 6 #^42 + 10 #^43 - 8 #^44 - 8 #^45 - 7 #^46 - 
+         3 #^47 + 9 #^48 + #^49 + 6 #^50 + 6 #^51 - 2 #^52 - 3 #^53 - 10 #^54 - 
+         2 #^55 + 3 #^56 + 5 #^57 + 
+         2 #^58 - #^59 - #^60 - #^61 - #^62 - #^63 + #^64 + 2 #^65 + 
+         2 #^66 - #^67 - 2 #^68 - #^69 + #^71& , 3, 0]], ",", 
+       "1.303577126903429639125"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Hafner\[Dash]Sarnak\[Dash]McCurley constant\>\"", ",", "Undefined",
+        ",", "0.35323637185499598454"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Backhouse's constant\>\"", ",", "Undefined", ",", 
+       "1.45607494858268967139"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Viswanath constant\>\"", ",", "Undefined", ",", " ", 
+       "1.1319882487943"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Komornik\[Dash]Loreti constant\>\"", ",", "Undefined", ",", 
+       "1.78723165018296593301"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Heath-Brown\[Dash]Moroz constant\>\"", ",", 
+       RowBox[{"Product", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"1", "-", 
+             RowBox[{"1", "/", 
+              RowBox[{"Prime", "[", "n", "]"}]}]}], ")"}], "^", "7"}], 
+          RowBox[{"(", 
+           RowBox[{"1", "+", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"7", " ", 
+                RowBox[{"Prime", "[", "n", "]"}]}], "+", "1"}], ")"}], "/", 
+             RowBox[{
+              RowBox[{"Prime", "[", "n", "]"}], "^", "2"}]}]}], ")"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.00131764115485317810"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<MRB constant\>\"", ",", " ", 
+       RowBox[{"Sum", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"-", "1"}], ")"}], "^", "n"}], "*", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"n", "^", 
+             RowBox[{"(", 
+              RowBox[{"1", "/", "n"}], ")"}]}], "-", "1"}], ")"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.18785964246206712024"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Prime constant\>\"", ",", 
+       RowBox[{"Sum", "[", 
+        RowBox[{
+         RowBox[{"1", "/", 
+          RowBox[{"2", "^", 
+           RowBox[{"Prime", "[", "n", "]"}]}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.41468250985111166024"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Somos' quadratic recurrence constant\>\"", ",", " ", 
+       RowBox[{"Product", "[", 
+        RowBox[{
+         RowBox[{"n", "^", 
+          RowBox[{"(", 
+           RowBox[{"1", "/", 
+            RowBox[{"2", "^", "n"}]}], ")"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "1.66168794963359412129"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<Foias constant\>\"", ",", "Undefined", ",", " ", 
+       "1.18745235112650105459"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Logarithmic capacity of the unit disk\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Gamma", "[", 
+          RowBox[{"1", "/", "4"}], "]"}], "^", "2"}], "/", 
+        RowBox[{"(", 
+         RowBox[{"4", " ", 
+          RowBox[{"Pi", "^", 
+           RowBox[{"(", 
+            RowBox[{"3", "/", "2"}], ")"}]}]}], ")"}]}], ",", 
+       "0.59017029950804811302"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Taniguchi constant\>\"", ",", 
+       RowBox[{"Product", "[", 
+        RowBox[{
+         RowBox[{"1", "-", 
+          RowBox[{"3", "/", 
+           RowBox[{
+            RowBox[{"Prime", "[", "n", "]"}], "^", "3"}]}], "+", 
+          RowBox[{"2", "/", 
+           RowBox[{
+            RowBox[{"Prime", "[", "n", "]"}], "^", "4"}]}], "+", 
+          RowBox[{"1", "/", 
+           RowBox[{
+            RowBox[{"Prime", "[", "n", "]"}], "^", "5"}]}], "-", 
+          RowBox[{"1", "/", 
+           RowBox[{
+            RowBox[{"Prime", "[", "n", "]"}], "^", "6"}]}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "Infinity"}], "}"}]}], "]"}], ",", 
+       "0.67823449191739197803"}], "}"}]}], "\[IndentingNewLine]", "}"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.9331226571245003`*^9, 3.933122746221388*^9}, {
+   3.933122823196787*^9, 3.933122845114073*^9}, 3.933122951461708*^9, {
+   3.933123012387705*^9, 3.933123029856964*^9}, {3.9331230744178333`*^9, 
+   3.933123083405695*^9}, {3.9331231281178913`*^9, 3.9331231543882637`*^9}, {
+   3.93312319858519*^9, 3.93312320044166*^9}, 3.9331232636815186`*^9, {
+   3.9331233506489124`*^9, 3.933123353112894*^9}, {3.933123416673834*^9, 
+   3.933123456351959*^9}, {3.9331234993049545`*^9, 3.9331235019839725`*^9}, {
+   3.933123547744957*^9, 3.9331235850481815`*^9}, {3.9331236380001945`*^9, 
+   3.9331236396235657`*^9}, {3.9331237536387844`*^9, 3.933123761238983*^9}, {
+   3.9331238432233677`*^9, 3.9331238450944195`*^9}, {3.9331239306858616`*^9, 
+   3.9331240643575916`*^9}, {3.933124168828598*^9, 3.9331241704124165`*^9}, 
+   3.9331242130388927`*^9, {3.933124604395506*^9, 3.933124604538166*^9}, {
+   3.9331247032186584`*^9, 3.9331247032819557`*^9}, {3.9331250207376328`*^9, 
+   3.933125020896738*^9}, {3.9331251064710827`*^9, 3.9331251174388294`*^9}, {
+   3.93312514886405*^9, 3.9331251766310425`*^9}, {3.933125236695204*^9, 
+   3.9331252618219166`*^9}, {3.9331253576386356`*^9, 
+   3.9331253688773212`*^9}, {3.933125821114746*^9, 3.9331258211705837`*^9}, {
+   3.9331259183695316`*^9, 3.9331259227344856`*^9}, {3.933126130705019*^9, 
+   3.93312613209606*^9}, {3.9331263743110466`*^9, 3.933126375143299*^9}, {
+   3.9331267316047173`*^9, 3.933126733165367*^9}, {3.933126782085367*^9, 
+   3.9331267834923363`*^9}, {3.933127220290249*^9, 3.9331272203932304`*^9}, {
+   3.933127371329132*^9, 3.933127398600231*^9}, {3.933127447392935*^9, 
+   3.93312744759956*^9}, {3.93312757743857*^9, 3.933127577567562*^9}, {
+   3.933127845966139*^9, 3.93312784792482*^9}, {3.9331279729483433`*^9, 
+   3.9331279744440746`*^9}, {3.9331281198205757`*^9, 3.933128119924732*^9}, {
+   3.9331282369489803`*^9, 3.933128333424999*^9}, {3.933128757383703*^9, 
+   3.933128759166687*^9}, {3.933128844022833*^9, 3.9331288603449516`*^9}, {
+   3.933129108254095*^9, 3.9331291828841724`*^9}, {3.9331292178762627`*^9, 
+   3.933129248804676*^9}, {3.9331298084648914`*^9, 3.933129904863142*^9}, {
+   3.933129953647028*^9, 3.933130338659788*^9}, {3.9331303814680176`*^9, 
+   3.9331304008593864`*^9}, {3.933130441787241*^9, 3.9331304897301826`*^9}, {
+   3.933130986304039*^9, 3.9331310542717705`*^9}, {3.9331311462220993`*^9, 
+   3.9331311990621414`*^9}, {3.933131286965868*^9, 3.933131458860016*^9}, 
+   3.9331324878471527`*^9, {3.9331325343491383`*^9, 3.933132550923458*^9}, {
+   3.933133681769163*^9, 3.933133954177948*^9}, {3.93313400584951*^9, 
+   3.933134949162977*^9}, {3.9332936477206345`*^9, 3.933293679189169*^9}, {
+   3.9332938726663094`*^9, 3.933293883920145*^9}, {3.9332940488863964`*^9, 
+   3.9332941063593388`*^9}, {3.933294158848995*^9, 3.9332943335371227`*^9}, {
+   3.9332944445051575`*^9, 3.9332945670670166`*^9}, {3.9332950869001904`*^9, 
+   3.9332951360219135`*^9}, {3.9332952144167957`*^9, 
+   3.9332952453188553`*^9}, {3.93329648068721*^9, 3.933296504383108*^9}, 
+   3.933296679034254*^9, {3.9332967092240944`*^9, 3.9332968490830326`*^9}, {
+   3.933297051925585*^9, 3.9332970727392426`*^9}, {3.9332972101108723`*^9, 
+   3.9332972535733547`*^9}, {3.9332973374453983`*^9, 3.933297418911207*^9}, 
+   3.933297497942217*^9, {3.9332975437272263`*^9, 3.933297689089697*^9}, {
+   3.933298038757164*^9, 3.933298041572178*^9}},
+ CellLabel->"In[30]:=",ExpressionUUID->"fbe6e22c-c8f9-5747-85e1-9d09181435ad"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Length", "[", "wikiMathConstantList", "]"}]], "Input",
+ CellChangeTimes->{{3.93313249324238*^9, 3.9331324947973995`*^9}, {
+  3.93313496956328*^9, 3.933134971613058*^9}},
+ CellLabel->"In[31]:=",ExpressionUUID->"c6d27c22-4e3c-6a46-858f-13b118657839"],
+
+Cell[BoxData["101"], "Output",
+ CellChangeTimes->{3.9331324951240807`*^9, 3.9331349719257946`*^9, 
+  3.933293563834139*^9, 3.933297712772066*^9, 3.9332980452492065`*^9},
+ CellLabel->"Out[31]=",ExpressionUUID->"3be05bb9-694f-2c44-b627-7fd56dc78e52"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ParallelTable", "[", 
+  RowBox[{
+   RowBox[{"N", "[", 
+    RowBox[{
+     RowBox[{"wikiMathConstantList", "[", 
+      RowBox[{"[", 
+       RowBox[{"k", ",", "2"}], "]"}], "]"}], ",", "32"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"k", ",", "1", ",", 
+     RowBox[{"Length", "[", "wikiMathConstantList", "]"}]}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.9331349793796196`*^9, 3.933135007582052*^9}},
+ CellLabel->"In[32]:=",ExpressionUUID->"34f8929e-f18c-0b49-97eb-5b202a1e384b"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "unfl", "\"Underflow occurred in computation.\"", None, 32, 88, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980465641994`*^9},
+ CellLabel->
+  "(kernel 7)",ExpressionUUID->"0901b017-9195-f845-9021-b7f62884db19"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "unfl", "\"Underflow occurred in computation.\"", None, 32, 89, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.933298046591196*^9},
+ CellLabel->
+  "(kernel 7)",ExpressionUUID->"776dead0-66e8-594e-bbe3-0e81256ed84f"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "unfl", "\"Underflow occurred in computation.\"", None, 32, 90, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980466211967`*^9},
+ CellLabel->
+  "(kernel 7)",ExpressionUUID->"f1b72151-ef93-a34a-b657-b28bf2d4fe1c"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "stop", 
+   "\"Further output of \\!\\(\\*StyleBox[RowBox[{\\\"General\\\", \
+\\\"::\\\", \\\"unfl\\\"}], \\\"MessageName\\\"]\\) will be suppressed during \
+this calculation.\"", None, 32, 91, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980466561985`*^9},
+ CellLabel->
+  "(kernel 7)",ExpressionUUID->"a1aeaac0-3f3f-824e-b2ec-c43d70e95a7e"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "N", "meprec", 
+   "\"Internal precision limit $MaxExtraPrecision = \\!\\(\\*RowBox[{\\\"50.`\
+\\\"}]\\) reached while evaluating \\!\\(\\*RowBox[{\\\"1\\\", \\\"+\\\", \
+RowBox[{UnderoverscriptBox[\\\"\[Sum]\\\", RowBox[{\\\"n\\\", \\\"=\\\", \
+\\\"2\\\"}], \\\"\[Infinity]\\\"], RowBox[{\\\"(\\\", RowBox[{\\\"1\\\", \
+\\\"-\\\", FractionBox[\\\"1\\\", RowBox[{\\\"Zeta\\\", \\\"[\\\", \\\"n\\\", \
+\\\"]\\\"}]]}], \\\")\\\"}]}]}]\\).\"", None, 32, 92, 24403041243187611266, 
+   "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.93329804692568*^9},
+ CellLabel->
+  "(kernel 5)",ExpressionUUID->"9edf5d23-d6c0-c643-91ce-ea9b819734d4"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"15.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 93, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980490496807`*^9},
+ CellLabel->
+  "(kernel 5)",ExpressionUUID->"a10f1516-cce5-c14d-929d-cae83867852d"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"14.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 94, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980490946846`*^9},
+ CellLabel->
+  "(kernel 5)",ExpressionUUID->"6eb4c7d5-df2b-ea44-a0a9-50ab9cc5f499"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"13.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 95, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980491346817`*^9},
+ CellLabel->
+  "(kernel 5)",ExpressionUUID->"60e48c55-a1e1-8c45-8b26-ece4651ebb94"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "stop", 
+   "\"Further output of \\!\\(\\*StyleBox[RowBox[{\\\"Prime\\\", \\\"::\\\", \
+\\\"intpp\\\"}], \\\"MessageName\\\"]\\) will be suppressed during this \
+calculation.\"", None, 32, 96, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980491676807`*^9},
+ CellLabel->
+  "(kernel 5)",ExpressionUUID->"0bc4a34d-b134-8a42-9859-99af1abeac20"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"15.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 97, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.933298049368685*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"c9390cc2-00cc-814b-a329-4ba2b2ac8b82"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"14.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 98, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980494086857`*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"3c70bf37-9b9b-eb4f-8530-af308530647c"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"13.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 99, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.933298049453684*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"4be9d312-f563-3e47-91b4-46137942c9d7"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "stop", 
+   "\"Further output of \\!\\(\\*StyleBox[RowBox[{\\\"Prime\\\", \\\"::\\\", \
+\\\"intpp\\\"}], \\\"MessageName\\\"]\\) will be suppressed during this \
+calculation.\"", None, 32, 100, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980495026855`*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"45db1622-4d24-5142-b3c9-e967bf19900b"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "N", "meprec", 
+   "\"Internal precision limit $MaxExtraPrecision = \\!\\(\\*RowBox[{\\\"50.`\
+\\\"}]\\) reached while evaluating \\!\\(\\*RowBox[{UnderoverscriptBox[\\\"\
+\[Product]\\\", RowBox[{\\\"n\\\", \\\"=\\\", \\\"1\\\"}], \
+\\\"\[Infinity]\\\"], RowBox[{\\\"(\\\", RowBox[{\\\"1\\\", \\\"-\\\", \
+FractionBox[RowBox[{\\\"Prime\\\", \\\"[\\\", \\\"n\\\", \\\"]\\\"}], \
+RowBox[{RowBox[{\\\"-\\\", \\\"1\\\"}], \\\"+\\\", \
+SuperscriptBox[RowBox[{\\\"Prime\\\", \\\"[\\\", \\\"n\\\", \\\"]\\\"}], \
+\\\"3\\\"]}]]}], \\\")\\\"}]}]\\).\"", None, 32, 101, 24403041243187611266, 
+   "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980495776806`*^9},
+ CellLabel->
+  "(kernel 5)",ExpressionUUID->"4c6c0681-9dc3-634d-8a43-85f18e393201"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "N", "meprec", 
+   "\"Internal precision limit $MaxExtraPrecision = \\!\\(\\*RowBox[{\\\"50.`\
+\\\"}]\\) reached while evaluating \\!\\(\\*RowBox[{FractionBox[\\\"1\\\", \\\
+\"2\\\"], \\\"+\\\", RowBox[{FractionBox[\\\"1\\\", \\\"2\\\"], \\\" \\\", \
+RowBox[{UnderoverscriptBox[\\\"\[Product]\\\", RowBox[{\\\"n\\\", \\\"=\\\", \
+\\\"1\\\"}], \\\"\[Infinity]\\\"], RowBox[{\\\"(\\\", RowBox[{\\\"1\\\", \
+\\\"-\\\", FractionBox[\\\"2\\\", SuperscriptBox[RowBox[{\\\"Prime\\\", \\\"[\
+\\\", \\\"n\\\", \\\"]\\\"}], \\\"2\\\"]]}], \\\")\\\"}]}]}]}]\\).\"", None, 
+   32, 102, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980501056805`*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"4a75fcb0-e3e3-b241-a4ba-7044254a2051"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"15.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 103, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.933298050215683*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"b55295d3-c037-2d43-b0b5-fbc4c226e901"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"14.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 104, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980502496815`*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"01caa808-ff87-b843-b200-61344f43bd69"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"13.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 105, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.933298050305681*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"26d0bfb0-8495-7846-b056-c4f627f3a4e8"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "stop", 
+   "\"Further output of \\!\\(\\*StyleBox[RowBox[{\\\"Prime\\\", \\\"::\\\", \
+\\\"intpp\\\"}], \\\"MessageName\\\"]\\) will be suppressed during this \
+calculation.\"", None, 32, 106, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980503576813`*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"5608ba0b-c4c8-5447-80f8-d0580c867714"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "N", "meprec", 
+   "\"Internal precision limit $MaxExtraPrecision = \\!\\(\\*RowBox[{\\\"50.`\
+\\\"}]\\) reached while evaluating \\!\\(\\*RowBox[{UnderoverscriptBox[\\\"\
+\[Product]\\\", RowBox[{\\\"n\\\", \\\"=\\\", \\\"1\\\"}], \
+\\\"\[Infinity]\\\"], RowBox[{\\\"(\\\", RowBox[{\\\"1\\\", \\\"-\\\", \
+FractionBox[\\\"1\\\", RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"-\\\", \
+\\\"1\\\"}], \\\"+\\\", RowBox[{\\\"Prime\\\", \\\"[\\\", \\\"n\\\", \
+\\\"]\\\"}]}], \\\")\\\"}], \\\" \\\", RowBox[{\\\"Prime\\\", \\\"[\\\", \
+\\\"n\\\", \\\"]\\\"}]}]]}], \\\")\\\"}]}]\\).\"", None, 32, 107, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.933298054212986*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"ba0cb6f6-1e38-6247-b76c-0b88e74e5315"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"15.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 108, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980549255276`*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"62395340-3ad1-aa4c-8387-55db094166bc"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"14.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 109, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980549745274`*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"f7d61932-a766-1b4a-82cf-6c7a891e38e1"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"13.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 110, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980550175285`*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"23ca9db5-903c-6942-9004-7ceda177b0aa"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "stop", 
+   "\"Further output of \\!\\(\\*StyleBox[RowBox[{\\\"Prime\\\", \\\"::\\\", \
+\\\"intpp\\\"}], \\\"MessageName\\\"]\\) will be suppressed during this \
+calculation.\"", None, 32, 111, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980550715275`*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"ea838caf-cb29-7048-a24b-89cdf9584e20"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"16.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 112, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980554065266`*^9},
+ CellLabel->
+  "(kernel 6)",ExpressionUUID->"d0ea4ef0-7253-934b-9a34-44d3a0de5472"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"17.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 113, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.933298055459528*^9},
+ CellLabel->
+  "(kernel 6)",ExpressionUUID->"41ab9c60-e23e-5d47-a8d6-f3c79ea61fa6"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Prime", "intpp", 
+   "\"Positive integer argument expected in \\!\\(\\*RowBox[{\\\"Prime\\\", \
+\\\"[\\\", \\\"18.`42.\\\", \\\"]\\\"}]\\).\"", None, 32, 114, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980555075264`*^9},
+ CellLabel->
+  "(kernel 6)",ExpressionUUID->"d49c1e3e-e3e1-104d-943f-40ebae21647e"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "stop", 
+   "\"Further output of \\!\\(\\*StyleBox[RowBox[{\\\"Prime\\\", \\\"::\\\", \
+\\\"intpp\\\"}], \\\"MessageName\\\"]\\) will be suppressed during this \
+calculation.\"", None, 32, 115, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980555525246`*^9},
+ CellLabel->
+  "(kernel 6)",ExpressionUUID->"bd32b571-d629-954a-a9d1-ab0692b3cb93"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "N", "meprec", 
+   "\"Internal precision limit $MaxExtraPrecision = \\!\\(\\*RowBox[{\\\"50.`\
+\\\"}]\\) reached while evaluating \\!\\(\\*RowBox[{\\\"EulerGamma\\\", \\\"+\
+\\\", RowBox[{UnderoverscriptBox[\\\"\[Sum]\\\", RowBox[{\\\"n\\\", \
+\\\"=\\\", \\\"1\\\"}], \\\"\[Infinity]\\\"], RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"Log\\\", \\\"[\\\", RowBox[{\\\"1\\\", \\\"-\\\", \
+FractionBox[\\\"1\\\", RowBox[{\\\"Prime\\\", \\\"[\\\", RowBox[{\\\"\
+\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]]}], \
+\\\"]\\\"}], \\\"+\\\", FractionBox[\\\"1\\\", RowBox[{\\\"Prime\\\", \\\"[\\\
+\", \\\"n\\\", \\\"]\\\"}]]}], \\\")\\\"}]}]}]\\).\"", None, 32, 116, 
+   24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9332980591172104`*^9},
+ CellLabel->
+  "(kernel 6)",ExpressionUUID->"a0f4092f-e2ee-6e4a-ae3a-51f530050a58"],
+
+Cell[BoxData["$Aborted"], "Output",
+ CellChangeTimes->{3.93313510150959*^9, 3.9332948366565*^9, 
+  3.933297765239273*^9, 3.933298067602211*^9},
+ CellLabel->"Out[32]=",ExpressionUUID->"958dbb1b-8ea4-6f4c-8f95-ad8542b80166"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"wikiMathConstantList", "[", 
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"1", ";;"}], ",", "3"}], "]"}], "]"}], ",", 
+     RowBox[{"wikiMathConstantList", "[", 
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"1", ";;"}], ",", "1"}], "]"}], "]"}]}], "}"}], "//", 
+   "Transpose"}], "//", "NumericalSort"}]], "Input",
+ CellChangeTimes->{{3.9331352187305145`*^9, 3.933135228943514*^9}, {
+  3.9332980033616314`*^9, 3.9332980269012165`*^9}},
+ CellLabel->"In[33]:=",ExpressionUUID->"2d99fbcd-2550-9642-8887-1b1d499d0bc1"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "1.`"}], ",", "\<\"Neg\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0.`", ",", "\<\"Zero\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+      RowBox[{"1.`", " ", "\[ImaginaryI]"}]}], 
+     ",", "\<\"Imaginary unit\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.0013176411548531781`17.119797151011813", 
+     ",", "\<\"Heath-Brown\[Dash]Moroz constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.08607133205593420688`18.9348585242398", 
+     ",", "\<\"Erd\[ODoubleAcute]s\[Dash]Tenenbaum\[Dash]Ford constant\"\>"}],
+     "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.110001`19.041396633271933", ",", "\<\"Liouville's constant\"\>"}], 
+    "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.1149420448532962007`19.060478919094905", 
+     ",", "\<\"Kepler\[Dash]Bouwkamp constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.12345678910111213141`19.091514977524962", 
+     ",", "\<\"Champernowne constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.18785964246206712024`19.273833491444087", 
+     ",", "\<\"MRB constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.19452804946532511361`19.288982232138398", 
+     ",", "\<\"Second du Bois-Reymond constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.23571113171923293137`19.37238009304651", 
+     ",", "\<\"Copeland\[Dash]Erd\[ODoubleAcute]s constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.26149721284764278375`19.417467064326278", 
+     ",", "\<\"Meissel-Mertens constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.28016949902386913303`19.447420853552746", 
+     ",", "\<\"Bernstein's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.35323637185499598454`19.54806541541134", 
+     ",", "\<\"Hafner\[Dash]Sarnak\[Dash]McCurley constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.37395581361920228805`19.572820289272553", 
+     ",", "\<\"Artin's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.41245403364010759778`19.615375555191868", 
+     ",", "\<\"Prouhet\[Dash]Thue\[Dash]Morse constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.41468250985111166024`19.61771571842326", 
+     ",", "\<\"Prime constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.433212701892219323381861585376468091735701313452595157014`56.\
+63670118175022", ",", "\<\"Bloch constant lower limit\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.4718616534526817848744687936113161490770126651520228692521`57.\
+67381468518238", ",", "\<\"Bloch constant upper limit\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.47494937998792065033`19.67664732507033", 
+     ",", "\<\"Weierstrass constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0.5`", ",", "\<\"Half\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.543258965342976706952728295300613231138863371313713010605`56.\
+735006902165786", ",", "\<\"Landau constant upper limit\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.56714329040978387299`19.753692798526576", 
+     ",", "\<\"Omega constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.57595996889294543964`19.76039229958111", 
+     ",", "\<\"Stephens' constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.5772156649015328606`19.76133810878317", ",", "\<\"Euler gamma\"\>"}], 
+    "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.59017029950804811302`19.77097734971778", 
+     ",", "\<\"Logarithmic capacity of the unit disk\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.59634736232319407434`19.775499302685976", 
+     ",", "\<\"Gompertz constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.62432998854355087099`19.79541419596956", 
+     ",", "\<\"Golomb\[Dash]Dickman constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.64341054628833802618`19.808488175243745", 
+     ",", "\<\"Cahen's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.66016181584686957392`19.819650400868905", 
+     ",", "\<\"Twin primes constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.6613170494696223352`18.82040971943032", 
+     ",", "\<\"Feller\[Dash]Tornier constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.66170718226717623515`19.820665848565422", 
+     ",", "\<\"Robbins constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.66274341934918158097`19.821345424138777", 
+     ",", "\<\"Laplace limit\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.67823449191739197803`19.831379872243144", 
+     ",", "\<\"Taniguchi constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.69314718055994530941`19.84082546104514", 
+     ",", "\<\"Natural logarithm of 2\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.69777465796400798201`19.8437151925322", 
+     ",", "\<\"First continued fraction constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.73908513321516064165`19.868694466481546", 
+     ",", "\<\"Dottie number\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.76422365358920066299`19.8832204754674", 
+     ",", "\<\"Landau-Ramanujan constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.82246703342411321823`19.915118499340643", 
+     ",", "\<\"First Nielsen-Ramanujan constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.83462684167407318628`19.92149234754977", 
+     ",", "\<\"Gauss's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.85073618820186726036`19.9297949070051", 
+     ",", "\<\"Regular paperfolding sequence\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.91596559417721901505`19.961879160851687", 
+     ",", "\<\"Catalan's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.955316618124509278163`20.980147332542156", 
+     ",", "\<\"Magic angle\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.97027011439203392574`19.986892654739975", 
+     ",", "\<\"Lochs constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "0.98943127383114695174`19.99538563337569", 
+     ",", "\<\"Asymptotic behavior of Lebesgue constants\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1.`", ",", "\<\"One\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.00743475688427937609`20.003216930105832", 
+     ",", "\<\"DeVicci's tesseract constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.01494160640965362502`20.00644105629496", 
+     ",", "\<\"Gieseking constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.05946309435929526456`20.025085832972", 
+     ",", "\<\"Twelfth root of 2\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1.1319882487943`", ",", "\<\"Viswanath constant\"\>"}], "}"}], 
+   ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.15470053837925152901`20.06246936830415", 
+     ",", "\<\"Second Hermite constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.17628081825991750654`20.07051101498995", 
+     ",", "\<\"Salem constant[\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.18656911041562545282`20.074293038295508", 
+     ",", "\<\"L\[EAcute]vy's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.18745235112650105459`20.074616191721738", 
+     ",", "\<\"Foias constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.20205690315959428539`20.079925026854138", 
+     ",", "\<\"Ap\[EAcute]ry's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.23370055013616982735`20.09120975839632", 
+     ",", "\<\"Second Favard constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.25992104989487316476`20.100343331887995", 
+     ",", "\<\"Cube root of 2\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.28242712910062263687`20.108032696724504", 
+     ",", "\<\"Glaisher-Kinkelin constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.303577126903429639125`21.115136731551644", 
+     ",", "\<\"Conway's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.30637788386308069046`20.116068819464736", 
+     ",", "\<\"Mills' constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.32471795724474602596`20.122123423442005", 
+     ",", "\<\"Plastic ratio\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.4142135623730950488`20.15051499783199", 
+     ",", "\<\"Pythagoras constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.44224957030740838232`20.15904041823989", 
+     ",", "\<\"Cube root of 3\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.45136923488338105028`20.161777912970418", 
+     ",", "\<\"Soldner constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.45607494858268967139`20.163183730003226", 
+     ",", "\<\"Backhouse's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.46557123187676802665`20.166006931514964", 
+     ",", "\<\"Supergolden ratio\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.46707807943397547289`20.16645322806616", 
+     ",", "\<\"Porter's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.53960071783900203869`20.18740810491245", 
+     ",", "\<\"Lieb's square ice constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.60669515241529176378`20.205933483370085", 
+     ",", "\<\"Erd\[ODoubleAcute]s\[Dash]Borwein constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.6180339887498948482`20.20898764024998", ",", "\<\"Golden ratio\"\>"}], 
+    "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.66168794963359412129`20.220549470425045", 
+     ",", "\<\"Somos' quadratic recurrence constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.70521114010536776428`20.231778161220277", 
+     ",", "\<\"Niven's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.73205080756887729352`20.238560627359835", 
+     ",", "\<\"Theodorus constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.78723165018296593301`20.25218084678435", 
+     ",", "\<\"Komornik\[Dash]Loreti constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.83928675521416113255`20.264649443484252", 
+     ",", "\<\"Tribonacci constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.84775906502257351225`20.26664534158493", 
+     ",", "\<\"Connective constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1.902160583104`", ",", "\<\"Brun's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1.95996398454005423552`20.292248091020138", ",", "\<\"Z score\"\>"}], 
+    "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2.`", ",", "\<\"Two\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.09455148154232659148`20.321091039261567", 
+     ",", "\<\"Wallis's constant \"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.2360679774997896964`20.34948500216801", ",", "\<\"Sqrt 5\"\>"}], "}"}],
+    ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.29558714933926807403`20.36089378490805", 
+     ",", "\<\"Universal parabolic constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.39996322972865332223`20.38020458785816", ",", "\<\"Golden angle\"\>"}],
+     "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.4142135623730950488`20.38277568533786", ",", "\<\"Silver ratio\"\>"}], 
+    "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.50290787509589282228`20.398444864760517", 
+     ",", "\<\"Feigenbaum alpha\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.58498175957925321706`20.41245748292628", 
+     ",", "\<\"Sierpi\:0144ski's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.62205755429211981046`20.418642220243903", 
+     ",", "\<\"Lemniscate constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.66514414269022518865`20.425720702549118", 
+     ",", "\<\"Gelfond-Schneider constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.6854520010653064453`20.429017394336256", 
+     ",", "\<\"Khinchin's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.71828182845904523536`20.434294481903255", 
+     ",", "\<\"Euler number\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.80777024202851936522`20.448361566883108", 
+     ",", "\<\"Frans\[EAcute]n\[Dash]Robinson constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3.14159265358979323846`20.49714987269413", ",", "\<\"Pi\"\>"}], 
+    "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "3.27582291872181115978`20.515320417050358", 
+     ",", "\<\"L\[EAcute]vy's constant 2\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "3.35988566624317755317`20.526324499007547", 
+     ",", "\<\"Reciprocal Fibonacci constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "4.53236014182719380962`20.656324411649", 
+     ",", "\<\"Van der Pauw constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "4.66920160910299067185`20.66924262651821", 
+     ",", "\<\"Feigenbaum delta\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6.28318530717958647692`20.798179868358112", ",", "\<\"Tau\"\>"}],
+     "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "14.13472514173469379045`21.150287367789208", 
+     ",", "\<\"Imaginary part of first non-trivial zero of zeta \
+function\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "23.14069263277926900572`21.364376353841845", 
+     ",", "\<\"Gelfond's constant\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "137.5077640500378546463487396283702776207600000000000000000001`40.\
+138327220267335", ",", "\<\"Golden angle degrees\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2.62537412640768743999999999999250073`35.419191200868354*^17", 
+     ",", "\<\"Ramanujan's constant\"\>"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.933135229458599*^9, 3.933297765286274*^9, 3.933297971290949*^9, {
+   3.9332980086893845`*^9, 3.9332980273215046`*^9}, 3.9332980676642094`*^9},
+ CellLabel->"Out[33]=",ExpressionUUID->"f909b5c6-15b7-a64a-bacf-320c64d6a4c4"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"%", "/", "%%"}], "-", "1"}]], "Input",
+ CellChangeTimes->{{3.9331352338165436`*^9, 3.9331352363752537`*^9}},
+ CellLabel->"In[25]:=",ExpressionUUID->"58795f8b-a237-124f-840f-f5203a5701af"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Power", "infy", 
+   "\"Infinite expression \\!\\(\\*FractionBox[\\\"1\\\", \\\"0\\\"]\\) \
+encountered.\"", 2, 25, 85, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.9331352366868305`*^9, 3.9332977653112736`*^9},
+ CellLabel->
+  "During evaluation of \
+In[25]:=",ExpressionUUID->"3b77b2e1-0b92-684e-8bca-3c048fad2abf"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Power", "infy", 
+   "\"Infinite expression \\!\\(\\*FractionBox[\\\"1\\\", \\\"0\\\"]\\) \
+encountered.\"", 2, 25, 86, 24403041243187611266, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.9331352366868305`*^9, 3.933297765319273*^9},
+ CellLabel->
+  "During evaluation of \
+In[25]:=",ExpressionUUID->"fa8c72f1-bb45-0e49-94a0-07bd76750fe0"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Infinity", "indet", 
+   "\"Indeterminate expression \\!\\(\\*RowBox[{\\\"0.`\\\", \\\" \\\", \
+\\\"ComplexInfinity\\\"}]\\) encountered.\"", 2, 25, 87, 24403041243187611266,
+    "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.9331352366868305`*^9, 3.933297765324272*^9},
+ CellLabel->
+  "During evaluation of \
+In[25]:=",ExpressionUUID->"eb05113d-7dd0-9d4f-84d0-8f83b4926929"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.`", ",", "0.`", ",", "0.`", ",", "0``20.497149872692766", ",", 
+   "0``20.798179868355383", ",", "0``20.150514997831376", ",", 
+   "0``20.23856062735908", ",", "0``20.349485002167036", ",", 
+   "0``20.20898764024928", ",", "0``20.382775685336814", ",", "Indeterminate",
+    ",", "0.`", ",", "0``20.100343331887448", ",", "0``20.159040418239265", 
+   ",", "0``20.025085832971538", ",", "0``20.166006931514328", ",", 
+   RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+    RowBox[{"0.`", " ", "\[ImaginaryI]"}]}], ",", "0``20.266645341584123", 
+   ",", "0``19.060478919094855", ",", "0``20.321091039260654", ",", 
+   "0``20.43429448190207", ",", "0``19.84082546104484", ",", 
+   "0``20.418642220242766", ",", "0``19.761338108782915", ",", 
+   "0``20.205933483369385", ",", "0``19.75369279852633", ",", 
+   "0``20.079925026853616", ",", "0``21.15028736778307", ",", 
+   "0``19.82134542413849", ",", "0``20.16177791296979", ",", 
+   "0``19.921492347549403", ",", "0``20.06246936830365", ",", 
+   "0``19.041396633271887", ",", "0``19.843715192531903", ",", 
+   "0``31.99983460955619", ",", "0``20.10803269672395", ",", 
+   "0``19.96187916085129", ",", "0``19.868694466481227", ",", 
+   RowBox[{"-", "0.0015925443280380982`1.541927461565124"}], ",", 
+   RowBox[{"-", "2.324895398478710714963649536`9.727297202837564*^-11"}], ",",
+    "Undefined", ",", "0``21.364376353831794", ",", "0``20.425720702547956", 
+   ",", "0``20.091209758395788", ",", "0``20.380204587857115", ",", 
+   "0``31.999999996841677", ",", "0``20.41245748292516", ",", "Undefined", 
+   ",", "0``19.915118499340288", ",", "0``20.00644105629452", ",", 
+   "Undefined", ",", "0``20.264649443483453", ",", "Undefined", ",", 
+   "Undefined", ",", "0``20.12212342344143", ",", "0``32.", ",", "0``32.", 
+   ",", "0``20.29224809101929", ",", "0``32.", ",", "Undefined", ",", 
+   "Undefined", ",", "0``19.99538563337526", ",", 
+   RowBox[{"-", "0.0004066230543868322`1.4359710104857686"}], ",", 
+   "0``19.09151497752491", ",", "0``20.070511014989442", ",", 
+   "6.13704137439626213`0.21697644553353745*^-21", ",", 
+   "0``20.074293038294993", ",", "1.0171548300800441`*^13", ",", "Undefined", 
+   ",", "Undefined", ",", "0``19.775499302685713", ",", 
+   "0``20.65632441164703", ",", "0``20.980147332538007", ",", 
+   RowBox[{"-", "0.0008375650537171239`1.4388323859497492"}], ",", 
+   "0``20.166453228065524", ",", "ComplexInfinity", ",", 
+   "0``20.0032169301054", ",", "0``20.187408104911782", ",", 
+   "0``20.231760185918628", ",", 
+   RowBox[{"-", "0.0008312247461387477`1.4355295453882453"}], ",", 
+   "0``19.92979490700473", ",", "0``20.526324499006087", ",", "Undefined", 
+   ",", "0``19.820665848565138", ",", "0``19.676647325070128", ",", 
+   "0``20.44836156688189", ",", "Undefined", ",", "0``19.288982232138313", 
+   ",", "0``18.934858524239765", ",", 
+   RowBox[{"-", "1.0903140928302940148925599848684`14.152688404483392*^-7"}], 
+   ",", "Undefined", ",", "Undefined", ",", "Undefined", ",", "Undefined", 
+   ",", 
+   RowBox[{"-", "0.0225141017197563312`1.3726440798047645"}], ",", 
+   "0``14.13596477748329", ",", "0``19.6177157183534", ",", 
+   "0``20.220549470424324", ",", "Undefined", ",", "0``19.770977349717523", 
+   ",", 
+   RowBox[{"-", "9.3153971167373`0.989805332588012*^-6"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.9331352367038307`*^9, 3.9332977653292713`*^9},
+ CellLabel->"Out[25]=",ExpressionUUID->"d4926185-2a6a-0047-aa17-3775ccb509cf"]
+}, Open  ]]
+},
+WindowSize->{1280, 738},
+WindowMargins->{{-5.5, Automatic}, {Automatic, -5.5}},
+Magnification:>0.75 Inherited,
+FrontEndVersion->"14.1 for Microsoft Windows (64-bit) (July 16, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"4110b7ea-6c77-bb45-96d9-ea76a353d585"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 397, 11, 21, "Input",ExpressionUUID->"ab3adce2-80fc-ea4d-89ba-24cb266a1251"],
+Cell[958, 33, 452, 13, 21, "Input",ExpressionUUID->"e89c5074-b44c-f34d-9db2-a1097256f4ee"],
+Cell[1413, 48, 393, 10, 31, "Input",ExpressionUUID->"0ce156d3-a2e6-7d45-a146-0523e12b7ee8"],
+Cell[1809, 60, 48750, 1157, 2589, "Input",ExpressionUUID->"fbe6e22c-c8f9-5747-85e1-9d09181435ad"],
+Cell[CellGroupData[{
+Cell[50584, 1221, 272, 4, 31, "Input",ExpressionUUID->"c6d27c22-4e3c-6a46-858f-13b118657839"],
+Cell[50859, 1227, 248, 3, 24, "Output",ExpressionUUID->"3be05bb9-694f-2c44-b627-7fd56dc78e52"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[51144, 1235, 513, 13, 31, "Input",ExpressionUUID->"34f8929e-f18c-0b49-97eb-5b202a1e384b"],
+Cell[51660, 1250, 332, 8, 18, "Message",ExpressionUUID->"0901b017-9195-f845-9021-b7f62884db19"],
+Cell[51995, 1260, 330, 8, 18, "Message",ExpressionUUID->"776dead0-66e8-594e-bbe3-0e81256ed84f"],
+Cell[52328, 1270, 332, 8, 18, "Message",ExpressionUUID->"f1b72151-ef93-a34a-b657-b28bf2d4fe1c"],
+Cell[52663, 1280, 458, 10, 18, "Message",ExpressionUUID->"a1aeaac0-3f3f-824e-b2ec-c43d70e95a7e"],
+Cell[53124, 1292, 709, 14, 31, "Message",ExpressionUUID->"9edf5d23-d6c0-c643-91ce-ea9b819734d4"],
+Cell[53836, 1308, 416, 10, 18, "Message",ExpressionUUID->"a10f1516-cce5-c14d-929d-cae83867852d"],
+Cell[54255, 1320, 416, 10, 18, "Message",ExpressionUUID->"6eb4c7d5-df2b-ea44-a0a9-50ab9cc5f499"],
+Cell[54674, 1332, 416, 10, 18, "Message",ExpressionUUID->"60e48c55-a1e1-8c45-8b26-ece4651ebb94"],
+Cell[55093, 1344, 457, 10, 18, "Message",ExpressionUUID->"0bc4a34d-b134-8a42-9859-99af1abeac20"],
+Cell[55553, 1356, 414, 10, 18, "Message",ExpressionUUID->"c9390cc2-00cc-814b-a329-4ba2b2ac8b82"],
+Cell[55970, 1368, 416, 10, 18, "Message",ExpressionUUID->"3c70bf37-9b9b-eb4f-8530-af308530647c"],
+Cell[56389, 1380, 414, 10, 18, "Message",ExpressionUUID->"4be9d312-f563-3e47-91b4-46137942c9d7"],
+Cell[56806, 1392, 458, 10, 18, "Message",ExpressionUUID->"45db1622-4d24-5142-b3c9-e967bf19900b"],
+Cell[57267, 1404, 817, 16, 31, "Message",ExpressionUUID->"4c6c0681-9dc3-634d-8a43-85f18e393201"],
+Cell[58087, 1422, 827, 15, 31, "Message",ExpressionUUID->"4a75fcb0-e3e3-b241-a4ba-7044254a2051"],
+Cell[58917, 1439, 415, 10, 18, "Message",ExpressionUUID->"b55295d3-c037-2d43-b0b5-fbc4c226e901"],
+Cell[59335, 1451, 417, 10, 18, "Message",ExpressionUUID->"01caa808-ff87-b843-b200-61344f43bd69"],
+Cell[59755, 1463, 415, 10, 18, "Message",ExpressionUUID->"26d0bfb0-8495-7846-b056-c4f627f3a4e8"],
+Cell[60173, 1475, 458, 10, 18, "Message",ExpressionUUID->"5608ba0b-c4c8-5447-80f8-d0580c867714"],
+Cell[60634, 1487, 852, 16, 31, "Message",ExpressionUUID->"ba0cb6f6-1e38-6247-b76c-0b88e74e5315"],
+Cell[61489, 1505, 417, 10, 18, "Message",ExpressionUUID->"62395340-3ad1-aa4c-8387-55db094166bc"],
+Cell[61909, 1517, 417, 10, 18, "Message",ExpressionUUID->"f7d61932-a766-1b4a-82cf-6c7a891e38e1"],
+Cell[62329, 1529, 417, 10, 18, "Message",ExpressionUUID->"23ca9db5-903c-6942-9004-7ceda177b0aa"],
+Cell[62749, 1541, 458, 10, 18, "Message",ExpressionUUID->"ea838caf-cb29-7048-a24b-89cdf9584e20"],
+Cell[63210, 1553, 417, 10, 18, "Message",ExpressionUUID->"d0ea4ef0-7253-934b-9a34-44d3a0de5472"],
+Cell[63630, 1565, 415, 10, 18, "Message",ExpressionUUID->"41ab9c60-e23e-5d47-a8d6-f3c79ea61fa6"],
+Cell[64048, 1577, 417, 10, 18, "Message",ExpressionUUID->"d49c1e3e-e3e1-104d-943f-40ebae21647e"],
+Cell[64468, 1589, 458, 10, 18, "Message",ExpressionUUID->"bd32b571-d629-954a-a9d1-ab0692b3cb93"],
+Cell[64929, 1601, 938, 17, 31, "Message",ExpressionUUID->"a0f4092f-e2ee-6e4a-ae3a-51f530050a58"],
+Cell[65870, 1620, 222, 3, 24, "Output",ExpressionUUID->"958dbb1b-8ea4-6f4c-8f95-ad8542b80166"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[66129, 1628, 607, 16, 31, "Input",ExpressionUUID->"2d99fbcd-2550-9642-8887-1b1d499d0bc1"],
+Cell[66739, 1646, 14041, 399, 403, "Output",ExpressionUUID->"f909b5c6-15b7-a64a-bacf-320c64d6a4c4"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[80817, 2050, 222, 4, 21, "Input",ExpressionUUID->"58795f8b-a237-124f-840f-f5203a5701af"],
+Cell[81042, 2056, 396, 9, 29, "Message",ExpressionUUID->"3b77b2e1-0b92-684e-8bca-3c048fad2abf"],
+Cell[81441, 2067, 394, 9, 29, "Message",ExpressionUUID->"fa8c72f1-bb45-0e49-94a0-07bd76750fe0"],
+Cell[81838, 2078, 431, 10, 19, "Message",ExpressionUUID->"eb05113d-7dd0-9d4f-84d0-8f83b4926929"],
+Cell[82272, 2090, 3462, 55, 84, "Output",ExpressionUUID->"d4926185-2a6a-0047-aa17-3775ccb509cf"]
+}, Open  ]]
+}
+]
+*)
+
