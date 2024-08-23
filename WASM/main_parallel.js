@@ -7,7 +7,7 @@ let Module;
 let workers = [];
 let activeWorkers = 0;
 let inputRelativePrecision;
-
+window.calculationComplete = false;
 
 async function initializeModule() {
     Module = await window.moduleReadyPromise;
@@ -64,6 +64,7 @@ function extractPrecision(inputString) {
 
 async function calculate() {
     try {
+        //window.calculationComplete = false; 
         if (!Module) {
             await initializeModule();
         }
@@ -125,6 +126,7 @@ async function calculate() {
                     displayResult(result, startTime);
                     terminateAllWorkers();
                     updateResultsTable(result);
+                    window.calculationComplete = true;
                 } else {
                     updateResultsTable(result);
                     if (result.status === "FINISHED") {
@@ -134,6 +136,7 @@ async function calculate() {
                     if (activeWorkers === 0) {
                       // All workers have finished
                       displayResult(result, startTime);
+                      window.calculationComplete = true;
                     }
                 }
             };
@@ -304,9 +307,119 @@ function calculateCompressionRatio(epsilon, sigma, K, n, z) {
     }
 }
 
+async function testSingleValue(value) {
+    try {
+        if (!Module) {
+            await initializeModule();
+        }
+        
+        //document.getElementById('numberInput').value = value.toString();
+        document.getElementById('numberInput').value = value;
+        
+        const startTime = new Date();
+        
+        window.calculationComplete = false;
+        calculate(); 
+
+        // Wait for the calculation to complete
+        while (!window.calculationComplete) {
+            await new Promise(resolve => setTimeout(resolve, 100));  // Wait 100ms before checking again
+        }
+
+        const endTime = new Date();
+        
+        const result = {
+            input: value,
+            abs_error: document.getElementById('delta_z').textContent, 
+            infix: document.getElementById('resultInfix').value,
+            rpn: document.getElementById('resultRPN').textContent,
+            mathematica: document.getElementById('resultMathematica').textContent,
+            numeric: document.getElementById('resultNumeric').value,
+            timeTaken: (endTime - startTime) / 1000  // in seconds
+        };
+        
+        console.log('Test result:', result);
+        window.calculationComplete=false;
+        return result;
+    } catch (error) {
+        console.error('Error testing value:', error);
+    }
+}
+
+async function runBenchmark(filename) {
+
+    const startTime = Date.now();
+    const response = await fetch(filename);
+    const tsvData = await response.text();
+    
+    const testCases = tsvData
+    .split('\n')
+    .filter(line => line.trim() !== '') // Remove empty lines
+    //.slice(1) // Skip the header row
+    .map(line => {
+    //const testCases = tsvData.split('\n').slice(1).map(line => {
+        console.log("line:",line);
+        //const [input, name, wzor] = line.split('\t');
+        const [input, name, wzor] = line.split('\t').map(field => field.trim().replace(/^"(.*)"$/, '$1'));
+
+        console.log("[input, name, wzor]", input, name, wzor);
+        return { input: input, expected: wzor.trim() };
+    });
+
+    const results = [];
+
+    for (const testCase of testCases) {
+        const result = await testSingleValue(testCase.input);
+        result.expected = testCase.expected;
+        results.push(result);
+    }
 
 
-function setupEventListeners() {
+    const endTime = Date.now();
+    const totalTimeInSeconds = (endTime - startTime) / 1000;
+    console.log(`Benchmark complete. Total cases: ${results.length}`);
+    console.log(`Total benchmark time: ${totalTimeInSeconds}`);
+    return results;
+}
+
+function saveResultsToJSON(results) {
+    const jsonString = JSON.stringify(results, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+ // Create a timestamp
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/:/g, '-').replace(/\..+/, '');
+
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'benchmark_results_' + timestamp + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+async function runAndSaveBenchmark(filename) {
+    const benchmarkResults = await runBenchmark(filename);
+    if (benchmarkResults) {
+        saveResultsToJSON(benchmarkResults);
+        console.log('Benchmark results saved to JSON file.');
+    } else {
+        console.log('Benchmark failed. No results to save.');
+    }
+}
+
+// Make these functions globally accessible
+window.runBenchmark = runBenchmark;
+window.saveResultsToJSON = saveResultsToJSON;
+window.runAndSaveBenchmark = runAndSaveBenchmark;
+
+// Make it globally accessible
+window.testSingleValue = testSingleValue;
+
+function setupEventListeners() {	
     const calculateButton = document.getElementById('calculateButton');
     if (calculateButton) {
         calculateButton.addEventListener('click', calculate);
