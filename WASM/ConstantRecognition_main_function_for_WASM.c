@@ -1,5 +1,5 @@
 /* Andrzej Odrzywolek, 03.01.2024, andrzej.odrzywolek@uj.edu.pl */
-#include "ConstantRecognition_function_for_WASM.c"
+#include "ConstantRecognition_function2_for_WASM.c"
 
 
 

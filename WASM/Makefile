@@ -3,7 +3,7 @@ SRC_DIR := ../C
 TARGET := rpn_function.js
 
 # Source files
-SOURCES := ConstantRecognition_function_for_WASM.c \
+SOURCES := ConstantRecognition_function2_for_WASM.c \
            $(SRC_DIR)/constant.c \
            $(SRC_DIR)/mathematica.c \
            $(SRC_DIR)/math2.c \
