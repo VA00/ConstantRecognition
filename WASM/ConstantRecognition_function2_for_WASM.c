@@ -3,7 +3,7 @@
 /*
 To compile for WASM/WWW
 
-emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c ../C/mathematica.c ../C/math2.c \
+emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c ../C/mathematica.c ../C/math2.c \
 -s WASM=1 -s EXPORTED_FUNCTIONS='["_search_RPN", "_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 -o rpn_function.js
 
@@ -95,10 +95,7 @@ emcc -Wall ConstantRecognition_function_for_WASM.c ../C/constant.c ../C/itoa.c .
 #define JSON_BUFFER_SIZE (1024*1024)  // 1MB
 #define min(a,b) ((a)<(b)?(a):(b))
 
-const char* constants = "012345opqrstuvw";  // 0-9, pi, e, -1, GoldenRatio
-const char* unary_funcs = "4589abcdefghijklmn";  // log, exp, inv, minus, sqrt, sqr, trig functions
-const char* binary_ops = "67xyz";  // plus, times, subtract, divide, power
-int search_status = 1; //Running
+
 
 union DoubleInt64 {
     double d;
@@ -158,46 +155,31 @@ int checkSyntax3(const char * ternary, const int length) {
 }
 
 
-char* search_RPN2(double z, double Delta_z, int MinCodeLength, int MaxCodeLength, int cpu_id, int ncpus) {
-  // Allocate memory for the output string
-  char* RPN_full_Code = (char*)malloc(32*16 * sizeof(char));
-  char* JSON_output =  (char*)malloc(JSON_BUFFER_SIZE * sizeof(char));
-  if( (RPN_full_Code == NULL) || (JSON_output == NULL) ) return "Error allocating memory for JSON";
+void generate_combinations(char*, char*, int, int, int);
+const char* constants = "0123opqrstuvw";  // 0-9, pi, e, -1, GoldenRatio, etc...
+const char* unary_funcs = "4589abcdefghijklmn";  // log, exp, inv, minus, sqrt, sqr, trig functions, etc...
+const char* binary_ops = "67xyz";  // plus, times, subtract, divide, power, etc..
+int search_status = 1; //Running
 
-    // Initialize JSON output
-    char* json_start = JSON_output;
-    int remaining = JSON_BUFFER_SIZE;
-    int written = snprintf(json_start, remaining, 
-        "{\"cpuId\":%d, \"results\": [", cpu_id);
-    json_start += written;
-    remaining -= written;
+//Global variables
 
+char* RPN_full_Code;
+char* JSON_output;
+char* json_start;
+int remaining; 
+int written;
+int result_count;
+unsigned long long int j, k, k1=0, k2=0,kMAX,chunk_size,start,end;
+char amino[STACKSIZE], amino_best[STACKSIZE], permutations[STACKSIZE];
 
-
-    int result_count = 0;
-    //const int MAX_RESULTS = 128;  // Adjust as needed
-
-  
-  unsigned long long int j, k, k1=0, k2=0,kMAX,chunk_size,start,end;
-  
-  char amino[STACKSIZE], amino_best[STACKSIZE], permutations[STACKSIZE];
-  
-
-  
-  ERR_TYPE var, best, relative_error, compression_ratio;
-  NUM_TYPE computedX, targetX;
-  
-
-   
-  int K, K_best=1, test;
-  const int n=3;
-
-  targetX = ( NUM_TYPE ) z;
-
-  best  = MAX_NUMBER;  
+ERR_TYPE var, best, relative_error, Delta_z, compression_ratio;
+NUM_TYPE computedX, targetX;
+ 
+int K, K_best=1, test;
+const int n=3;
 
 
-  void generate_combinations(char* ternary, char* result, int index, int length) {
+  void generate_combinations(char* ternary, char* result, int index, int length, int cpu_id) {
 
       if (index == length) {
           // Process the complete combination
@@ -235,7 +217,7 @@ char* search_RPN2(double z, double Delta_z, int MinCodeLength, int MaxCodeLength
          }
         else
          {
-          compression_ratio = - log10( fmax(best,Delta_z)/z)/(K)/log10(INSTR_NUM);
+          compression_ratio = - log10( fmax(best,Delta_z)/targetX)/(K)/log10(INSTR_NUM);
 	     }	 
 
         written = snprintf(json_start, remaining, 
@@ -287,9 +269,34 @@ char* search_RPN2(double z, double Delta_z, int MinCodeLength, int MaxCodeLength
   
       for (int i = 0; i < options_length; i++) {
           result[index] = options[i];
-          generate_combinations(ternary, result, index + 1, length);
+          generate_combinations(ternary, result, index + 1, length, cpu_id);
       }
   }
+
+
+
+char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int cpu_id, int ncpus) {
+  // Allocate memory for the output string
+  RPN_full_Code = (char*)malloc(32*16 * sizeof(char));
+  JSON_output =  (char*)malloc(JSON_BUFFER_SIZE * sizeof(char));
+  if( (RPN_full_Code == NULL) || (JSON_output == NULL) ) return "Error allocating memory for JSON";
+
+    // Initialize JSON output
+    json_start = JSON_output;
+    remaining = JSON_BUFFER_SIZE;
+    written = snprintf(json_start, remaining, 
+        "{\"cpuId\":%d, \"results\": [", cpu_id);
+    json_start += written;
+    remaining -= written;
+
+    result_count = 0;
+  
+
+  targetX = ( NUM_TYPE ) z;
+  Delta_z = (NUM_TYPE) dz;
+  best  = MAX_NUMBER;  
+  strcpy(amino_best, "0");  // Initialize with default string equivalent to a first constant
+
 
 
 
@@ -330,7 +337,7 @@ char* search_RPN2(double z, double Delta_z, int MinCodeLength, int MaxCodeLength
 	  k1++;
 
       //printf("%d\t%d\t%s\n",K,k,amino);
-      generate_combinations(amino, permutations, 0, K);
+      generate_combinations(amino, permutations, 0, K, cpu_id);
       //printf("Search status: %d\n", search_status);
       if( search_status==0) return JSON_output;  
      
