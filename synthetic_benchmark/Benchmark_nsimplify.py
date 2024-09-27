@@ -5,7 +5,7 @@ from sympy.printing.mathematica import mathematica_code
 
 # Input and output file names
 
-name = 'Benchmark_CASIO_HL-815L_K6_L2'
+name = 'Benchmark_CASIO_HL-815L_K7_L2'
 input_file = name+'.dat'
 output_file = name+'_results.dat'
 
