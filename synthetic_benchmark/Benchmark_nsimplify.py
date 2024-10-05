@@ -13,7 +13,7 @@ metadata_file = name + '_metadata.txt'
 
 # Read the CSV data using pandas, WARNING: automatic datatype detection!
 #data = pd.read_csv(input_file)
-data = pd.read_csv(input_file, dtype={'Float128': str})
+data = pd.read_csv(input_file, dtype={'FloatString': str})
 
 # Start the timer
 start_time = time.time()
@@ -24,7 +24,7 @@ data['nsimplifyMma'] = None
 for index, row in data.iterrows():
     try:
         # Convert the Float128 column to a float
-        float_value = sympify(row['Float128'].replace(' I', 'j'))
+        float_value = sympify(row['FloatString'].replace(' I', 'j'))
         # Apply nsimplify
         simplified = nsimplify(float_value)
         # Store the result in new columns
