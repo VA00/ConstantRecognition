@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <complex.h>
 #include <fenv.h>
 //#include <omp.h>
@@ -94,6 +95,58 @@
 
 #define EPS_MAX 4 //Maximum error considered to be equality, use 0 or 1 to be "paranoid"
 
+ERR_TYPE rel_err(NUM_TYPE computedX, NUM_TYPE targetX)
+{
+  return ABS( computedX/targetX - ONE );
+}
+
+// Helper function to evaluate polynomial combinations up to 4th power
+ERR_TYPE evaluate_relationships(NUM_TYPE computedX, NUM_TYPE targetX) {
+    const int MAX_COEFF = 8; // Maximum coefficient to try
+    ERR_TYPE best_err = MAX_NUMBER;
+    
+    // Try combinations ax + bx² + cx³ + dx^4 where a,b,c,d are non-negative integers
+    for(int a = 0; a <= MAX_COEFF; a++) {
+        for(int b = 0; b <= MAX_COEFF; b++) {
+            for(int c = 0; c <= MAX_COEFF; c++) {
+                for(int d = 0; d <= MAX_COEFF; d++) {
+                    // Skip trivial case
+                    if(a == 0 && b == 0 && c == 0 && d == 0) continue;
+                    
+                    // Calculate x², x³, and x⁴
+                    NUM_TYPE x2 = computedX * computedX;
+                    NUM_TYPE x3 = x2 * computedX;
+                    NUM_TYPE x4 = x3 * computedX;
+                    
+                    // Calculate ax + bx² + cx³ + dx⁴
+                    NUM_TYPE candidate = a*computedX + b*x2 + c*x3 + d*x4;
+                    ERR_TYPE err = ABS(candidate/targetX - ONE);
+                    
+                    if(err < best_err) {
+                        best_err = err;
+#ifdef DEBUG
+                        printf("Better approximation found: %d*x + %d*x² + %d*x³ + %d*x⁴ = %f (error: %e)\n", 
+                               a, b, c, d, (double)candidate, (double)err);
+#endif
+                    }
+                }
+            }
+        }
+    }
+    
+    return best_err;
+}
+
+//typedef double (*RankingFunction)(NUM_TYPE computedX, NUM_TYPE targetX);
+
+ERR_TYPE rankFunc(NUM_TYPE computedX, NUM_TYPE targetX)
+{
+   
+   //return rel_err(computedX, targetX);
+   return evaluate_relationships(computedX, targetX);
+   //return hamming_distance(computedX, targetX);
+}
+
 int main(int argc, char** argv)
 {
   unsigned long long int j=0, k=0, k1=0, k2=0, kMAX;
@@ -109,7 +162,8 @@ int main(int argc, char** argv)
   
 
    
-  int K, test, ULP, MaxCodeLength=6;
+  int K, test, MaxCodeLength=6;
+  uint64_t ULP;
   const int n=INSTR_NUM;
   int omp_cancel_flag=0, cpu_id=1, ncpus=1;
   
@@ -205,7 +259,8 @@ int main(int argc, char** argv)
     computedX = CONSTANT(amino, K);
 	if (IS_NAN(creal(computedX)) || IS_NAN(cimag(computedX))) continue;  // Skip NaN
 	k2++;
-    var = ABS( computedX/targetX - ONE );	  
+    //var = ABS( computedX/targetX - ONE );	  
+    var = rankFunc(computedX, targetX);
 #else
     computedX = CONSTANT(amino, K);
 	if (IS_NAN(computedX)) continue;  // Skip NaN
@@ -223,9 +278,9 @@ int main(int argc, char** argv)
       ULP = compute_ULP_distance(computedX, targetX);
 
 #ifdef USE_COMPLEX           
-     fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, creal(computedX),cimag(computedX),cpu_id,amino);
+     fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%lu\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, creal(computedX),cimag(computedX),cpu_id,amino);
 #else
-     fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%d\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, computedX,                    0.0,cpu_id,amino);
+     fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%lu\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, computedX,                    0.0,cpu_id,amino);
 #endif
       
       time_t now = time (0);
@@ -246,7 +301,7 @@ int main(int argc, char** argv)
           ULP = compute_ULP_distance(computedX, targetX);
 
           printf("Total valid formulae [all codes] tested by thread %d:\t%llu [%llu]\n",cpu_id,k2,k1);
-          printf("Minimal error in ULP=%d\n", ULP );
+          printf("Minimal error in ULP=%lu\n", ULP );
 #ifdef USE_COMPLEX
 	      printf("Re=%.18lf\n",creal(computedX));
 	      printf("Im=%.18lf\n",cimag(computedX));
