@@ -48,7 +48,8 @@ export const unnamedFunctionsMma = {
     "HALF":  (x) => "(" + x + "/2)",
     "DBL":   (x) => "(2*" + x + ")",
     "PRE":   (x) => "(" + x + "-1)",
-    "SUC":   (x) => "(" + x + "+1)"
+    "SUC":   (x) => "(" + x + "+1)",
+    "TET":   (x) => "(" + x + ")^(" + x + ")"
 };
 
 export const namedOperatorsMma = {
