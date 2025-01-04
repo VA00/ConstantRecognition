@@ -155,7 +155,7 @@ int checkSyntax3(const char * ternary, const int length) {
 }
 
 
-void generate_combinations(char*, char*, int, int, int);
+//void generate_combinations(char*, char*, int, int, int);
 const char* constants = "0123opqrstuvw";  // 0-9, pi, e, -1, GoldenRatio, etc...
 const char* unary_funcs = "4589abcdefghijklmn";  // log, exp, inv, minus, sqrt, sqr, trig functions, etc...
 const char* binary_ops = "67xyz";  // plus, times, subtract, divide, power, etc..
@@ -179,13 +179,17 @@ int K, K_best=1, test;
 const int n=3;
 
 
-  void generate_combinations(char* ternary, char* result, int index, int length, int cpu_id) {
+int generate_combinations(char* ternary, char* result, int index, int length, int cpu_id, int* found) {
 
+      if (*found) {
+        return 1;  //stop recursion
+      }
+        
       if (index == length) {
           // Process the complete combination
       computedX = CONSTANT(result, K);
 
-	  if (IS_NAN(computedX)) return;  // Skip NaN
+	  if (IS_NAN(computedX)) return 0;  // Skip NaN
       k2++;
       //var = ABS( computedX/targetX - ONE );	  
       var = rankFunc(computedX, targetX);	  
@@ -242,11 +246,11 @@ const int n=3;
             "], \"result\":\"SUCCESS\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, \"INPUT_ABS_ERR\":%lf, \"COMPRESSION_RATIO\":%lf, \"K\":%d, \"status\":\"FINISHED\", \"HAMMING_DISTANCE\":%lf}",
             RPN_full_Code, relative_error, Delta_z, compression_ratio, K_best, hamming_distance(computedX, targetX));
         
-        search_status = 0;            
-        return;
+        *found = 1;            
+        return 1;
 
        }
-          return;
+          return 0;
       }
   
       const char* options;
@@ -269,9 +273,11 @@ const int n=3;
   
       for (int i = 0; i < options_length; i++) {
           result[index] = options[i];
-          generate_combinations(ternary, result, index + 1, length, cpu_id);
+          if(generate_combinations(ternary, result, index + 1, length, cpu_id, found)) return 1;
       }
+      return 0;
   }
+
 
 
 
@@ -296,8 +302,7 @@ char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int 
   Delta_z = (NUM_TYPE) dz;
   best  = MAX_NUMBER;  
   strcpy(amino_best, "0");  // Initialize with default string equivalent to a first constant
-
-
+  int found = 0;
 
 
   
@@ -337,9 +342,9 @@ char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int 
 	  k1++;
 
       //printf("%d\t%d\t%s\n",K,k,amino);
-      generate_combinations(amino, permutations, 0, K, cpu_id);
+      generate_combinations(amino, permutations, 0, K, cpu_id, &found);
       //printf("Search status: %d\n", search_status);
-      if( search_status==0) return JSON_output;  
+      if( found) return JSON_output;  
      
 
     }
@@ -403,5 +408,3 @@ char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int 
   return JSON_output;
 
 }
-
-
