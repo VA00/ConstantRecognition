@@ -286,24 +286,31 @@ function setupFilterListeners() {
 }
 
 
-function calculateCompressionRatio(epsilon, sigma, K, n, z) {
-    if (sigma === 0){
-        // For integers with perfect precision
-        const base10DigitCount = Math.floor(Math.log10(Math.abs(z))) + 1;
-        const base36DigitCount = K;
+function calculateCompressionRatio(relativeError, inputRelativePrecision, K, n, targetX) {
+    if (targetX === 0) {
+        return 0; // Handle cases where the target is 0
+    }
 
-        console.log(base10DigitCount);
-        
-        // Adjust for the information content difference between base 10 and base 36
-        const adjustedBase10Count = base10DigitCount * Math.log10(10) / Math.log10(36);
-        
-        return adjustedBase10Count / base36DigitCount;
+    if (relativeError === 0) {
+        // Perfect match (special case)
+        const digitsInTarget = Math.floor(Math.log10(Math.abs(targetX))) + 1;
+        const informationInRPN = K * Math.log10(n);
+
+        if (informationInRPN <= 0) {
+            return 0; // Or handle it as an error
+        } else {
+            return digitsInTarget / informationInRPN;
+        }
     } else {
-        const precision = Math.max(epsilon, sigma);
-        const z = document.getElementById('z').textContent; // Get the current z value
-        const numerator = -Math.log10(precision / z);
-        const denominator = K * Math.log10(n);
-        return numerator / denominator;
+        // General case (approximation)
+        const digitsInTarget = -Math.log10(relativeError);
+        const informationInRPN = K * Math.log10(n);
+
+        if (relativeError >= 1 || informationInRPN <= 0) {
+            return 0; // Or handle it as a very poor approximation
+        } else {
+            return digitsInTarget / informationInRPN;
+        }
     }
 }
 

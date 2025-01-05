@@ -41,7 +41,8 @@ emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c 
   #define ABS fabsf
   #define CONSTANT constantf
   #define EPSILON FLT_EPSILON
-  #define ONE 1.0f
+  #define ONE  1.0f
+  #define ZERO 0.0f
   #define IS_NAN isnanf
 #elif SEARCH_TYPE == REAL_DBL
   #define NUM_TYPE double
@@ -50,7 +51,8 @@ emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c 
   #define ABS fabs
   #define CONSTANT constant 
   #define EPSILON DBL_EPSILON
-  #define ONE 1.0
+  #define ONE  1.0
+  #define ZERO 0.0
   #define IS_NAN isnan
 #elif SEARCH_TYPE == REAL_LDBL
   #define NUM_TYPE long double
@@ -59,7 +61,8 @@ emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c 
   #define ABS fabsl
   #define CONSTANT constantl
   #define EPSILON LDBL_EPSILON
-  #define ONE 1.0l
+  #define ONE  1.0l
+  #define ZERO 0.0l
   #define IS_NAN isnanl
 #elif SEARCH_TYPE == CPLX_FLT
   #define NUM_TYPE complex float
@@ -68,7 +71,8 @@ emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c 
   #define ABS cabsf
   #define CONSTANT cconstantf
   #define EPSILON FLT_EPSILON
-  #define ONE 1.0f
+  #define ONE ( 1.0f + 0.0f * I)
+  #define ZERO (0.0f + 0.0f * I)
   #define IS_NAN isnanf
 #elif SEARCH_TYPE == CPLX_DBL
   #define NUM_TYPE complex double
@@ -77,7 +81,8 @@ emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c 
   #define ABS cabs
   #define CONSTANT cconstantf
   #define EPSILON DBL_EPSILON
-  #define ONE 1.0
+  #define ONE  (1.0 + 0.0 * I)
+  #define ZERO (0.0 + 0.0 * I)
   #define IS_NAN isnan
 #elif SEARCH_TYPE == CPLX_LDBL
   #define NUM_TYPE complex long double
@@ -86,7 +91,8 @@ emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c 
   #define ABS cabsl
   #define CONSTANT cconstantl
   #define EPSILON LDBL_EPSILON
-  #define ONE 1.0l
+  #define ONE  (1.0L + 0.0L * I)
+  #define ZERO (0.0L + 0.0L * I)
   #define IS_NAN isnanl
 #endif
 
@@ -123,7 +129,11 @@ double hamming_distance(double a, double b)
 
 ERR_TYPE rel_err(NUM_TYPE computedX, NUM_TYPE targetX)
 {
-  return ABS( computedX/targetX - ONE );
+  if(targetX==ZERO)
+    return ABS( computedX-targetX);
+  else
+    return ABS( computedX/targetX - ONE );
+
 }
 
 //typedef double (*RankingFunction)(NUM_TYPE computedX, NUM_TYPE targetX);
@@ -211,18 +221,35 @@ int generate_combinations(char* ternary, char* result, int index, int length, in
          
         relative_error = rel_err(computedX, targetX);
 
-        if(Delta_z==0.0)
-         {
 
-          double base10DigitCount = floor(log10(fabs(targetX))) + 1.0;
-        // Adjust for the information content difference between base 10 and base 36
-          double adjustedBase10Count = base10DigitCount * log10(10) / log10(36);
-          compression_ratio = adjustedBase10Count / K;
-         }
-        else
-         {
-          compression_ratio = - log10( fmax(best,Delta_z)/targetX)/(K)/log10(INSTR_NUM);
-	     }	 
+        if (targetX == 0.0) {
+            compression_ratio = 0.0; // Handle cases where the target is 0
+        } 
+        else {
+
+          if (relative_error == 0.0) {
+              // Perfect match (special case)
+              double digitsInTarget = floor(log10(fabs(targetX))) + 1.0;
+              double informationInRPN = K * log10(INSTR_NUM);
+		  
+              if (informationInRPN <= 0.0) {
+                  compression_ratio = 0.0; // Or handle it as an error
+              } else {
+                  compression_ratio = digitsInTarget / informationInRPN;
+              }
+          } else {
+              // General case (approximation)
+              double digitsInTarget = -log10(relative_error);
+              double informationInRPN = K * log10(INSTR_NUM);
+		  
+              if (relative_error >= 1.0 || informationInRPN <= 0.0) {
+                  compression_ratio = 0.0; // Or handle it as a very poor approximation
+              } else {
+                  compression_ratio = digitsInTarget / informationInRPN;
+              }
+          }
+        }
+
 
         written = snprintf(json_start, remaining, 
             "{\"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, \"result\":\"INTERMEDIATE\", \"status\":\"RUNNING\", \"cpuId\":%d, \"HAMMING_DISTANCE\":%lf}",
