@@ -40,7 +40,8 @@
   #define ABS fabsf
   #define CONSTANT constantf
   #define EPSILON FLT_EPSILON
-  #define ONE 1.0f
+  #define ONE  1.0f
+  #define ZERO 0.0f
   #define IS_NAN isnanf
 #elif SEARCH_TYPE == REAL_DBL
   #define NUM_TYPE double
@@ -49,7 +50,8 @@
   #define ABS fabs
   #define CONSTANT constant 
   #define EPSILON DBL_EPSILON
-  #define ONE 1.0
+  #define ONE  1.0
+  #define ZERO 0.0
   #define IS_NAN isnan
 #elif SEARCH_TYPE == REAL_LDBL
   #define NUM_TYPE long double
@@ -58,7 +60,8 @@
   #define ABS fabsl
   #define CONSTANT constantl
   #define EPSILON LDBL_EPSILON
-  #define ONE 1.0l
+  #define ONE  1.0l
+  #define ZERO 0.0l
   #define IS_NAN isnanl
 #elif SEARCH_TYPE == CPLX_FLT
   #define USE_COMPLEX
@@ -68,7 +71,8 @@
   #define ABS cabsf
   #define CONSTANT cconstantf
   #define EPSILON FLT_EPSILON
-  #define ONE 1.0f
+  #define ONE  (1.0f + 0.0f * I)
+  #define ZERO (0.0f + 0.0f * I)
   #define IS_NAN isnanf
 #elif SEARCH_TYPE == CPLX_DBL
   #define USE_COMPLEX
@@ -78,7 +82,8 @@
   #define ABS cabs
   #define CONSTANT cconstant
   #define EPSILON DBL_EPSILON
-  #define ONE 1.0
+  #define ONE  (1.0 + 0.0 * I)
+  #define ZERO (0.0 + 0.0 * I)
   #define IS_NAN isnan
 #elif SEARCH_TYPE == CPLX_LDBL
   #define USE_COMPLEX
@@ -88,7 +93,8 @@
   #define ABS cabsl
   #define CONSTANT cconstantl
   #define EPSILON LDBL_EPSILON
-  #define ONE 1.0l
+  #define ONE (1.0L + 0.0L * I)
+  #define ZERO (0.0L + 0.0L * I)
   #define IS_NAN isnanl
 #endif
 
@@ -97,7 +103,11 @@
 
 ERR_TYPE rel_err(NUM_TYPE computedX, NUM_TYPE targetX)
 {
-  return ABS( computedX/targetX - ONE );
+  
+  if(targetX==ZERO)
+    return ABS( computedX-targetX);
+  else
+    return ABS( computedX/targetX - ONE );
 }
 
 // Helper function to evaluate polynomial combinations up to 4th power
@@ -142,8 +152,8 @@ ERR_TYPE evaluate_relationships(NUM_TYPE computedX, NUM_TYPE targetX) {
 ERR_TYPE rankFunc(NUM_TYPE computedX, NUM_TYPE targetX)
 {
    
-   //return rel_err(computedX, targetX);
-   return evaluate_relationships(computedX, targetX);
+   return rel_err(computedX, targetX);
+   //return evaluate_relationships(computedX, targetX);
    //return hamming_distance(computedX, targetX);
 }
 
@@ -185,6 +195,9 @@ int main(int argc, char** argv)
   sscanf(str, "%lf", &z);
   targetX = (ERR_TYPE) z;
 #endif
+
+
+
   
 #ifdef USE_COMPLEX
   if(cpu_id==1) printf("Search target:%.18lf%+.18lfI\n", creal(targetX), cimag(targetX));
@@ -265,7 +278,7 @@ int main(int argc, char** argv)
     computedX = CONSTANT(amino, K);
 	if (IS_NAN(computedX)) continue;  // Skip NaN
     k2++;
-    var = ABS( computedX/targetX - ONE );	  
+    var = rankFunc(computedX, targetX);  
 #endif
 
 		
@@ -278,9 +291,9 @@ int main(int argc, char** argv)
       ULP = compute_ULP_distance(computedX, targetX);
 
 #ifdef USE_COMPLEX           
-     fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%lu\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, creal(computedX),cimag(computedX),cpu_id,amino);
+     fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%20lu\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, creal(computedX),cimag(computedX),cpu_id,amino);
 #else
-     fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%lu\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, computedX,                    0.0,cpu_id,amino);
+     fprintf(search_log_file,"%20llu\t%20llu\t%20llu\t%20lu\t%22.17lf\t%24.18lf\t%24.18lf\t%-6d\t%-28s\t",j,k1,k2,ULP, best, computedX,                    0.0,cpu_id,amino);
 #endif
       
       time_t now = time (0);
