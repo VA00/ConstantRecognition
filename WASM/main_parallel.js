@@ -19,43 +19,29 @@ function updateSearchDepthValue(value) {
 }
 
 function extractPrecision(inputString) {
-
-    //console.log(inputString);
-    // Remove any leading/trailing whitespace
-    //inputString = inputString.trim();
-    
     // Parse the input string to a number
     let value = parseFloat(inputString);
-    //console.log(value);
-    
+
     // Handle scientific notation
     let parts = inputString.split(/e/i);
     let mainPart = parts[0];
-    
+    let exponent = parts.length > 1 ? parseInt(parts[1]) : 0;
+
     // Find the decimal point
     let decimalIndex = mainPart.indexOf('.');
-    //console.log(inputString);
-    
+
     let absolutePrecision;
     if (decimalIndex === -1) {
-        // If there's no decimal point, use machine precision
-        absolutePrecision = Number.EPSILON;
-        absolutePrecision = 0.0;
+        // If there's no decimal point, it's an integer
+        absolutePrecision = 0; // Integers have exact precision
     } else {
-        // Count the number of digits after the decimal point
+        // Count the number of digits after the decimal point, including trailing zeros
         let fractionalPart = mainPart.slice(decimalIndex + 1);
-        //let significantDigits = fractionalPart.replace(/0+$/, '').length;
         let significantDigits = fractionalPart.length;
-        
-        // Absolute precision is 1 divided by 10 raised to the power of significant digits
-        absolutePrecision = 0.5*Math.pow(10, -significantDigits);
+
+        // Calculate absolute precision
+        absolutePrecision = 0.5 * Math.pow(10, -significantDigits + exponent);
     }
-    
-    // Calculate relative precision
-    //let relativePrecision = absolutePrecision / Math.abs(value);
-    
-    //console.log(absolutePrecision);    
-   // console.log(relativePrecision);    
 
     return absolutePrecision;
 }
@@ -286,15 +272,51 @@ function setupFilterListeners() {
 }
 
 
+function countSignificantDigits(number) {
+  if (number === 0) {
+    return 1; // Special case for 0
+  }
+
+  const s = String(Math.abs(number));
+  
+  if (s.indexOf(".") == -1)
+  {
+    return s.length;
+  }
+
+  // Remove leading zeros after the decimal point
+  let firstSignificantDigitIndex = 0;
+  if (number > -1 && number < 1) {
+    
+    for (let i = 0; i < s.length; i++)
+     {
+      if (s[i]!="0" && s[i]!=".")
+       {
+        firstSignificantDigitIndex=i;
+        break;
+       }
+     }
+  }
+
+  return s.length - firstSignificantDigitIndex - (s.indexOf(".")<firstSignificantDigitIndex);
+}
+
 function calculateCompressionRatio(relativeError, inputRelativePrecision, K, n, targetX) {
+
+
     if (targetX === 0) {
         return 0; // Handle cases where the target is 0
     }
 
+
+
     if (relativeError === 0) {
         // Perfect match (special case)
-        const digitsInTarget = Math.floor(Math.log10(Math.abs(targetX))) + 1;
+        //const digitsInTarget = Math.floor(Math.log10(Math.abs(targetX))) + 1;
+        const digitsInTarget = countSignificantDigits(targetX);
         const informationInRPN = K * Math.log10(n);
+        console.log('informationInRPN:', informationInRPN);
+        console.log('digitsInTarget:', digitsInTarget);
 
         if (informationInRPN <= 0) {
             return 0; // Or handle it as an error
