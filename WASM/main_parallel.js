@@ -8,6 +8,7 @@ let workers = [];
 let activeWorkers = 0;
 let inputRelativePrecision;
 window.calculationComplete = false;
+let userThreadCount; // Variable to store user-selected thread count
 
 async function initializeModule() {
     Module = await window.moduleReadyPromise;
@@ -16,6 +17,10 @@ async function initializeModule() {
 
 function updateSearchDepthValue(value) {
     document.getElementById('searchDepthValue').textContent = value;
+}
+
+function updateThreadCountValue(value) {
+    document.getElementById('threadCountValue').textContent = value;
 }
 
 function extractPrecision(inputString) {
@@ -62,7 +67,13 @@ async function calculate() {
         //const inputRelativePrecision;
         const MinCodeLength = 1;
         const MaxCodeLength = parseInt(document.getElementById('searchDepthValue').textContent);
-        const ncpus = navigator.hardwareConcurrency || 7;
+        
+        // Use user-selected thread count or auto-detected value
+        const isAutoThreads = document.getElementById('autoThreads').checked;
+        const ncpus = isAutoThreads ? 
+            (navigator.hardwareConcurrency || 7) : 
+            parseInt(document.getElementById('threadCount').value);
+            
         //const ncpus = 2; // For debug
 
         // Extract precision from input
@@ -73,6 +84,7 @@ async function calculate() {
         inputRelativePrecision = inputPrecision/Math.abs(z);
         console.log("Δz=", inputPrecision);
         console.log("Δz/z=", inputRelativePrecision);
+        console.log("Using " + ncpus + " threads");
 
         document.getElementById('z').textContent = z.toString();
         document.getElementById('delta_z').textContent = inputPrecision.toString();
@@ -448,6 +460,41 @@ window.runAndSaveBenchmark = runAndSaveBenchmark;
 // Make it globally accessible
 window.testSingleValue = testSingleValue;
 
+function setupThreadSlider() {
+    const threadSlider = document.getElementById('threadCount');
+    const autoThreadCheckbox = document.getElementById('autoThreads');
+    const detected = navigator.hardwareConcurrency || 7;
+    
+    // Set max value based on detected cores (with some room for higher values if needed)
+    threadSlider.max = Math.max(32, detected * 2);
+    
+    // Set initial value to detected cores
+    threadSlider.value = detected;
+    updateThreadCountValue('Auto');
+    
+    // Event listeners for the thread slider and auto checkbox
+    threadSlider.addEventListener('input', (event) => {
+        const value = parseInt(event.target.value);
+        updateThreadCountValue(value);
+        
+        // Uncheck Auto checkbox when user manually changes the slider
+        if (autoThreadCheckbox.checked) {
+            autoThreadCheckbox.checked = false;
+        }
+    });
+    
+    autoThreadCheckbox.addEventListener('change', (event) => {
+        if (event.target.checked) {
+            // If Auto is checked, set slider to detected value
+            threadSlider.value = detected;
+            updateThreadCountValue('Auto');
+        } else {
+            // If Auto is unchecked, show the current slider value
+            updateThreadCountValue(parseInt(threadSlider.value));
+        }
+    });
+}
+
 function setupEventListeners() {	
     const calculateButton = document.getElementById('calculateButton');
     if (calculateButton) {
@@ -471,6 +518,7 @@ function setupEventListeners() {
     }
 
     setupFilterListeners(); 
+    setupThreadSlider();
 }
 
 // Initialize everything when the DOM is ready
@@ -487,6 +535,4 @@ document.addEventListener('DOMContentLoaded', () => {
         pastedText = pastedText.replace(/\s/g, '');
         inputElement.value = pastedText;
     });
-
-
 });

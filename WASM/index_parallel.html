@@ -13,6 +13,14 @@
 
     <p>Detected <span id="detectedCPUs"></span> logical CPU's.</p>
 
+    <div>
+        <label for="threadCount" title="Adjust this slider to set the number of threads used for calculation">
+            Threads: <span id="threadCountValue">Auto</span>
+        </label>
+        <input id="threadCount" type="range" min="1" max="32" step="1">
+        <label><input type="checkbox" id="autoThreads" checked> Auto</label>
+    </div>
+
   <p>
    Enter <B>ANY</b> numeric in the first box to identify or approximate.
   </p>
