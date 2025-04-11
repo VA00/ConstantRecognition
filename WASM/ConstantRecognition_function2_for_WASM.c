@@ -127,6 +127,30 @@ double hamming_distance(double a, double b)
     return (double) distance;
 }
 
+//Proposed by o1
+
+ERR_TYPE why_not_ULP(const double ref, const double val)
+{
+    // Handle NaN and infinities if necessary
+    if (isnan(ref) || isnan(val) || isinf(ref) || isinf(val)) {
+        // Define behavior for NaN
+        return (ERR_TYPE) UINT64_MAX;
+    }
+
+    // Map doubles to int64_t while preserving ordering
+    int64_t i_ref, i_val;
+    memcpy(&i_ref, &ref, sizeof(double));
+    memcpy(&i_val, &val, sizeof(double));
+
+    if (i_ref < 0)
+        i_ref = INT64_MIN - i_ref;
+    if (i_val < 0)
+        i_val = INT64_MIN - i_val;
+
+    uint64_t ulp_diff = (uint64_t)(llabs(i_val - i_ref));
+    return ABS( (ERR_TYPE) ulp_diff );
+}
+
 ERR_TYPE rel_err(NUM_TYPE computedX, NUM_TYPE targetX)
 {
   if(targetX==ZERO)
@@ -141,8 +165,9 @@ ERR_TYPE rel_err(NUM_TYPE computedX, NUM_TYPE targetX)
 ERR_TYPE rankFunc(NUM_TYPE computedX, NUM_TYPE targetX)
 {
    
-   return rel_err(computedX, targetX);
+   //return rel_err(computedX, targetX);
    //return hamming_distance(computedX, targetX);
+   return why_not_ULP(computedX, targetX);
 }
 
 int checkSyntax3(const char * ternary, const int length) {
@@ -182,7 +207,7 @@ int result_count;
 unsigned long long int j, k, k1=0, k2=0,kMAX,chunk_size,start,end;
 char amino[STACKSIZE], amino_best[STACKSIZE], permutations[STACKSIZE];
 
-ERR_TYPE var, best, relative_error, Delta_z, compression_ratio;
+ERR_TYPE var, best = MAX_NUMBER, relative_error, Delta_z, compression_ratio;
 NUM_TYPE computedX, targetX;
  
 int K, K_best=1, test;
@@ -190,6 +215,7 @@ const int n=3;
 
 
 int generate_combinations(char* ternary, char* result, int index, int length, int cpu_id, int* found) {
+
 
       if (*found) {
         return 1;  //stop recursion
@@ -201,8 +227,10 @@ int generate_combinations(char* ternary, char* result, int index, int length, in
 
 	  if (IS_NAN(computedX)) return 0;  // Skip NaN
       k2++;
-      //var = ABS( computedX/targetX - ONE );	  
-      var = rankFunc(computedX, targetX);	  
+      //var = ABS( computedX/targetX - ONE );
+      var = rankFunc(computedX, targetX);
+
+      //printf("var=%lf\n",var);
       
       if(var<best) 
        {
@@ -260,6 +288,8 @@ int generate_combinations(char* ternary, char* result, int index, int length, in
         result_count++;
 
 	   }
+
+       
     
 	   if(   (relative_error<=EPS_MAX*EPSILON)    
            ||  ( ABS(computedX-targetX)<=2.0*Delta_z && compression_ratio>=1.05 ) 
@@ -309,20 +339,21 @@ int generate_combinations(char* ternary, char* result, int index, int length, in
 
 
 char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int cpu_id, int ncpus) {
+
   // Allocate memory for the output string
   RPN_full_Code = (char*)malloc(32*16 * sizeof(char));
   JSON_output =  (char*)malloc(JSON_BUFFER_SIZE * sizeof(char));
   if( (RPN_full_Code == NULL) || (JSON_output == NULL) ) return "Error allocating memory for JSON";
 
-    // Initialize JSON output
-    json_start = JSON_output;
-    remaining = JSON_BUFFER_SIZE;
-    written = snprintf(json_start, remaining, 
-        "{\"cpuId\":%d, \"results\": [", cpu_id);
-    json_start += written;
-    remaining -= written;
+  // Initialize JSON output
+  json_start = JSON_output;
+  remaining = JSON_BUFFER_SIZE;
+  written = snprintf(json_start, remaining, 
+      "{\"cpuId\":%d, \"results\": [", cpu_id);
+  json_start += written;
+  remaining -= written;
 
-    result_count = 0;
+  result_count = 0;
   
 
   targetX = ( NUM_TYPE ) z;
@@ -331,22 +362,10 @@ char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int 
   strcpy(amino_best, "0");  // Initialize with default string equivalent to a first constant
   int found = 0;
 
-
   
   j=cpu_id;
   for(K=1;K<=MaxCodeLength;K++)
   {
-    //kMAX=ipow(INSTR_NUM,K);
-    //printf("DEBUG: %d\n\n",kMAX);
-    //chunk_size = (kMAX/ncpus)+0ULL;
-    //start=cpu_id*chunk_size;
-    //end = (cpu_id == ncpus-1) ? kMAX : start+chunk_size-1;
-
-
-    //kMAX = ipow(INSTR_NUM, K);
-    //chunk_size = (kMAX / ncpus) + (kMAX % ncpus ? 1 : 0); // Ensure all work is covered
-    //start = cpu_id * chunk_size;
-    //end = (cpu_id == ncpus - 1) ? kMAX : (start + chunk_size); // Last CPU takes any remainder
 
     kMAX = ipow(3, K);
     chunk_size = (kMAX / ncpus) + ((kMAX % ncpus) > cpu_id ? 1 : 0);
@@ -365,17 +384,18 @@ char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int 
           
       test = checkSyntax3 (amino, K); //check if base-3 RPN code is valid 
      
+      //printf("%llu\t%llu\t%llu\n", k, j, k1);
       if (!test) continue;
 	  k1++;
 
-      //printf("%d\t%d\t%s\n",K,k,amino);
+      //printf("%d\t%llu\t%s\n\n\n\n\n",K,k,amino);
       generate_combinations(amino, permutations, 0, K, cpu_id, &found);
-      //printf("Search status: %d\n", search_status);
+      //printf("Search status: %d\n\n\n\n\n", search_status);
       if( found) return JSON_output;  
      
 
     }
-    if((k1<=12ULL) && (j>1000000ULL) && (K>4) ) //Early exit if basically NOTHING was found so far; Further search seems pointless. Used values are for 36-button CALC4
+    if((k1<=12ULL) && (j>250LL) && (K>4) ) //Early exit if basically NOTHING was found so far; Further search seems pointless. 
     {
       
       print_code_mathematica(amino_best,K_best,RPN_full_Code);
