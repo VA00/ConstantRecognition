@@ -103,50 +103,56 @@ async function calculate() {
         // Create and start workers
         workers = [];
         activeWorkers = ncpus;
+
+        // --- create and start workers ---
+        workers = [];
+        activeWorkers = ncpus;
+        
         for (let i = 0; i < ncpus; i++) {
             const worker = new Worker('worker.js');
-            //const worker = new Worker('worker.js?v=' + Date.now() + i);
-            workers.push(worker);
-
-            worker.onmessage = function(e) {
-                const result = e.data;
-
-                if (result.results) {
-                    result.results.forEach(result => {
-                        updateResultsTable(result);
-                        //console.log("From message");
-                        //console.log(result);
+        
+            // wait until we get the ready ping ---------------------------------
+            worker.addEventListener('message', function readyListener(e) {
+                if (e.data && e.data.type === 'ready') {
+                    worker.removeEventListener('message', readyListener);
+        
+                    // real results arrive here ----------------------------------
+                    worker.addEventListener('message', e => {
+                        const result = e.data;
+        
+                        if (result.results) {                      // intermediate rows
+                            result.results.forEach(updateResultsTable);
+                        }
+        
+                        if (result.result === 'SUCCESS') {         // final answer
+                            displayResult(result, startTime);
+                            terminateAllWorkers();
+                            updateResultsTable(result);
+                            window.calculationComplete = true;
+                        } else {
+                            updateResultsTable(result);
+                            if (result.status === 'FINISHED') activeWorkers--;
+                            if (activeWorkers === 0) {
+                                displayResult(result, startTime);
+                                window.calculationComplete = true;
+                            }
+                        }
+                    });
+        
+                    // now it is safe to start work -------------------------------
+                    worker.postMessage({
+                        initDelay: 0,               // delay no longer necessary
+                        z, inputPrecision, MinCodeLength, MaxCodeLength,
+                        cpuId: i, ncpus
                     });
                 }
-
-
-                if (result.result === "SUCCESS") {
-                    displayResult(result, startTime);
-                    terminateAllWorkers();
-                    updateResultsTable(result);
-                    window.calculationComplete = true;
-                } else {
-                    updateResultsTable(result);
-                    if (result.status === "FINISHED") {
-                    activeWorkers--;
-                    }
-                    console.log(activeWorkers);
-                    if (activeWorkers === 0) {
-                      // All workers have finished
-                      displayResult(result, startTime);
-                      window.calculationComplete = true;
-                    }
-                }
-            };
-
-            worker.onerror = function(error) {
-                console.error('Worker error:', error);
-            };
-
-            // Include initDelay when starting the worker
-            const initDelay =  1000*Math.random()+100; // 100ms delay between each worker start
-            worker.postMessage({initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId: i, ncpus});
+            });
+        
+            worker.onerror = err => console.error('Worker error:', err);
+        
+            workers.push(worker);
         }
+
 
     } catch (error) {
         console.error("Error in calculate function:", error);

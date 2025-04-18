@@ -1,6 +1,11 @@
 // Worker script: worker.js
 importScripts('rpn_function.js');
 
+
+// tell the main thread only when the runtime is ready
+Module.onRuntimeInitialized = () => postMessage({type: 'ready'});
+
+
 function doWork(initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus) {
     return new Promise(resolve => {
         setTimeout(() => {
