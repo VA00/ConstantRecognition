@@ -58,7 +58,8 @@ export const namedOperatorsMma = {
     "TIMES": "*",
     "DIVIDE": "/",
     "POWER":  "^",
-    "LOGARITHM": "~Log~"
+    "LOGARITHM": "~Log~",
+    "EML": "~EmL~"
 };
 
 export function rpnToMma(rpn) {

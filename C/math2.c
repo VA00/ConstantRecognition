@@ -273,6 +273,49 @@ complex long double clnl(complex long double x, complex long double y)
 }
 
 
+
+/* Complex EML operator */
+
+
+
+float emlf(float x, float y)
+{
+	return expf(x) - logf(y);
+}
+
+double eml(double x, double y)
+{
+	return exp(x) - log(y);
+}
+
+
+long double emll(long double x, long double y)
+{
+	return expl(x) - logl(y);
+}
+
+
+complex float cemlf(complex float x, complex float y)
+{
+	return cexpf(x) - clogf(y);
+}
+
+complex double ceml(complex double x, complex double y)
+{
+	return cexp(x) - clog(y);
+}
+
+
+complex long double cemll(complex long double x, complex long double y)
+{
+	return cexpl(x)-clogl(y);
+}
+
+
+
+/* Complex Gamma function: not yet implemented */
+
+
 complex float ctgammaf(complex float x)
 {
   return tgammaf(crealf(x))+0.0f*I;

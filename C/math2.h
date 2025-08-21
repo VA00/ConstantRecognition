@@ -82,6 +82,19 @@ complex float clnf(complex float,complex float);
 complex double cln(complex double,complex double);
 complex long double clnl(complex long double, complex long double);
 
+/* Complex EML operator */
+
+
+float emlf(float, float);
+double eml(double x, double y);
+long double emll(long double x, long double y);
+complex float cemlf(complex float, complex float);
+complex double ceml(complex double x, complex double y);
+complex long double cemll(complex long double x, complex long double y);
+
+
+/* Complex Gamma function: not yet implemented */
+
 complex float ctgammaf(complex float);
 complex double ctgamma(complex double);
 complex long double ctgammal(complex long double);
