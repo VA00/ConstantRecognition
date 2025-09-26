@@ -27,6 +27,7 @@ fi
 START_TIME=$(date +%s)
 echo "Search started at $(date '+%Y-%m-%d %H:%M') using $NCPUS CPUs."
 echo "Using $PROGRAM"
+
 echo "0" > found.txt
 
 
@@ -47,7 +48,7 @@ FOUND=$(cat found.txt)
 if [ "$FOUND" -eq 1 ]; then
     RESULT_MESSAGE="Search succeeded."
 else
-    RESULT_MESSAGE="Search did not succeed. Check log files."
+    RESULT_MESSAGE="Search did not succeed for K<=$K. Check log files."
 fi
 
 
