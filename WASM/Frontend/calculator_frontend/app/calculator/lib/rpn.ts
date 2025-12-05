@@ -6,7 +6,8 @@ import { Precision } from './types';
 export const namedConstants: Record<string, string> = {
   "NEG": "-1", "ZERO": "0", "ONE": "1", "TWO": "2", "THREE": "3",
   "FOUR": "4", "FIVE": "5", "SIX": "6", "SEVEN": "7", "EIGHT": "8",
-  "NINE": "9", "POL": "½", "PI": "π", "EULER": "e", "GOLDENRATIO": "φ"
+  "NINE": "9", "POL": "½", "PI": "π", "EULER": "e", "GOLDENRATIO": "φ",
+  "EULER_GAMMA": "γ"  // Euler-Mascheroni constant (not in WASM yet)
 };
 
 export const namedFunctions: Record<string, string> = {
@@ -58,7 +59,9 @@ export function gamma(z: number): number {
 
 // Convert RPN string to array
 export function parseRPN(rpn: string): string[] {
-  // WASM returns format like "PI, EULER, PLUS, " - comma and space separated
+  if (!rpn || rpn.length === 0) return [];
+  
+  // WASM returns format like "PI, EULER, PLUS" - comma and space separated
   if (rpn.includes(',')) {
     return rpn.split(',')
       .map(t => t.trim())
@@ -68,8 +71,9 @@ export function parseRPN(rpn: string): string[] {
   if (rpn.includes(' ')) {
     return rpn.split(' ').filter(t => t.length > 0);
   }
-  // Otherwise assume it's single-char tokens
-  return rpn.split('');
+  // Single token (no delimiters) - return as single element array
+  // This handles cases like "PI" which should be ["PI"], not ["P", "I"]
+  return [rpn];
 }
 
 // Convert RPN to infix notation for display

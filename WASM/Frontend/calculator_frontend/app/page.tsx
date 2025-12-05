@@ -263,7 +263,7 @@ export default function LandingPage() {
       <footer className="fixed bottom-0 left-0 right-0 z-10 py-4 px-6">
         <div className="flex items-center justify-between text-slate-500 text-sm">
           <div>
-            © Andrzej Odrzywołek, UJ 2025
+            © Andrzej Odrzywołek & Klaudiusz Sroka, UJ 2025
           </div>
           <a 
             href="https://github.com/Klaudiusz321/ConstantRecognition" 
