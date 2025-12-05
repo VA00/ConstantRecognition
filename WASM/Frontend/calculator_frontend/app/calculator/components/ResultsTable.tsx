@@ -1,7 +1,8 @@
 'use client';
 
 import { SearchResult, Filters } from '../lib/types';
-import { rpnToInfix, rpnToMathematica, createWolframLink } from '../lib/rpn';
+import { rpnToMathematica, createWolframLink, rpnToLatex } from '../lib/rpn';
+import { Latex } from './Latex';
 
 interface ResultsTableProps {
   results: SearchResult[];
@@ -133,9 +134,9 @@ export function ResultsTable({
               >
                 Komplexity<SortIcon column="K" />
               </th>
+              <th className="p-3">Formula</th>
               <th className="p-3">Numeric result</th>
-              <th className="p-3">Mathematica</th>
-              <th className="p-3">Search status</th>
+              <th className="p-3">Status</th>
               <th 
                 className="p-3 cursor-pointer hover:text-[#0066cc] select-none"
                 onClick={() => handleSort('REL_ERR')}
@@ -157,17 +158,18 @@ export function ResultsTable({
               <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#111113] text-sm">
                 <td className="p-3 font-mono text-gray-500 dark:text-gray-500">{r.cpuId}</td>
                 <td className="p-3 font-mono font-medium text-gray-900 dark:text-white">{r.K}</td>
-                <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{r.result}</td>
                 <td className="p-3">
                   <a 
                     href={createWolframLink(rpnToMathematica(r.RPN))}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#0066cc] hover:underline font-mono text-xs"
+                    className="text-gray-900 dark:text-white hover:text-[#0066cc]"
+                    title="Open in Wolfram Alpha"
                   >
-                    {rpnToMathematica(r.RPN)}
+                    <Latex formula={rpnToLatex(r.RPN)} />
                   </a>
                 </td>
+                <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{r.result}</td>
                 <td className="p-3">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
                     r.status === 'FINISHED' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :

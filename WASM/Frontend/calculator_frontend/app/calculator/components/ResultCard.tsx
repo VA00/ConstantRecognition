@@ -1,7 +1,8 @@
 'use client';
 
 import { SearchResult } from '../lib/types';
-import { rpnToInfix, rpnToMathematica, createWolframLink } from '../lib/rpn';
+import { rpnToMathematica, createWolframLink, rpnToLatex } from '../lib/rpn';
+import { Latex } from './Latex';
 
 interface ResultCardProps {
   result: SearchResult;
@@ -13,7 +14,9 @@ export function ResultCard({ result }: ResultCardProps) {
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
         <div>
           <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Best Match</label>
-          <div className="text-xl font-mono text-gray-900 dark:text-white mt-1">{rpnToInfix(result.RPN)}</div>
+          <div className="text-xl text-gray-900 dark:text-white mt-1">
+            <Latex formula={rpnToLatex(result.RPN)} />
+          </div>
         </div>
         <div>
           <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Numeric Value</label>
@@ -31,8 +34,8 @@ export function ResultCard({ result }: ResultCardProps) {
           </a>
         </div>
         <div>
-          <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">RPN</label>
-          <div className="text-sm font-mono text-gray-500 dark:text-gray-500 mt-1">{result.RPN}</div>
+          <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Relative Error</label>
+          <div className="text-sm font-mono text-gray-500 dark:text-gray-500 mt-1">{result.REL_ERR.toExponential(2)}</div>
         </div>
       </div>
     </div>

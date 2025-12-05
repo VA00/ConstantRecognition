@@ -195,3 +195,62 @@ export function rpnToMathematica(rpn: string | string[]): string {
 export function createWolframLink(formula: string): string {
   return `https://www.wolframalpha.com/input?i=${encodeURIComponent(formula)}`;
 }
+
+// Convert RPN to LaTeX syntax for beautiful rendering
+export function rpnToLatex(rpn: string | string[]): string {
+  const tokens = typeof rpn === 'string' ? parseRPN(rpn) : rpn;
+  
+  const latexConstants: Record<string, string> = {
+    "NEG": "(-1)", "ZERO": "0", "ONE": "1", "TWO": "2", "THREE": "3",
+    "FOUR": "4", "FIVE": "5", "SIX": "6", "SEVEN": "7", "EIGHT": "8",
+    "NINE": "9", "PI": "\\pi", "EULER": "e", "GOLDENRATIO": "\\varphi",
+    "EULER_GAMMA": "\\gamma"
+  };
+  
+  const latexFunctions: Record<string, (x: string) => string> = {
+    "EXP": x => `e^{${x}}`,
+    "LOG": x => `\\ln(${x})`,
+    "SIN": x => `\\sin(${x})`,
+    "ARCSIN": x => `\\arcsin(${x})`,
+    "COS": x => `\\cos(${x})`,
+    "ARCCOS": x => `\\arccos(${x})`,
+    "TAN": x => `\\tan(${x})`,
+    "ARCTAN": x => `\\arctan(${x})`,
+    "SINH": x => `\\sinh(${x})`,
+    "ARCSINH": x => `\\text{arsinh}(${x})`,
+    "COSH": x => `\\cosh(${x})`,
+    "ARCCOSH": x => `\\text{arcosh}(${x})`,
+    "TANH": x => `\\tanh(${x})`,
+    "ARCTANH": x => `\\text{artanh}(${x})`,
+    "SQRT": x => `\\sqrt{${x}}`,
+    "SQR": x => `{${x}}^2`,
+    "GAMMA": x => `\\Gamma(${x})`,
+    "INV": x => `\\frac{1}{${x}}`,
+    "MINUS": x => `(-${x})`
+  };
+  
+  const latexOperators: Record<string, (a: string, b: string) => string> = {
+    "PLUS": (a, b) => `${a} + ${b}`,
+    "SUBTRACT": (a, b) => `${a} - ${b}`,
+    "TIMES": (a, b) => `${a} \\cdot ${b}`,
+    "DIVIDE": (a, b) => `\\frac{${a}}{${b}}`,
+    "POWER": (a, b) => `{${a}}^{${b}}`
+  };
+
+  const stack: string[] = [];
+  tokens.forEach(token => {
+    if (latexConstants[token]) {
+      stack.push(latexConstants[token]);
+    } else if (latexFunctions[token]) {
+      const arg = stack.pop() || '?';
+      stack.push(latexFunctions[token](arg));
+    } else if (latexOperators[token]) {
+      const b = stack.pop() || '?';
+      const a = stack.pop() || '?';
+      stack.push(latexOperators[token](a, b));
+    } else if (token) {
+      stack.push(token);
+    }
+  });
+  return stack.pop() || rpn.toString();
+}
