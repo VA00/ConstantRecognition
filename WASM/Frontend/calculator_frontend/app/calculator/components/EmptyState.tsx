@@ -10,7 +10,7 @@ export function EmptyState({ onExampleClick }: EmptyStateProps) {
     { value: '2.718281828459045', label: 'e', description: 'Euler number' },
     { value: '1.6180339887498949', label: 'φ', description: 'Golden ratio' },
     { value: '0.5772156649015329', label: 'γ', description: 'Euler-Mascheroni' },
-    { value: '0.6931471805599453', label: 'ln2', description: 'Sum[(-1)^n Log[1+1/n]]' },
+    { value: '0.6931471805599453', label: 'ln2', description: 'Log[2]' },
    
   ];
 

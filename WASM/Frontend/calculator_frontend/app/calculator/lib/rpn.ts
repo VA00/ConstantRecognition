@@ -88,9 +88,11 @@ export function rpnToInfix(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(`${namedFunctions[token]}(${arg})`);
     } else if (namedOperators[token]) {
-      const b = stack.pop() || '?';
-      const a = stack.pop() || '?';
-      stack.push(`(${a} ${namedOperators[token]} ${b})`);
+      // In this RPN convention: top of stack is LEFT operand, second is RIGHT
+      // So for "a b -" we get b - a (top - second)
+      const left = stack.pop() || '?';   // top of stack = left operand
+      const right = stack.pop() || '?';  // second = right operand  
+      stack.push(`(${left} ${namedOperators[token]} ${right})`);
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);
@@ -111,9 +113,10 @@ export function evaluateRPN(rpn: string | string[]): number {
       const arg = stack.pop() || 0;
       stack.push(numFunctions[token](arg));
     } else if (numOperators[token]) {
-      const a = stack.pop() || 0;
-      const b = stack.pop() || 0;
-      stack.push(numOperators[token](a, b));
+      // In this RPN convention: top of stack is LEFT operand, second is RIGHT
+      const left = stack.pop() || 0;   // top = left
+      const right = stack.pop() || 0;  // second = right
+      stack.push(numOperators[token](left, right));
     }
   });
   return stack.pop() || NaN;
@@ -151,7 +154,8 @@ export function rpnToMathematica(rpn: string | string[]): string {
   const mmaConstants: Record<string, string> = {
     "NEG": "(-1)", "ZERO": "0", "ONE": "1", "TWO": "2", "THREE": "3",
     "FOUR": "4", "FIVE": "5", "SIX": "6", "SEVEN": "7", "EIGHT": "8",
-    "NINE": "9", "PI": "Pi", "EULER": "E", "GOLDENRATIO": "GoldenRatio"
+    "NINE": "9", "PI": "Pi", "EULER": "E", "GOLDENRATIO": "GoldenRatio",
+    "EULER_GAMMA": "EulerGamma", "POL": "(1/2)"
   };
   const mmaFunctions: Record<string, string> = {
     "EXP": "Exp", "LOG": "Log", "SIN": "Sin", "ARCSIN": "ArcSin",
@@ -161,9 +165,9 @@ export function rpnToMathematica(rpn: string | string[]): string {
     "MINUS": "Minus"
   };
   const mmaUnnamed: Record<string, (x: string) => string> = {
-    "SQR": x => `(${x})^2`,
-    "INV": x => `1/(${x})`,
-    "MINUS": x => `(-(${x}))`
+    "SQR": x => `${x}^2`,
+    "INV": x => `1/${x}`,
+    "MINUS": x => `-${x}`
   };
   const mmaOperators: Record<string, string> = {
     "PLUS": "+", "SUBTRACT": "-", "TIMES": "*", "DIVIDE": "/", "POWER": "^"
@@ -180,9 +184,10 @@ export function rpnToMathematica(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(`${mmaFunctions[token]}[${arg}]`);
     } else if (mmaOperators[token]) {
-      const b = stack.pop() || '?';
-      const a = stack.pop() || '?';
-      stack.push(`((${a}) ${mmaOperators[token]} (${b}))`);
+      // In this RPN convention: top of stack is LEFT operand, second is RIGHT
+      const left = stack.pop() || '?';   // top = left
+      const right = stack.pop() || '?';  // second = right
+      stack.push(`(${left} ${mmaOperators[token]} ${right})`);
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);
@@ -245,9 +250,10 @@ export function rpnToLatex(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(latexFunctions[token](arg));
     } else if (latexOperators[token]) {
-      const b = stack.pop() || '?';
-      const a = stack.pop() || '?';
-      stack.push(latexOperators[token](a, b));
+      // In this RPN convention: top of stack is LEFT operand, second is RIGHT
+      const left = stack.pop() || '?';   // top = left
+      const right = stack.pop() || '?';  // second = right
+      stack.push(latexOperators[token](left, right));
     } else if (token) {
       stack.push(token);
     }
