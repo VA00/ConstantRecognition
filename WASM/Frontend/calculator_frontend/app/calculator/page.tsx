@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters } from './lib/types';
-import { extractPrecision } from './lib/rpn';
+import { extractPrecision, evaluateRPN } from './lib/rpn';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
 export default function CalculatorPage() {
@@ -20,10 +20,17 @@ export default function CalculatorPage() {
   const [activeWorkers, setActiveWorkers] = useState<ActiveWorker[]>([]);
   const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | 'HAMMING_DISTANCE' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [searchFinished, setSearchFinished] = useState(false);
   const itemsPerPage = 20;
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
+
+  // Best result = lowest REL_ERR
+  const bestResult = useMemo(() => {
+    if (results.length === 0) return null;
+    return [...results].sort((a, b) => a.REL_ERR - b.REL_ERR)[0];
+  }, [results]);
 
   // Check for WASM support and detect CPUs
   useEffect(() => {
@@ -48,14 +55,28 @@ export default function CalculatorPage() {
     // Skip ready message
     if (data.type === 'ready') return;
     
+    // Debug: log raw data from WASM
+    console.log('WASM raw data:', JSON.stringify(data, null, 2));
+    
     // Worker completed with results array
     if (data.results && Array.isArray(data.results)) {
+      console.log('Results array:', data.results);
       data.results.forEach((r: { K: number; RPN: string; result: string; REL_ERR: number; HAMMING_DISTANCE: number; status?: string; cpuId?: number }) => {
+        console.log('Processing result:', r);
+        
+        // Calculate numeric value from RPN
+        let numericValue: string;
+        try {
+          numericValue = evaluateRPN(r.RPN).toString();
+        } catch {
+          numericValue = 'N/A';
+        }
+        
         const result: SearchResult = {
           cpuId: r.cpuId || data.cpuId || cpuId,
           K: r.K,
           RPN: r.RPN,
-          result: r.result,
+          result: numericValue,
           REL_ERR: r.REL_ERR,
           HAMMING_DISTANCE: r.HAMMING_DISTANCE,
           status: r.status || 'K_BEST'
@@ -83,6 +104,7 @@ export default function CalculatorPage() {
     setIsCalculating(true);
     setResults([]);
     setCurrentPage(1);
+    setSearchFinished(false);
     isAbortedRef.current = false;
     
     const precisionInfo = extractPrecision(inputValue);
@@ -116,7 +138,7 @@ export default function CalculatorPage() {
       worker.onerror = (e) => handleWorkerError(cpuId, e);
       
       workers.push(worker);
-      initialActiveWorkers.push({ id: cpuId, status: 'running', currentK: 2 });
+      initialActiveWorkers.push({ id: cpuId, status: 'running', currentK: 1 });
     }
     
     workersRef.current = workers;
@@ -129,7 +151,7 @@ export default function CalculatorPage() {
         initDelay: 0,
         z: parseFloat(inputValue),
         inputPrecision: deltaZNum,
-        MinCodeLength: 2,
+        MinCodeLength: 1,
         MaxCodeLength: searchDepth,
         cpuId: i + 1,
         ncpus: effectiveThreads
@@ -140,6 +162,7 @@ export default function CalculatorPage() {
     await allComplete;
     
     setIsCalculating(false);
+    setSearchFinished(true);
   };
 
   const handleAbort = () => {
@@ -159,6 +182,7 @@ export default function CalculatorPage() {
     setSortColumn(null);
     setSortDirection('asc');
     setFilters(defaultFilters);
+    setSearchFinished(false);
   };
 
   const handleExampleClick = (value: string) => {
@@ -191,9 +215,17 @@ export default function CalculatorPage() {
           onCalculate={calculate}
         />
 
-        {results.length > 0 ? (
+        {results.length > 0 && bestResult ? (
           <>
-            <ResultCard result={results[0]} />
+            {/* Search Finished Banner */}
+            {searchFinished && (
+              <div className="bg-green-500 text-white py-3 px-6 text-center">
+                <span className="text-lg font-bold">✓ SEARCH FINISHED!</span>
+                <span className="ml-4 text-sm opacity-90">Found {results.length} result{results.length !== 1 ? 's' : ''}</span>
+              </div>
+            )}
+            {/* Show best result (lowest REL_ERR) */}
+            <ResultCard result={bestResult} />
             <ResultsTable
               results={results}
               filters={filters}

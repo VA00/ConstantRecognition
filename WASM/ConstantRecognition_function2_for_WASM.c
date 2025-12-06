@@ -364,7 +364,7 @@ char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int 
 
   
   j=cpu_id;
-  for(K=1;K<=MaxCodeLength;K++)
+  for(K=MinCodeLength;K<=MaxCodeLength;K++)
   {
 
     kMAX = ipow(3, K);

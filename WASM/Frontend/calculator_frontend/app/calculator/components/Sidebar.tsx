@@ -136,7 +136,7 @@ export function Sidebar({
                 <div key={w.id} className="flex items-center gap-2 text-xs">
                   <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                   <span className="text-gray-600 dark:text-gray-400">
-                    CPU {w.id}: K={w.currentK}
+                    CPU {w.id}: searching...
                   </span>
                 </div>
               ))}

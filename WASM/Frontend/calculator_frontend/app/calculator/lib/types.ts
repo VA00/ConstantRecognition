@@ -17,6 +17,7 @@ export interface Filters {
   showExp: boolean;
   showLn: boolean;
   showSqrt: boolean;
+  kFilter: number | null; // null = show all, number = show only that K
 }
 
 export interface Precision {
@@ -36,5 +37,6 @@ export const defaultFilters: Filters = {
   showCos: true,
   showExp: true,
   showLn: true,
-  showSqrt: true
+  showSqrt: true,
+  kFilter: null
 };
