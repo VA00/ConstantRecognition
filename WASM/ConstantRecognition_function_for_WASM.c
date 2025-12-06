@@ -183,7 +183,7 @@ char* search_RPN(double z, double Delta_z, int MinCodeLength, int MaxCodeLength,
   best  = MAX_NUMBER;
   
   j=cpu_id;
-  for(K=1;K<=MaxCodeLength;K++)
+  for(K=MinCodeLength;K<=MaxCodeLength;K++)
   {
     //kMAX=ipow(INSTR_NUM,K);
     //printf("DEBUG: %d\n\n",kMAX);

@@ -1,7 +1,8 @@
 'use client';
 
 import { SearchResult, Filters } from '../lib/types';
-import { rpnToInfix, rpnToMathematica, createWolframLink } from '../lib/rpn';
+import { rpnToMathematica, createWolframLink, rpnToLatex } from '../lib/rpn';
+import { Latex } from './Latex';
 
 interface ResultsTableProps {
   results: SearchResult[];
@@ -31,11 +32,12 @@ export function ResultsTable({
   // Filter and sort logic
   const filteredAndSortedResults = results
     .filter(r => {
-      if (!filters.showSin && r.RPN.includes('S')) return false;
-      if (!filters.showCos && r.RPN.includes('C')) return false;
-      if (!filters.showExp && r.RPN.includes('E')) return false;
-      if (!filters.showLn && r.RPN.includes('L')) return false;
-      if (!filters.showSqrt && r.RPN.includes('Q')) return false;
+      if (!filters.showSin && r.RPN.includes('SIN')) return false;
+      if (!filters.showCos && r.RPN.includes('COS')) return false;
+      if (!filters.showExp && r.RPN.includes('EXP')) return false;
+      if (!filters.showLn && r.RPN.includes('LOG')) return false;
+      if (!filters.showSqrt && r.RPN.includes('SQRT')) return false;
+      if (filters.kFilter !== null && r.K !== filters.kFilter) return false;
       return true;
     })
     .sort((a, b) => {
@@ -70,11 +72,14 @@ export function ResultsTable({
     return <span className="text-[#0066cc] ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>;
   };
 
+  // Get unique K values from results for the filter dropdown
+  const uniqueKValues = [...new Set(results.map(r => r.K))].sort((a, b) => a - b);
+
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
       {/* Filters */}
-      <div className="p-4 border-b border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="p-4 border-b border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-4 flex-wrap">
           <span className="text-xs text-gray-500 dark:text-gray-500 font-medium">Filter:</span>
           {[
             { key: 'showSin', label: 'sin' },
@@ -86,13 +91,31 @@ export function ResultsTable({
             <label key={f.key} className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
               <input
                 type="checkbox"
-                checked={filters[f.key as keyof Filters]}
+                checked={filters[f.key as keyof Filters] as boolean}
                 onChange={(e) => setFilters({ ...filters, [f.key]: e.target.checked })}
                 className="accent-[#0066cc]"
               />
               {f.label}
             </label>
           ))}
+          
+          {/* K (Complexity) Filter */}
+          <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-300 dark:border-gray-600">
+            <span className="text-xs text-gray-500 dark:text-gray-500 font-medium">K:</span>
+            <select
+              value={filters.kFilter === null ? 'all' : filters.kFilter}
+              onChange={(e) => setFilters({ 
+                ...filters, 
+                kFilter: e.target.value === 'all' ? null : parseInt(e.target.value) 
+              })}
+              className="text-xs bg-gray-100 dark:bg-[#2a2a2e] text-gray-700 dark:text-gray-300 rounded px-2 py-1 border-none outline-none cursor-pointer"
+            >
+              <option value="all">All</option>
+              {uniqueKValues.map(k => (
+                <option key={k} value={k}>K={k}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="text-xs text-gray-500 dark:text-gray-500">
           Showing {filteredAndSortedResults.length} of {results.length} results
@@ -111,9 +134,9 @@ export function ResultsTable({
               >
                 Komplexity<SortIcon column="K" />
               </th>
+              <th className="p-3">Formula</th>
               <th className="p-3">Numeric result</th>
-              <th className="p-3">Mathematica</th>
-              <th className="p-3">Search status</th>
+              <th className="p-3">Status</th>
               <th 
                 className="p-3 cursor-pointer hover:text-[#0066cc] select-none"
                 onClick={() => handleSort('REL_ERR')}
@@ -135,17 +158,18 @@ export function ResultsTable({
               <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#111113] text-sm">
                 <td className="p-3 font-mono text-gray-500 dark:text-gray-500">{r.cpuId}</td>
                 <td className="p-3 font-mono font-medium text-gray-900 dark:text-white">{r.K}</td>
-                <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{r.result}</td>
                 <td className="p-3">
                   <a 
                     href={createWolframLink(rpnToMathematica(r.RPN))}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#0066cc] hover:underline font-mono text-xs"
+                    className="text-gray-900 dark:text-white hover:text-[#0066cc]"
+                    title="Open in Wolfram Alpha"
                   >
-                    {rpnToMathematica(r.RPN)}
+                    <Latex formula={rpnToLatex(r.RPN)} />
                   </a>
                 </td>
+                <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{r.result}</td>
                 <td className="p-3">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
                     r.status === 'FINISHED' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :

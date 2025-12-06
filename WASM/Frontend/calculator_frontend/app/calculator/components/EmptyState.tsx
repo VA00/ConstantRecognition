@@ -6,10 +6,12 @@ interface EmptyStateProps {
 
 export function EmptyState({ onExampleClick }: EmptyStateProps) {
   const examples = [
-    { value: '3.14159265358979', label: 'π' },
-    { value: '2.71828182845904', label: 'e' },
-    { value: '1.61803398874989', label: 'φ' },
-    { value: '0.57721566490153', label: 'γ' },
+    { value: '3.141592653589793', label: 'π', description: 'Pi' },
+    { value: '2.718281828459045', label: 'e', description: 'Euler number' },
+    { value: '1.6180339887498949', label: 'φ', description: 'Golden ratio' },
+    { value: '0.5772156649015329', label: 'γ', description: 'Euler-Mascheroni' },
+    { value: '0.6931471805599453', label: 'ln2', description: 'Log[2]' },
+   
   ];
 
   return (
@@ -31,9 +33,13 @@ export function EmptyState({ onExampleClick }: EmptyStateProps) {
             <button
               key={ex.value}
               onClick={() => onExampleClick(ex.value)}
-              className="px-4 py-2 text-sm bg-gray-100 dark:bg-[#2a2a2e] hover:bg-gray-200 dark:hover:bg-[#3a3a3e] text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
+              className="px-4 py-2 text-sm bg-gray-100 dark:bg-[#2a2a2e] hover:bg-gray-200 dark:hover:bg-[#3a3a3e] text-gray-700 dark:text-gray-300 rounded-lg transition-colors group relative"
+              title={ex.description}
             >
               Try {ex.label}
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                {ex.description}
+              </span>
             </button>
           ))}
         </div>
