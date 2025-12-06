@@ -25,7 +25,8 @@ export default function CalculatorPage() {
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
-
+  
+  // WebGPU hook
   // Best result = lowest REL_ERR
   const bestResult = useMemo(() => {
     if (results.length === 0) return null;
@@ -109,7 +110,9 @@ export default function CalculatorPage() {
     
     const precisionInfo = extractPrecision(inputValue);
     setPrecision(precisionInfo);
+    const deltaZNum = parseFloat(precisionInfo.deltaZ || '0.5');
 
+    // CPU/WASM computation
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
     
     // Terminate existing workers
@@ -145,7 +148,6 @@ export default function CalculatorPage() {
     setActiveWorkers(initialActiveWorkers);
     
     // Start computation on each worker
-    const deltaZNum = parseFloat(precisionInfo.deltaZ || '0.5');
     workers.forEach((worker, i) => {
       worker.postMessage({
         initDelay: 0,
