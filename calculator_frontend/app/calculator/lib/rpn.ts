@@ -165,9 +165,9 @@ export function rpnToMathematica(rpn: string | string[]): string {
     "MINUS": "Minus"
   };
   const mmaUnnamed: Record<string, (x: string) => string> = {
-    "SQR": x => `${x}^2`,
-    "INV": x => `1/${x}`,
-    "MINUS": x => `-${x}`
+    "SQR": x => `(${x})^2`,
+    "INV": x => `1/(${x})`,
+    "MINUS": x => `(-${x})`
   };
   const mmaOperators: Record<string, string> = {
     "PLUS": "+", "SUBTRACT": "-", "TIMES": "*", "DIVIDE": "/", "POWER": "^"

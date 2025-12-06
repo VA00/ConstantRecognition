@@ -1,0 +1,32 @@
+{
+    "name": "ConstantRecognition CUDA",
+    "image": "nvidia/cuda:12.2.0-devel-ubuntu22.04",
+    
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {},
+        "ghcr.io/devcontainers/features/git:1": {}
+    },
+    
+    "runArgs": [
+        "--gpus", "all"
+    ],
+    
+    "postCreateCommand": "apt-get update && apt-get install -y build-essential emscripten && chmod +x /workspaces/ConstantRecognition/cuda/*.cu",
+    
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "nvidia.nsight-vscode-edition",
+                "ms-vscode.cmake-tools"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
+    
+    "mounts": [],
+    
+    "remoteUser": "root"
+}
