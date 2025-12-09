@@ -76,10 +76,10 @@ export function ResultsTable({
   const uniqueKValues = [...new Set(results.map(r => r.K))].sort((a, b) => a - b);
 
   return (
-    <div className="flex-1 overflow-hidden flex flex-col">
+    <div className="flex-1 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d] w-full max-w-full">
       {/* Filters */}
-      <div className="p-4 border-b border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-4 flex-wrap">
+      <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 overflow-hidden">
+        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
           <span className="text-xs text-gray-500 dark:text-gray-500 font-medium">Filter:</span>
           {[
             { key: 'showSin', label: 'sin' },
@@ -100,7 +100,7 @@ export function ResultsTable({
           ))}
           
           {/* K (Complexity) Filter */}
-          <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-300 dark:border-gray-600">
+          <div className="flex items-center gap-2 sm:ml-4 sm:pl-4 sm:border-l border-gray-300 dark:border-gray-600">
             <span className="text-xs text-gray-500 dark:text-gray-500 font-medium">K:</span>
             <select
               value={filters.kFilter === null ? 'all' : filters.kFilter}
@@ -123,8 +123,8 @@ export function ResultsTable({
       </div>
 
       {/* Table */}
-      <div className="flex-1 overflow-auto">
-        <table className="w-full">
+      <div className="flex-1 overflow-auto bg-white dark:bg-[#1a1a1d] max-w-full">
+        <table className="w-full table-fixed">
           <thead className="bg-gray-50 dark:bg-[#111113] sticky top-0">
             <tr className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider text-left">
               <th className="p-3">CPU ID</th>
@@ -169,7 +169,7 @@ export function ResultsTable({
                     <Latex formula={rpnToLatex(r.RPN)} />
                   </a>
                 </td>
-                <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{r.result}</td>
+                <td className="p-3 font-mono text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={r.result}>{r.result}</td>
                 <td className="p-3">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
                     r.status === 'FINISHED' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
@@ -183,7 +183,7 @@ export function ResultsTable({
                 <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{typeof r.REL_ERR === 'number' ? r.REL_ERR.toExponential(2) : r.REL_ERR}</td>
                 <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{r.compressionRatio?.toFixed(2) || '-'}</td>
                 <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{typeof r.HAMMING_DISTANCE === 'number' ? r.HAMMING_DISTANCE.toFixed(0) : r.HAMMING_DISTANCE}</td>
-                <td className="p-3 font-mono text-xs text-gray-500 dark:text-gray-500">{r.RPN}</td>
+                <td className="p-3 font-mono text-xs text-gray-500 dark:text-gray-500 max-w-[200px] truncate" title={r.RPN}>{r.RPN}</td>
               </tr>
             ))}
           </tbody>
@@ -192,7 +192,7 @@ export function ResultsTable({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="p-4 border-t border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] flex items-center justify-center gap-2">
+        <div className="p-3 sm:p-4 border-t border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
           <button
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}

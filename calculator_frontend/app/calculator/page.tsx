@@ -21,12 +21,12 @@ export default function CalculatorPage() {
   const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | 'HAMMING_DISTANCE' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchFinished, setSearchFinished] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const itemsPerPage = 20;
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
   
-  // WebGPU hook
   // Best result = lowest REL_ERR
   const bestResult = useMemo(() => {
     if (results.length === 0) return null;
@@ -48,6 +48,17 @@ export default function CalculatorPage() {
     const cpus = navigator.hardwareConcurrency || 4;
     setDetectedCPUs(cpus);
     setThreadCount(cpus);
+  }, []);
+
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const handleWorkerMessage = (cpuId: number, e: MessageEvent, onComplete?: () => void) => {
@@ -107,6 +118,7 @@ export default function CalculatorPage() {
     setCurrentPage(1);
     setSearchFinished(false);
     isAbortedRef.current = false;
+    setSidebarOpen(false); // Close sidebar on mobile when calculating
     
     const precisionInfo = extractPrecision(inputValue);
     setPrecision(precisionInfo);
@@ -191,8 +203,12 @@ export default function CalculatorPage() {
     setInputValue(value);
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(prev => !prev);
+  };
+
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-[#111113] overflow-hidden">
+    <div className="flex h-screen w-screen max-w-full bg-gray-50 dark:bg-[#1a1a1d] overflow-hidden">
       <Sidebar
         wasmLoaded={wasmLoaded}
         detectedCPUs={detectedCPUs}
@@ -207,9 +223,11 @@ export default function CalculatorPage() {
         isCalculating={isCalculating}
         onAbort={handleAbort}
         onReset={handleReset}
+        isOpen={sidebarOpen}
+        onToggle={toggleSidebar}
       />
 
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 min-w-0 flex flex-col overflow-hidden pt-14 lg:pt-0 bg-white dark:bg-[#1a1a1d]">
         <InputBar
           inputValue={inputValue}
           setInputValue={setInputValue}
@@ -221,9 +239,9 @@ export default function CalculatorPage() {
           <>
             {/* Search Finished Banner */}
             {searchFinished && (
-              <div className="bg-green-500 text-white py-3 px-6 text-center">
-                <span className="text-lg font-bold">✓ SEARCH FINISHED!</span>
-                <span className="ml-4 text-sm opacity-90">Found {results.length} result{results.length !== 1 ? 's' : ''}</span>
+              <div className="bg-green-500 text-white py-2 sm:py-3 px-4 sm:px-6 text-center">
+                <span className="text-base sm:text-lg font-bold">✓ SEARCH FINISHED!</span>
+                <span className="ml-2 sm:ml-4 text-xs sm:text-sm opacity-90">Found {results.length} result{results.length !== 1 ? 's' : ''}</span>
               </div>
             )}
             {/* Show best result (lowest REL_ERR) */}
@@ -248,4 +266,3 @@ export default function CalculatorPage() {
     </div>
   );
 }
-

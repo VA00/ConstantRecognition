@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Disable dev indicators that might cause layout issues
+  devIndicators: false,
+  
   // Pusta konfiguracja Turbopack (wystarczy dla większości przypadków)
   turbopack: {},
   
