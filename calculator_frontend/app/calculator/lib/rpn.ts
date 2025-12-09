@@ -88,10 +88,10 @@ export function rpnToInfix(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(`${namedFunctions[token]}(${arg})`);
     } else if (namedOperators[token]) {
-      // In this RPN convention: top of stack is LEFT operand, second is RIGHT
-      // So for "a b -" we get b - a (top - second)
-      const left = stack.pop() || '?';   // top of stack = left operand
-      const right = stack.pop() || '?';  // second = right operand  
+      // Standard RPN: "a b -" means a - b
+      // First pop = right operand (b), second pop = left operand (a)
+      const right = stack.pop() || '?';  // top of stack = right operand
+      const left = stack.pop() || '?';   // second = left operand  
       stack.push(`(${left} ${namedOperators[token]} ${right})`);
     } else if (token) {
       // Unknown token - push as-is
@@ -113,9 +113,10 @@ export function evaluateRPN(rpn: string | string[]): number {
       const arg = stack.pop() || 0;
       stack.push(numFunctions[token](arg));
     } else if (numOperators[token]) {
-      // In this RPN convention: top of stack is LEFT operand, second is RIGHT
-      const left = stack.pop() || 0;   // top = left
-      const right = stack.pop() || 0;  // second = right
+      // Standard RPN: "a b -" means a - b
+      // First pop = right operand, second pop = left operand
+      const right = stack.pop() || 0;  // top = right
+      const left = stack.pop() || 0;   // second = left
       stack.push(numOperators[token](left, right));
     }
   });
@@ -184,9 +185,9 @@ export function rpnToMathematica(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(`${mmaFunctions[token]}[${arg}]`);
     } else if (mmaOperators[token]) {
-      // In this RPN convention: top of stack is LEFT operand, second is RIGHT
-      const left = stack.pop() || '?';   // top = left
-      const right = stack.pop() || '?';  // second = right
+      // Standard RPN: first pop = right operand, second pop = left operand
+      const right = stack.pop() || '?';  // top = right
+      const left = stack.pop() || '?';   // second = left
       stack.push(`(${left} ${mmaOperators[token]} ${right})`);
     } else if (token) {
       // Unknown token - push as-is
@@ -250,9 +251,9 @@ export function rpnToLatex(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(latexFunctions[token](arg));
     } else if (latexOperators[token]) {
-      // In this RPN convention: top of stack is LEFT operand, second is RIGHT
-      const left = stack.pop() || '?';   // top = left
-      const right = stack.pop() || '?';  // second = right
+      // Standard RPN: first pop = right operand, second pop = left operand
+      const right = stack.pop() || '?';  // top = right
+      const left = stack.pop() || '?';   // second = left
       stack.push(latexOperators[token](left, right));
     } else if (token) {
       stack.push(token);
