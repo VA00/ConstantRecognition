@@ -3,7 +3,7 @@
 /*
 To compile for WASM/WWW
 
-emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c ../C/mathematica.c ../C/math2.c \
+emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/mathematica.c ../C/math2.c \
 -s WASM=1 -s EXPORTED_FUNCTIONS='["_search_RPN", "_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 -o rpn_function.js
 
@@ -101,6 +101,7 @@ emcc -Wall ConstantRecognition_function2_for_WASM.c ../C/constant.c ../C/itoa.c 
 #define JSON_BUFFER_SIZE (1024*1024)  // 1MB
 #define min(a,b) ((a)<(b)?(a):(b))
 
+static const char BUILD_TIMESTAMP[] = "BUILD_TIME:" __DATE__ " " __TIME__;
 
 
 union DoubleInt64 {
@@ -349,7 +350,7 @@ char* search_RPN(double z, double dz, int MinCodeLength, int MaxCodeLength, int 
   json_start = JSON_output;
   remaining = JSON_BUFFER_SIZE;
   written = snprintf(json_start, remaining, 
-      "{\"cpuId\":%d, \"results\": [", cpu_id);
+      "{\"cpuId\":%d, \"buildTime\":\"%s\", \"results\": [", cpu_id, BUILD_TIMESTAMP);
   json_start += written;
   remaining -= written;
 
