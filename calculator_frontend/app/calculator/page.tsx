@@ -5,6 +5,20 @@ import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters } from '
 import { extractPrecision, evaluateRPN } from './lib/rpn';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
+// Ensures that all worker/WASM fetches include the configured base path (if any).
+// - Trailing slashes are removed so "//" never appears in URLs.
+// - A leading "/" is added when needed so a value like "~user/app" becomes "/~user/app".
+// - In the browser we return an absolute URL using window.location.origin; on the server we
+//   return a path that Next.js can understand during static export.
+const withBasePath = (path: string) => {
+  const base = process.env.NEXT_PUBLIC_BASE_PATH?.replace(/\/+$/g, '') ?? '';
+  const normalizedBase = base ? (base.startsWith('/') ? base : `/${base}`) : '';
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  if (typeof window === 'undefined') return `${normalizedBase}${normalizedPath}`;
+  return new URL(`${normalizedBase}${normalizedPath}`, window.location.origin).toString();
+};
+
+
 export default function CalculatorPage() {
   const [inputValue, setInputValue] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -37,7 +51,8 @@ export default function CalculatorPage() {
   useEffect(() => {
     const checkWasm = async () => {
       try {
-        const response = await fetch('/wasm/rpn_function.wasm');
+        //const response = await fetch('/wasm/rpn_function.wasm');
+        const response = await fetch(withBasePath('/wasm/rpn_function.wasm'));
         setWasmLoaded(response.ok);
       } catch {
         setWasmLoaded(false);
@@ -127,7 +142,8 @@ export default function CalculatorPage() {
     const allComplete = new Promise<void>(resolve => { resolveAll = resolve; });
     
     for (let i = 0; i < effectiveThreads; i++) {
-      const worker = new Worker('/wasm/worker.js');
+      //const worker = new Worker('/wasm/worker.js');
+      const worker = new Worker(withBasePath('/wasm/worker.js'));
       const cpuId = i + 1;
       
       const onComplete = () => {
