@@ -432,14 +432,15 @@ int compare_candidates(const void* a, const void* b)
 
 int main(int argc, char** argv)
 {
-    float targetX = 137.035999084f;  // Fine structure constant inverse
+    double targetX_double = 137.035999177;// Fine structure constant inverse
     int MaxCodeLength = 10;
     
     // Parse arguments
-    if (argc > 1) targetX = atof(argv[1]);
+    if (argc > 1) targetX_double = atof(argv[1]);
     if (argc > 2) MaxCodeLength = atoi(argv[2]);
     
-    double targetX_double = (double)targetX;
+    float targetX = (float) targetX_double;  
+
     
     printf("=== GPU Constant Recognition (HYBRID: FP32 search + FP64 verify) ===\n");
     printf("Target: %.17g\n", targetX_double);
