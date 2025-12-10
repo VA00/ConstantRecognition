@@ -297,8 +297,12 @@ export default function LandingPage() {
               <span className="absolute top-1/2 -left-3 -translate-y-1/2 text-slate-500 text-lg">Γ</span>
             </div>
             {/* Main logo */}
-            <div className="w-28 h-28 rounded-3xl bg-[#1a1a1c] border border-slate-800 flex items-center justify-center shadow-2xl">
-              <span className="text-6xl font-bold text-white">π</span>
+            <div className="w-28 h-28 rounded-3xl bg-[#1a1a1c] border border-slate-800 flex items-center justify-center shadow-2xl overflow-hidden">
+              <img 
+                src="/favicon copy.jpg" 
+                alt="Logo" 
+                className="w-20 h-20 object-cover"
+              />
             </div>
           </div>
         </div>

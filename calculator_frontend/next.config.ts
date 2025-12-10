@@ -1,13 +1,17 @@
 import type { NextConfig } from "next";
 
+
+  
   // Accepts values like "/constant" or "constant/" and normalizes them to "/constant".
   // The regex strips leading/trailing slashes so we can add exactly one leading slash back.
   const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH;
   const normalizedBasePath = rawBasePath
     ? `/${rawBasePath.replace(/^\/+|\/+$/g, "")}`
     : undefined;
-  
+
   const nextConfig: NextConfig = {
+
+  
     // Generate a static export in `out/` when running `next build`
     output: "export",
     // Keep all asset URLs relative to an optional base path (or the current folder)
@@ -17,7 +21,10 @@ import type { NextConfig } from "next";
     images: {
       unoptimized: true,
     },
-
+    
+  // Disable dev indicators that might cause layout issues
+  devIndicators: false,
+  
   // Pusta konfiguracja Turbopack (wystarczy dla większości przypadków)
   turbopack: {},
   
