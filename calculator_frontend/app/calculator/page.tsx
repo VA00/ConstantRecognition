@@ -44,10 +44,11 @@ export default function CalculatorPage() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
   
-  // Best result = lowest REL_ERR
+  // Best result = lowest REL_ERR from final results only (not intermediate K_BEST)
   const bestResult = useMemo(() => {
-    if (results.length === 0) return null;
-    return [...results].sort((a, b) => a.REL_ERR - b.REL_ERR)[0];
+    const finalResults = results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED');
+    if (finalResults.length === 0) return null;
+    return [...finalResults].sort((a, b) => a.REL_ERR - b.REL_ERR)[0];
   }, [results]);
 
   // Check for WASM support and detect CPUs
