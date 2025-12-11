@@ -4,9 +4,9 @@ export interface SearchResult {
   RPN: string;
   result: string;
   REL_ERR: string;
-  HAMMING_DISTANCE: number;
   status?: string;
   results?: SearchResult[];
+  compressionRatio?: number;
 }
 
 export interface Precision {

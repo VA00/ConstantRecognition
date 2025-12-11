@@ -8,8 +8,8 @@ interface ResultsTableProps {
   results: SearchResult[];
   filters: Filters;
   setFilters: (filters: Filters) => void;
-  sortColumn: 'K' | 'REL_ERR' | 'HAMMING_DISTANCE' | null;
-  setSortColumn: (column: 'K' | 'REL_ERR' | 'HAMMING_DISTANCE' | null) => void;
+  sortColumn: 'K' | 'REL_ERR' | null;
+  setSortColumn: (column: 'K' | 'REL_ERR' | null) => void;
   sortDirection: 'asc' | 'desc';
   setSortDirection: (direction: 'asc' | 'desc') => void;
   currentPage: number;
@@ -56,7 +56,7 @@ export function ResultsTable({
     currentPage * itemsPerPage
   );
 
-  const handleSort = (column: 'K' | 'REL_ERR' | 'HAMMING_DISTANCE') => {
+  const handleSort = (column: 'K' | 'REL_ERR') => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -65,7 +65,7 @@ export function ResultsTable({
     }
   };
 
-  const SortIcon = ({ column }: { column: 'K' | 'REL_ERR' | 'HAMMING_DISTANCE' }) => {
+  const SortIcon = ({ column }: { column: 'K' | 'REL_ERR' }) => {
     if (sortColumn !== column) {
       return <span className="text-gray-400 ml-1">↕</span>;
     }
@@ -77,6 +77,8 @@ export function ResultsTable({
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d] w-full max-w-full">
+      
+      
       {/* Filters */}
       <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 overflow-hidden">
         <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
@@ -99,23 +101,7 @@ export function ResultsTable({
             </label>
           ))}
           
-          {/* K (Complexity) Filter */}
-          <div className="flex items-center gap-2 sm:ml-4 sm:pl-4 sm:border-l border-gray-300 dark:border-gray-600">
-            <span className="text-xs text-gray-500 dark:text-gray-500 font-medium">K:</span>
-            <select
-              value={filters.kFilter === null ? 'all' : filters.kFilter}
-              onChange={(e) => setFilters({ 
-                ...filters, 
-                kFilter: e.target.value === 'all' ? null : parseInt(e.target.value) 
-              })}
-              className="text-xs bg-gray-100 dark:bg-[#2a2a2e] text-gray-700 dark:text-gray-300 rounded px-2 py-1 border-none outline-none cursor-pointer"
-            >
-              <option value="all">All</option>
-              {uniqueKValues.map(k => (
-                <option key={k} value={k}>K={k}</option>
-              ))}
-            </select>
-          </div>
+         
         </div>
         <div className="text-xs text-gray-500 dark:text-gray-500">
           Showing {filteredAndSortedResults.length} of {results.length} results
@@ -144,17 +130,26 @@ export function ResultsTable({
                 Relative error<SortIcon column="REL_ERR" />
               </th>
               <th className="p-3">Compression ratio</th>
-              <th 
-                className="p-3 cursor-pointer hover:text-[#0066cc] select-none"
-                onClick={() => handleSort('HAMMING_DISTANCE')}
-              >
-                Hamming distance<SortIcon column="HAMMING_DISTANCE" />
-              </th>
               <th className="p-3">RPN code</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-[#2a2a2e]">
-            {paginatedResults.map((r, i) => (
+            {paginatedResults.map((r, i) => {
+              // Calculate compression ratio if not provided by WASM
+              // Formula: -log10(REL_ERR) / K / log10(36)
+              // This measures how many "base-36 digits" of precision per symbol in RPN code
+              const calcCompressionRatio = () => {
+                if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
+                  return r.compressionRatio.toFixed(2);
+                }
+                if (typeof r.REL_ERR === 'number' && r.REL_ERR > 0 && r.K > 0) {
+                  const ratio = -Math.log10(r.REL_ERR) / r.K / Math.log10(36);
+                  return ratio.toFixed(2);
+                }
+                return '-';
+              };
+              
+              return (
               <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#111113] text-sm">
                 <td className="p-3 font-mono text-gray-500 dark:text-gray-500">{r.cpuId}</td>
                 <td className="p-3 font-mono font-medium text-gray-900 dark:text-white">{r.K}</td>
@@ -181,11 +176,11 @@ export function ResultsTable({
                   </span>
                 </td>
                 <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{typeof r.REL_ERR === 'number' ? r.REL_ERR.toExponential(2) : r.REL_ERR}</td>
-                <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{r.compressionRatio?.toFixed(2) || '-'}</td>
-                <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{typeof r.HAMMING_DISTANCE === 'number' ? r.HAMMING_DISTANCE.toFixed(0) : r.HAMMING_DISTANCE}</td>
+                <td className="p-3 font-mono text-gray-600 dark:text-gray-400">{calcCompressionRatio()}</td>
                 <td className="p-3 font-mono text-xs text-gray-500 dark:text-gray-500 max-w-[200px] truncate" title={r.RPN}>{r.RPN}</td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>

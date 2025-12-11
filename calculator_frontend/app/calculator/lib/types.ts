@@ -6,7 +6,6 @@ export interface SearchResult {
   RPN: string;
   result: string;
   REL_ERR: number;
-  HAMMING_DISTANCE: number;
   status: string;
   compressionRatio?: number;
 }
@@ -17,7 +16,9 @@ export interface Filters {
   showExp: boolean;
   showLn: boolean;
   showSqrt: boolean;
-  kFilter: number | null; // null = show all, number = show only that K
+  kFilter: number | null; 
+  showBest: boolean;
+  bestSofar: boolean;
 }
 
 export interface Precision {
@@ -38,5 +39,19 @@ export const defaultFilters: Filters = {
   showExp: true,
   showLn: true,
   showSqrt: true,
-  kFilter: null
+  kFilter: null,
+  showBest: true,
+  bestSofar: true,
 };
+export const examples = [
+  {
+    value: '1.17809724509617246442', 
+    label: '\\int_0^{\\infty} \\left(\\frac{\\sin(x)}{x}\\right)^3 \\, dx', 
+    description: 'Borwein Integral (Sinc^3)'
+  },
+  {
+    value: '0.57786367489553612464', 
+    label: '\\int_0^{\\infty} \\frac{\\cos(x)}{x^2 + 1} \\, dx', 
+    description: 'Laplace Integral (Pi / 2e)'
+  }
+];
