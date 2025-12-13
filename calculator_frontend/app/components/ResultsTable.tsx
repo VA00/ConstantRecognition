@@ -178,7 +178,6 @@ export default function ResultsTable({
               <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Search status</th>
               <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Relative error</th>
               <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Compression ratio</th>
-              <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Hamming distance</th>
               <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">RPN code</th>
             </tr>
           </thead>
@@ -227,14 +226,13 @@ export default function ResultsTable({
                   </td>
                   <td className="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-500">{result.REL_ERR || '-'}</td>
                   <td className="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-500">{compressionRatio}</td>
-                  <td className="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-500">{result.HAMMING_DISTANCE ?? '-'}</td>
                   <td className="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-500 max-w-[200px] truncate" title={result.RPN}>{result.RPN || '-'}</td>
                 </tr>
               );
             })}
             {paginated.length === 0 && (
               <tr>
-                <td colSpan={9} className="px-4 py-8 text-center text-gray-500 dark:text-gray-500">
+                <td colSpan={8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-500">
                   No matching records found
                 </td>
               </tr>

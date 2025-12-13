@@ -1,18 +1,14 @@
 'use client';
+import { examples } from '../lib/types';
+import { Latex } from './Latex';
+
 
 interface EmptyStateProps {
   onExampleClick: (value: string) => void;
 }
 
 export function EmptyState({ onExampleClick }: EmptyStateProps) {
-  const examples = [
-    { value: '3.141592653589793', label: 'π', description: 'Pi' },
-    { value: '2.718281828459045', label: 'e', description: 'Euler number' },
-    { value: '1.6180339887498949', label: 'φ', description: 'Golden ratio' },
-    { value: '0.5772156649015329', label: 'γ', description: 'Euler-Mascheroni' },
-    { value: '0.6931471805599453', label: 'ln2', description: 'Log[2]' },
-   
-  ];
+
 
   return (
     <div className="flex-1 flex items-center justify-center">
@@ -36,7 +32,7 @@ export function EmptyState({ onExampleClick }: EmptyStateProps) {
               className="px-4 py-2 text-sm bg-gray-100 dark:bg-[#2a2a2e] hover:bg-gray-200 dark:hover:bg-[#3a3a3e] text-gray-700 dark:text-gray-300 rounded-lg transition-colors group relative"
               title={ex.description}
             >
-              Try {ex.label}
+              <Latex formula={ex.label} />
               <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 {ex.description}
               </span>

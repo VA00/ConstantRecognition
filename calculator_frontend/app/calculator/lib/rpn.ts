@@ -88,11 +88,12 @@ export function rpnToInfix(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(`${namedFunctions[token]}(${arg})`);
     } else if (namedOperators[token]) {
-      // Standard RPN: "a b -" means a - b
-      // First pop = right operand (b), second pop = left operand (a)
-      const right = stack.pop() || '?';  // top of stack = right operand
-      const left = stack.pop() || '?';   // second = left operand  
-      stack.push(`(${left} ${namedOperators[token]} ${right})`);
+      // Non-standard RPN in C backend: "a b op" means op(b, a)
+      // So for "a b -" it computes b - a, for "a b ^" it computes b^a
+      const right = stack.pop() || '?';  // top of stack
+      const left = stack.pop() || '?';   // second from top
+      // Swap: use right as left operand, left as right operand
+      stack.push(`(${right} ${namedOperators[token]} ${left})`);
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);
@@ -113,11 +114,12 @@ export function evaluateRPN(rpn: string | string[]): number {
       const arg = stack.pop() || 0;
       stack.push(numFunctions[token](arg));
     } else if (numOperators[token]) {
-      // Standard RPN: "a b -" means a - b
-      // First pop = right operand, second pop = left operand
-      const right = stack.pop() || 0;  // top = right
-      const left = stack.pop() || 0;   // second = left
-      stack.push(numOperators[token](left, right));
+      // Non-standard RPN in C backend: "a b op" means op(b, a)
+      // So for "a b -" it computes b - a, for "a b ^" it computes b^a
+      const right = stack.pop() || 0;  // top
+      const left = stack.pop() || 0;   // second
+      // Swap: apply operator as op(right, left) instead of op(left, right)
+      stack.push(numOperators[token](right, left));
     }
   });
   return stack.pop() || NaN;
@@ -185,10 +187,11 @@ export function rpnToMathematica(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(`${mmaFunctions[token]}[${arg}]`);
     } else if (mmaOperators[token]) {
-      // Standard RPN: first pop = right operand, second pop = left operand
-      const right = stack.pop() || '?';  // top = right
-      const left = stack.pop() || '?';   // second = left
-      stack.push(`(${left} ${mmaOperators[token]} ${right})`);
+      // Non-standard RPN in C backend: "a b op" means op(b, a)
+      const right = stack.pop() || '?';  // top
+      const left = stack.pop() || '?';   // second
+      // Swap: use right as left operand, left as right operand
+      stack.push(`(${right} ${mmaOperators[token]} ${left})`);
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);
@@ -251,10 +254,11 @@ export function rpnToLatex(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(latexFunctions[token](arg));
     } else if (latexOperators[token]) {
-      // Standard RPN: first pop = right operand, second pop = left operand
-      const right = stack.pop() || '?';  // top = right
-      const left = stack.pop() || '?';   // second = left
-      stack.push(latexOperators[token](left, right));
+      // Non-standard RPN in C backend: "a b op" means op(b, a)
+      const right = stack.pop() || '?';  // top
+      const left = stack.pop() || '?';   // second
+      // Swap: use right as left operand, left as right operand
+      stack.push(latexOperators[token](right, left));
     } else if (token) {
       stack.push(token);
     }

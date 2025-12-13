@@ -32,19 +32,23 @@ export default function CalculatorPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [precision, setPrecision] = useState<Precision>({});
   const [activeWorkers, setActiveWorkers] = useState<ActiveWorker[]>([]);
-  const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | 'HAMMING_DISTANCE' | null>(null);
+  const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchFinished, setSearchFinished] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const itemsPerPage = 20;
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<number>(0);
   
-  // Best result = lowest REL_ERR
+  // Best result = lowest REL_ERR from final results only (not intermediate K_BEST)
   const bestResult = useMemo(() => {
-    if (results.length === 0) return null;
-    return [...results].sort((a, b) => a.REL_ERR - b.REL_ERR)[0];
+    const finalResults = results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED');
+    if (finalResults.length === 0) return null;
+    return [...finalResults].sort((a, b) => a.REL_ERR - b.REL_ERR)[0];
   }, [results]);
 
   // Check for WASM support and detect CPUs
@@ -82,15 +86,12 @@ export default function CalculatorPage() {
     // Skip ready message
     if (data.type === 'ready') return;
     
-    // Debug: log raw data from WASM
-    console.log('WASM raw data:', JSON.stringify(data, null, 2));
+    // Collect all results in one batch to avoid multiple re-renders
+    const newResults: SearchResult[] = [];
     
     // Worker completed with results array
     if (data.results && Array.isArray(data.results)) {
-      console.log('Results array:', data.results);
-      data.results.forEach((r: { K: number; RPN: string; result: string; REL_ERR: number; HAMMING_DISTANCE: number; status?: string; cpuId?: number }) => {
-        console.log('Processing result:', r);
-        
+      data.results.forEach((r: { K: number; RPN: string; result: string; REL_ERR: number; status?: string; cpuId?: number; COMPRESSION_RATIO?: number }) => {
         // Calculate numeric value from RPN
         let numericValue: string;
         try {
@@ -99,17 +100,41 @@ export default function CalculatorPage() {
           numericValue = 'N/A';
         }
         
-        const result: SearchResult = {
+        newResults.push({
           cpuId: r.cpuId || data.cpuId || cpuId,
           K: r.K,
           RPN: r.RPN,
           result: numericValue,
           REL_ERR: r.REL_ERR,
-          HAMMING_DISTANCE: r.HAMMING_DISTANCE,
-          status: r.status || 'K_BEST'
-        };
-        setResults(prev => [...prev, result]);
+          status: r.result === 'INTERMEDIATE' ? 'SEARCHING' : (r.result || r.status || 'K_BEST'),
+          compressionRatio: r.COMPRESSION_RATIO
+        });
       });
+      
+      // Handle final result (SUCCESS/FAILURE/ABORTED) from top-level data
+      if (data.result && data.RPN) {
+        let numericValue: string;
+        try {
+          numericValue = evaluateRPN(data.RPN).toString();
+        } catch {
+          numericValue = 'N/A';
+        }
+        
+        newResults.push({
+          cpuId: data.cpuId || cpuId,
+          K: data.K,
+          RPN: data.RPN,
+          result: numericValue,
+          REL_ERR: data.REL_ERR,
+          status: data.result, // SUCCESS, FAILURE, ABORTED
+          compressionRatio: data.COMPRESSION_RATIO
+        });
+      }
+      
+      // Update state once with all results from this worker
+      if (newResults.length > 0) {
+        setResults(prev => [...prev, ...newResults]);
+      }
       
       // Worker finished
       setActiveWorkers(prev => prev.filter(w => w.id !== cpuId));
@@ -134,6 +159,13 @@ export default function CalculatorPage() {
     setSearchFinished(false);
     isAbortedRef.current = false;
     setSidebarOpen(false); // Close sidebar on mobile when calculating
+    
+    // Start timer (update every 500ms to reduce re-renders)
+    setElapsedTime(0);
+    startTimeRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      setElapsedTime(Date.now() - startTimeRef.current);
+    }, 500);
     
     const precisionInfo = extractPrecision(inputValue);
     setPrecision(precisionInfo);
@@ -191,6 +223,13 @@ export default function CalculatorPage() {
     // Wait for all workers to complete
     await allComplete;
     
+    // Stop timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    setElapsedTime(Date.now() - startTimeRef.current);
+    
     setIsCalculating(false);
     setSearchFinished(true);
   };
@@ -200,6 +239,12 @@ export default function CalculatorPage() {
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
     setActiveWorkers([]);
+    // Stop timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    setElapsedTime(Date.now() - startTimeRef.current);
     setIsCalculating(false);
   };
 
@@ -213,6 +258,7 @@ export default function CalculatorPage() {
     setSortDirection('asc');
     setFilters(defaultFilters);
     setSearchFinished(false);
+    setElapsedTime(0);
   };
 
   const handleExampleClick = (value: string) => {
@@ -253,17 +299,27 @@ export default function CalculatorPage() {
 
         {results.length > 0 && bestResult ? (
           <>
-            {/* Search Finished Banner */}
-            {searchFinished && (
+            {/* Timer / Search Status Banner */}
+            {isCalculating ? (
+              <div className="bg-blue-500 text-white py-2 sm:py-3 px-4 sm:px-6 text-center flex items-center justify-center gap-4">
+                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                <span className="text-base sm:text-lg font-bold">SEARCHING...</span>
+                <span className="font-mono text-lg">{(elapsedTime / 1000).toFixed(1)}s</span>
+              </div>
+            ) : searchFinished && (
               <div className="bg-green-500 text-white py-2 sm:py-3 px-4 sm:px-6 text-center">
                 <span className="text-base sm:text-lg font-bold">✓ SEARCH FINISHED!</span>
-                <span className="ml-2 sm:ml-4 text-xs sm:text-sm opacity-90">Found {results.length} result{results.length !== 1 ? 's' : ''}</span>
+                <span className="ml-2 sm:ml-4 text-xs sm:text-sm opacity-90">Found {results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length} result{results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length !== 1 ? 's' : ''}</span>
+                <span className="ml-2 sm:ml-4 font-mono">{(elapsedTime / 1000).toFixed(2)}s</span>
               </div>
             )}
             {/* Show best result (lowest REL_ERR) */}
             <ResultCard result={bestResult} />
             <ResultsTable
-              results={results}
+              results={results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED')}
               filters={filters}
               setFilters={setFilters}
               sortColumn={sortColumn}
