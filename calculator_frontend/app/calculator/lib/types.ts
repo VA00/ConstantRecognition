@@ -50,8 +50,13 @@ export const examples = [
     description: 'Borwein Integral (Sinc^3)'
   },
   {
-    value: '0.57786367489553612464', 
+    value: '0.5778636748955', 
     label: '\\int_0^{\\infty} \\frac{\\cos(x)}{x^2 + 1} \\, dx', 
-    description: 'Laplace Integral (Pi / 2e)'
-  }
+    description: 'Laplace Integral'
+  },
+  {
+    value: '0.51404189589007076139762973957688', 
+    label: '\\int_0^1 \\frac{\\arctan(\\sqrt{2+x^2})}{(x^2 + 1)\\sqrt{2+x^2}} \\, dx', 
+    description: 'Wolfram Mathematica failure example'
+  },
 ];
