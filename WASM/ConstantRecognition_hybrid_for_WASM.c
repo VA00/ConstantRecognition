@@ -1,8 +1,13 @@
-/* Hybrid FP32/FP64 Constant Recognition for WASM
-   Based on structure by Prof. A. Odrzywolek (function2)
-   Hybrid extension logic implemented as requested.
-*/
+/* Klaudiusz Sroka, 12.12.2025, klaudiusz.sroka@student.uj.edu.pl */
 
+/*
+To compile for WASM/WWW
+
+emcc -Wall ConstantRecognition_hybrid_for_WASM.c ../C/constant.c ../C/mathematica.c ../C/math2.c \
+-s WASM=1 -s EXPORTED_FUNCTIONS='["_search_RPN_hybrid", "_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
+-o rpn_function_hybrid.js
+
+*/
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
@@ -149,17 +154,17 @@ int generate_combinations_hybrid(char* ternary, char* result, int index, int len
           // ---------------------------------------------------------
           // 1. FAST PASS (FP32)
           // ---------------------------------------------------------
-          // Wyliczamy wartość we float (constantf)
+                    // Calculate value in float (constantf)
           NUM_TYPE_F computedX_f = CONSTANT_F(result, K);
           
           if (IS_NAN_F(computedX_f)) return 0;
 
           // FP32 Filter Logic
-          // Sprawdzamy czy: |computed - target| < threshold
+                    // Check if: |computed - target| < threshold
           float diff = ABS_F(computedX_f - targetX_f);
           
-          // Jeśli różnica jest zbyt duża, odrzucamy OD RAZU.
-          // Nie wykonujemy kosztownych obliczeń double.
+                    // If the difference is too large, reject IMMEDIATELY.
+                    // Do not perform expensive double calculations.
           if (diff >= threshold_f) {
               return 0; 
           }
@@ -195,7 +200,7 @@ int generate_combinations_hybrid(char* ternary, char* result, int index, int len
                 compression_ratio = 0.0;
             } else {
                 if (relative_error == 0.0) {
-                    double digitsInTarget = floor(log10(fabs(targetX))) + 1.0;
+                    double digitsInTarget = 16.0;
                     double informationInRPN = K * log10(INSTR_NUM);
                     if (informationInRPN <= 0.0) compression_ratio = 0.0;
                     else compression_ratio = digitsInTarget / informationInRPN;

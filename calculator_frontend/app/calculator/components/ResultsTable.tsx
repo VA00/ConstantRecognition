@@ -142,8 +142,14 @@ export function ResultsTable({
                 if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
                   return r.compressionRatio.toFixed(2);
                 }
-                if (typeof r.REL_ERR === 'number' && r.REL_ERR > 0 && r.K > 0) {
-                  const ratio = -Math.log10(r.REL_ERR) / r.K / Math.log10(36);
+                if (typeof r.REL_ERR === 'number' && r.K > 0) {
+                  let numerator;
+                  if (r.REL_ERR === 0){
+                    numerator = 16.0;
+                  }else {
+                    numerator = -Math.log10(r.REL_ERR);
+                  }
+                  const ratio = numerator / r.K / Math.log10(36);
                   return ratio.toFixed(2);
                 }
                 return '-';
