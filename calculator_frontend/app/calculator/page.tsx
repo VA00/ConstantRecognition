@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters } from './lib/types';
+import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode } from './lib/types';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
@@ -35,8 +35,10 @@ export default function CalculatorPage() {
   const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchFinished, setSearchFinished] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
+  const [manualError, setManualError] = useState('');
   const itemsPerPage = 20;
   
   const workersRef = useRef<Worker[]>([]);
@@ -69,16 +71,6 @@ export default function CalculatorPage() {
     setThreadCount(cpus);
   }, []);
 
-  // Close sidebar when clicking outside on mobile
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setSidebarOpen(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleWorkerMessage = (cpuId: number, e: MessageEvent, onComplete?: () => void) => {
     const data = e.data;
@@ -158,7 +150,6 @@ export default function CalculatorPage() {
     setCurrentPage(1);
     setSearchFinished(false);
     isAbortedRef.current = false;
-    setSidebarOpen(false); // Close sidebar on mobile when calculating
     
     // Start timer (update every 500ms to reduce re-renders)
     setElapsedTime(0);
@@ -167,9 +158,27 @@ export default function CalculatorPage() {
       setElapsedTime(Date.now() - startTimeRef.current);
     }, 500);
     
-    const precisionInfo = extractPrecision(inputValue);
-    setPrecision(precisionInfo);
-    const deltaZNum = parseFloat(precisionInfo.deltaZ || '0.5');
+    // Calculate precision based on error mode
+    let deltaZNum: number;
+    const zNum = parseFloat(inputValue);
+    
+    if (errorMode === 'zero') {
+      deltaZNum = 0;
+    } else if (errorMode === 'manual' && manualError) {
+      deltaZNum = parseFloat(manualError) || 0;
+    } else {
+      // automatic mode - use extractPrecision
+      const autoPrecision = extractPrecision(inputValue);
+      deltaZNum = parseFloat(autoPrecision.deltaZ || '0.5');
+    }
+    
+    // Update precision display
+    const relDeltaZ = zNum !== 0 ? deltaZNum / Math.abs(zNum) : 0;
+    setPrecision({
+      z: inputValue,
+      deltaZ: deltaZNum === 0 ? '0' : deltaZNum.toExponential(2),
+      relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
+    });
 
     // CPU/WASM computation
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
@@ -265,12 +274,9 @@ export default function CalculatorPage() {
     setInputValue(value);
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(prev => !prev);
-  };
-
   return (
-    <div className="flex h-screen w-screen max-w-full bg-gray-50 dark:bg-[#1a1a1d] overflow-hidden">
+    <div className="flex h-screen w-screen bg-gray-50 dark:bg-[#1a1a1d] overflow-hidden">
+      {/* Sidebar */}
       <Sidebar
         wasmLoaded={wasmLoaded}
         detectedCPUs={detectedCPUs}
@@ -285,39 +291,51 @@ export default function CalculatorPage() {
         isCalculating={isCalculating}
         onAbort={handleAbort}
         onReset={handleReset}
-        isOpen={sidebarOpen}
-        onToggle={toggleSidebar}
+        isOpen={!sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        errorMode={errorMode}
+        setErrorMode={setErrorMode}
+        manualError={manualError}
+        setManualError={setManualError}
       />
 
-      <main className="flex-1 min-w-0 flex flex-col overflow-hidden pt-14 lg:pt-0 bg-white dark:bg-[#1a1a1d]">
+      {/* Main content */}
+      <main className="flex-1 flex flex-col overflow-hidden">
         <InputBar
           inputValue={inputValue}
           setInputValue={setInputValue}
           isCalculating={isCalculating}
           onCalculate={calculate}
+          onReset={handleReset}
+          onAbort={handleAbort}
         />
 
+        {/* Search Status */}
+        {isCalculating && (
+          <div className="bg-blue-500 text-white py-3 px-4 text-center flex items-center justify-center gap-4">
+            <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            <span className="font-bold">Searching for formulas...</span>
+            <span className="font-mono">{(elapsedTime / 1000).toFixed(1)}s</span>
+            {precision.deltaZ && (
+              <span className="text-sm opacity-75">(±{precision.deltaZ})</span>
+            )}
+          </div>
+        )}
+
         {results.length > 0 && bestResult ? (
-          <>
-            {/* Timer / Search Status Banner */}
-            {isCalculating ? (
-              <div className="bg-blue-500 text-white py-2 sm:py-3 px-4 sm:px-6 text-center flex items-center justify-center gap-4">
-                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                <span className="text-base sm:text-lg font-bold">SEARCHING...</span>
-                <span className="font-mono text-lg">{(elapsedTime / 1000).toFixed(1)}s</span>
-              </div>
-            ) : searchFinished && (
-              <div className="bg-green-500 text-white py-2 sm:py-3 px-4 sm:px-6 text-center">
-                <span className="text-base sm:text-lg font-bold">✓ SEARCH FINISHED!</span>
-                <span className="ml-2 sm:ml-4 text-xs sm:text-sm opacity-90">Found {results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length} result{results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length !== 1 ? 's' : ''}</span>
-                <span className="ml-2 sm:ml-4 font-mono">{(elapsedTime / 1000).toFixed(2)}s</span>
+          <div className="flex-1 flex flex-col bg-white dark:bg-[#1a1a1d]">
+            {/* Success banner */}
+            {searchFinished && !isCalculating && (
+              <div className="bg-green-500 text-white py-2 px-4 text-center text-sm">
+                ✓ Found {results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length} formula{results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s
               </div>
             )}
-            {/* Show best result (lowest REL_ERR) */}
+            {/* Best result card */}
             <ResultCard result={bestResult} />
+            {/* Results table */}
             <ResultsTable
               results={results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED')}
               filters={filters}
@@ -330,7 +348,7 @@ export default function CalculatorPage() {
               setCurrentPage={setCurrentPage}
               itemsPerPage={itemsPerPage}
             />
-          </>
+          </div>
         ) : (
           <EmptyState onExampleClick={handleExampleClick} />
         )}

@@ -1,5 +1,8 @@
 // Types and interfaces for the calculator
 
+// Error mode for uncertainty handling
+export type ErrorMode = 'zero' | 'automatic' | 'manual';
+
 export interface SearchResult {
   cpuId: number;
   K: number;
