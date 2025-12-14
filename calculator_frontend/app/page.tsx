@@ -299,7 +299,7 @@ export default function LandingPage() {
             {/* Main logo */}
             <div className="w-28 h-28 rounded-3xl bg-[#1a1a1c] border border-slate-800 flex items-center justify-center shadow-2xl overflow-hidden">
               <img 
-                src="/favicon copy.jpg" 
+                src="/favicon-192.png" 
                 alt="Logo" 
                 className="w-20 h-20 object-cover"
               />
