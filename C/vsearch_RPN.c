@@ -2,6 +2,7 @@
  * 
  * Configurable RPN expression search for constant recognition
  * Author: Andrzej Odrzywolek, andrzej.odrzywolek@uj.edu.pl
+ * Code assist: Claude 4.5 Opus, 2025-12-20 
  * 
  * Compilation examples:
  * 
@@ -11,15 +12,31 @@
  *     icx -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -lm -o vsearch
  * 
  *   WebAssembly (emcc):
- *     emcc -O2 -Wall vsearch_RPN.c \
- *       -s WASM=1 \
- *       -s EXPORTED_FUNCTIONS='["_vsearch_RPN", "_search_RPN", "_search_RPN_hybrid", "_free"]' \
- *       -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
- *       -o vsearch.js
+ *     emcc -O2 -Wall vsearch_RPN.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_vsearch_RPN", "_search_RPN", "_search_RPN_hybrid", "_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' -o vsearch.js
  * 
- *   Windows (cl.exe):
- *     cl /O2 /W3 /DSTANDALONE_TEST vsearch_RPN.c
+ *   Windows (cl.exe from Visual Studio Developer PowerShell):
+ *     cl /O2 /W3 /DSTANDALONE_TEST vsearch_RPN.c /Fe:vsearch_cl.exe
+ *
+ *   Windows/Intel (icx.exe)
+ *   Initialize environment:
+ *     cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'
+ *     icx -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -o vsearch	
  */
+
+/* Windows related settings for icx.exe */
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+
+#ifdef _WIN32
+#define strdup _strdup
+#endif
+
+/* Windows related include for cl.exe */
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,13 +66,6 @@ static const char BUILD_TIMESTAMP[] = "BUILD_TIME:" __DATE__ " " __TIME__;
  * Parse comma-separated name lists into InstructionSet (from opcodes.h)
  * ============================================================================ */
 
-/* Helper: trim whitespace from token in place */
-static char* trim_token(char* token) {
-    while (*token == ' ') token++;
-    char* end = token + strlen(token) - 1;
-    while (end > token && *end == ' ') *end-- = '\0';
-    return token;
-}
 
 /* Parse comma-separated list of constant names */
 static int parse_const_list(const char* list, InstructionSet* iset) {
@@ -76,7 +86,7 @@ static int parse_const_list(const char* list, InstructionSet* iset) {
     char* token = strtok(copy, ",");
     
     while (token != NULL && count < MAX_OPS) {
-        token = trim_token(token);
+
         for (int i = 0; i < CONST_COUNT; i++) {
             if (strcmp(token, CONST_NAMES[i]) == 0) {
                 iset->const_ops[count++] = (unsigned char)i;
@@ -108,7 +118,7 @@ static int parse_unary_list(const char* list, InstructionSet* iset) {
     char* token = strtok(copy, ",");
     
     while (token != NULL && count < MAX_OPS) {
-        token = trim_token(token);
+
         for (int i = 0; i < UNARY_COUNT; i++) {
             if (strcmp(token, UNARY_NAMES[i]) == 0) {
                 iset->unary_ops[count++] = (unsigned char)i;
@@ -140,7 +150,7 @@ static int parse_binary_list(const char* list, InstructionSet* iset) {
     char* token = strtok(copy, ",");
     
     while (token != NULL && count < MAX_OPS) {
-        token = trim_token(token);
+
         for (int i = 0; i < BINARY_COUNT; i++) {
             if (strcmp(token, BINARY_NAMES[i]) == 0) {
                 iset->binary_ops[count++] = (unsigned char)i;
@@ -176,7 +186,11 @@ static inline int iset_total(const InstructionSet* iset) {
  * TERNARY FORM UTILITIES
  * 
  * Ternary encoding: 0=constant, 1=unary, 2=binary
- * Valid RPN iff stack==1 at end (Catalan constraint)
+ * Valid RPN iff stack==1 at end
+*
+ * Valid RPN iff stack depth remains >=1 throughout and equals 1 at end.
+ * The count of valid ternary structures follows Motzkin numbers (OEIS A001006).
+ *
  * ============================================================================ */
 
 /* Check if ternary code is syntactically valid RPN */
@@ -294,14 +308,30 @@ static void format_code(const char* ternary, const int* indices, int K,
 }
 
 /* ============================================================================
- * HAMMING DISTANCE (for diagnostics) , problem with Visual Studio on Windows
+ * HAMMING DISTANCE (cross-platform)
  * ============================================================================ */
+
+static inline int popcount64(uint64_t x) {
+#if defined(_MSC_VER)
+    /* MSVC */
+    return (int)__popcnt64(x);
+#elif defined(__GNUC__) || defined(__clang__)
+    /* GCC, Clang, ICX */
+    return __builtin_popcountll(x);
+#else
+    /* Portable fallback */
+    x = x - ((x >> 1) & 0x5555555555555555ULL);
+    x = (x & 0x3333333333333333ULL) + ((x >> 2) & 0x3333333333333333ULL);
+    x = (x + (x >> 4)) & 0x0f0f0f0f0f0f0f0fULL;
+    return (int)((x * 0x0101010101010101ULL) >> 56);
+#endif
+}
 
 static double hamming_distance(double a, double b) {
     uint64_t ua, ub;
     memcpy(&ua, &a, sizeof(double));
     memcpy(&ub, &b, sizeof(double));
-    return (double)__builtin_popcountll(ua ^ ub); // problem with Visual Studio on Windows
+    return (double) popcount64(ua ^ ub);
 }
 
 /* ============================================================================

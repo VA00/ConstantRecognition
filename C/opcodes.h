@@ -10,6 +10,7 @@
 #ifndef OPCODES_H
 #define OPCODES_H
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 /* ============================================================================
@@ -25,10 +26,10 @@ enum {
 };
 
 static const double CONST_VALUES[] = {
-    //M_PI,   /* PI, problem with Visual Studio on Windows  */
-    3.1415926535897932384626433832795,   /* PI */
-    //M_E,   /* EULER, problem with Visual Studio on Windows */
-    2.7182818284590452353602874713527,   /* EULER */
+    M_PI,  
+    //3.1415926535897932384626433832795,   /* PI */
+    M_E,   
+    //2.7182818284590452353602874713527,   /* EULER */
    -1.0,                                      /* NEG */
     1.61803398874989484820458683436563812,   /* GOLDENRATIO */
     1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0
