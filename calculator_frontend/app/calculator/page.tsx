@@ -29,28 +29,39 @@ export default function CalculatorPage() {
   const [autoThreads, setAutoThreads] = useState(true);
   const [detectedCPUs, setDetectedCPUs] = useState(4);
   const [filters, setFilters] = useState<Filters>(defaultFilters);
-  const [currentPage, setCurrentPage] = useState(1);
   const [precision, setPrecision] = useState<Precision>({});
   const [activeWorkers, setActiveWorkers] = useState<ActiveWorker[]>([]);
-  const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | null>(null);
+  const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | 'CR' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchFinished, setSearchFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
-  const itemsPerPage = 20;
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
   
-  // Best result = lowest REL_ERR from final results only (not intermediate K_BEST)
+  // Helper to calculate compression ratio
+  const getCompressionRatio = (r: SearchResult): number => {
+    if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
+      return r.compressionRatio;
+    }
+    if (typeof r.REL_ERR === 'number' && r.K > 0) {
+      const numerator = r.REL_ERR === 0 ? 16.0 : -Math.log10(r.REL_ERR);
+      return numerator / r.K / Math.log10(36);
+    }
+    return 0;
+  };
+  
+  // Best result = MAXIMUM Compression Ratio (CR) - this is the correct identification criterion
+  // CR rises initially as accuracy improves, then falls when overfitting starts
+  // The maximum CR indicates the true match
   const bestResult = useMemo(() => {
-    const finalResults = results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED');
-    if (finalResults.length === 0) return null;
-    return [...finalResults].sort((a, b) => a.REL_ERR - b.REL_ERR)[0];
+    if (results.length === 0) return null;
+    return [...results].sort((a, b) => getCompressionRatio(b) - getCompressionRatio(a))[0];
   }, [results]);
 
   // Check for WASM support and detect CPUs
@@ -147,7 +158,6 @@ export default function CalculatorPage() {
     
     setIsCalculating(true);
     setResults([]);
-    setCurrentPage(1);
     setSearchFinished(false);
     isAbortedRef.current = false;
     
@@ -262,7 +272,6 @@ export default function CalculatorPage() {
     setInputValue('');
     setResults([]);
     setPrecision({});
-    setCurrentPage(1);
     setSortColumn(null);
     setSortDirection('asc');
     setFilters(defaultFilters);
@@ -326,27 +335,24 @@ export default function CalculatorPage() {
         )}
 
         {results.length > 0 && bestResult ? (
-          <div className="flex-1 flex flex-col bg-white dark:bg-[#1a1a1d]">
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d]">
             {/* Success banner */}
             {searchFinished && !isCalculating && (
               <div className="bg-green-500 text-white py-2 px-4 text-center text-sm">
-                ✓ Found {results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length} formula{results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s
+                Found {results.length} result{results.length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s
               </div>
             )}
             {/* Best result card */}
-            <ResultCard result={bestResult} />
+            <ResultCard result={bestResult} allResults={results} />
             {/* Results table */}
             <ResultsTable
-              results={results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED')}
+              results={results}
               filters={filters}
               setFilters={setFilters}
               sortColumn={sortColumn}
               setSortColumn={setSortColumn}
               sortDirection={sortDirection}
               setSortDirection={setSortDirection}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              itemsPerPage={itemsPerPage}
             />
           </div>
         ) : (

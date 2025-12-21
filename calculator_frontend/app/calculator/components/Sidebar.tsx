@@ -71,7 +71,8 @@ export function Sidebar({
         border-r border-gray-200 dark:border-[#2a2a2e] 
         flex flex-col
         transition-all duration-300 ease-in-out
-        ${isOpen ? 'w-72 lg:w-64' : 'w-0 overflow-hidden'}
+        overflow-x-hidden
+        ${isOpen ? 'w-80 min-w-80' : 'w-0 min-w-0 overflow-hidden'}
       `}>
         {/* Header with collapse button */}
         <div className="p-4 border-b border-gray-200 dark:border-[#2a2a2e]">
@@ -215,7 +216,7 @@ export function Sidebar({
                         value={manualError}
                         onChange={(e) => setManualError(e.target.value)}
                         placeholder="0.000001"
-                        className="flex-1 px-2 py-1 rounded border border-gray-300 dark:border-[#2a2a2e] bg-white dark:bg-[#111113] text-gray-900 dark:text-white font-mono text-sm"
+                        className="w-32 px-2 py-1 rounded border border-gray-300 dark:border-[#2a2a2e] bg-white dark:bg-[#111113] text-gray-900 dark:text-white font-mono text-sm"
                       />
                     </div>
                   )}

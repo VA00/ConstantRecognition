@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { SearchResult, Filters } from '../lib/types';
 import { rpnToMathematica, createWolframLink, rpnToLatex } from '../lib/rpn';
 import { Latex } from './Latex';
@@ -13,9 +12,6 @@ interface ResultsTableProps {
   setSortColumn: (column: 'K' | 'REL_ERR' | 'CR' | null) => void;
   sortDirection: 'asc' | 'desc';
   setSortDirection: (direction: 'asc' | 'desc') => void;
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  itemsPerPage: number;
 }
 
 export function ResultsTable({
@@ -26,11 +22,7 @@ export function ResultsTable({
   setSortColumn,
   sortDirection,
   setSortDirection,
-  currentPage,
-  setCurrentPage,
-  itemsPerPage: defaultItemsPerPage
 }: ResultsTableProps) {
-  const [showEntries, setShowEntries] = useState(defaultItemsPerPage);
 
   // Calculate compression ratio for a result
   const getCompressionRatio = (r: SearchResult): number => {
@@ -89,9 +81,7 @@ export function ResultsTable({
       return 0;
     });
 
-  const totalPages = Math.ceil(filteredAndSortedResults.length / showEntries);
-  const startIdx = (currentPage - 1) * showEntries;
-  const paginatedResults = filteredAndSortedResults.slice(startIdx, startIdx + showEntries);
+  // Show all results (no pagination)
 
   const handleSort = (column: 'K' | 'REL_ERR' | 'CR') => {
     if (sortColumn === column) {
@@ -122,7 +112,7 @@ export function ResultsTable({
   };
 
   return (
-    <div className="flex-1 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d] w-full max-w-full">
+    <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d] w-full max-w-full">
       {/* Filters Row */}
       <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] space-y-3">
         {/* Top row: Status filters and search */}
@@ -152,7 +142,7 @@ export function ResultsTable({
             <input
               type="text"
               value={filters.searchQuery}
-              onChange={(e) => { setFilters({ ...filters, searchQuery: e.target.value }); setCurrentPage(1); }}
+              onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
               placeholder="Filter results..."
               className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#111113] text-gray-900 dark:text-white w-40 sm:w-48"
             />
@@ -193,21 +183,6 @@ export function ResultsTable({
                 <option value="0.8">0.8</option>
                 <option value="0.9">0.9</option>
                 <option value="1.0">1.0</option>
-              </select>
-            </div>
-
-            {/* Show entries */}
-            <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
-              <span>Show:</span>
-              <select
-                value={showEntries}
-                onChange={(e) => { setShowEntries(parseInt(e.target.value)); setCurrentPage(1); }}
-                className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#111113] text-gray-900 dark:text-white text-xs"
-              >
-                <option value={10}>10</option>
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
               </select>
             </div>
 
@@ -261,7 +236,7 @@ export function ResultsTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-[#2a2a2e]">
-            {paginatedResults.map((r, i) => {
+            {filteredAndSortedResults.map((r, i) => {
               const cr = getCompressionRatio(r);
               const isBestMatch = maxCR > 0 && Math.abs(cr - maxCR) < 0.001;
               return (
@@ -312,7 +287,7 @@ export function ResultsTable({
                 </td>
               </tr>
             );})}
-            {paginatedResults.length === 0 && (
+            {filteredAndSortedResults.length === 0 && (
               <tr>
                 <td colSpan={8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-500">
                   No matching results found
@@ -323,50 +298,14 @@ export function ResultsTable({
         </table>
       </div>
 
-      {/* Pagination */}
-      <div className="p-3 sm:p-4 border-t border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] flex items-center justify-between text-sm">
+      {/* Footer with results count */}
+      <div className="p-3 sm:p-4 border-t border-gray-200 dark:border-[#2a2a2e] bg-white dark:bg-[#1a1a1d] text-sm">
         <div className="text-xs text-gray-500 dark:text-gray-500">
           {filteredAndSortedResults.length > 0 
-            ? `Showing ${startIdx + 1}-${Math.min(startIdx + showEntries, filteredAndSortedResults.length)} of ${filteredAndSortedResults.length}`
+            ? `Showing ${filteredAndSortedResults.length} result${filteredAndSortedResults.length !== 1 ? 's' : ''}`
             : 'No results'
           }
         </div>
-        
-        {totalPages > 1 && (
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="px-3 py-1 text-xs text-gray-600 dark:text-gray-400 hover:text-[#0066cc] disabled:opacity-50 disabled:cursor-not-allowed border border-gray-300 dark:border-gray-600 rounded"
-            >
-              Prev
-            </button>
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const page = currentPage <= 3 ? i + 1 : currentPage + i - 2;
-              if (page > totalPages || page < 1) return null;
-              return (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`px-3 py-1 text-xs rounded ${
-                    currentPage === page
-                      ? 'bg-[#0066cc] text-white'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-[#0066cc] border border-gray-300 dark:border-gray-600'
-                  }`}
-                >
-                  {page}
-                </button>
-              );
-            })}
-            <button
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              className="px-3 py-1 text-xs text-gray-600 dark:text-gray-400 hover:text-[#0066cc] disabled:opacity-50 disabled:cursor-not-allowed border border-gray-300 dark:border-gray-600 rounded"
-            >
-              Next
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
