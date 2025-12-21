@@ -1,5 +1,5 @@
 // Worker script: worker.js
-importScripts('rpn_function_hybrid.js');
+importScripts('rpn_function.js');
 
 let isReady = false;
 
@@ -28,8 +28,8 @@ function doWork(initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuI
     return new Promise(resolve => {
         setTimeout(() => {
             try {
-                // Using hybrid FP32+FP64 version for faster search
-                const result = Module.ccall('search_RPN_hybrid', 'string', 
+                // Using standard FP64 version
+                const result = Module.ccall('search_RPN', 'string', 
                                ['number', 'number', 'number', 'number', 'number', 'number'], 
                                [z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus]);
                 resolve(JSON.parse(result));
