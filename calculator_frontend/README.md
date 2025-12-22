@@ -9,7 +9,7 @@ This is a Next.js 16 frontend for the constant recognizer. The project is config
 ## Static production build
 - Build the site: `npm run build`
   - The static files are written to `out/`
-- Serve locally for a quick check (example): `npx serve out`
+- Serve locally for a quick check (example): `npx serve@latest out`
 - Deploy by copying the `out/` directory to any HTTP server (e.g., `nginx`, `httpd`, `python -m http.server`).
 
 ### Hosting in a subdirectory or behind a reverse proxy path
