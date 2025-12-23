@@ -3,6 +3,9 @@
 // Error mode for uncertainty handling
 export type ErrorMode = 'zero' | 'automatic' | 'manual';
 
+// Compute mode - CPU (WASM) or GPU (WebGPU)
+export type ComputeMode = 'cpu' | 'gpu';
+
 export interface SearchResult {
   cpuId: number;
   K: number;

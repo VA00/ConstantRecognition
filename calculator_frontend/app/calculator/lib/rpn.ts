@@ -57,9 +57,66 @@ export function gamma(z: number): number {
   return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
 }
 
+// Short-form RPN character mappings (from WebGPU)
+// CONST_CHARS = '0123opqrstuvw' (13 chars)
+const SHORT_CONST_MAP: Record<string, string> = {
+  '0': 'PI', '1': 'EULER', '2': 'NEG', '3': 'GOLDENRATIO',
+  'o': 'ONE', 'p': 'TWO', 'q': 'THREE', 'r': 'FOUR', 's': 'FIVE',
+  't': 'SIX', 'u': 'SEVEN', 'v': 'EIGHT', 'w': 'NINE'
+};
+
+// UNARY_CHARS = '4589abcdefghijklmn' (18 chars)
+const SHORT_UNARY_MAP: Record<string, string> = {
+  '4': 'LOG', '5': 'EXP', '8': 'INV', '9': 'GAMMA',
+  'a': 'SQRT', 'b': 'SQR', 'c': 'SIN', 'd': 'ARCSIN',
+  'e': 'COS', 'f': 'ARCCOS', 'g': 'TAN', 'h': 'ARCTAN',
+  'i': 'SINH', 'j': 'ARCSINH', 'k': 'COSH', 'l': 'ARCCOSH',
+  'm': 'TANH', 'n': 'ARCTANH'
+};
+
+// BINARY_CHARS = '67xyz' (5 chars)
+const SHORT_BINARY_MAP: Record<string, string> = {
+  '6': 'PLUS', '7': 'TIMES', 'x': 'SUBTRACT', 'y': 'DIVIDE', 'z': 'POWER'
+};
+
+// All valid short-form characters
+const ALL_SHORT_CHARS = new Set([
+  ...Object.keys(SHORT_CONST_MAP),
+  ...Object.keys(SHORT_UNARY_MAP),
+  ...Object.keys(SHORT_BINARY_MAP)
+]);
+
+// Check if string is short-form RPN (from WebGPU)
+function isShortFormRPN(rpn: string): boolean {
+  // Short-form RPN has no delimiters and all chars are from the GPU charset
+  if (rpn.includes(',') || rpn.includes(' ')) return false;
+  // Must have at least one char and all chars must be valid short-form
+  return rpn.length > 0 && [...rpn].every(c => ALL_SHORT_CHARS.has(c));
+}
+
+// Convert short-form RPN to long-form tokens
+function expandShortRPN(rpn: string): string[] {
+  const tokens: string[] = [];
+  for (const char of rpn) {
+    if (SHORT_CONST_MAP[char]) {
+      tokens.push(SHORT_CONST_MAP[char]);
+    } else if (SHORT_UNARY_MAP[char]) {
+      tokens.push(SHORT_UNARY_MAP[char]);
+    } else if (SHORT_BINARY_MAP[char]) {
+      tokens.push(SHORT_BINARY_MAP[char]);
+    }
+  }
+  return tokens;
+}
+
 // Convert RPN string to array
 export function parseRPN(rpn: string): string[] {
   if (!rpn || rpn.length === 0) return [];
+  
+  // Check if this is short-form RPN from WebGPU (single chars, no delimiters)
+  if (isShortFormRPN(rpn)) {
+    return expandShortRPN(rpn);
+  }
   
   // WASM returns format like "PI, EULER, PLUS" - comma and space separated
   if (rpn.includes(',')) {
@@ -78,6 +135,9 @@ export function parseRPN(rpn: string): string[] {
 
 // Convert RPN to infix notation for display
 export function rpnToInfix(rpn: string | string[]): string {
+  // Detect if this is short-form (GPU) or long-form (WASM) RPN
+  // Short-form uses standard RPN order, long-form uses swapped order
+  const isShort = typeof rpn === 'string' && isShortFormRPN(rpn);
   const tokens = typeof rpn === 'string' ? parseRPN(rpn) : rpn;
   const stack: string[] = [];
   
@@ -88,12 +148,15 @@ export function rpnToInfix(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(`${namedFunctions[token]}(${arg})`);
     } else if (namedOperators[token]) {
-      // Non-standard RPN in C backend: "a b op" means op(b, a)
-      // So for "a b -" it computes b - a, for "a b ^" it computes b^a
       const right = stack.pop() || '?';  // top of stack
       const left = stack.pop() || '?';   // second from top
-      // Swap: use right as left operand, left as right operand
-      stack.push(`(${right} ${namedOperators[token]} ${left})`);
+      if (isShort) {
+        // Standard RPN: "a b op" means op(a, b)
+        stack.push(`(${left} ${namedOperators[token]} ${right})`);
+      } else {
+        // WASM non-standard RPN: "a b op" means op(b, a)
+        stack.push(`(${right} ${namedOperators[token]} ${left})`);
+      }
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);
@@ -105,6 +168,8 @@ export function rpnToInfix(rpn: string | string[]): string {
 
 // Evaluate RPN expression numerically
 export function evaluateRPN(rpn: string | string[]): number {
+  // Detect if this is short-form (GPU) or long-form (WASM) RPN
+  const isShort = typeof rpn === 'string' && isShortFormRPN(rpn);
   const tokens = typeof rpn === 'string' ? parseRPN(rpn) : rpn;
   const stack: number[] = [];
   tokens.forEach(token => {
@@ -114,12 +179,15 @@ export function evaluateRPN(rpn: string | string[]): number {
       const arg = stack.pop() || 0;
       stack.push(numFunctions[token](arg));
     } else if (numOperators[token]) {
-      // Non-standard RPN in C backend: "a b op" means op(b, a)
-      // So for "a b -" it computes b - a, for "a b ^" it computes b^a
       const right = stack.pop() || 0;  // top
       const left = stack.pop() || 0;   // second
-      // Swap: apply operator as op(right, left) instead of op(left, right)
-      stack.push(numOperators[token](right, left));
+      if (isShort) {
+        // Standard RPN: "a b op" means op(a, b)
+        stack.push(numOperators[token](left, right));
+      } else {
+        // WASM non-standard RPN: "a b op" means op(b, a)
+        stack.push(numOperators[token](right, left));
+      }
     }
   });
   return stack.pop() || NaN;
@@ -153,6 +221,8 @@ export function extractPrecision(inputString: string): Precision {
 
 // Convert RPN to Mathematica syntax
 export function rpnToMathematica(rpn: string | string[]): string {
+  // Detect if this is short-form (GPU) or long-form (WASM) RPN
+  const isShort = typeof rpn === 'string' && isShortFormRPN(rpn);
   const tokens = typeof rpn === 'string' ? parseRPN(rpn) : rpn;
   const mmaConstants: Record<string, string> = {
     "NEG": "(-1)", "ZERO": "0", "ONE": "1", "TWO": "2", "THREE": "3",
@@ -187,11 +257,15 @@ export function rpnToMathematica(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(`${mmaFunctions[token]}[${arg}]`);
     } else if (mmaOperators[token]) {
-      // Non-standard RPN in C backend: "a b op" means op(b, a)
       const right = stack.pop() || '?';  // top
       const left = stack.pop() || '?';   // second
-      // Swap: use right as left operand, left as right operand
-      stack.push(`(${right} ${mmaOperators[token]} ${left})`);
+      if (isShort) {
+        // Standard RPN: "a b op" means op(a, b)
+        stack.push(`(${left} ${mmaOperators[token]} ${right})`);
+      } else {
+        // WASM non-standard RPN: "a b op" means op(b, a)
+        stack.push(`(${right} ${mmaOperators[token]} ${left})`);
+      }
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);
@@ -207,6 +281,8 @@ export function createWolframLink(formula: string): string {
 
 // Convert RPN to LaTeX syntax for beautiful rendering
 export function rpnToLatex(rpn: string | string[]): string {
+  // Detect if this is short-form (GPU) or long-form (WASM) RPN
+  const isShort = typeof rpn === 'string' && isShortFormRPN(rpn);
   const tokens = typeof rpn === 'string' ? parseRPN(rpn) : rpn;
   
   const latexConstants: Record<string, string> = {
@@ -254,11 +330,15 @@ export function rpnToLatex(rpn: string | string[]): string {
       const arg = stack.pop() || '?';
       stack.push(latexFunctions[token](arg));
     } else if (latexOperators[token]) {
-      // Non-standard RPN in C backend: "a b op" means op(b, a)
       const right = stack.pop() || '?';  // top
       const left = stack.pop() || '?';   // second
-      // Swap: use right as left operand, left as right operand
-      stack.push(latexOperators[token](right, left));
+      if (isShort) {
+        // Standard RPN: "a b op" means op(a, b)
+        stack.push(latexOperators[token](left, right));
+      } else {
+        // WASM non-standard RPN: "a b op" means op(b, a)
+        stack.push(latexOperators[token](right, left));
+      }
     } else if (token) {
       stack.push(token);
     }

@@ -3,7 +3,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode } from './lib/types';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
+import { evaluateShortRPN } from './lib/webgpu';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
+import { useWebGPU } from './hooks/useWebGPU';
 
 // Ensures that all worker/WASM fetches include the configured base path (if any).
 // - Trailing slashes are removed so "//" never appears in URLs.
@@ -38,6 +40,9 @@ export default function CalculatorPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
+  
+  // WebGPU hook - automatycznie używa GPU jeśli dostępne
+  const { gpuAvailable, gpuInfo, search: gpuSearch, abort: gpuAbort } = useWebGPU();
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
@@ -191,7 +196,76 @@ export default function CalculatorPage() {
       relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
     });
 
-    // CPU/WASM computation
+    // =========================================
+    // GPU MODE (WebGPU) - automatycznie używane jeśli dostępne
+    // =========================================
+    console.log('[Search] gpuAvailable:', gpuAvailable, 'gpuInfo:', gpuInfo);
+    
+    if (gpuAvailable) {
+      console.log('[GPU] Starting GPU search for:', zNum, 'K:', searchDepth);
+      console.time('[GPU] Search duration');
+      setActiveWorkers([{ id: 0, status: 'GPU', currentK: searchDepth }]);
+      
+      // Collect results in array instead of updating state for each one
+      const collectedResults: SearchResult[] = [];
+      
+      try {
+        await gpuSearch(zNum, {
+          minK: searchDepth,
+          maxK: searchDepth,
+          onProgress: (info) => {
+            console.log('[GPU] Progress K:', info.K, 'forms:', info.forms, 'evaluated:', info.evaluated, 'candidates so far:', collectedResults.length);
+            setActiveWorkers([{ id: 0, status: 'GPU', currentK: info.K }]);
+          },
+          onResult: (result) => {
+            // Collect results without triggering React re-render for each one
+            // Use evaluateShortRPN for GPU results (consistent with GPU/shader logic)
+            const numericValue = evaluateShortRPN(result.RPN);
+            const searchResult: SearchResult = {
+              cpuId: result.cpuId,
+              K: result.K,
+              RPN: result.RPN,
+              result: isFinite(numericValue) ? numericValue.toPrecision(15) : result.RPN,
+              REL_ERR: result.REL_ERR,
+              status: result.status,
+              compressionRatio: result.K > 0 ? 
+                (-Math.log10(result.REL_ERR || 1e-16)) / result.K / Math.log10(36) : 0
+            };
+            collectedResults.push(searchResult);
+          }
+        });
+
+        console.log('[GPU] Search complete. Total candidates:', collectedResults.length);
+        
+        // Sort by compression ratio (best first), then limit to top 100
+        const sortedResults = collectedResults
+          .sort((a, b) => (b.compressionRatio || 0) - (a.compressionRatio || 0))
+          .slice(0, 100);
+        
+        // Single state update with all results
+        setResults(sortedResults);
+      } catch (err) {
+        console.error('GPU search error:', err);
+      }
+      
+      console.timeEnd('[GPU] Search duration');
+      setActiveWorkers([]);
+      
+      // Stop timer
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      setElapsedTime(Date.now() - startTimeRef.current);
+      setIsCalculating(false);
+      setSearchFinished(true);
+      return;
+    }
+
+    // =========================================
+    // CPU MODE (WASM Workers) - fallback gdy GPU niedostępne
+    // =========================================
+    console.log('[CPU] Starting CPU/WASM search - GPU not available');
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
     
     // Terminate existing workers
@@ -256,8 +330,13 @@ export default function CalculatorPage() {
 
   const handleAbort = () => {
     isAbortedRef.current = true;
+    // Abort CPU workers
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
+    // Abort GPU search (always try if available)
+    if (gpuAvailable) {
+      gpuAbort();
+    }
     setActiveWorkers([]);
     // Stop timer
     if (timerRef.current) {
@@ -307,6 +386,8 @@ export default function CalculatorPage() {
         setErrorMode={setErrorMode}
         manualError={manualError}
         setManualError={setManualError}
+        gpuAvailable={gpuAvailable}
+        gpuName={gpuInfo?.name}
       />
 
       {/* Main content */}
