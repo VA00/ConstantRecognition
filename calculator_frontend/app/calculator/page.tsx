@@ -69,7 +69,8 @@ export default function CalculatorPage() {
     const checkWasm = async () => {
       try {
         //const response = await fetch('/wasm/rpn_function.wasm');
-        const response = await fetch(withBasePath('/wasm/rpn_function.wasm'));
+        //const response = await fetch(withBasePath('/wasm/rpn_function.wasm'));
+        const response = await fetch(withBasePath('/wasm/vsearch.wasm'));
         setWasmLoaded(response.ok);
       } catch {
         setWasmLoaded(false);

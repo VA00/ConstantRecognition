@@ -4,7 +4,7 @@
  * Based on CALC4 from Mathematica SymbolicRegression_ConstantRecognition_codegen.nb
  * 
  * Naming: uppercase Wolfram function names
- * Exception: LN for Log[x], LOG reserved for Log[base,x] (future)
+ * Exception: LOG for Log[x], LOGARITHM reserved for Log[base,x]
  */
 
 #ifndef OPCODES_H
@@ -46,7 +46,7 @@ static const char* CONST_NAMES[] = {
 
 enum {
     /* Core */
-    LN, EXP,
+    LOG, EXP,
     /* Elementary functions */
     INV, GAMMA, SQRT, SQR,
     SIN, ARCSIN, COS, ARCCOS, TAN, ARCTAN,
@@ -55,7 +55,7 @@ enum {
 };
 
 static const char* UNARY_NAMES[] = {
-    "LN", "EXP",
+    "LOG", "EXP",
     "INV", "GAMMA", "SQRT", "SQR",
     "SIN", "ARCSIN", "COS", "ARCCOS", "TAN", "ARCTAN",
     "SINH", "ARCSINH", "COSH", "ARCCOSH", "TANH", "ARCTANH"
@@ -63,7 +63,7 @@ static const char* UNARY_NAMES[] = {
 
 static inline double apply_unary(int op, double x) {
     switch(op) {
-        case LN:       return log(x);
+        case LOG:      return log(x);
         case EXP:      return exp(x);
         case INV:      return 1.0 / x;
         case GAMMA:    return tgamma(x);
@@ -136,7 +136,7 @@ static const InstructionSet CALC4 = {
     
     .const_ops  = { PI, EULER, NEG, GOLDENRATIO,
                     ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE },
-    .unary_ops  = { LN, EXP, INV, GAMMA, SQRT, SQR,
+    .unary_ops  = { LOG, EXP, INV, GAMMA, SQRT, SQR,
                     SIN, ARCSIN, COS, ARCCOS, TAN, ARCTAN,
                     SINH, ARCSINH, COSH, ARCCOSH, TANH, ARCTANH },
     .binary_ops = { PLUS, TIMES, SUBTRACT, DIVIDE, POWER }

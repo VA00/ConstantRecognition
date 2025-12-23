@@ -1,5 +1,6 @@
 // Worker script: worker.js
-importScripts('rpn_function.js');
+//importScripts('rpn_function.js');
+importScripts('vsearch.js');
 
 let isReady = false;
 

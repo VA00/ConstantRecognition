@@ -1,26 +1,36 @@
 /* vsearch_RPN.c
- * 
- * Configurable RPN expression search for constant recognition
- * Author: Andrzej Odrzywolek, andrzej.odrzywolek@uj.edu.pl
- * Code assist: Claude 4.5 Opus, 2025-12-20 
- * 
- * Compilation examples:
- * 
- *   Standalone test (gcc/clang/icx):
- *     gcc -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -lm -o vsearch
- *     clang -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -lm -o vsearch
- *     icx -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -lm -o vsearch
- * 
- *   WebAssembly (emcc):
- *     emcc -O2 -Wall vsearch_RPN.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_vsearch_RPN", "_search_RPN", "_search_RPN_hybrid", "_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' -o vsearch.js
- * 
- *   Windows (cl.exe from Visual Studio Developer PowerShell):
- *     cl /O2 /W3 /DSTANDALONE_TEST vsearch_RPN.c /Fe:vsearch_cl.exe
- *
- *   Windows/Intel (icx.exe)
- *   Initialize environment:
- *     cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'
- *     icx -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -o vsearch	
+
+Configurable RPN expression search for constant recognition
+Author: Andrzej Odrzywolek, andrzej.odrzywolek@uj.edu.pl
+Code assist: Claude 4.5 Opus, 2025-12-20 
+
+Compilation examples:
+
+  Standalone test (gcc/clang/icx):
+    gcc -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -lm -o vsearch
+    clang -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -lm -o vsearch
+    icx -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -lm -o vsearch
+
+  WebAssembly (emcc, Linux):
+    emcc -O2 -Wall vsearch_RPN.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_vsearch_RPN", "_search_RPN", "_search_RPN_hybrid", "_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' -o vsearch.js
+
+  WebAssembly (emcc, Windows):
+  Install emsdk
+
+  git clone https://github.com/emscripten-core/emsdk.git
+  cd emsdk
+  emsdk> .\emsdk install latest
+         .\emsdk activate latest
+
+  emcc -O2 -Wall vsearch_RPN.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_vsearch_RPN", "_search_RPN", "_search_RPN_hybrid", "_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' -o vsearch.js
+
+  Windows (cl.exe from Visual Studio Developer PowerShell):
+    cl /O2 /W3 /DSTANDALONE_TEST vsearch_RPN.c /Fe:vsearch_cl.exe
+
+  Windows/Intel (icx.exe)
+  Initialize environment:
+    cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'
+    icx -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -o vsearch	
  */
 
 /* Windows related settings for icx.exe */
