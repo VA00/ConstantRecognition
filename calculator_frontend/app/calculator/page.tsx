@@ -138,6 +138,24 @@ export default function CalculatorPage() {
           status: data.result, // SUCCESS, FAILURE, ABORTED
           compressionRatio: data.COMPRESSION_RATIO
         });
+
+
+        // Early termination on SUCCESS
+        if (data.result === 'SUCCESS') {
+          // Terminate all other workers immediately
+          workersRef.current.forEach(w => w.terminate());
+          workersRef.current = [];
+          setActiveWorkers([]);
+          setIsCalculating(false);
+          setSearchFinished(true);
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+          setElapsedTime(Date.now() - startTimeRef.current);
+        }
+
+
       }
       
       // Update state once with all results from this worker
