@@ -282,7 +282,7 @@ export default function CalculatorPage() {
     for (let i = 0; i < effectiveThreads; i++) {
       //const worker = new Worker('/wasm/worker.js');
       const worker = new Worker(withBasePath('/wasm/worker.js'));
-      const cpuId = i + 1;
+      const cpuId = i;
       
       const onComplete = () => {
         completedCount++;
@@ -309,7 +309,7 @@ export default function CalculatorPage() {
         inputPrecision: deltaZNum,
         MinCodeLength: 1,
         MaxCodeLength: searchDepth,
-        cpuId: i + 1,
+        cpuId: i,
         ncpus: effectiveThreads
       });
     });
