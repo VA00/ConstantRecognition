@@ -68,7 +68,43 @@ Compilation examples:
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
-static const char BUILD_TIMESTAMP[] = "BUILD_TIME:" __DATE__ " " __TIME__;
+static const char BUILD_TIMESTAMP[] = __DATE__ " " __TIME__;
+
+static const char COMPILER_VERSION[] =
+#ifdef __VERSION__
+__VERSION__;
+#elif defined(__clang_version__)
+__clang_version__;
+#else
+"Unknown";
+#endif
+
+static const char ARCH_INFO[] = 
+#ifdef __x86_64__
+    "x86_64";
+#elif defined(__arm__)
+    "ARM";
+#elif defined(__wasm__)
+    "WASM";  
+#else
+    "Unknown";
+#endif
+;
+
+static const char OS_INFO[] = 
+#ifdef __linux__
+    "Linux";
+#elif defined(__APPLE__)
+    "macOS";
+#elif defined(_WIN32)
+    "Windows";
+#elif defined(__unix__)
+    "Unix-like";
+#else
+    "Unknown";
+#endif
+;
+
 
 /* ============================================================================
  * INSTRUCTION SET PARSING
@@ -394,7 +430,7 @@ static int generate_and_evaluate(const char* ternary, int* indices, int pos, int
             format_code(ternary, indices, K, state->iset, code, sizeof(code));
             
             if (state->result_count > 0) {
-                int w = snprintf(state->json_ptr, state->json_remaining, ",");
+                int w = snprintf(state->json_ptr, state->json_remaining, ",\n");
                 state->json_ptr += w;
                 state->json_remaining -= w;
             }
@@ -493,13 +529,24 @@ char* vsearch_RPN(double z, double dz, int MinK, int MaxK,
     state.best_ternary[0] = 0;
     state.best_indices[0] = 0;
     
-    /* Start JSON */
-    int w = snprintf(state.json_ptr, state.json_remaining,
-                     "{\"cpuId\":%d, \"buildTime\":\"%s\", \"results\": [", 
-                     cpu_id, BUILD_TIMESTAMP);
-    state.json_ptr += w;
-    state.json_remaining -= w;
+    /* Start JSON object */
+    int w = snprintf(state.json_ptr, state.json_remaining, "{\n"); state.json_ptr += w; state.json_remaining -= w;
+
+    w = snprintf(state.json_ptr, state.json_remaining, "\"z\":  %.17lf,\n", z);                       state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"dz\": %.17lf,\n", dz);                      state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"minK\":  %d,\n", MinK);                     state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"maxK\":  %d,\n", MaxK);                     state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"cpuId\": %d,\n", cpu_id);                   state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"ncpus\": %d,\n", ncpus);                    state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"buildTime\": \"%s\",\n", BUILD_TIMESTAMP);  state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"compiler\":  \"%s\",\n", COMPILER_VERSION); state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"arch\":      \"%s\",\n", ARCH_INFO);        state.json_ptr += w; state.json_remaining -= w;
+    w = snprintf(state.json_ptr, state.json_remaining, "\"os\":        \"%s\",\n", OS_INFO);          state.json_ptr += w; state.json_remaining -= w;
     
+    /* Start results array */
+    w = snprintf(state.json_ptr, state.json_remaining, "\"results\": [\n"); 
+    state.json_ptr += w; state.json_remaining -= w;
+
     /* Ternary code and indices buffers */
     char ternary[MAX_CODE_LENGTH];
     int indices[MAX_CODE_LENGTH];
@@ -630,7 +677,7 @@ char* vsearch_RPN(double z, double dz, int MinK, int MaxK,
 int main(int argc, char** argv) {
 
     double z = 77777;
-    double dz = 0.0;
+    double dz = 0.01;
     int MaxK = 6;
     int cpu_id = 0;
     int ncpus = 1;
