@@ -3,7 +3,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode } from './lib/types';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
+import { evaluateShortRPN } from './lib/webgpu';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
+import { useWebGPU } from './hooks/useWebGPU';
 
 // Ensures that all worker/WASM fetches include the configured base path (if any).
 // - Trailing slashes are removed so "//" never appears in URLs.
@@ -29,28 +31,42 @@ export default function CalculatorPage() {
   const [autoThreads, setAutoThreads] = useState(true);
   const [detectedCPUs, setDetectedCPUs] = useState(4);
   const [filters, setFilters] = useState<Filters>(defaultFilters);
-  const [currentPage, setCurrentPage] = useState(1);
   const [precision, setPrecision] = useState<Precision>({});
   const [activeWorkers, setActiveWorkers] = useState<ActiveWorker[]>([]);
-  const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | null>(null);
+  const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | 'CR' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchFinished, setSearchFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
-  const itemsPerPage = 20;
+  
+  // WebGPU hook - automatycznie używa GPU jeśli dostępne
+  const { gpuAvailable, gpuInfo, search: gpuSearch, abort: gpuAbort } = useWebGPU();
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
   
-  // Best result = lowest REL_ERR from final results only (not intermediate K_BEST)
+  // Helper to calculate compression ratio
+  const getCompressionRatio = (r: SearchResult): number => {
+    if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
+      return r.compressionRatio;
+    }
+    if (typeof r.REL_ERR === 'number' && r.K > 0) {
+      const numerator = r.REL_ERR === 0 ? 16.0 : -Math.log10(r.REL_ERR);
+      return numerator / r.K / Math.log10(36);
+    }
+    return 0;
+  };
+  
+  // Best result = MAXIMUM Compression Ratio (CR) - this is the correct identification criterion
+  // CR rises initially as accuracy improves, then falls when overfitting starts
+  // The maximum CR indicates the true match
   const bestResult = useMemo(() => {
-    const finalResults = results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED');
-    if (finalResults.length === 0) return null;
-    return [...finalResults].sort((a, b) => a.REL_ERR - b.REL_ERR)[0];
+    if (results.length === 0) return null;
+    return [...results].sort((a, b) => getCompressionRatio(b) - getCompressionRatio(a))[0];
   }, [results]);
 
   // Check for WASM support and detect CPUs
@@ -148,7 +164,6 @@ export default function CalculatorPage() {
     
     setIsCalculating(true);
     setResults([]);
-    setCurrentPage(1);
     setSearchFinished(false);
     isAbortedRef.current = false;
     
@@ -181,7 +196,76 @@ export default function CalculatorPage() {
       relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
     });
 
-    // CPU/WASM computation
+    // =========================================
+    // GPU MODE (WebGPU) - automatycznie używane jeśli dostępne
+    // =========================================
+    console.log('[Search] gpuAvailable:', gpuAvailable, 'gpuInfo:', gpuInfo);
+    
+    if (gpuAvailable) {
+      console.log('[GPU] Starting GPU search for:', zNum, 'K:', searchDepth);
+      console.time('[GPU] Search duration');
+      setActiveWorkers([{ id: 0, status: 'GPU', currentK: searchDepth }]);
+      
+      // Collect results in array instead of updating state for each one
+      const collectedResults: SearchResult[] = [];
+      
+      try {
+        await gpuSearch(zNum, {
+          minK: searchDepth,
+          maxK: searchDepth,
+          onProgress: (info) => {
+            console.log('[GPU] Progress K:', info.K, 'forms:', info.forms, 'evaluated:', info.evaluated, 'candidates so far:', collectedResults.length);
+            setActiveWorkers([{ id: 0, status: 'GPU', currentK: info.K }]);
+          },
+          onResult: (result) => {
+            // Collect results without triggering React re-render for each one
+            // Use evaluateShortRPN for GPU results (consistent with GPU/shader logic)
+            const numericValue = evaluateShortRPN(result.RPN);
+            const searchResult: SearchResult = {
+              cpuId: result.cpuId,
+              K: result.K,
+              RPN: result.RPN,
+              result: isFinite(numericValue) ? numericValue.toPrecision(15) : result.RPN,
+              REL_ERR: result.REL_ERR,
+              status: result.status,
+              compressionRatio: result.K > 0 ? 
+                (-Math.log10(result.REL_ERR || 1e-16)) / result.K / Math.log10(36) : 0
+            };
+            collectedResults.push(searchResult);
+          }
+        });
+
+        console.log('[GPU] Search complete. Total candidates:', collectedResults.length);
+        
+        // Sort by compression ratio (best first), then limit to top 100
+        const sortedResults = collectedResults
+          .sort((a, b) => (b.compressionRatio || 0) - (a.compressionRatio || 0))
+          .slice(0, 100);
+        
+        // Single state update with all results
+        setResults(sortedResults);
+      } catch (err) {
+        console.error('GPU search error:', err);
+      }
+      
+      console.timeEnd('[GPU] Search duration');
+      setActiveWorkers([]);
+      
+      // Stop timer
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      setElapsedTime(Date.now() - startTimeRef.current);
+      setIsCalculating(false);
+      setSearchFinished(true);
+      return;
+    }
+
+    // =========================================
+    // CPU MODE (WASM Workers) - fallback gdy GPU niedostępne
+    // =========================================
+    console.log('[CPU] Starting CPU/WASM search - GPU not available');
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
     
     // Terminate existing workers
@@ -246,8 +330,13 @@ export default function CalculatorPage() {
 
   const handleAbort = () => {
     isAbortedRef.current = true;
+    // Abort CPU workers
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
+    // Abort GPU search (always try if available)
+    if (gpuAvailable) {
+      gpuAbort();
+    }
     setActiveWorkers([]);
     // Stop timer
     if (timerRef.current) {
@@ -263,7 +352,6 @@ export default function CalculatorPage() {
     setInputValue('');
     setResults([]);
     setPrecision({});
-    setCurrentPage(1);
     setSortColumn(null);
     setSortDirection('asc');
     setFilters(defaultFilters);
@@ -298,6 +386,8 @@ export default function CalculatorPage() {
         setErrorMode={setErrorMode}
         manualError={manualError}
         setManualError={setManualError}
+        gpuAvailable={gpuAvailable}
+        gpuName={gpuInfo?.name}
       />
 
       {/* Main content */}
@@ -327,27 +417,24 @@ export default function CalculatorPage() {
         )}
 
         {results.length > 0 && bestResult ? (
-          <div className="flex-1 flex flex-col bg-white dark:bg-[#1a1a1d]">
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d]">
             {/* Success banner */}
             {searchFinished && !isCalculating && (
               <div className="bg-green-500 text-white py-2 px-4 text-center text-sm">
-                ✓ Found {results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length} formula{results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED').length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s
+                Found {results.length} result{results.length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s
               </div>
             )}
             {/* Best result card */}
-            <ResultCard result={bestResult} />
+            <ResultCard result={bestResult} allResults={results} />
             {/* Results table */}
             <ResultsTable
-              results={results.filter(r => r.status === 'SUCCESS' || r.status === 'FAILURE' || r.status === 'ABORTED')}
+              results={results}
               filters={filters}
               setFilters={setFilters}
               sortColumn={sortColumn}
               setSortColumn={setSortColumn}
               sortDirection={sortDirection}
               setSortDirection={setSortDirection}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              itemsPerPage={itemsPerPage}
             />
           </div>
         ) : (

@@ -3,6 +3,9 @@
 // Error mode for uncertainty handling
 export type ErrorMode = 'zero' | 'automatic' | 'manual';
 
+// Compute mode - CPU (WASM) or GPU (WebGPU)
+export type ComputeMode = 'cpu' | 'gpu';
+
 export interface SearchResult {
   cpuId: number;
   K: number;
@@ -11,17 +14,22 @@ export interface SearchResult {
   REL_ERR: number;
   status: string;
   compressionRatio?: number;
+  fp32Evals?: number;
+  fp64Evals?: number;
 }
 
 export interface Filters {
-  showSin: boolean;
-  showCos: boolean;
-  showExp: boolean;
-  showLn: boolean;
-  showSqrt: boolean;
-  kFilter: number | null; 
-  showBest: boolean;
-  bestSofar: boolean;
+  maxRelErr: number | null;  // Max relative error threshold (e.g. 1e-10)
+  minCR: number | null;      // Min compression ratio threshold
+  searchQuery: string;       // Search in RPN/formula
+  showSuccess: boolean;      // Show SUCCESS results
+  showFailure: boolean;      // Show FAILURE results  
+  showAborted: boolean;      // Show ABORTED results
+}
+
+export interface ErrorSettings {
+  autoError: boolean;      // true = auto-detect from input precision
+  customError: string;     // manual error value (e.g. "0.001" or "1e-6")
 }
 
 export interface Precision {
@@ -37,14 +45,17 @@ export interface ActiveWorker {
 }
 
 export const defaultFilters: Filters = {
-  showSin: true,
-  showCos: true,
-  showExp: true,
-  showLn: true,
-  showSqrt: true,
-  kFilter: null,
-  showBest: true,
-  bestSofar: true,
+  maxRelErr: null,
+  minCR: null,
+  searchQuery: '',
+  showSuccess: true,
+  showFailure: true,
+  showAborted: true,
+};
+
+export const defaultErrorSettings: ErrorSettings = {
+  autoError: true,
+  customError: '0',
 };
 export const examples = [
   {

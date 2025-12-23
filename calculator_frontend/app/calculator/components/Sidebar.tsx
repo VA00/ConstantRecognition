@@ -24,6 +24,9 @@ interface SidebarProps {
   setErrorMode: (mode: ErrorMode) => void;
   manualError: string;
   setManualError: (value: string) => void;
+  // GPU info (auto-detected)
+  gpuAvailable: boolean;
+  gpuName?: string;
 }
 
 export function Sidebar({
@@ -45,7 +48,9 @@ export function Sidebar({
   errorMode,
   setErrorMode,
   manualError,
-  setManualError
+  setManualError,
+  gpuAvailable,
+  gpuName
 }: SidebarProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -71,7 +76,8 @@ export function Sidebar({
         border-r border-gray-200 dark:border-[#2a2a2e] 
         flex flex-col
         transition-all duration-300 ease-in-out
-        ${isOpen ? 'w-72 lg:w-64' : 'w-0 overflow-hidden'}
+        overflow-x-hidden
+        ${isOpen ? 'w-80 min-w-80' : 'w-0 min-w-0 overflow-hidden'}
       `}>
         {/* Header with collapse button */}
         <div className="p-4 border-b border-gray-200 dark:border-[#2a2a2e]">
@@ -112,6 +118,14 @@ export function Sidebar({
             <div className="text-sm lg:text-xs text-gray-500 dark:text-gray-500">
               {detectedCPUs} logical CPUs detected
             </div>
+            {gpuAvailable && (
+              <div className="flex items-center gap-2 text-sm lg:text-xs text-green-600 dark:text-green-400">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                </svg>
+                <span>WebGPU: {gpuName || 'Available'}</span>
+              </div>
+            )}
           </div>
 
           {/* Precision Info */}
@@ -146,6 +160,55 @@ export function Sidebar({
               </div>
             </div>
           )}
+
+          {/* Complexity (K) - always visible */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+              Complexity (K)
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min="2"
+                max="9"
+                value={searchDepth}
+                onChange={(e) => setSearchDepth(parseInt(e.target.value))}
+                className="flex-1 accent-[#0066cc] h-2"
+              />
+              <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-4">{searchDepth}</span>
+            </div>
+            <p className="text-[10px] text-gray-400">Search expressions with exactly K symbols</p>
+          </div>
+
+          {/* Threads - always visible */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+              Threads
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min="1"
+                max="32"
+                value={threadCount}
+                onChange={(e) => setThreadCount(parseInt(e.target.value))}
+                disabled={autoThreads}
+                className="flex-1 accent-[#0066cc] disabled:opacity-40 h-2"
+              />
+              <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-8">
+                {autoThreads ? 'Auto' : threadCount}
+              </span>
+            </div>
+            <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={autoThreads}
+                onChange={(e) => setAutoThreads(e.target.checked)}
+                className="accent-[#0066cc] w-4 h-4"
+              />
+              Auto-detect
+            </label>
+          </div>
 
           {/* Advanced Options Toggle */}
           <div className="border-t border-gray-200 dark:border-[#2a2a2e] pt-4">
@@ -215,60 +278,11 @@ export function Sidebar({
                         value={manualError}
                         onChange={(e) => setManualError(e.target.value)}
                         placeholder="0.000001"
-                        className="flex-1 px-2 py-1 rounded border border-gray-300 dark:border-[#2a2a2e] bg-white dark:bg-[#111113] text-gray-900 dark:text-white font-mono text-sm"
+                        className="w-32 px-2 py-1 rounded border border-gray-300 dark:border-[#2a2a2e] bg-white dark:bg-[#111113] text-gray-900 dark:text-white font-mono text-sm"
                       />
                     </div>
                   )}
                 </div>
-              </div>
-
-              {/* Complexity */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-                  Max Complexity (K)
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="range"
-                    min="2"
-                    max="9"
-                    value={searchDepth}
-                    onChange={(e) => setSearchDepth(parseInt(e.target.value))}
-                    className="flex-1 accent-[#0066cc] h-2"
-                  />
-                  <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-4">{searchDepth}</span>
-                </div>
-                <p className="text-[10px] text-gray-400">Higher = slower but more accurate</p>
-              </div>
-
-              {/* Threads */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-                  Threads
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="range"
-                    min="1"
-                    max="32"
-                    value={threadCount}
-                    onChange={(e) => setThreadCount(parseInt(e.target.value))}
-                    disabled={autoThreads}
-                    className="flex-1 accent-[#0066cc] disabled:opacity-40 h-2"
-                  />
-                  <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-8">
-                    {autoThreads ? 'Auto' : threadCount}
-                  </span>
-                </div>
-                <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={autoThreads}
-                    onChange={(e) => setAutoThreads(e.target.checked)}
-                    className="accent-[#0066cc] w-4 h-4"
-                  />
-                  Auto-detect
-                </label>
               </div>
             </div>
           )}
