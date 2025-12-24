@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ActiveWorker, Precision, ErrorMode } from '../lib/types';
+import { ActiveWorker, Precision, ErrorMode, ComputeMode } from '../lib/types';
 
 interface SidebarProps {
   wasmLoaded: boolean;
@@ -27,6 +27,9 @@ interface SidebarProps {
   // GPU info (auto-detected)
   gpuAvailable: boolean;
   gpuName?: string;
+  //Compute mode selection
+  computeMode: ComputeMode;
+  setComputeMode: (mode: ComputeMode) => void;
 }
 
 export function Sidebar({
@@ -50,7 +53,9 @@ export function Sidebar({
   manualError,
   setManualError,
   gpuAvailable,
-  gpuName
+  gpuName,
+  computeMode,
+  setComputeMode
 }: SidebarProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -128,6 +133,67 @@ export function Sidebar({
             )}
           </div>
 
+{/* Compute Backend Selection */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+              Compute Backend
+            </label>
+            <div className="flex rounded-md shadow-sm">
+              <button
+                type="button"
+                onClick={() => setComputeMode('auto')}
+                disabled={isCalculating}
+                className={`flex-1 px-3 py-2 text-xs font-medium rounded-l-md border transition-colors
+                  ${computeMode === 'auto' 
+                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
+                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
+                  disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                Auto
+              </button>
+              <button
+                type="button"
+                onClick={() => setComputeMode('cpu')}
+                disabled={isCalculating}
+                className={`flex-1 px-3 py-2 text-xs font-medium border-t border-b transition-colors
+                  ${computeMode === 'cpu' 
+                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
+                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
+                  disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                CPU
+              </button>
+              <button
+                type="button"
+                onClick={() => setComputeMode('gpu')}
+                disabled={isCalculating || !gpuAvailable}
+                className={`flex-1 px-3 py-2 text-xs font-medium rounded-r-md border transition-colors
+                  ${computeMode === 'gpu' 
+                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
+                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
+                  disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                GPU {!gpuAvailable && '(N/A)'}
+              </button>
+            </div>
+            {/* Status text */}
+            <div className="text-[10px] text-gray-400 dark:text-gray-500">
+              {computeMode === 'auto' && (
+                gpuAvailable 
+                  ? <span className="text-green-600 dark:text-green-400">Will use GPU (WebGPU available)</span>
+                  : <span>Will use CPU (WebGPU not available)</span>
+              )}
+              {computeMode === 'cpu' && (
+                <span>WASM Workers ({autoThreads ? detectedCPUs : threadCount} threads)</span>
+              )}
+              {computeMode === 'gpu' && (
+                gpuAvailable 
+                  ? <span className="text-green-600 dark:text-green-400">{gpuName || 'WebGPU'}</span>
+                  : <span className="text-amber-600 dark:text-amber-400">⚠️ GPU unavailable, will use CPU</span>
+              )}
+            </div>
+          </div>
+
           {/* Precision Info */}
           {precision.z && (
             <div className="space-y-2">
@@ -180,35 +246,37 @@ export function Sidebar({
             <p className="text-[10px] text-gray-400">Search expressions with exactly K symbols</p>
           </div>
 
-          {/* Threads - always visible */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-              Threads
-            </label>
-            <div className="flex items-center gap-3">
-              <input
-                type="range"
-                min="1"
-                max="32"
-                value={threadCount}
-                onChange={(e) => setThreadCount(parseInt(e.target.value))}
-                disabled={autoThreads}
-                className="flex-1 accent-[#0066cc] disabled:opacity-40 h-2"
-              />
-              <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-8">
-                {autoThreads ? 'Auto' : threadCount}
-              </span>
+          {/* Threads - only visible when CPU will be used */}
+          {(computeMode === 'cpu' || (computeMode === 'auto' && !gpuAvailable)) && (
+            <div className="space-y-2">
+              <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+                CPU Threads
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="range"
+                  min="1"
+                  max="32"
+                  value={threadCount}
+                  onChange={(e) => setThreadCount(parseInt(e.target.value))}
+                  disabled={autoThreads}
+                  className="flex-1 accent-[#0066cc] disabled:opacity-40 h-2"
+                />
+                <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-8">
+                  {autoThreads ? 'Auto' : threadCount}
+                </span>
+              </div>
+              <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={autoThreads}
+                  onChange={(e) => setAutoThreads(e.target.checked)}
+                  className="accent-[#0066cc] w-4 h-4"
+                />
+                Auto-detect ({detectedCPUs} CPUs)
+              </label>
             </div>
-            <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={autoThreads}
-                onChange={(e) => setAutoThreads(e.target.checked)}
-                className="accent-[#0066cc] w-4 h-4"
-              />
-              Auto-detect
-            </label>
-          </div>
+          )}
 
           {/* Advanced Options Toggle */}
           <div className="border-t border-gray-200 dark:border-[#2a2a2e] pt-4">

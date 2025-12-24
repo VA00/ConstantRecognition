@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode } from './lib/types';
+import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode, ComputeMode } from './lib/types';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
 import { evaluateShortRPN } from './lib/webgpu';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
@@ -40,6 +40,9 @@ export default function CalculatorPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
+  
+  // NEW: Compute mode state - 'auto' uses GPU if available, 'cpu' forces CPU, 'gpu' forces GPU
+  const [computeMode, setComputeMode] = useState<ComputeMode>('cpu');
   
   // WebGPU hook - automatycznie używa GPU jeśli dostępne
   const { gpuAvailable, gpuInfo, search: gpuSearch, abort: gpuAbort } = useWebGPU();
@@ -88,6 +91,18 @@ export default function CalculatorPage() {
     setThreadCount(cpus);
   }, []);
 
+  // Determine effective compute backend based on mode and availability
+  const getEffectiveBackend = (): 'gpu' | 'cpu' => {
+    switch (computeMode) {
+      case 'gpu':
+        return gpuAvailable ? 'gpu' : 'cpu';
+      case 'cpu':
+        return 'cpu';
+      case 'auto':
+      default:
+        return gpuAvailable ? 'gpu' : 'cpu';
+    }
+  };
 
   const handleWorkerMessage = (cpuId: number, e: MessageEvent, onComplete?: () => void) => {
     const data = e.data;
@@ -215,11 +230,16 @@ export default function CalculatorPage() {
     });
 
     // =========================================
-    // GPU MODE (WebGPU) - automatycznie używane jeśli dostępne
+    // DETERMINE BACKEND BASED ON USER CHOICE
     // =========================================
-    console.log('[Search] gpuAvailable:', gpuAvailable, 'gpuInfo:', gpuInfo);
-    
-    if (gpuAvailable) {
+    const effectiveBackend = getEffectiveBackend();
+    console.log('[Search] computeMode:', computeMode, 'gpuAvailable:', gpuAvailable, 
+                'effectiveBackend:', effectiveBackend, 'gpuInfo:', gpuInfo);
+
+    // =========================================
+    // GPU MODE (WebGPU)
+    // =========================================
+    if (effectiveBackend === 'gpu') {
       console.log('[GPU] Starting GPU search for:', zNum, 'K:', searchDepth);
       console.time('[GPU] Search duration');
       setActiveWorkers([{ id: 0, status: 'GPU', currentK: searchDepth }]);
@@ -281,9 +301,9 @@ export default function CalculatorPage() {
     }
 
     // =========================================
-    // CPU MODE (WASM Workers) - fallback gdy GPU niedostępne
+    // CPU MODE (WASM Workers)
     // =========================================
-    console.log('[CPU] Starting CPU/WASM search - GPU not available');
+    console.log('[CPU] Starting CPU/WASM search');
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
     
     // Terminate existing workers
@@ -406,6 +426,9 @@ export default function CalculatorPage() {
         setManualError={setManualError}
         gpuAvailable={gpuAvailable}
         gpuName={gpuInfo?.name}
+        // NEW: Compute mode props
+        computeMode={computeMode}
+        setComputeMode={setComputeMode}
       />
 
       {/* Main content */}
@@ -419,14 +442,16 @@ export default function CalculatorPage() {
           onAbort={handleAbort}
         />
 
-        {/* Search Status */}
+        {/* Search Status - shows which backend is being used */}
         {isCalculating && (
           <div className="bg-blue-500 text-white py-3 px-4 text-center flex items-center justify-center gap-4">
             <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            <span className="font-bold">Searching for formulas...</span>
+            <span className="font-bold">
+              Searching via {getEffectiveBackend().toUpperCase()}...
+            </span>
             <span className="font-mono">{(elapsedTime / 1000).toFixed(1)}s</span>
             {precision.deltaZ && (
               <span className="text-sm opacity-75">(±{precision.deltaZ})</span>
@@ -436,10 +461,13 @@ export default function CalculatorPage() {
 
         {results.length > 0 && bestResult ? (
           <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d]">
-            {/* Success banner */}
+            {/* Success banner - shows which backend was used */}
             {searchFinished && !isCalculating && (
               <div className="bg-green-500 text-white py-2 px-4 text-center text-sm">
                 Found {results.length} result{results.length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s
+                <span className="ml-2 opacity-75">
+                  (via {getEffectiveBackend().toUpperCase()})
+                </span>
               </div>
             )}
             {/* Best result card */}
