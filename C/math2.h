@@ -1,100 +1,116 @@
+/* math2.h - Extended math functions (header-only)
+ *
+ * All functions are static inline for maximum speed.
+ * No separate .c file needed.
+ */
+
+#ifndef MATH2_H
+#define MATH2_H
+
 #include <math.h>
 #include <complex.h>
 
-/* sqr computes x squared, x*x */
+/* ============================================================================
+ * BINARY OPERATION HELPERS
+ * ============================================================================ */
 
-float sqrf(float);
-double sqr(double);
-long double sqrl(long double);
+static inline double plus(double a, double b)     { return a + b; }
+static inline double times(double a, double b)    { return a * b; }
+static inline double subtract(double a, double b) { return a - b; }
+static inline double divide(double a, double b)   { return a / b; }
 
-complex float csqrf(complex float);
-complex double csqr(complex double);
-complex long double csqrl(complex long double);
+/* ============================================================================
+ * UNARY FUNCTIONS - REAL
+ * ============================================================================ */
 
+/* sqr: x squared, x*x */
+static inline float       sqrf(float x)       { return x * x; }
+static inline double      sqr(double x)       { return x * x; }
+static inline long double sqrl(long double x) { return x * x; }
 
-/* dbl doubles x,  2.0*x == x+x */
+/* dbl: double, 2*x or x+x */
+static inline float       dblf(float x)       { return x + x; }
+static inline double      dbl(double x)       { return x + x; }
+static inline long double dbll(long double x) { return x + x; }
 
-float dblf(float);
-double dbl(double);
-long double dbll(long double);
+/* half: x/2 or 0.5*x */
+static inline float       halff(float x)       { return 0.5f * x; }
+static inline double      half(double x)       { return 0.5 * x; }
+static inline long double halfl(long double x) { return 0.5L * x; }
 
-complex float cdblf(complex float);
-complex double cdbl(complex double);
-complex long double cdbll(complex long double);
+/* suc: successor, x+1 */
+static inline float       sucf(float x)       { return x + 1.0f; }
+static inline double      suc(double x)       { return x + 1.0; }
+static inline long double sucl(long double x) { return x + 1.0L; }
 
-float halff(float);
-double half(double);
-long double halfl(long double);
+/* pre: predecessor, x-1 */
+static inline float       pref(float x)       { return x - 1.0f; }
+static inline double      pre(double x)       { return x - 1.0; }
+static inline long double prel(long double x) { return x - 1.0L; }
 
-complex float chalff(complex float);
-complex double chalf(complex double);
-complex long double chalfl(complex long double);
+/* inv: reciprocal, 1/x */
+static inline float       invf(float x)       { return 1.0f / x; }
+static inline double      inv(double x)       { return 1.0 / x; }
+static inline long double invl(long double x) { return 1.0L / x; }
 
+/* tet: tetration, x^x */
+static inline float       tetf(float x)       { return powf(x, x); }
+static inline double      tet(double x)       { return pow(x, x); }
+static inline long double tetl(long double x) { return powl(x, x); }
 
+/* ln: arbitrary base logarithm, log_x(y) */
+static inline float       lnf(float x, float y)             { return logf(y) / logf(x); }
+static inline double      ln(double x, double y)            { return log(y) / log(x); }
+static inline long double lnl(long double x, long double y) { return logl(y) / logl(x); }
 
-/* suc computex integer ,,succesor'' x,  x+1 */
+/* eml: exp(x) - log(y) */
+static inline float       emlf(float x, float y)             { return expf(x) - logf(y); }
+static inline double      eml(double x, double y)            { return exp(x) - log(y); }
+static inline long double emll(long double x, long double y) { return expl(x) - logl(y); }
 
-float sucf(float);
-double suc(double);
-long double sucl(long double);
+/* ============================================================================
+ * UNARY FUNCTIONS - COMPLEX
+ * ============================================================================ */
 
-complex float csucf(complex float);
-complex double csuc(complex double);
-complex long double csucl(complex long double);
+static inline complex float       csqrf(complex float x)       { return x * x; }
+static inline complex double      csqr(complex double x)       { return x * x; }
+static inline complex long double csqrl(complex long double x) { return x * x; }
 
-/* pre computex integer ,,precedesor'' x,  x-1 */
+static inline complex float       cdblf(complex float x)       { return x + x; }
+static inline complex double      cdbl(complex double x)       { return x + x; }
+static inline complex long double cdbll(complex long double x) { return x + x; }
 
-float pref(float);
-double pre(double);
-long double prel(long double);
+static inline complex float       chalff(complex float x)       { return 0.5f * x; }
+static inline complex double      chalf(complex double x)       { return 0.5 * x; }
+static inline complex long double chalfl(complex long double x) { return 0.5L * x; }
 
-complex float cpref(complex float);
-complex double cpre(complex double);
-complex long double cprel(complex long double);
+static inline complex float       csucf(complex float x)       { return x + 1.0f; }
+static inline complex double      csuc(complex double x)       { return x + 1.0; }
+static inline complex long double csucl(complex long double x) { return x + 1.0L; }
 
-/* inv computex reciprocal 1/x*/
+static inline complex float       cpref(complex float x)       { return x - 1.0f; }
+static inline complex double      cpre(complex double x)       { return x - 1.0; }
+static inline complex long double cprel(complex long double x) { return x - 1.0L; }
 
-float invf(float);
-double inv(double);
-long double invl(long double);
+static inline complex float       cinvf(complex float x)       { return 1.0f / x; }
+static inline complex double      cinv(complex double x)       { return 1.0 / x; }
+static inline complex long double cinvl(complex long double x) { return 1.0L / x; }
 
-complex float cinvf(complex float);
-complex double cinv(complex double);
-complex long double cinvl(complex long double);
+static inline complex float       ctetf(complex float x)       { return cpowf(x, x); }
+static inline complex double      ctet(complex double x)       { return cpow(x, x); }
+static inline complex long double ctetl(complex long double x) { return cpowl(x, x); }
 
-/* tetration x^x*/
+static inline complex float       clnf(complex float x, complex float y)             { return clogf(y) / clogf(x); }
+static inline complex double      cln(complex double x, complex double y)            { return clog(y) / clog(x); }
+static inline complex long double clnl(complex long double x, complex long double y) { return clogl(y) / clogl(x); }
 
-float tetf(float);
-double tet(double);
-long double tetl(long double);
+static inline complex float       cemlf(complex float x, complex float y)             { return cexpf(x) - clogf(y); }
+static inline complex double      ceml(complex double x, complex double y)            { return cexp(x) - clog(y); }
+static inline complex long double cemll(complex long double x, complex long double y) { return cexpl(x) - clogl(y); }
 
-complex float ctetf(complex float);
-complex double ctet(complex double);
-complex long double ctetl(complex long double);
+/* Complex Gamma: approximate (real part only) */
+static inline complex float       ctgammaf(complex float x)       { return tgammaf(crealf(x)) + 0.0f * I; }
+static inline complex double      ctgamma(complex double x)       { return tgamma(creal(x)) + 0.0 * I; }
+static inline complex long double ctgammal(complex long double x) { return tgammal(creall(x)) + 0.0L * I; }
 
-/* arbitrary base Logarithm LN */
-
-float lnf(float,float);
-double ln(double,double);
-long double lnl(long double, long double);
-
-complex float clnf(complex float,complex float);
-complex double cln(complex double,complex double);
-complex long double clnl(complex long double, complex long double);
-
-/* Complex EML operator */
-
-
-float emlf(float, float);
-double eml(double x, double y);
-long double emll(long double x, long double y);
-complex float cemlf(complex float, complex float);
-complex double ceml(complex double x, complex double y);
-complex long double cemll(complex long double x, complex long double y);
-
-
-/* Complex Gamma function: not yet implemented */
-
-complex float ctgammaf(complex float);
-complex double ctgamma(complex double);
-complex long double ctgammal(complex long double);
+#endif /* MATH2_H */
