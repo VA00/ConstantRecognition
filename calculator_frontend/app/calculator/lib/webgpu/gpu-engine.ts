@@ -8,6 +8,15 @@ import type { GPUInfo, GPUSearchResult, FormDescriptor, Candidate, SearchOptions
 import { evaluateShortRPN, indexToRPN } from './rpn-evaluator';
 import { generateValidForms } from './form-generator';
 
+// Helper to add base path for production builds
+const withBasePath = (path: string) => {
+  const base = process.env.NEXT_PUBLIC_BASE_PATH?.replace(/\/+$/g, '') ?? '';
+  const normalizedBase = base ? (base.startsWith('/') ? base : `/${base}`) : '';
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  if (typeof window === 'undefined') return `${normalizedBase}${normalizedPath}`;
+  return new URL(`${normalizedBase}${normalizedPath}`, window.location.origin).toString();
+};
+
 export class ConstantRecognitionGPU {
   private device: GPUDevice | null = null;
   private pipeline: GPUComputePipeline | null = null;
@@ -45,8 +54,18 @@ export class ConstantRecognitionGPU {
         this.device = null;
       });
 
-      // Load shader from public folder
-      const shaderCode = await fetch('/wasm/rpn_shader.wgsl').then(r => r.text());
+      // Load shader from public folder (with base path for production)
+      const shaderResponse = await fetch(withBasePath('/wasm/rpn_shader.wgsl'));
+      if (!shaderResponse.ok) {
+        throw new Error(`Failed to load shader: ${shaderResponse.status} ${shaderResponse.statusText}`);
+      }
+      const shaderCode = await shaderResponse.text();
+      
+      // Verify we got WGSL, not HTML error page
+      if (shaderCode.trim().startsWith('<!DOCTYPE') || shaderCode.trim().startsWith('<html')) {
+        throw new Error('Shader file not found - received HTML instead of WGSL');
+      }
+      
       this.shaderModule = this.device.createShaderModule({ code: shaderCode });
 
       this.pipeline = this.device.createComputePipeline({
