@@ -1,7 +1,14 @@
 /* math2.h - Extended math functions (header-only)
  *
- * All functions are static inline for maximum speed.
+ * Author: Andrzej Odrzywolek
+ * Date: January 2, 2025
+ *
+ * All functions are static inline for maximum performance.
  * No separate .c file needed.
+ *
+ * These are used by calculator definitions (CALC4.h, etc.)
+ * to provide named function pointers for binary operations
+ * and additional unary operations not in standard <math.h>.
  */
 
 #ifndef MATH2_H
@@ -12,12 +19,27 @@
 
 /* ============================================================================
  * BINARY OPERATION HELPERS
+ * 
+ * Standard math.h doesn't provide function pointers for basic operations.
+ * These wrappers allow using +, -, *, / as function pointers.
  * ============================================================================ */
 
 static inline double plus(double a, double b)     { return a + b; }
 static inline double times(double a, double b)    { return a * b; }
 static inline double subtract(double a, double b) { return a - b; }
 static inline double divide(double a, double b)   { return a / b; }
+
+/* Float versions */
+static inline float plusf(float a, float b)       { return a + b; }
+static inline float timesf(float a, float b)      { return a * b; }
+static inline float subtractf(float a, float b)   { return a - b; }
+static inline float dividef(float a, float b)     { return a / b; }
+
+/* Long double versions */
+static inline long double plusl(long double a, long double b)     { return a + b; }
+static inline long double timesl(long double a, long double b)    { return a * b; }
+static inline long double subjectl(long double a, long double b)  { return a - b; }
+static inline long double dividel(long double a, long double b)   { return a / b; }
 
 /* ============================================================================
  * UNARY FUNCTIONS - REAL
@@ -52,6 +74,11 @@ static inline long double prel(long double x) { return x - 1.0L; }
 static inline float       invf(float x)       { return 1.0f / x; }
 static inline double      inv(double x)       { return 1.0 / x; }
 static inline long double invl(long double x) { return 1.0L / x; }
+
+/* minus: negation, -x */
+static inline float       minusf(float x)       { return -x; }
+static inline double      minus(double x)       { return -x; }
+static inline long double minusl(long double x) { return -x; }
 
 /* tet: tetration, x^x */
 static inline float       tetf(float x)       { return powf(x, x); }

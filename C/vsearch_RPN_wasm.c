@@ -1,7 +1,7 @@
 /* vsearch_RPN_wasm.c - WASM wrapper for JS frontend
  *
  * Author: Andrzej Odrzywolek, andrzej.odrzywolek@uj.edu.pl
- * Date: December 28, 2025
+ * Date: January 2, 2025
  *
  * This file provides:
  *   - String parsing for runtime-configurable calculators
@@ -9,11 +9,15 @@
  *   - Backward compatibility with existing web interface
  *
  * Compilation:
- *   emcc -O2 -Wall vsearch_RPN_wasm.c vsearch_RPN_core.c math2.c \
- *        -s WASM=1 \
- *        -s EXPORTED_FUNCTIONS='["_vsearch_RPN","_search_RPN","_search_RPN_hybrid","_free"]' \
- *        -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' \
- *        -o vsearch.js
+ *   emcc -O2 -Wall vsearch_RPN_wasm.c vsearch_RPN_core.c utils.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_search_RPN","_search_RPN_hybrid","_vsearch_RPN","_free"]'  -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]'  -o vsearch.js
+ *
+ * WebAssembly (emcc, Windows):
+ * Install emsdk
+ *
+ * git clone https://github.com/emscripten-core/emsdk.git
+ * cd emsdk
+ * emsdk> .\emsdk install latest
+ *        .\emsdk activate latest
  */
 
 #ifdef _WIN32
@@ -117,10 +121,11 @@ char* vsearch_RPN(
         free(copy);
     }
     
-    return vsearch_RPN_core(z, dz, MinK, MaxK, cpu_id, ncpus,
-                           const_ops, n_const,
-                           unary_ops, n_unary,
-                           binary_ops, n_binary);
+    return search_constant(z, dz, MinK, MaxK, cpu_id, ncpus,
+                          const_ops, n_const,
+                          unary_ops, n_unary,
+                          binary_ops, n_binary,
+                          ERROR_REL, COMPARE_STRICT);
 }
 
 /* ============================================================================
@@ -133,19 +138,21 @@ char* vsearch_RPN(
 /* Legacy API: uses full CALC4 calculator */
 EMSCRIPTEN_KEEPALIVE
 char* search_RPN(double z, double dz, int MinK, int MaxK, int cpu_id, int ncpus) {
-    return vsearch_RPN_core(z, dz, MinK, MaxK, cpu_id, ncpus,
-                           CALC4_CONSTS, CALC4_N_CONST,
-                           CALC4_FUNCS,  CALC4_N_UNARY,
-                           CALC4_OPS,    CALC4_N_BINARY);
+    return search_constant(z, dz, MinK, MaxK, cpu_id, ncpus,
+                          CALC4_CONSTS, CALC4_N_CONST,
+                          CALC4_FUNCS,  CALC4_N_UNARY,
+                          CALC4_OPS,    CALC4_N_BINARY,
+                          ERROR_REL, COMPARE_STRICT);
 }
 
-/* Hybrid search (same as search_RPN for now) */
+/* Hybrid search (same as search_RPN for now - placeholder for FP32+FP64) */
 EMSCRIPTEN_KEEPALIVE
 char* search_RPN_hybrid(double z, double dz, int MinK, int MaxK, int cpu_id, int ncpus) {
-    return vsearch_RPN_core(z, dz, MinK, MaxK, cpu_id, ncpus,
-                           CALC4_CONSTS, CALC4_N_CONST,
-                           CALC4_FUNCS,  CALC4_N_UNARY,
-                           CALC4_OPS,    CALC4_N_BINARY);
+    return search_constant(z, dz, MinK, MaxK, cpu_id, ncpus,
+                          CALC4_CONSTS, CALC4_N_CONST,
+                          CALC4_FUNCS,  CALC4_N_UNARY,
+                          CALC4_OPS,    CALC4_N_BINARY,
+                          ERROR_REL, COMPARE_STRICT);
 }
 
 /* Configurable search via strings */
@@ -153,6 +160,39 @@ EMSCRIPTEN_KEEPALIVE
 char* search_RPN_custom(double z, double dz, int MinK, int MaxK, int cpu_id, int ncpus,
                         const char* consts, const char* funcs, const char* ops) {
     return vsearch_RPN(z, dz, MinK, MaxK, cpu_id, ncpus, consts, funcs, ops);
+}
+
+/* Function recognition via WASM */
+EMSCRIPTEN_KEEPALIVE
+char* search_function_wasm(
+    const double* x_values, const double* y_values, const double* dy_values,
+    int n_data,
+    int MinK, int MaxK,
+    int cpu_id, int ncpus)
+{
+    /* Convert arrays to DataPoint array */
+    DataPoint* data = (DataPoint*)malloc(n_data * sizeof(DataPoint));
+    if (!data) {
+        return strdup("{\"error\":\"Memory allocation failed\"}");
+    }
+    
+    for (int i = 0; i < n_data; i++) {
+        data[i].x = x_values[i];
+        data[i].y = y_values[i];
+        data[i].dy = (dy_values != NULL) ? dy_values[i] : 0.0;
+    }
+    
+    char* result = search_function(
+        data, n_data,
+        MinK, MaxK,
+        cpu_id, ncpus,
+        CALC4_CONSTS, CALC4_N_CONST,
+        CALC4_FUNCS,  CALC4_N_UNARY,
+        CALC4_OPS,    CALC4_N_BINARY,
+        ERROR_MSE, COMPARE_STRICT);
+    
+    free(data);
+    return result;
 }
 
 #endif /* __EMSCRIPTEN__ */
