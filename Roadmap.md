@@ -66,29 +66,30 @@ Create genuinely new problems with elegant solutions. Example: `11/13 = tanh(ln(
 ## Frontend Roadmap
 
 ### High Priority
-| Feature | Description | Complexity | Frontend Visibility
-|---------|-------------|------------|-----------
-| Calculator Creator UI | Drag-and-drop interface for defining custom instruction sets | High | Advanced options
-| Preset Calculator Selection | Choose from: CALC4, RIES-compatible, TI-35, CASIO, etc. | Medium | Dropdown list, CALC4 default
-| Complex Number Support | Search using complex constants and operations | Medium | Advanced options or autoselect if target is complex number
+| Feature | Description | Complexity | Frontend Visibility | Backend availability
+|---------|-------------|------------|---------------------|---------------------
+| Calculator Creator UI | Drag-and-drop interface for defining custom instruction sets | High | Advanced options | Yes, via master CALC4 and string arg passing
+| Preset Calculator Selection | Choose from: CALC4, RIES-compatible, TI-35, CASIO, etc. | Medium | Dropdown list, CALC4 default | Yes, via calc/*.h
+| Complex Number Support | Search using complex constants and operations | Medium | Advanced options or autoselect if target is complex number | Not implemented, only via Wolfram/Mathematica legacy codegen
 
 ### Medium Priority
-| Feature | Description | Complexity | Frontend Visibility
-|---------|-------------|------------|-----------
-| Multiple Identification Criteria | Select any combination of accuracy drop, probability, compression ratio | Low | Advanced options
-| External Backend Integration | Connect to RIES, SymPy/nsimplify as alternative engines | Medium | Advanced options
-| Multiple Norm Selection | Relative error, absolute error, ULP distance, Hamming distance, string dissimilarity, integer/rational/RPN relationships | Low | Advanced options
-| Sorting Direction Toggle | Choose `<` vs `≤` for discrete metrics | Low | Advanced options
+| Feature | Description | Complexity | Frontend Visibility | Backend availability
+|---------|-------------|------------|---------------------|---------------------
+| Multiple Identification Criteria | Select any combination of accuracy drop, probability, compression ratio | Low | Advanced options | Partially implemented
+| External Backend Integration | Connect to RIES, SymPy/nsimplify as alternative engines | Medium | Advanced options | Not implemented
+| Multiple Norm Selection | Relative error, absolute error, ULP distance, Hamming distance, string dissimilarity, integer/rational/RPN relationships | Low | Advanced options | Partial implementation
+| Sorting Toggle | Choose `<` vs `≤` for discrete metrics | Low | Advanced options | Yes, via CompareMode in vsearch_core()
+| Sorting Direction Toggle | Choose from `alternating` (default)  vs `from above`/`from below` for continuous discrete metrics | Low | Advanced options | No
 
 ### Lower Priority / Exploratory
-| Feature | Description | Complexity | Frontend Visibility
-|---------|-------------|------------|--------------------
-| Integer Target Mode | Dedicated search using Prime, Fibonacci, Binomial, etc. | Medium | Advanced options or autoselect if target is an integer
-| Multi-Constant Search | Find formulas involving multiple target constants (any/all) | High | File open dialog
-| Univariate Function Search | Identify functions, not just constants | Very High | File open dialog
-| Integer Sequence Search | Identify sequences using GPU integer arithmetic| High | Advanced options, File open dialog or autoselect if integer sequence is pasted/typed 
-| Calculator Completeness Checker | Verify a calculator can express all "expected" results | Medium | Part of calculator creator
-| Cross-Calculator Complexity Comparison | Compare expression complexity across different instruction sets using e.g. EmL compiler | Low | Intermediate results table
+| Feature | Description | Complexity | Frontend Visibility | Backend availability
+|---------|-------------|------------|---------------------|---------------------
+| Integer Target Mode | Dedicated search using Prime, Fibonacci, Binomial, etc. | Medium | Advanced options or autoselect if target is an integer | No
+| Multi-Constant Search | Find formulas involving multiple target constants (any/all) | High | File open dialog | No
+| Univariate Function Search | Identify functions, not just constants | Very High | File open dialog | Yes
+| Integer Sequence Search | Identify sequences using GPU integer arithmetic| High | Advanced options, File open dialog or autoselect if integer sequence is pasted/typed | No
+| Calculator Completeness Checker | Verify a calculator can express all "expected" results | Medium | Part of calculator creator | No, only Wolfram code
+| Cross-Calculator Complexity Comparison | Compare expression complexity across different instruction sets using e.g. EmL compiler | Low | Intermediate results table | No
 
 ---
 
