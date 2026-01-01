@@ -21,6 +21,7 @@
 
 #ifdef _WIN32
 #define strdup _strdup
+#define sscanf sscanf_s
 #endif
 
 /* ============================================================================
