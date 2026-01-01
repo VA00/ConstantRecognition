@@ -554,6 +554,7 @@ char* vsearch_core(
     
     int w = snprintf(state.json_ptr, state.json_remaining,
         "{\n"
+        "\"buildTime\": \"%s\",\n"
         "\"mode\": \"%s\",\n"
         "\"metric\": \"%s\",\n"
         "\"compare\": \"%s\",\n"
@@ -568,17 +569,16 @@ char* vsearch_core(
         "\"n_unary\": %d,\n"
         "\"n_binary\": %d,\n"
         "\"n_total\": %d,\n"
-        "\"buildTime\": \"%s\",\n"
         "\"compiler\": \"%s\",\n"
         "\"arch\": \"%s\",\n"
         "\"os\": \"%s\",\n"
         "\"results\": [\n",
-        mode_str, metric_str[metric], compare_str,
+        BUILD_TIMESTAMP, mode_str, metric_str[metric], compare_str,
         n_data, data[0].y, data[0].dy,
         cpu_id, ncpus, MinK, MaxK,
         n_const, n_unary, n_binary,
         n_const + n_unary + n_binary,
-        BUILD_TIMESTAMP, COMPILER_VERSION, ARCH_INFO, OS_INFO);
+        COMPILER_VERSION, ARCH_INFO, OS_INFO);
     state.json_ptr += w;
     state.json_remaining -= w;
     
