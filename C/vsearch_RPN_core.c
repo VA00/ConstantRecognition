@@ -428,10 +428,16 @@ static int generate_and_evaluate(
             int hamming = compute_hamming_distance(target, computed);
             
             int w = snprintf(state->json_ptr, state->json_remaining,
-                "{\"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, "
-                "\"result\":\"INTERMEDIATE\", \"status\":\"RUNNING\", "
-                "\"cpuId\":%d, \"HAMMING_DISTANCE\":%d}",
-                code, err, K, state->cpu_id, hamming);
+                "{"
+                "\"K\":%d, "
+                "\"REL_ERR\":%.5e, "
+                "\"result\":\"INTERMEDIATE\", "
+                "\"status\":\"RUNNING\", "
+                "\"cpuId\":%d, "
+                "\"HAMMING_DISTANCE\":%d, "
+                "\"RPN\":\"%s\""
+                "}",
+                K, err, state->cpu_id, hamming, code);
             state->json_ptr += w;
             state->json_remaining -= w;
             state->result_count++;
@@ -619,10 +625,16 @@ char* vsearch_core(
             }
             
             w = snprintf(state.json_ptr, state.json_remaining,
-                "{\"RPN\":\"%s\", \"REL_ERR\":%.17e, \"K\":%d, "
-                "\"result\":\"K_BEST\", \"status\":\"RUNNING\", "
-                "\"cpuId\":%d, \"HAMMING_DISTANCE\":%d}",
-                code, state.best_err, K, cpu_id, hamming);
+                "{"
+                "\"K\":%d, "
+                "\"REL_ERR\":%.5e, "
+                "\"result\":\"K_BEST\"      , "
+                "\"status\":\"RUNNING\", "
+                "\"cpuId\":%d, "
+                "\"HAMMING_DISTANCE\":%d, "
+                "\"RPN\":\"%s\""
+                "}",
+                K, state.best_err, cpu_id, hamming, code);
             state.json_ptr += w;
             state.json_remaining -= w;
             state.result_count++;

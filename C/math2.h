@@ -24,25 +24,25 @@
  * These wrappers allow using +, -, *, / as function pointers.
  * ============================================================================ */
 
-static inline double plus(double a, double b)     { return a + b; }
-static inline double times(double a, double b)    { return a * b; }
-static inline double subtract(double a, double b) { return a - b; }
-static inline double divide(double a, double b)   { return a / b; }
-static inline double concat(double a, double b)   { return a*pow(10.0, 1.0+floor(log10(b))) + b; } // concat[a_, b_] := a*10^(1 + Floor[Log10[b]]) + b
-
-/* Float versions */
-static inline float plusf(float a, float b)       { return a + b; }
-static inline float timesf(float a, float b)      { return a * b; }
-static inline float subtractf(float a, float b)   { return a - b; }
-static inline float dividef(float a, float b)     { return a / b; }
-static inline float concatf(float a, float b)     { return a*powf(10.0f, 1.0f+floorf(log10f(b))) + b; }
+static inline double plus(double a, double b)                    { return a + b; }
+static inline double times(double a, double b)                   { return a * b; }
+static inline double subtract(double a, double b)                { return a - b; }
+static inline double divide(double a, double b)                  { return a / b; }
+static inline double concat(double a, double b)                  { return a*pow(10.0, 1.0+floor(log10(b))) + b; } // concat[a_, b_] := a*10^(1 + Floor[Log10[b]]) + b
+												                 
+/* Float versions */                                             
+static inline float plusf(float a, float b)                      { return a + b; }
+static inline float timesf(float a, float b)                     { return a * b; }
+static inline float subtractf(float a, float b)                  { return a - b; }
+static inline float dividef(float a, float b)                    { return a / b; }
+static inline float concatf(float a, float b)                    { return a*powf(10.0f, 1.0f+floorf(log10f(b))) + b; }
 
 /* Long double versions */
-static inline long double plusl(long double a, long double b)     { return a + b; }
-static inline long double timesl(long double a, long double b)    { return a * b; }
-static inline long double subjectl(long double a, long double b)  { return a - b; }
-static inline long double dividel(long double a, long double b)   { return a / b; }
-static inline long double concatl(long double a, long double b)   { return a*powl(10.0l, 1.0l+floorl(log10l(b))) + b; }
+static inline long double plusl(long double a, long double b)    { return a + b; }
+static inline long double timesl(long double a, long double b)   { return a * b; }
+static inline long double subjectl(long double a, long double b) { return a - b; }
+static inline long double dividel(long double a, long double b)  { return a / b; }
+static inline long double concatl(long double a, long double b)  { return a*powl(10.0l, 1.0l+floorl(log10l(b))) + b; }
 
 /* ============================================================================
  * UNARY FUNCTIONS - REAL
