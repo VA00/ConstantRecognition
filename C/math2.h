@@ -28,6 +28,7 @@ static inline double plus(double a, double b)     { return a + b; }
 static inline double times(double a, double b)    { return a * b; }
 static inline double subtract(double a, double b) { return a - b; }
 static inline double divide(double a, double b)   { return a / b; }
+static inline double concat(double a, double b)   { return a*pow(10.0, 1.0+floor(log10(b))) + b; } // concat[a_, b_] := a*10^(1 + Floor[Log10[b]]) + b
 
 /* Float versions */
 static inline float plusf(float a, float b)       { return a + b; }
@@ -44,6 +45,12 @@ static inline long double dividel(long double a, long double b)   { return a / b
 /* ============================================================================
  * UNARY FUNCTIONS - REAL
  * ============================================================================ */
+
+/* sqr: x squared, x*x */
+static inline float       percentf(float x)       { return 0.01f*x; }
+static inline double      percent(double x)       { return 0.01*x; }
+static inline long double percentl(long double x) { return 0.01l*x; }
+
 
 /* sqr: x squared, x*x */
 static inline float       sqrf(float x)       { return x * x; }
