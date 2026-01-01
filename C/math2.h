@@ -35,18 +35,20 @@ static inline float plusf(float a, float b)       { return a + b; }
 static inline float timesf(float a, float b)      { return a * b; }
 static inline float subtractf(float a, float b)   { return a - b; }
 static inline float dividef(float a, float b)     { return a / b; }
+static inline float concatf(float a, float b)     { return a*powf(10.0f, 1.0f+floorf(log10f(b))) + b; }
 
 /* Long double versions */
 static inline long double plusl(long double a, long double b)     { return a + b; }
 static inline long double timesl(long double a, long double b)    { return a * b; }
 static inline long double subjectl(long double a, long double b)  { return a - b; }
 static inline long double dividel(long double a, long double b)   { return a / b; }
+static inline long double concatl(long double a, long double b)   { return a*powl(10.0l, 1.0l+floorl(log10l(b))) + b; }
 
 /* ============================================================================
  * UNARY FUNCTIONS - REAL
  * ============================================================================ */
 
-/* sqr: x squared, x*x */
+/* Percent operator % of desk calcs */
 static inline float       percentf(float x)       { return 0.01f*x; }
 static inline double      percent(double x)       { return 0.01*x; }
 static inline long double percentl(long double x) { return 0.01l*x; }
