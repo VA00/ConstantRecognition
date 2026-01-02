@@ -40,7 +40,7 @@ static inline float concatf(float a, float b)                    { return a*powf
 /* Long double versions */
 static inline long double plusl(long double a, long double b)    { return a + b; }
 static inline long double timesl(long double a, long double b)   { return a * b; }
-static inline long double subjectl(long double a, long double b) { return a - b; }
+static inline long double subtractl(long double a, long double b) { return a - b; }
 static inline long double dividel(long double a, long double b)  { return a / b; }
 static inline long double concatl(long double a, long double b)  { return a*powl(10.0l, 1.0l+floorl(log10l(b))) + b; }
 
@@ -108,6 +108,8 @@ static inline long double emll(long double x, long double y) { return expl(x) - 
  * UNARY FUNCTIONS - COMPLEX
  * ============================================================================ */
 
+#ifndef _MSC_VER
+
 static inline complex float       csqrf(complex float x)       { return x * x; }
 static inline complex double      csqr(complex double x)       { return x * x; }
 static inline complex long double csqrl(complex long double x) { return x * x; }
@@ -148,5 +150,7 @@ static inline complex long double cemll(complex long double x, complex long doub
 static inline complex float       ctgammaf(complex float x)       { return tgammaf(crealf(x)) + 0.0f * I; }
 static inline complex double      ctgamma(complex double x)       { return tgamma(creal(x)) + 0.0 * I; }
 static inline complex long double ctgammal(complex long double x) { return tgammal(creall(x)) + 0.0L * I; }
+
+#endif
 
 #endif /* MATH2_H */
