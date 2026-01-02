@@ -8,7 +8,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <complex.h>
 #include <string.h>
 
 #include "utils.h"
@@ -84,6 +83,8 @@ int compute_hamming_distance(double a, double b)
 /* ============================================================================
  * COMPLEX NUMBER PARSING
  * ============================================================================ */
+#ifndef _MSC_VER
+#include <complex.h>
 
 double complex parseComplex(const char* str)
 {
@@ -111,3 +112,5 @@ double complex parseComplex(const char* str)
 
     return result;
 }
+
+#endif

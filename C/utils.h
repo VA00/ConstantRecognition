@@ -58,6 +58,10 @@ int compute_hamming_distance(double a, double b);
  * Returns NAN + NAN*I on parse error.
  * ============================================================================ */
 
+#ifndef _MSC_VER
+
 double complex parseComplex(const char* str);
+
+#endif
 
 #endif /* UTILS_H */
