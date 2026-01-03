@@ -3,9 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode, ComputeMode } from './lib/types';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
-import { evaluateShortRPN } from './lib/webgpu';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
-import { useWebGPU } from './hooks/useWebGPU';
 
 // Ensures that all worker/WASM fetches include the configured base path (if any).
 // - Trailing slashes are removed so "//" never appears in URLs.
@@ -40,12 +38,9 @@ export default function CalculatorPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
-  
-  // NEW: Compute mode state - 'auto' uses GPU if available, 'cpu' forces CPU, 'gpu' forces GPU
-  const [computeMode, setComputeMode] = useState<ComputeMode>('cpu');
-  
-  // WebGPU hook - automatycznie używa GPU jeśli dostępne
-  const { gpuAvailable, gpuInfo, search: gpuSearch, abort: gpuAbort } = useWebGPU();
+  const [gpuAvailable, setGpuAvailable] = useState(false);
+  const [gpuName, setGpuName] = useState<string | undefined>(undefined);
+  const [computeMode, setComputeMode] = useState<ComputeMode>('auto');
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
@@ -77,8 +72,7 @@ export default function CalculatorPage() {
     const checkWasm = async () => {
       try {
         //const response = await fetch('/wasm/rpn_function.wasm');
-        //const response = await fetch(withBasePath('/wasm/rpn_function.wasm'));
-        const response = await fetch(withBasePath('/wasm/vsearch.wasm'));
+        const response = await fetch(withBasePath('/wasm/rpn_function.wasm'));
         setWasmLoaded(response.ok);
       } catch {
         setWasmLoaded(false);
@@ -89,20 +83,30 @@ export default function CalculatorPage() {
     const cpus = navigator.hardwareConcurrency || 4;
     setDetectedCPUs(cpus);
     setThreadCount(cpus);
+    
+    // Check for WebGPU support
+    const checkGpu = async () => {
+      try {
+        if ('gpu' in navigator) {
+          const gpu = (navigator as Navigator & { gpu?: GPU }).gpu;
+          if (gpu) {
+            const adapter = await gpu.requestAdapter();
+            if (adapter) {
+              setGpuAvailable(true);
+              const info = await adapter.requestAdapterInfo?.();
+              if (info?.device) {
+                setGpuName(info.device);
+              }
+            }
+          }
+        }
+      } catch {
+        // WebGPU not available
+      }
+    };
+    checkGpu();
   }, []);
 
-  // Determine effective compute backend based on mode and availability
-  const getEffectiveBackend = (): 'gpu' | 'cpu' => {
-    switch (computeMode) {
-      case 'gpu':
-        return gpuAvailable ? 'gpu' : 'cpu';
-      case 'cpu':
-        return 'cpu';
-      case 'auto':
-      default:
-        return gpuAvailable ? 'gpu' : 'cpu';
-    }
-  };
 
   const handleWorkerMessage = (cpuId: number, e: MessageEvent, onComplete?: () => void) => {
     const data = e.data;
@@ -153,24 +157,6 @@ export default function CalculatorPage() {
           status: data.result, // SUCCESS, FAILURE, ABORTED
           compressionRatio: data.COMPRESSION_RATIO
         });
-
-
-        // Early termination on SUCCESS
-        if (data.result === 'SUCCESS') {
-          // Terminate all other workers immediately
-          workersRef.current.forEach(w => w.terminate());
-          workersRef.current = [];
-          setActiveWorkers([]);
-          setIsCalculating(false);
-          setSearchFinished(true);
-          if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-          }
-          setElapsedTime(Date.now() - startTimeRef.current);
-        }
-
-
       }
       
       // Update state once with all results from this worker
@@ -229,81 +215,7 @@ export default function CalculatorPage() {
       relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
     });
 
-    // =========================================
-    // DETERMINE BACKEND BASED ON USER CHOICE
-    // =========================================
-    const effectiveBackend = getEffectiveBackend();
-    console.log('[Search] computeMode:', computeMode, 'gpuAvailable:', gpuAvailable, 
-                'effectiveBackend:', effectiveBackend, 'gpuInfo:', gpuInfo);
-
-    // =========================================
-    // GPU MODE (WebGPU)
-    // =========================================
-    if (effectiveBackend === 'gpu') {
-      console.log('[GPU] Starting GPU search for:', zNum, 'K:', searchDepth);
-      console.time('[GPU] Search duration');
-      setActiveWorkers([{ id: 0, status: 'GPU', currentK: searchDepth }]);
-      
-      // Collect results in array instead of updating state for each one
-      const collectedResults: SearchResult[] = [];
-      
-      try {
-        await gpuSearch(zNum, {
-          minK: searchDepth,
-          maxK: searchDepth,
-          onProgress: (info) => {
-            console.log('[GPU] Progress K:', info.K, 'forms:', info.forms, 'evaluated:', info.evaluated, 'candidates so far:', collectedResults.length);
-            setActiveWorkers([{ id: 0, status: 'GPU', currentK: info.K }]);
-          },
-          onResult: (result) => {
-            // Collect results without triggering React re-render for each one
-            // Use evaluateShortRPN for GPU results (consistent with GPU/shader logic)
-            const numericValue = evaluateShortRPN(result.RPN);
-            const searchResult: SearchResult = {
-              cpuId: result.cpuId,
-              K: result.K,
-              RPN: result.RPN,
-              result: isFinite(numericValue) ? numericValue.toPrecision(15) : result.RPN,
-              REL_ERR: result.REL_ERR,
-              status: result.status,
-              compressionRatio: result.K > 0 ? 
-                (-Math.log10(result.REL_ERR || 1e-16)) / result.K / Math.log10(36) : 0
-            };
-            collectedResults.push(searchResult);
-          }
-        });
-
-        console.log('[GPU] Search complete. Total candidates:', collectedResults.length);
-        
-        // Sort by compression ratio (best first), then limit to top 100
-        const sortedResults = collectedResults
-          .sort((a, b) => (b.compressionRatio || 0) - (a.compressionRatio || 0))
-          .slice(0, 100);
-        
-        // Single state update with all results
-        setResults(sortedResults);
-      } catch (err) {
-        console.error('GPU search error:', err);
-      }
-      
-      console.timeEnd('[GPU] Search duration');
-      setActiveWorkers([]);
-      
-      // Stop timer
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-      setElapsedTime(Date.now() - startTimeRef.current);
-      setIsCalculating(false);
-      setSearchFinished(true);
-      return;
-    }
-
-    // =========================================
-    // CPU MODE (WASM Workers)
-    // =========================================
-    console.log('[CPU] Starting CPU/WASM search');
+    // CPU/WASM computation
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
     
     // Terminate existing workers
@@ -320,7 +232,7 @@ export default function CalculatorPage() {
     for (let i = 0; i < effectiveThreads; i++) {
       //const worker = new Worker('/wasm/worker.js');
       const worker = new Worker(withBasePath('/wasm/worker.js'));
-      const cpuId = i;
+      const cpuId = i + 1;
       
       const onComplete = () => {
         completedCount++;
@@ -347,7 +259,7 @@ export default function CalculatorPage() {
         inputPrecision: deltaZNum,
         MinCodeLength: 1,
         MaxCodeLength: searchDepth,
-        cpuId: i,
+        cpuId: i,  // FIXED: cpu_id starts from 0, not 1
         ncpus: effectiveThreads
       });
     });
@@ -368,13 +280,8 @@ export default function CalculatorPage() {
 
   const handleAbort = () => {
     isAbortedRef.current = true;
-    // Abort CPU workers
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
-    // Abort GPU search (always try if available)
-    if (gpuAvailable) {
-      gpuAbort();
-    }
     setActiveWorkers([]);
     // Stop timer
     if (timerRef.current) {
@@ -425,8 +332,7 @@ export default function CalculatorPage() {
         manualError={manualError}
         setManualError={setManualError}
         gpuAvailable={gpuAvailable}
-        gpuName={gpuInfo?.name}
-        // NEW: Compute mode props
+        gpuName={gpuName}
         computeMode={computeMode}
         setComputeMode={setComputeMode}
       />
@@ -442,16 +348,14 @@ export default function CalculatorPage() {
           onAbort={handleAbort}
         />
 
-        {/* Search Status - shows which backend is being used */}
+        {/* Search Status */}
         {isCalculating && (
           <div className="bg-blue-500 text-white py-3 px-4 text-center flex items-center justify-center gap-4">
             <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            <span className="font-bold">
-              Searching via {getEffectiveBackend().toUpperCase()}...
-            </span>
+            <span className="font-bold">Searching for formulas...</span>
             <span className="font-mono">{(elapsedTime / 1000).toFixed(1)}s</span>
             {precision.deltaZ && (
               <span className="text-sm opacity-75">(±{precision.deltaZ})</span>
@@ -461,13 +365,10 @@ export default function CalculatorPage() {
 
         {results.length > 0 && bestResult ? (
           <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d]">
-            {/* Success banner - shows which backend was used */}
+            {/* Success banner */}
             {searchFinished && !isCalculating && (
               <div className="bg-green-500 text-white py-2 px-4 text-center text-sm">
                 Found {results.length} result{results.length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s
-                <span className="ml-2 opacity-75">
-                  (via {getEffectiveBackend().toUpperCase()})
-                </span>
               </div>
             )}
             {/* Best result card */}

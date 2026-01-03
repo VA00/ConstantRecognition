@@ -308,7 +308,7 @@ export function rpnToLatex(rpn: string | string[]): string {
     "TANH": x => `\\tanh(${x})`,
     "ARCTANH": x => `\\text{artanh}(${x})`,
     "SQRT": x => `\\sqrt{${x}}`,
-    "SQR": x => `{${x}}^2`,
+    "SQR": x => `(${x})^2`,
     "GAMMA": x => `\\Gamma(${x})`,
     "INV": x => `\\frac{1}{${x}}`,
     "MINUS": x => `(-${x})`
