@@ -43,7 +43,7 @@ __constant__ float d_const_values[N_CONST] = {
     6.0f,                       // 9: SIX
     7.0f,                       // 10: SEVEN
     8.0f,                       // 11: EIGHT
-    9.0f                        // 12: NINE
+    9.0f                        // 12: NINE //totalne mambodżabo zmienić to 
 };
 
 // Character mappings for output
@@ -187,7 +187,7 @@ __global__ void search_form_kernel_hybrid(
         s_ternary[threadIdx.x] = ternary[threadIdx.x];
     }
     if (threadIdx.x == 0) {
-        s_ternary[K] = '\0';
+        s_ternary[K] = '\0'; // dowiedzieć się czemu pierwsza liczba tablicy musi byc nullem
     }
     __syncthreads();
     
@@ -271,7 +271,7 @@ int generate_valid_forms(int K, FormDesc* forms, int max_forms)
         forms[count++] = form;
     }
     
-    return count;
+    return count; //sprawdzić czy ta funkcja powinna być na procesorze 
 }
 
 // ============================================================================
