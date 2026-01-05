@@ -285,6 +285,14 @@ export function rpnToLatex(rpn: string | string[]): string {
   const isShort = typeof rpn === 'string' && isShortFormRPN(rpn);
   const tokens = typeof rpn === 'string' ? parseRPN(rpn) : rpn;
   
+  type LatexNode = { latex: string; precedence: number };
+  const wrapWithParens = (node: LatexNode, minPrecedence: number) => {
+    if (node.precedence < minPrecedence) {
+      return `\\left(${node.latex}\\right)`;
+    }
+    return node.latex;
+  };
+
   const latexConstants: Record<string, string> = {
     "NEG": "(-1)", "ZERO": "0", "ONE": "1", "TWO": "2", "THREE": "3",
     "FOUR": "4", "FIVE": "5", "SIX": "6", "SEVEN": "7", "EIGHT": "8",
@@ -314,34 +322,54 @@ export function rpnToLatex(rpn: string | string[]): string {
     "MINUS": x => `(-${x})`
   };
   
-  const latexOperators: Record<string, (a: string, b: string) => string> = {
-    "PLUS": (a, b) => `${a} + ${b}`,
-    "SUBTRACT": (a, b) => `${a} - ${b}`,
-    "TIMES": (a, b) => `${a} \\cdot ${b}`,
-    "DIVIDE": (a, b) => `\\frac{${a}}{${b}}`,
-    "POWER": (a, b) => `{${a}}^{${b}}`
-  };
+  const latexOperators = new Set(["PLUS", "SUBTRACT", "TIMES", "DIVIDE", "POWER"]);
 
-  const stack: string[] = [];
+  const stack: LatexNode[] = [];
   tokens.forEach(token => {
     if (latexConstants[token]) {
-      stack.push(latexConstants[token]);
+      stack.push({ latex: latexConstants[token], precedence: 5 });
     } else if (latexFunctions[token]) {
-      const arg = stack.pop() || '?';
-      stack.push(latexFunctions[token](arg));
-    } else if (latexOperators[token]) {
-      const right = stack.pop() || '?';  // top
-      const left = stack.pop() || '?';   // second
-      if (isShort) {
-        // Standard RPN: "a b op" means op(a, b)
-        stack.push(latexOperators[token](left, right));
-      } else {
-        // WASM non-standard RPN: "a b op" means op(b, a)
-        stack.push(latexOperators[token](right, left));
+      const arg = stack.pop() || { latex: '?', precedence: 5 };
+      stack.push({ latex: latexFunctions[token](arg.latex), precedence: 4 });
+    } else if (latexOperators.has(token)) {
+      const right = stack.pop() || { latex: '?', precedence: 5 };  // top
+      const left = stack.pop() || { latex: '?', precedence: 5 };   // second
+      const lhs = isShort ? left : right;
+      const rhs = isShort ? right : left;
+
+      if (token === 'PLUS') {
+        const leftLatex = wrapWithParens(lhs, 1);
+        const rightLatex = wrapWithParens(rhs, 1);
+        stack.push({ latex: `${leftLatex} + ${rightLatex}`, precedence: 1 });
+        return;
+      }
+      if (token === 'SUBTRACT') {
+        const leftLatex = wrapWithParens(lhs, 1);
+        const rightLatex = wrapWithParens(rhs, 2);
+        stack.push({ latex: `${leftLatex} - ${rightLatex}`, precedence: 1 });
+        return;
+      }
+      if (token === 'TIMES') {
+        const leftLatex = wrapWithParens(lhs, 2);
+        const rightLatex = wrapWithParens(rhs, 2);
+        stack.push({ latex: `${leftLatex} \\cdot ${rightLatex}`, precedence: 2 });
+        return;
+      }
+      if (token === 'DIVIDE') {
+        const leftLatex = wrapWithParens(lhs, 2);
+        const rightLatex = wrapWithParens(rhs, 2);
+        stack.push({ latex: `\\frac{${leftLatex}}{${rightLatex}}`, precedence: 2 });
+        return;
+      }
+      if (token === 'POWER') {
+        const leftLatex = wrapWithParens(lhs, 3);
+        const rightLatex = wrapWithParens(rhs, 4);
+        stack.push({ latex: `{${leftLatex}}^{${rightLatex}}`, precedence: 3 });
+        return;
       }
     } else if (token) {
-      stack.push(token);
+      stack.push({ latex: token, precedence: 5 });
     }
   });
-  return stack.pop() || rpn.toString();
+  return stack.pop()?.latex || rpn.toString();
 }

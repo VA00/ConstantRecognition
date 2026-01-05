@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode, ComputeMode } from './lib/types';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
+import { useWebGPU } from './hooks/useWebGPU';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
 // Ensures that all worker/WASM fetches include the configured base path (if any).
@@ -38,14 +39,22 @@ export default function CalculatorPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
-  const [gpuAvailable, setGpuAvailable] = useState(false);
-  const [gpuName, setGpuName] = useState<string | undefined>(undefined);
   const [computeMode, setComputeMode] = useState<ComputeMode>('auto');
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+  const resolveAllRef = useRef<(() => void) | null>(null);
+  const searchEndedRef = useRef(false);
+
+  const {
+    gpuAvailable,
+    gpuInfo,
+    search: searchGPU,
+    abort: abortGPU
+  } = useWebGPU();
+  const gpuName = gpuInfo?.name;
   
   // Helper to calculate compression ratio
   const getCompressionRatio = (r: SearchResult): number => {
@@ -84,27 +93,6 @@ export default function CalculatorPage() {
     setDetectedCPUs(cpus);
     setThreadCount(cpus);
     
-    // Check for WebGPU support
-    const checkGpu = async () => {
-      try {
-        if ('gpu' in navigator) {
-          const gpu = (navigator as Navigator & { gpu?: GPU }).gpu;
-          if (gpu) {
-            const adapter = await gpu.requestAdapter();
-            if (adapter) {
-              setGpuAvailable(true);
-              const info = await adapter.requestAdapterInfo?.();
-              if (info?.device) {
-                setGpuName(info.device);
-              }
-            }
-          }
-        }
-      } catch {
-        // WebGPU not available
-      }
-    };
-    checkGpu();
   }, []);
 
 
@@ -128,8 +116,9 @@ export default function CalculatorPage() {
           numericValue = 'N/A';
         }
         
+        const resolvedCpuId = r.cpuId ?? data.cpuId ?? cpuId;
         newResults.push({
-          cpuId: r.cpuId || data.cpuId || cpuId,
+          cpuId: resolvedCpuId,
           K: r.K,
           RPN: r.RPN,
           result: numericValue,
@@ -149,7 +138,7 @@ export default function CalculatorPage() {
         }
         
         newResults.push({
-          cpuId: data.cpuId || cpuId,
+          cpuId: data.cpuId ?? cpuId,
           K: data.K,
           RPN: data.RPN,
           result: numericValue,
@@ -164,11 +153,20 @@ export default function CalculatorPage() {
         setResults(prev => [...prev, ...newResults]);
       }
       
-      // Worker finished
-      setActiveWorkers(prev => prev.filter(w => w.id !== cpuId));
-      
-      // Notify completion
-      if (onComplete) onComplete();
+      const isSuccess = data.result === 'SUCCESS';
+      if (isSuccess && !searchEndedRef.current) {
+        searchEndedRef.current = true;
+        workersRef.current.forEach(w => w.terminate());
+        workersRef.current = [];
+        setActiveWorkers([]);
+        resolveAllRef.current?.();
+      } else {
+        // Worker finished
+        setActiveWorkers(prev => prev.filter(w => w.id !== cpuId));
+        
+        // Notify completion
+        if (onComplete) onComplete();
+      }
     }
   };
 
@@ -184,7 +182,9 @@ export default function CalculatorPage() {
     setIsCalculating(true);
     setResults([]);
     setSearchFinished(false);
+    searchEndedRef.current = false;
     isAbortedRef.current = false;
+    resolveAllRef.current = null;
     
     // Start timer (update every 500ms to reduce re-renders)
     setElapsedTime(0);
@@ -215,6 +215,51 @@ export default function CalculatorPage() {
       relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
     });
 
+    const shouldUseGpu =
+      (computeMode === 'gpu' && gpuAvailable) ||
+      (computeMode === 'auto' && gpuAvailable);
+
+    if (shouldUseGpu) {
+      setActiveWorkers([]);
+      try {
+        const gpuResults = await searchGPU(zNum, {
+          minK: 1,
+          maxK: searchDepth
+        });
+
+        const mappedResults: SearchResult[] = gpuResults.map(result => {
+          let numericValue: string;
+          try {
+            numericValue = evaluateRPN(result.RPN).toString();
+          } catch {
+            numericValue = 'N/A';
+          }
+
+          return {
+            cpuId: result.cpuId ?? 0,
+            K: result.K,
+            RPN: result.RPN,
+            result: numericValue,
+            REL_ERR: result.REL_ERR,
+            status: result.status
+          };
+        });
+
+        setResults(mappedResults);
+      } catch (err) {
+        console.error('GPU search failed:', err);
+      } finally {
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+        setElapsedTime(Date.now() - startTimeRef.current);
+        setIsCalculating(false);
+        setSearchFinished(true);
+      }
+      return;
+    }
+
     // CPU/WASM computation
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
     
@@ -226,18 +271,26 @@ export default function CalculatorPage() {
     const workers: Worker[] = [];
     const initialActiveWorkers: ActiveWorker[] = [];
     let completedCount = 0;
-    let resolveAll: () => void;
-    const allComplete = new Promise<void>(resolve => { resolveAll = resolve; });
+
+    const allComplete = new Promise<void>(resolve => {
+      resolveAllRef.current = resolve;
+    });
+    
+
+
+    //let resolveAll: () => void;
+    //const allComplete = new Promise<void>(resolve => { resolveAll = resolve; });
+    //resolveAllRef.current = resolveAll;
     
     for (let i = 0; i < effectiveThreads; i++) {
       //const worker = new Worker('/wasm/worker.js');
       const worker = new Worker(withBasePath('/wasm/worker.js'));
-      const cpuId = i + 1;
+      const cpuId = i;
       
       const onComplete = () => {
         completedCount++;
         if (completedCount >= effectiveThreads) {
-          resolveAll();
+          resolveAllRef.current?.();
         }
       };
       
@@ -259,7 +312,7 @@ export default function CalculatorPage() {
         inputPrecision: deltaZNum,
         MinCodeLength: 1,
         MaxCodeLength: searchDepth,
-        cpuId: i,  // FIXED: cpu_id starts from 0, not 1
+        cpuId: i,
         ncpus: effectiveThreads
       });
     });
@@ -274,8 +327,10 @@ export default function CalculatorPage() {
     }
     setElapsedTime(Date.now() - startTimeRef.current);
     
-    setIsCalculating(false);
-    setSearchFinished(true);
+    if (!isAbortedRef.current) {
+      setIsCalculating(false);
+      setSearchFinished(true);
+    }
   };
 
   const handleAbort = () => {
@@ -283,6 +338,8 @@ export default function CalculatorPage() {
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
     setActiveWorkers([]);
+    abortGPU();
+    resolveAllRef.current?.();
     // Stop timer
     if (timerRef.current) {
       clearInterval(timerRef.current);
