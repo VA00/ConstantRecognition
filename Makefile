@@ -13,4 +13,4 @@ clean:
 	done
 
 	rm -f found.txt
-	rm -f search_*
+	rm -f search_log*

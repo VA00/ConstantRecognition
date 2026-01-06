@@ -7,20 +7,17 @@ TARGET_HYBRID_MAIN := rpn_hybrid_main
 # Source files for standard version
 SOURCES := ConstantRecognition_function2_for_WASM.c \
            $(SRC_DIR)/constant.c \
-           $(SRC_DIR)/mathematica.c \
-           $(SRC_DIR)/math2.c
+           $(SRC_DIR)/mathematica.c
 
 # Source files for hybrid FP32+FP64 version (WASM library)
 SOURCES_HYBRID := ConstantRecognition_hybrid_for_WASM.c \
                   $(SRC_DIR)/constant.c \
-                  $(SRC_DIR)/mathematica.c \
-                  $(SRC_DIR)/math2.c
+                  $(SRC_DIR)/mathematica.c 
 
 # Source files for hybrid with main (for testing in terminal)
 SOURCES_HYBRID_MAIN := ConstantRecognition_main_hybrid_for_WASM.c \
                        $(SRC_DIR)/constant.c \
-                       $(SRC_DIR)/mathematica.c \
-                       $(SRC_DIR)/math2.c
+                       $(SRC_DIR)/mathematica.c
 
 # Compiler and flags
 EMCC := emcc
