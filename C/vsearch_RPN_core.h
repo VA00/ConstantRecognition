@@ -1,14 +1,16 @@
-/* vsearch_RPN_core.h - Unified constant and function recognition
+/* vsearch_RPN_core.h - Unified constant, function, and batch recognition
  * 
  * Author: Andrzej Odrzywolek
- * Date: January 2, 2025
+ * Date: January 3, 2025
+ * Code assist: Claude 4.5 Opus
  *
  * Core types and function declarations for:
  *   - Constant recognition (no variable, single target)
  *   - Function recognition (variable x, tabulated data)
+ *   - Batch recognition (multiple targets, one formula per target)
  *
- * The key insight: constant recognition is a special case of function
- * recognition where n_data=1 and variable x is not allowed.
+ * The key insight: constant recognition is a special case of batch
+ * recognition where n_data=1 and num_to_find=1.
  */
 
 #ifndef VSEARCH_RPN_CORE_H
@@ -69,9 +71,9 @@ typedef struct {
  * Continuous metrics (for general use):
  *   ERROR_ABS     - Absolute error: |computed - target|
  *   ERROR_REL     - Relative error: |computed/target - 1|
- *   ERROR_MSE     - Mean Squared Error: Σ(y-ŷ)²/n
- *   ERROR_MAE     - Mean Absolute Error: Σ|y-ŷ|/n
- *   ERROR_MAX     - Maximum Absolute Error: max|y-ŷ|
+ *   ERROR_MSE     - Mean Squared Error: Î£(y-Å·)Â²/n
+ *   ERROR_MAE     - Mean Absolute Error: Î£|y-Å·|/n
+ *   ERROR_MAX     - Maximum Absolute Error: max|y-Å·|
  *
  * Discrete metrics (for exact matching):
  *   ERROR_ULP     - Units in Last Place distance
@@ -113,7 +115,8 @@ typedef enum {
 
 typedef enum {
     MODE_CONSTANT,    /* No variable x, single target value */
-    MODE_FUNCTION     /* Variable x allowed in any/all constant slots */
+    MODE_FUNCTION,    /* Variable x allowed in any/all constant slots */
+    MODE_BATCH        /* Multiple targets, stop after num_to_find hits */
 } SearchMode;
 
 /* ============================================================================
@@ -151,7 +154,8 @@ char* vsearch_core(
     const UnaryOp* unary_ops, int n_unary,
     const BinaryOp* binary_ops, int n_binary,
     ErrorMetric metric,
-    CompareMode compare);
+    CompareMode compare,
+    int num_to_find);  /* >0: stop after nth, <=0: find all */
 
 /* ============================================================================
  * CONVENIENCE WRAPPERS
@@ -171,6 +175,21 @@ char* search_constant(
 /* Function recognition - direct call to core */
 char* search_function(
     const DataPoint* data, int n_data,
+    int MinK, int MaxK,
+    int cpu_id, int ncpus,
+    const ConstOp* const_ops, int n_const,
+    const UnaryOp* unary_ops, int n_unary,
+    const BinaryOp* binary_ops, int n_binary,
+    ErrorMetric metric,
+    CompareMode compare);
+
+/* Batch search - find formulas for multiple targets in one pass
+ * data[i].x = target_id (unique label), data[i].y = target value, data[i].dy = tolerance
+ * num_to_find > 0: stop after finding num_to_find targets
+ * num_to_find <= 0: find ALL targets */
+char* search_batch(
+    const DataPoint* data, int n_data,
+    int num_to_find,
     int MinK, int MaxK,
     int cpu_id, int ncpus,
     const ConstOp* const_ops, int n_const,
