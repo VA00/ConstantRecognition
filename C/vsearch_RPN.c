@@ -24,12 +24,12 @@ Compilation examples:
 
   emcc -O2 -Wall vsearch_RPN.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_vsearch_RPN", "_search_RPN", "_search_RPN_hybrid", "_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' -o vsearch.js
 
-  Windows (cl.exe from Visual Studio Developer PowerShell):
+  Windows (cl.exe from x64 Native Tools Command Prompt for VS 2022):
     cl /O2 /W3 /DSTANDALONE_TEST vsearch_RPN.c /Fe:vsearch_cl.exe
 
   Windows/Intel (icx.exe)
   Initialize environment:
-    cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'
+    cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && pwsh'
     icx -O2 -Wall -DSTANDALONE_TEST vsearch_RPN.c -o vsearch	
  */
 
