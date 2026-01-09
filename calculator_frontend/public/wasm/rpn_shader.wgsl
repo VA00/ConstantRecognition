@@ -36,6 +36,10 @@ struct Params {
     _pad3: u32,
 }
 
+struct Counter {
+    count: atomic<u32>
+}
+
 struct Result {
     error: f32,
     idx: u32,
@@ -46,7 +50,7 @@ struct Result {
 @group(0) @binding(0) var<uniform> params: Params;
 @group(0) @binding(1) var<storage, read> ternary_form: array<u32>;  // 0=const, 1=unary, 2=binary
 @group(0) @binding(2) var<storage, read_write> results: array<Result>;
-@group(0) @binding(3) var<storage, read_write> best_result: Result;
+@group(0) @binding(3) var<storage, read_write> global_counter: Counter;
 
 // ============================================================================
 // MATHEMATICAL CONSTANTS LOOKUP
@@ -203,74 +207,22 @@ fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
     
     // Check for NaN/Inf
     if (isNan(computed) || isInf(computed)) {
-        results[idx].valid = 0u;
-        results[idx].error = 1e38;
         return;
     }
     
     // Calculate error
     let diff = abs(computed - params.search_target);
     
-    // FP32 threshold filter
-    if (diff >= params.threshold) {
-        results[idx].valid = 0u;
-        results[idx].error = diff;
-        return;
-    }
-    
-    // Candidate passed filter!
-    results[idx].valid = 1u;
-    results[idx].error = diff;
-    results[idx].idx = real_idx;  // Store real index for RPN reconstruction
-    
-    // Atomic update of best result (simplified - real impl needs atomics)
-    // Note: WGSL atomics are limited, we'll do final reduction on CPU
-}
-
-// ============================================================================
-// REDUCTION KERNEL - Find minimum error
-// ============================================================================
-
-@compute @workgroup_size(256)
-fn reduce_min(@builtin(global_invocation_id) global_id: vec3<u32>,
-              @builtin(local_invocation_id) local_id: vec3<u32>,
-              @builtin(workgroup_id) wg_id: vec3<u32>) {
-    
-    var shared_min: array<f32, 256>;
-    var shared_idx: array<u32, 256>;
-    
-    let idx = global_id.x;
-    let lid = local_id.x;
-    
-    // Load into shared memory
-    if (idx < params.total_combinations && results[idx].valid == 1u) {
-        shared_min[lid] = results[idx].error;
-        shared_idx[lid] = idx;
-    } else {
-        shared_min[lid] = 1e38;
-        shared_idx[lid] = 0u;
-    }
-    
-    workgroupBarrier();
-    
-    // Parallel reduction
-    for (var s = 128u; s > 0u; s = s >> 1u) {
-        if (lid < s) {
-            if (shared_min[lid + s] < shared_min[lid]) {
-                shared_min[lid] = shared_min[lid + s];
-                shared_idx[lid] = shared_idx[lid + s];
-            }
-        }
-        workgroupBarrier();
-    }
-    
-    // First thread writes result
-    if (lid == 0u) {
-        // Store workgroup minimum (would need another buffer for multi-WG reduction)
-        if (shared_min[0] < best_result.error) {
-            best_result.error = shared_min[0];
-            best_result.idx = shared_idx[0];
-            best_result.valid = 1u;
+    // FP32 threshold filter - only record if error is below threshold
+    if (diff < params.threshold) {
+        // Atomically get write index
+        let write_index = atomicAdd(&global_counter.count, 1u);
+        
+        // Only write if we haven't exceeded buffer capacity
+        if (write_index < 1024u) {
+            results[write_index].error = diff;
+            results[write_index].idx = real_idx;
+            results[write_index].valid = 1u;
         }
     }
 }
