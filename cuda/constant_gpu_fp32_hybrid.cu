@@ -1,7 +1,7 @@
 // constant_gpu_fp32_hybrid.cu
 // Hybrid FP32 GPU search + FP64 CPU verification
 // Idea: Use fast FP32 to find candidates, verify with FP64 for true precision
-// Compile: nvcc -O3 -arch=sm_75 constant_gpu_fp32_hybrid.cu -o constant_gpu_fp32_hybrid
+// Compile: nvcc -O3 constant_gpu_fp32_hybrid.cu -o constant_gpu_fp32_hybrid
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,19 +31,19 @@
 // ============================================================================
 
 __constant__ float d_const_values[N_CONST] = {
-    3.14159265358979323846f,   // 0: PI
-    2.71828182845904523536f,   // 1: EULER
-   -1.0f,                       // 2: NEG
-    1.61803398874989484820f,   // 3: GOLDENRATIO
-    1.0f,                       // 4: ONE
-    2.0f,                       // 5: TWO
-    3.0f,                       // 6: THREE
-    4.0f,                       // 7: FOUR
-    5.0f,                       // 8: FIVE
-    6.0f,                       // 9: SIX
-    7.0f,                       // 10: SEVEN
-    8.0f,                       // 11: EIGHT
-    9.0f                        // 12: NINE //totalne mambodżabo zmienić to 
+    3.14159265358979323846f, //pi
+    2.71828182845904523536f, //e
+   -1.0f,                   
+    1.61803398874989484820f, //phi
+    1.0f,                   
+    2.0f,                   
+    3.0f,                   
+    4.0f,                   
+    5.0f,                   
+    6.0f,                   
+    7.0f,                   
+    8.0f,                   
+    9.0f                    
 };
 
 // Character mappings for output
@@ -433,7 +433,8 @@ int compare_candidates(const void* a, const void* b)
 int main(int argc, char** argv)
 {
     double targetX_double = 137.035999177;// Fine structure constant inverse
-    int MaxCodeLength = 10;
+    int MaxCodeLength = 9;  
+    // Runtime for K=9: 76.458 s on RTX5080; 658.389 s on Tesla T4
     
     // Parse arguments
     if (argc > 1) targetX_double = atof(argv[1]);
@@ -445,7 +446,7 @@ int main(int argc, char** argv)
     printf("=== GPU Constant Recognition (HYBRID: FP32 search + FP64 verify) ===\n");
     printf("Target: %.17g\n", targetX_double);
     printf("Max K: %d\n", MaxCodeLength);
-    printf("Candidate threshold: %.3e (%.1f × FLT_EPSILON)\n", 
+    printf("Candidate threshold: %.3e (%.1f FLT_EPSILON)\n", 
            CANDIDATE_THRESHOLD, CANDIDATE_THRESHOLD / FLT_EPSILON);
     printf("FLT_EPSILON: %.9e\n", FLT_EPSILON);
     printf("DBL_EPSILON: %.17e\n", DBL_EPSILON);
@@ -648,7 +649,7 @@ int main(int argc, char** argv)
     printf("Target:          %.17g\n", targetX_double);
     printf("Best computed:   %.17g\n", best_computed);
     printf("FP64 rel error:  %.17e\n", best_fp64_error);
-    printf("Error in eps:    %.6f × DBL_EPSILON\n", best_fp64_error / DBL_EPSILON);
+    printf("Error in eps:    %.6f DBL_EPSILON\n", best_fp64_error / DBL_EPSILON);
     printf("Code length K:   %d\n", h_candidates[best_idx].K);
     printf("Short code:      %s\n", best_amino);
     printf("Mathematica:     %s\n", best_mathematica);
