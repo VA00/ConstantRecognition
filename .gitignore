@@ -32,6 +32,7 @@ C/rpn_function_hybrid.wasm
 calculator_frontend/public/wasm/*.js
 calculator_frontend/public/wasm/*.wasm
 !calculator_frontend/public/wasm/worker.js
+!calculator_frontend/public/wasm/worker_function.js
 
 # ==== CUDA Build Artifacts ====
 cuda/*.o
