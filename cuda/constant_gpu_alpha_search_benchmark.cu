@@ -202,7 +202,7 @@ __global__ void search_form_kernel_hybrid(
         s_ternary[threadIdx.x] = ternary[threadIdx.x];
     }
     if (threadIdx.x == 0) {
-        s_ternary[K] = '\0'; // dowiedzieć się czemu pierwsza liczba tablicy musi byc nullem
+        s_ternary[K] = '\0';
     }
     __syncthreads();
     
@@ -286,7 +286,7 @@ int generate_valid_forms(int K, FormDesc* forms, int max_forms)
         forms[count++] = form;
     }
     
-    return count; //sprawdzić czy ta funkcja powinna być na procesorze 
+    return count;
 }
 
 // ============================================================================
