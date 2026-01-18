@@ -20,7 +20,7 @@
 
 // Candidate threshold: collect expressions with FP32 error below this
 // Using a generous threshold to not miss good FP64 candidates
-#define CANDIDATE_THRESHOLD (64.0f * FLT_EPSILON)
+#define CANDIDATE_THRESHOLD (256.0f * FLT_EPSILON)
 
 // Maximum number of candidates to collect
 #define MAX_CANDIDATES (1024 * 1024)  // 1M candidates max
@@ -640,31 +640,20 @@ int main(int argc, char** argv)
             i+1, results[i].K, results[i].computed, results[i].sigma_distance, results[i].amino);
     }
     
-    // Output Wolfram list
-    printf("\n=== Wolfram Mathematica List ===\n");
-    printf("(* %d formulas within +/-%.0f sigma of CODATA 2022 alpha^(-1) = %.12f +/- %.1e *)\n", 
-           n_verified, n_sigma, centroid, sigma);
-    printf("alphaFormulas = {\n");
-    for (int i = 0; i < n_verified; i++) {
-        printf("  %s", results[i].mathematica);
-        if (i < n_verified - 1) printf(",");
-        printf("  (* K=%d, sigma=%+.2f *)\n", results[i].K, results[i].sigma_distance);
-    }
-    printf("};\n");
     
     // Write to file
-    FILE* f = fopen("alpha_formulas.m", "w");
+    FILE* f = fopen("alpha_formulas.wl", "w");
     if (f) {
         fprintf(f, "(* Alpha^(-1) formula candidates from GPU exhaustive search *)\n");
         fprintf(f, "(* CODATA 2022: %.12f +/- %.1e *)\n", centroid, sigma);
         fprintf(f, "(* Filter: +/-%.0f sigma, Max K: %d *)\n\n", n_sigma, MaxCodeLength);
-        fprintf(f, "alphaFormulas = {\n");
+        fprintf(f, "{\n");
         for (int i = 0; i < n_verified; i++) {
             fprintf(f, "  %s", results[i].mathematica);
             if (i < n_verified - 1) fprintf(f, ",");
             fprintf(f, "  (* K=%d, sigma=%+.2f *)\n", results[i].K, results[i].sigma_distance);
         }
-        fprintf(f, "};\n");
+        fprintf(f, "}\n");
         fclose(f);
         printf("\nFormulas saved to: alpha_formulas.m\n");
     }
