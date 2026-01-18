@@ -20,7 +20,7 @@
 
 // Candidate threshold: collect expressions with FP32 error below this
 // Using a generous threshold to not miss good FP64 candidates
-#define CANDIDATE_THRESHOLD (256.0f * FLT_EPSILON)
+#define CANDIDATE_THRESHOLD 8 //*FLT_EPSILON
 
 // Maximum number of candidates to collect
 #define MAX_CANDIDATES (1024 * 1024)  // 1M candidates max
@@ -475,8 +475,8 @@ int main(int argc, char** argv)
     printf("CODATA centroid: %.12f +/- %.1e\n", centroid, sigma);
     printf("Filter: +/-%.0f sigma = +/-%.3e\n", n_sigma, abs_threshold);
     printf("Max K: %d\n", MaxCodeLength);
-    printf("Candidate threshold: %.3e (%.1f FLT_EPSILON)\n", 
-           CANDIDATE_THRESHOLD, CANDIDATE_THRESHOLD / FLT_EPSILON);
+    printf("Candidate threshold: %.3e (%d FLT_EPSILON)\n", 
+           CANDIDATE_THRESHOLD * FLT_EPSILON, CANDIDATE_THRESHOLD);
     printf("FLT_EPSILON: %.9e\n", FLT_EPSILON);
     printf("DBL_EPSILON: %.17e\n", DBL_EPSILON);
     
@@ -558,7 +558,7 @@ int main(int argc, char** argv)
                 
                 search_form_kernel_hybrid<<<blocks, threadsPerBlock>>>(
                     d_ternary, K, d_radix, count, offset,
-                    targetX, CANDIDATE_THRESHOLD,
+                    targetX, CANDIDATE_THRESHOLD * FLT_EPSILON,
                     d_candidates, d_candidate_count, MAX_CANDIDATES, form_id
                 );
             }
@@ -655,7 +655,7 @@ int main(int argc, char** argv)
         }
         fprintf(f, "}\n");
         fclose(f);
-        printf("\nFormulas saved to: alpha_formulas.m\n");
+        printf("\nFormulas saved to: alpha_formulas.wl\n");
     }
     
     free(results);
