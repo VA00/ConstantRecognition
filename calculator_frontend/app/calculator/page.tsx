@@ -40,6 +40,12 @@ export default function CalculatorPage() {
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
   const [computeMode, setComputeMode] = useState<ComputeMode>('auto');
+  const [functionData, setFunctionData] = useState<{
+    xValues: number[];
+    yValues: number[];
+    dyValues: number[];
+    filename: string;
+  } | null>(null);
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
@@ -176,8 +182,62 @@ export default function CalculatorPage() {
     setIsCalculating(false);
   };
 
+  const parseFunctionData = (content: string) => {
+    const xValues: number[] = [];
+    const yValues: number[] = [];
+    const dyValues: number[] = [];
+    const lines = content.split(/\r?\n/);
+
+    lines.forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const parts = trimmed.split(/\s+/);
+      if (parts.length < 2) return;
+
+      const x = Number.parseFloat(parts[0]);
+      const y = Number.parseFloat(parts[1]);
+      if (Number.isNaN(x) || Number.isNaN(y)) return;
+
+      xValues.push(x);
+      yValues.push(y);
+
+      if (parts.length >= 3) {
+        const dy = Number.parseFloat(parts[2]);
+        dyValues.push(Number.isNaN(dy) ? 0 : dy);
+      } else {
+        dyValues.push(0);
+      }
+    });
+
+    return { xValues, yValues, dyValues };
+  };
+
+  const handleFileSelected = async (file: File) => {
+    try {
+      const content = await file.text();
+      const { xValues, yValues, dyValues } = parseFunctionData(content);
+      if (xValues.length === 0) {
+        console.warn('No valid data rows found in file.');
+        return;
+      }
+      setFunctionData({
+        xValues,
+        yValues,
+        dyValues,
+        filename: file.name
+      });
+    } catch (error) {
+      console.error('Failed to read file:', error);
+    }
+  };
+
+  const clearFunctionData = () => {
+    setFunctionData(null);
+  };
+
   const calculate = async () => {
-    if (!inputValue) return;
+    const usingFunctionData = Boolean(functionData && functionData.xValues.length > 0);
+    if (!inputValue && !usingFunctionData) return;
     
     setIsCalculating(true);
     setResults([]);
@@ -193,31 +253,37 @@ export default function CalculatorPage() {
       setElapsedTime(Date.now() - startTimeRef.current);
     }, 500);
     
-    // Calculate precision based on error mode
-    let deltaZNum: number;
-    const zNum = parseFloat(inputValue);
-    
-    if (errorMode === 'zero') {
-      deltaZNum = 0;
-    } else if (errorMode === 'manual' && manualError) {
-      deltaZNum = parseFloat(manualError) || 0;
+    let deltaZNum = 0;
+    let zNum = 0;
+    if (!usingFunctionData) {
+      // Calculate precision based on error mode
+      zNum = parseFloat(inputValue);
+
+      if (errorMode === 'zero') {
+        deltaZNum = 0;
+      } else if (errorMode === 'manual' && manualError) {
+        deltaZNum = parseFloat(manualError) || 0;
+      } else {
+        // automatic mode - use extractPrecision
+        const autoPrecision = extractPrecision(inputValue);
+        deltaZNum = parseFloat(autoPrecision.deltaZ || '0.5');
+      }
+
+      // Update precision display
+      const relDeltaZ = zNum !== 0 ? deltaZNum / Math.abs(zNum) : 0;
+      setPrecision({
+        z: inputValue,
+        deltaZ: deltaZNum === 0 ? '0' : deltaZNum.toExponential(2),
+        relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
+      });
     } else {
-      // automatic mode - use extractPrecision
-      const autoPrecision = extractPrecision(inputValue);
-      deltaZNum = parseFloat(autoPrecision.deltaZ || '0.5');
+      setPrecision({});
     }
-    
-    // Update precision display
-    const relDeltaZ = zNum !== 0 ? deltaZNum / Math.abs(zNum) : 0;
-    setPrecision({
-      z: inputValue,
-      deltaZ: deltaZNum === 0 ? '0' : deltaZNum.toExponential(2),
-      relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
-    });
 
     const shouldUseGpu =
-      (computeMode === 'gpu' && gpuAvailable) ||
-      (computeMode === 'auto' && gpuAvailable);
+      !usingFunctionData &&
+      ((computeMode === 'gpu' && gpuAvailable) ||
+        (computeMode === 'auto' && gpuAvailable));
 
     if (shouldUseGpu) {
       setActiveWorkers([]);
@@ -282,9 +348,11 @@ export default function CalculatorPage() {
     //const allComplete = new Promise<void>(resolve => { resolveAll = resolve; });
     //resolveAllRef.current = resolveAll;
     
+    const workerScript = usingFunctionData ? '/wasm/worker_function.js' : '/wasm/worker.js';
+
     for (let i = 0; i < effectiveThreads; i++) {
       //const worker = new Worker('/wasm/worker.js');
-      const worker = new Worker(withBasePath('/wasm/worker.js'));
+      const worker = new Worker(withBasePath(workerScript));
       const cpuId = i;
       
       const onComplete = () => {
@@ -306,15 +374,28 @@ export default function CalculatorPage() {
     
     // Start computation on each worker
     workers.forEach((worker, i) => {
-      worker.postMessage({
-        initDelay: 0,
-        z: parseFloat(inputValue),
-        inputPrecision: deltaZNum,
-        MinCodeLength: 1,
-        MaxCodeLength: searchDepth,
-        cpuId: i,
-        ncpus: effectiveThreads
-      });
+      if (usingFunctionData && functionData) {
+        worker.postMessage({
+          initDelay: 0,
+          xValues: functionData.xValues,
+          yValues: functionData.yValues,
+          dyValues: functionData.dyValues,
+          MinCodeLength: 1,
+          MaxCodeLength: searchDepth,
+          cpuId: i,
+          ncpus: effectiveThreads
+        });
+      } else {
+        worker.postMessage({
+          initDelay: 0,
+          z: parseFloat(inputValue),
+          inputPrecision: deltaZNum,
+          MinCodeLength: 1,
+          MaxCodeLength: searchDepth,
+          cpuId: i,
+          ncpus: effectiveThreads
+        });
+      }
     });
     
     // Wait for all workers to complete
@@ -354,6 +435,7 @@ export default function CalculatorPage() {
     setInputValue('');
     setResults([]);
     setPrecision({});
+    setFunctionData(null);
     setSortColumn(null);
     setSortDirection('asc');
     setFilters(defaultFilters);
@@ -403,6 +485,11 @@ export default function CalculatorPage() {
           onCalculate={calculate}
           onReset={handleReset}
           onAbort={handleAbort}
+          onFileSelected={handleFileSelected}
+          onClearFile={clearFunctionData}
+          canCalculate={Boolean(inputValue) || Boolean(functionData)}
+          fileName={functionData?.filename}
+          filePointCount={functionData?.xValues.length}
         />
 
         {/* Search Status */}
