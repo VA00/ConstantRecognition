@@ -434,7 +434,7 @@ int main(int argc, char** argv)
 {
     double targetX_double = 137.035999177;// Fine structure constant inverse
     int MaxCodeLength = 9;  
-    // Runtime for K=9: 76.458 s on RTX5080; 658.389 s on Tesla T4
+    // Runtime for K=9: 40 s on RTX6000, 76.458 s on RTX5080; 658.389 s on Tesla T4
     
     // Parse arguments
     if (argc > 1) targetX_double = atof(argv[1]);
