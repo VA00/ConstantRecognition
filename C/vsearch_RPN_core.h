@@ -155,7 +155,8 @@ char* vsearch_core(
     const BinaryOp* binary_ops, int n_binary,
     ErrorMetric metric,
     CompareMode compare,
-    int num_to_find);  /* >0: stop after nth, <=0: find all */
+    int num_to_find,
+    double cr_threshold);  /* >0: stop after nth, <=0: find all */
 
 /* ============================================================================
  * CONVENIENCE WRAPPERS
@@ -171,6 +172,17 @@ char* search_constant(
     const BinaryOp* binary_ops, int n_binary,
     ErrorMetric metric,
     CompareMode compare);
+
+char* search_constant_with_cr(
+    double target, double delta,
+    int MinK, int MaxK,
+    int cpu_id, int ncpus,
+    const ConstOp* const_ops, int n_const,
+    const UnaryOp* unary_ops, int n_unary,
+    const BinaryOp* binary_ops, int n_binary,
+    ErrorMetric metric,
+    CompareMode compare,
+    double cr_threshold);
 
 /* Function recognition - direct call to core */
 char* search_function(

@@ -24,6 +24,8 @@ interface SidebarProps {
   setErrorMode: (mode: ErrorMode) => void;
   manualError: string;
   setManualError: (value: string) => void;
+  earlyExitCRThreshold: number;
+  setEarlyExitCRThreshold: (value: number) => void;
   // GPU info (auto-detected)
   gpuAvailable: boolean;
   gpuName?: string;
@@ -52,6 +54,8 @@ export function Sidebar({
   setErrorMode,
   manualError,
   setManualError,
+  earlyExitCRThreshold,
+  setEarlyExitCRThreshold,
   gpuAvailable,
   gpuName,
   computeMode,
@@ -243,7 +247,7 @@ export function Sidebar({
               />
               <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-4">{searchDepth}</span>
             </div>
-            <p className="text-[10px] text-gray-400">Search expressions with exactly K symbols</p>
+            <p className="text-[10px] text-gray-400">Search expressions with up to K symbols</p>
           </div>
 
           {/* Threads - only visible when CPU will be used */}
@@ -351,6 +355,29 @@ export function Sidebar({
                     </div>
                   )}
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+                  Early Exit CR
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min="0"
+                    max="2"
+                    step="0.05"
+                    value={earlyExitCRThreshold}
+                    onChange={(e) => setEarlyExitCRThreshold(parseFloat(e.target.value))}
+                    className="flex-1 accent-[#0066cc] h-2"
+                  />
+                  <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-12 text-right">
+                    {earlyExitCRThreshold.toFixed(2)}
+                  </span>
+                </div>
+                <p className="text-[10px] text-gray-400">
+                  Minimum compression ratio required for tolerance-based early exit
+                </p>
               </div>
             </div>
           )}

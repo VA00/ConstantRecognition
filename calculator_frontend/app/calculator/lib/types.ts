@@ -45,8 +45,8 @@ export interface ActiveWorker {
 }
 
 export const defaultFilters: Filters = {
-  maxRelErr: null,
-  minCR: null,
+  maxRelErr: 1.0,
+  minCR: 0.0,
   searchQuery: '',
   showSuccess: true,
   showFailure: true,

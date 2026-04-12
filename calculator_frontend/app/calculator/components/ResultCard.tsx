@@ -7,16 +7,20 @@ import { Latex } from './Latex';
 interface ResultCardProps {
   result: SearchResult;
   allResults?: SearchResult[];  // For calculating accuracy jump
+  crThreshold: number;
 }
 
 // Calculate compression ratio
 function getCompressionRatio(r: SearchResult): number {
-  if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
-    return r.compressionRatio;
+  if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR === 0) {
+    return 16.0 / r.K / Math.log10(36);
   }
-  if (typeof r.REL_ERR === 'number' && r.K > 0) {
+  if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
+    return Math.max(0, Number.isFinite(r.compressionRatio) ? r.compressionRatio : 0);
+  }
+  if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR < 1.0) {
     const numerator = r.REL_ERR === 0 ? 16.0 : -Math.log10(r.REL_ERR);
-    return numerator / r.K / Math.log10(36);
+    return Math.max(0, numerator / r.K / Math.log10(36));
   }
   return 0;
 }
@@ -50,16 +54,13 @@ function hasAccuracyJump(result: SearchResult, allResults: SearchResult[]): bool
   return prevErr / currErr >= 100;
 }
 
-// Identification criteria thresholds
-const CR_THRESHOLD = 1.0;  // CR > 1.0 means good compression
-
-export function ResultCard({ result, allResults = [] }: ResultCardProps) {
+export function ResultCard({ result, allResults = [], crThreshold }: ResultCardProps) {
   const cr = getCompressionRatio(result);
   const probability = Math.pow(36, -result.K);  // 1/36^K
   const hasJump = hasAccuracyJump(result, allResults);
   
   // Criteria checks
-  const crPassed = cr >= CR_THRESHOLD;
+  const crPassed = cr >= crThreshold;
   const probPassed = probability < 1e-6;  // Very unlikely by chance
   const jumpPassed = hasJump;
   
@@ -153,7 +154,7 @@ export function ResultCard({ result, allResults = [] }: ResultCardProps) {
                 <span className={`text-xs font-mono ${
                   crPassed ? 'text-emerald-700 dark:text-emerald-300' : 'text-gray-500 dark:text-gray-400'
                 }`}>
-                  CR={cr.toFixed(2)}
+                  {`CR=${cr.toFixed(2)} / ${crThreshold.toFixed(2)}`}
                 </span>
               </div>
             </div>

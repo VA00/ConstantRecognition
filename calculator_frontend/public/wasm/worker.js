@@ -25,13 +25,20 @@ function waitForReady() {
     });
 }
 
-function doWork(initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus) {
+function doWork(initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, earlyExitCRThreshold) {
     return new Promise(resolve => {
         setTimeout(() => {
             try {
-                // Using standard FP64 version
-                const result = Module.ccall('search_RPN', 'string', 
-                               ['number', 'number', 'number', 'number', 'number', 'number'], 
+                if (typeof Module._search_RPN_with_cr === 'function') {
+                    const result = Module.ccall('search_RPN_with_cr', 'string',
+                                   ['number', 'number', 'number', 'number', 'number', 'number', 'number'],
+                                   [z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, earlyExitCRThreshold]);
+                    resolve(JSON.parse(result));
+                    return;
+                }
+
+                const result = Module.ccall('search_RPN', 'string',
+                               ['number', 'number', 'number', 'number', 'number', 'number'],
                                [z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus]);
                 resolve(JSON.parse(result));
             } catch (err) {
@@ -43,14 +50,23 @@ function doWork(initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuI
 }
 
 onmessage = async function(e) {
-    const { initDelay = 0, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus } = e.data;
+    const {
+        initDelay = 0,
+        z,
+        inputPrecision,
+        MinCodeLength,
+        MaxCodeLength,
+        cpuId,
+        ncpus,
+        earlyExitCRThreshold = 0.9
+    } = e.data;
     
     // Wait for WASM to be ready
     await waitForReady();
     
-    console.log(`Worker ${cpuId} of ${ncpus} starting work for z=${z}, Delta_z = ${inputPrecision}, MinCodeLength = ${MinCodeLength}, MaxCodeLength=${MaxCodeLength}`);
+    console.log(`Worker ${cpuId} of ${ncpus} starting work for z=${z}, Delta_z = ${inputPrecision}, MinCodeLength = ${MinCodeLength}, MaxCodeLength=${MaxCodeLength}, EarlyExitCR=${earlyExitCRThreshold}`);
     
-    const resultJSON = await doWork(initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus);
+    const resultJSON = await doWork(initDelay, z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, earlyExitCRThreshold);
     
     console.log(`Worker ${cpuId} finished work with result:`, resultJSON);
     

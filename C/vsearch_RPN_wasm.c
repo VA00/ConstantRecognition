@@ -9,7 +9,7 @@
  *   - Backward compatibility with existing web interface
  *
  * Compilation:
- *   emcc -O2 -Wall vsearch_RPN_wasm.c vsearch_RPN_core.c utils.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_search_RPN","_search_RPN_hybrid","_vsearch_RPN","_free"]'  -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]'  -o vsearch.js
+ *   emcc -O2 -Wall vsearch_RPN_wasm.c vsearch_RPN_core.c utils.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_search_RPN","_search_RPN_with_cr","_search_RPN_hybrid","_vsearch_RPN","_free"]'  -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]'  -o vsearch.js
  *
  * WebAssembly (emcc, Windows):
  * Install emsdk
@@ -143,6 +143,15 @@ char* search_RPN(double z, double dz, int MinK, int MaxK, int cpu_id, int ncpus)
                           CALC4_FUNCS,  CALC4_N_UNARY,
                           CALC4_OPS,    CALC4_N_BINARY,
                           ERROR_REL, COMPARE_STRICT);
+}
+
+EMSCRIPTEN_KEEPALIVE
+char* search_RPN_with_cr(double z, double dz, int MinK, int MaxK, int cpu_id, int ncpus, double cr_threshold) {
+    return search_constant_with_cr(z, dz, MinK, MaxK, cpu_id, ncpus,
+                          CALC4_CONSTS, CALC4_N_CONST,
+                          CALC4_FUNCS,  CALC4_N_UNARY,
+                          CALC4_OPS,    CALC4_N_BINARY,
+                          ERROR_REL, COMPARE_STRICT, cr_threshold);
 }
 
 /* Hybrid search (same as search_RPN for now - placeholder for FP32+FP64) */

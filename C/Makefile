@@ -22,7 +22,7 @@ vsearch_test: main_vsearch_test.c vsearch_RPN_core.c utils.c
 
 # WASM build (requires emcc)
 wasm: vsearch_RPN_wasm.c vsearch_RPN_core.c utils.c
-	emcc -O2 -Wall vsearch_RPN_wasm.c vsearch_RPN_core.c utils.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_search_RPN","_search_RPN_hybrid","_vsearch_RPN","_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' -o vsearch.js
+	emcc -O2 -Wall vsearch_RPN_wasm.c vsearch_RPN_core.c utils.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_search_RPN","_search_RPN_with_cr","_search_RPN_hybrid","_vsearch_RPN","_free"]' -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' -o vsearch.js
 
 # Legacy builds (math2.h is header-only, no .c file)
 DEPS = constant.c mathematica.c utils.c

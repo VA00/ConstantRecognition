@@ -48,6 +48,7 @@
 #define MAX_STACK_DEPTH  32
 #define JSON_BUFFER_SIZE (1024 * 1024)
 #define EPS_MAX          16    /* Maximum ULPs for "exact" match */
+#define DEFAULT_CR_THRESHOLD 1.05
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -240,11 +241,11 @@ static double compute_single_error(double computed, double target, ErrorMetric m
     }
 }
 
-static int is_exact_match(double err, double computed, double target, double delta, int K, int n_total) {
+static int is_exact_match(double err, double computed, double target, double delta, int K, int n_total, double cr_threshold) {
     if (err <= EPS_MAX * DBL_EPSILON) return 1;
     if (delta > 0) {
         double compression = (err > 0) ? -log10(err) / (K * log10(n_total)) : 10.0;
-        if (fabs(computed - target) <= 2.0 * delta && compression >= 1.05) return 1;
+        if (fabs(computed - target) <= 2.0 * delta && compression >= cr_threshold) return 1;
     }
     return 0;
 }
@@ -317,6 +318,7 @@ typedef struct {
     int num_to_find;
     int num_found;
     int stop_search;
+    double cr_threshold;
     TargetState* targets;      /* Per-target state for CONSTANT/BATCH */
     double func_best_err;      /* Best error for FUNCTION mode */
     double func_best_value;
@@ -425,7 +427,7 @@ static int generate_and_evaluate(const char* ternary, int* indices, int pos, int
                 st->json_remaining -= w;
                 st->result_count++;
             }
-            if (is_exact_match(err, computed, target, delta, K, st->n_total)) {
+            if (is_exact_match(err, computed, target, delta, K, st->n_total, st->cr_threshold)) {
                 st->targets[t].found = 1;
                 st->num_found++;
                 
@@ -496,7 +498,8 @@ char* vsearch_core(
     const BinaryOp* binary_ops, int n_binary,
     ErrorMetric metric,
     CompareMode compare,
-    int num_to_find)
+    int num_to_find,
+    double cr_threshold)
 {
     char* json_output = (char*)malloc(JSON_BUFFER_SIZE);
     if (!json_output) return strdup("{\"error\":\"Memory allocation failed\"}");
@@ -522,6 +525,7 @@ char* vsearch_core(
     st.binary_ops = binary_ops; st.n_binary = n_binary;
     st.n_total = n_total;
     st.num_to_find = effective_num;
+    st.cr_threshold = cr_threshold;
     st.targets = targets;
     st.func_best_err = DBL_MAX; st.func_best_K = 1;
     st.json_ptr = json_output; st.json_remaining = JSON_BUFFER_SIZE;
@@ -729,7 +733,24 @@ char* search_constant(
     DataPoint data[1] = {{.x = 0.0, .y = target, .dy = delta}};
     return vsearch_core(MODE_CONSTANT, data, 1, MinK, MaxK, cpu_id, ncpus,
                        const_ops, n_const, unary_ops, n_unary, binary_ops, n_binary,
-                       metric, compare, 1);
+                       metric, compare, 1, DEFAULT_CR_THRESHOLD);
+}
+
+char* search_constant_with_cr(
+    double target, double delta,
+    int MinK, int MaxK,
+    int cpu_id, int ncpus,
+    const ConstOp* const_ops, int n_const,
+    const UnaryOp* unary_ops, int n_unary,
+    const BinaryOp* binary_ops, int n_binary,
+    ErrorMetric metric,
+    CompareMode compare,
+    double cr_threshold)
+{
+    DataPoint data[1] = {{.x = 0.0, .y = target, .dy = delta}};
+    return vsearch_core(MODE_CONSTANT, data, 1, MinK, MaxK, cpu_id, ncpus,
+                       const_ops, n_const, unary_ops, n_unary, binary_ops, n_binary,
+                       metric, compare, 1, cr_threshold);
 }
 
 /* ============================================================================
@@ -748,7 +769,7 @@ char* search_function(
 {
     return vsearch_core(MODE_FUNCTION, data, n_data, MinK, MaxK, cpu_id, ncpus,
                        const_ops, n_const, unary_ops, n_unary, binary_ops, n_binary,
-                       metric, compare, 1);
+                       metric, compare, 1, DEFAULT_CR_THRESHOLD);
 }
 
 char* search_batch(
@@ -764,5 +785,5 @@ char* search_batch(
 {
     return vsearch_core(MODE_BATCH, data, n_data, MinK, MaxK, cpu_id, ncpus,
                        const_ops, n_const, unary_ops, n_unary, binary_ops, n_binary,
-                       metric, compare, num_to_find);
+                       metric, compare, num_to_find, DEFAULT_CR_THRESHOLD);
 }

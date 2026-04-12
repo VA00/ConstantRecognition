@@ -26,14 +26,34 @@ export function ResultsTable({
 
   // Calculate compression ratio for a result
   const getCompressionRatio = (r: SearchResult): number => {
-    if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
-      return r.compressionRatio;
+    if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR === 0) {
+      return 16.0 / r.K / Math.log10(36);
     }
-    if (typeof r.REL_ERR === 'number' && r.K > 0) {
+    if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
+      return Math.max(0, Number.isFinite(r.compressionRatio) ? r.compressionRatio : 0);
+    }
+    if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR < 1.0) {
       const numerator = r.REL_ERR === 0 ? 16.0 : -Math.log10(r.REL_ERR);
-      return numerator / r.K / Math.log10(36);
+      return Math.max(0, numerator / r.K / Math.log10(36));
     }
     return 0;
+  };
+
+  const getStatusPriority = (status: string): number => {
+    switch (status) {
+      case 'SUCCESS':
+        return 0;
+      case 'SEARCHING':
+      case 'RUNNING':
+      case 'INTERMEDIATE':
+      case 'K_BEST':
+        return 1;
+      case 'ABORTED':
+        return 2;
+      case 'FAILURE':
+      default:
+        return 3;
+    }
   };
 
   // Find max CR among all results (for highlighting best match)
@@ -66,6 +86,8 @@ export function ResultsTable({
       return true;
     })
     .sort((a, b) => {
+      const statusDiff = getStatusPriority(a.status) - getStatusPriority(b.status);
+      if (statusDiff !== 0) return statusDiff;
       if (!sortColumn) return 0;
       let aVal: number, bVal: number;
       if (sortColumn === 'CR') {
@@ -76,7 +98,10 @@ export function ResultsTable({
         bVal = b[sortColumn] as number;
       }
       if (typeof aVal === 'number' && typeof bVal === 'number') {
-        return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+        const metricDiff = sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+        if (metricDiff !== 0) return metricDiff;
+        if (sortColumn === 'CR') return a.REL_ERR - b.REL_ERR;
+        return getCompressionRatio(b) - getCompressionRatio(a);
       }
       return 0;
     });
@@ -102,8 +127,8 @@ export function ResultsTable({
 
   const clearFilters = () => {
     setFilters({
-      maxRelErr: null,
-      minCR: null,
+      maxRelErr: 1.0,
+      minCR: 0.0,
       searchQuery: '',
       showSuccess: true,
       showFailure: true,
@@ -156,11 +181,11 @@ export function ResultsTable({
             <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
               <span>Max Error:</span>
               <select
-                value={filters.maxRelErr ?? ''}
-                onChange={(e) => setFilters({ ...filters, maxRelErr: e.target.value ? parseFloat(e.target.value) : null })}
+                value={filters.maxRelErr ?? 1.0}
+                onChange={(e) => setFilters({ ...filters, maxRelErr: parseFloat(e.target.value) })}
                 className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#111113] text-gray-900 dark:text-white text-xs"
               >
-                <option value="">Any</option>
+                <option value="1">10⁰</option>
                 <option value="1e-3">10⁻³</option>
                 <option value="1e-6">10⁻⁶</option>
                 <option value="1e-9">10⁻⁹</option>
@@ -173,11 +198,11 @@ export function ResultsTable({
             <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
               <span>Min CR:</span>
               <select
-                value={filters.minCR ?? ''}
-                onChange={(e) => setFilters({ ...filters, minCR: e.target.value ? parseFloat(e.target.value) : null })}
+                value={filters.minCR ?? 0.0}
+                onChange={(e) => setFilters({ ...filters, minCR: parseFloat(e.target.value) })}
                 className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#111113] text-gray-900 dark:text-white text-xs"
               >
-                <option value="">Any</option>
+                <option value="0">0.0</option>
                 <option value="0.5">0.5</option>
                 <option value="0.7">0.7</option>
                 <option value="0.8">0.8</option>

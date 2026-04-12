@@ -39,7 +39,9 @@ export default function CalculatorPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
-  const [computeMode, setComputeMode] = useState<ComputeMode>('auto');
+  const [computeMode, setComputeMode] = useState<ComputeMode>('cpu');
+  const [earlyExitCRThreshold, setEarlyExitCRThreshold] = useState(0.9);
+  const [lastSearchExact, setLastSearchExact] = useState(false);
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
@@ -58,12 +60,15 @@ export default function CalculatorPage() {
   
   // Helper to calculate compression ratio
   const getCompressionRatio = (r: SearchResult): number => {
-    if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
-      return r.compressionRatio;
+    if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR === 0) {
+      return 16.0 / r.K / Math.log10(36);
     }
-    if (typeof r.REL_ERR === 'number' && r.K > 0) {
+    if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
+      return Math.max(0, Number.isFinite(r.compressionRatio) ? r.compressionRatio : 0);
+    }
+    if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR < 1.0) {
       const numerator = r.REL_ERR === 0 ? 16.0 : -Math.log10(r.REL_ERR);
-      return numerator / r.K / Math.log10(36);
+      return Math.max(0, numerator / r.K / Math.log10(36));
     }
     return 0;
   };
@@ -73,8 +78,17 @@ export default function CalculatorPage() {
   // The maximum CR indicates the true match
   const bestResult = useMemo(() => {
     if (results.length === 0) return null;
-    return [...results].sort((a, b) => getCompressionRatio(b) - getCompressionRatio(a))[0];
-  }, [results]);
+    return [...results].sort((a, b) => {
+      const aCR = getCompressionRatio(a);
+      const bCR = getCompressionRatio(b);
+      if (lastSearchExact) {
+        if (a.REL_ERR !== b.REL_ERR) return a.REL_ERR - b.REL_ERR;
+        return bCR - aCR;
+      }
+      if (aCR !== bCR) return bCR - aCR;
+      return a.REL_ERR - b.REL_ERR;
+    })[0];
+  }, [results, lastSearchExact]);
 
   // Check for WASM support and detect CPUs
   useEffect(() => {
@@ -214,6 +228,10 @@ export default function CalculatorPage() {
       deltaZ: deltaZNum === 0 ? '0' : deltaZNum.toExponential(2),
       relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
     });
+    const exactSearch = deltaZNum === 0;
+    setLastSearchExact(exactSearch);
+    setSortColumn(exactSearch ? 'REL_ERR' : 'CR');
+    setSortDirection(exactSearch ? 'asc' : 'desc');
 
     const shouldUseGpu =
       (computeMode === 'gpu' && gpuAvailable) ||
@@ -313,7 +331,8 @@ export default function CalculatorPage() {
         MinCodeLength: 1,
         MaxCodeLength: searchDepth,
         cpuId: i,
-        ncpus: effectiveThreads
+        ncpus: effectiveThreads,
+        earlyExitCRThreshold
       });
     });
     
@@ -357,6 +376,7 @@ export default function CalculatorPage() {
     setSortColumn(null);
     setSortDirection('asc');
     setFilters(defaultFilters);
+    setLastSearchExact(false);
     setSearchFinished(false);
     setElapsedTime(0);
   };
@@ -388,6 +408,8 @@ export default function CalculatorPage() {
         setErrorMode={setErrorMode}
         manualError={manualError}
         setManualError={setManualError}
+        earlyExitCRThreshold={earlyExitCRThreshold}
+        setEarlyExitCRThreshold={setEarlyExitCRThreshold}
         gpuAvailable={gpuAvailable}
         gpuName={gpuName}
         computeMode={computeMode}
@@ -429,7 +451,11 @@ export default function CalculatorPage() {
               </div>
             )}
             {/* Best result card */}
-            <ResultCard result={bestResult} allResults={results} />
+            <ResultCard
+              result={bestResult}
+              allResults={results}
+              crThreshold={earlyExitCRThreshold}
+            />
             {/* Results table */}
             <ResultsTable
               results={results}
