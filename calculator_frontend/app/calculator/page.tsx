@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode, ComputeMode } from './lib/types';
+import { CalculatorId, DEFAULT_CALCULATOR_ID } from './lib/calculators';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
 import { useWebGPU } from './hooks/useWebGPU';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
@@ -36,10 +37,12 @@ export default function CalculatorPage() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchFinished, setSearchFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
   const [computeMode, setComputeMode] = useState<ComputeMode>('cpu');
+  const [selectedCalculatorId, setSelectedCalculatorId] = useState<CalculatorId>(DEFAULT_CALCULATOR_ID);
   const [earlyExitCRThreshold, setEarlyExitCRThreshold] = useState(0.9);
   const [lastSearchExact, setLastSearchExact] = useState(false);
   
@@ -107,6 +110,24 @@ export default function CalculatorPage() {
     setDetectedCPUs(cpus);
     setThreadCount(cpus);
     
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 1023px)');
+
+    const applyLayoutMode = (matches: boolean) => {
+      setIsMobile(matches);
+      setSidebarCollapsed(matches);
+    };
+
+    applyLayoutMode(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      applyLayoutMode(event.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
 
@@ -401,7 +422,7 @@ export default function CalculatorPage() {
         activeWorkers={activeWorkers}
         isCalculating={isCalculating}
         onAbort={handleAbort}
-        onReset={handleReset}
+        isMobile={isMobile}
         isOpen={!sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
         errorMode={errorMode}
@@ -414,6 +435,8 @@ export default function CalculatorPage() {
         gpuName={gpuName}
         computeMode={computeMode}
         setComputeMode={setComputeMode}
+        selectedCalculatorId={selectedCalculatorId}
+        setSelectedCalculatorId={setSelectedCalculatorId}
       />
 
       {/* Main content */}

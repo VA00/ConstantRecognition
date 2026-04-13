@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { SearchResult, Filters } from '../lib/types';
 import { rpnToMathematica, createWolframLink, rpnToLatex } from '../lib/rpn';
+import { copyTextToClipboard } from '../lib/clipboard';
 import { Latex } from './Latex';
 
 interface ResultsTableProps {
@@ -14,6 +16,17 @@ interface ResultsTableProps {
   setSortDirection: (direction: 'asc' | 'desc') => void;
 }
 
+function renderSortIcon(
+  column: 'K' | 'REL_ERR' | 'CR',
+  sortColumn: 'K' | 'REL_ERR' | 'CR' | null,
+  sortDirection: 'asc' | 'desc'
+) {
+  if (sortColumn !== column) {
+    return <span className="text-gray-400 ml-1">↕</span>;
+  }
+  return <span className="text-[#0066cc] ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>;
+}
+
 export function ResultsTable({
   results,
   filters,
@@ -23,6 +36,16 @@ export function ResultsTable({
   sortDirection,
   setSortDirection,
 }: ResultsTableProps) {
+  const [copyFeedback, setCopyFeedback] = useState<{ id: string; state: 'copied' | 'failed' } | null>(null);
+  const copyFeedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyFeedbackTimeoutRef.current) {
+        clearTimeout(copyFeedbackTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Calculate compression ratio for a result
   const getCompressionRatio = (r: SearchResult): number => {
@@ -118,13 +141,6 @@ export function ResultsTable({
     }
   };
 
-  const SortIcon = ({ column }: { column: 'K' | 'REL_ERR' | 'CR' }) => {
-    if (sortColumn !== column) {
-      return <span className="text-gray-400 ml-1">↕</span>;
-    }
-    return <span className="text-[#0066cc] ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>;
-  };
-
   const clearFilters = () => {
     setFilters({
       maxRelErr: 1.0,
@@ -134,6 +150,21 @@ export function ResultsTable({
       showFailure: true,
       showAborted: true,
     });
+  };
+
+  const showCopyFeedback = (id: string, state: 'copied' | 'failed') => {
+    setCopyFeedback({ id, state });
+    if (copyFeedbackTimeoutRef.current) {
+      clearTimeout(copyFeedbackTimeoutRef.current);
+    }
+    copyFeedbackTimeoutRef.current = setTimeout(() => {
+      setCopyFeedback(current => (current?.id === id ? null : current));
+    }, 1500);
+  };
+
+  const handleCopyRpn = async (id: string, rpn: string) => {
+    const copied = await copyTextToClipboard(rpn);
+    showCopyFeedback(id, copied ? 'copied' : 'failed');
   };
 
   return (
@@ -240,7 +271,7 @@ export function ResultsTable({
                 className="p-3 w-20 cursor-pointer hover:text-[#0066cc] select-none"
                 onClick={() => handleSort('K')}
               >
-                K<SortIcon column="K" />
+                K{renderSortIcon('K', sortColumn, sortDirection)}
               </th>
               <th className="p-3">Formula</th>
               <th className="p-3 w-32">Result</th>
@@ -249,13 +280,13 @@ export function ResultsTable({
                 className="p-3 w-28 cursor-pointer hover:text-[#0066cc] select-none"
                 onClick={() => handleSort('REL_ERR')}
               >
-                Rel. Error<SortIcon column="REL_ERR" />
+                Rel. Error{renderSortIcon('REL_ERR', sortColumn, sortDirection)}
               </th>
               <th 
                 className="p-3 w-20 cursor-pointer hover:text-[#0066cc] select-none"
                 onClick={() => handleSort('CR')}
               >
-                CR<SortIcon column="CR" />
+                CR{renderSortIcon('CR', sortColumn, sortDirection)}
               </th>
               <th className="p-3 w-40">RPN</th>
             </tr>
@@ -264,6 +295,8 @@ export function ResultsTable({
             {filteredAndSortedResults.map((r, i) => {
               const cr = getCompressionRatio(r);
               const isBestMatch = maxCR > 0 && Math.abs(cr - maxCR) < 0.001;
+              const copyId = `${r.cpuId ?? 'cpu'}-${r.K}-${r.RPN}`;
+              const copyState = copyFeedback?.id === copyId ? copyFeedback.state : null;
               return (
               <tr 
                 key={i} 
@@ -307,8 +340,29 @@ export function ResultsTable({
                 <td className={`p-3 font-mono text-xs ${isBestMatch ? 'text-amber-700 dark:text-amber-400 font-bold' : 'text-gray-600 dark:text-gray-400'}`}>
                   {cr.toFixed(2)}{isBestMatch && ' (best)'}
                 </td>
-                <td className="p-3 font-mono text-xs text-gray-500 dark:text-gray-500 truncate" title={r.RPN}>
-                  {r.RPN}
+                <td className="p-3">
+                  <button
+                    type="button"
+                    onClick={() => handleCopyRpn(copyId, r.RPN)}
+                    className="group flex w-full items-center gap-2 text-left"
+                    title={`${r.RPN} | Click to copy full RPN`}
+                    aria-label={`Copy full RPN code: ${r.RPN}`}
+                  >
+                    <span className="min-w-0 flex-1 truncate font-mono text-xs text-gray-500 dark:text-gray-500">
+                      {r.RPN}
+                    </span>
+                    <span
+                      className={`shrink-0 text-[10px] font-semibold uppercase tracking-wide ${
+                        copyState === 'copied'
+                          ? 'text-green-600 dark:text-green-400 opacity-100'
+                          : copyState === 'failed'
+                            ? 'text-red-600 dark:text-red-400 opacity-100'
+                            : 'text-[#0066cc] opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'
+                      }`}
+                    >
+                      {copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Failed' : 'Copy'}
+                    </span>
+                  </button>
                 </td>
               </tr>
             );})}

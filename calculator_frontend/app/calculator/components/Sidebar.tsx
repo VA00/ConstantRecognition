@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { ActiveWorker, Precision, ErrorMode, ComputeMode } from '../lib/types';
+import { CALCULATORS, CalculatorId, getCalculatorById } from '../lib/calculators';
+import { CalculatorPalette } from './CalculatorPalette';
 
 interface SidebarProps {
   wasmLoaded: boolean;
@@ -16,7 +18,7 @@ interface SidebarProps {
   activeWorkers: ActiveWorker[];
   isCalculating: boolean;
   onAbort: () => void;
-  onReset: () => void;
+  isMobile: boolean;
   isOpen: boolean;
   onToggle: () => void;
   // Error mode
@@ -32,6 +34,8 @@ interface SidebarProps {
   //Compute mode selection
   computeMode: ComputeMode;
   setComputeMode: (mode: ComputeMode) => void;
+  selectedCalculatorId: CalculatorId;
+  setSelectedCalculatorId: (calculatorId: CalculatorId) => void;
 }
 
 export function Sidebar({
@@ -47,7 +51,7 @@ export function Sidebar({
   activeWorkers,
   isCalculating,
   onAbort,
-  onReset,
+  isMobile,
   isOpen,
   onToggle,
   errorMode,
@@ -59,34 +63,60 @@ export function Sidebar({
   gpuAvailable,
   gpuName,
   computeMode,
-  setComputeMode
+  setComputeMode,
+  selectedCalculatorId,
+  setSelectedCalculatorId,
 }: SidebarProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const selectedCalculator = getCalculatorById(selectedCalculatorId);
+  const gpuSearchActive = computeMode === 'gpu' || (computeMode === 'auto' && gpuAvailable);
+  const manualTolerance = parseFloat(manualError);
+  const toleranceSearchActive =
+    errorMode === 'automatic' ||
+    (errorMode === 'manual' && Number.isFinite(manualTolerance) && manualTolerance > 0);
+  const earlyExitCRActive = !gpuSearchActive && toleranceSearchActive;
+  const earlyExitCRNote = gpuSearchActive
+    ? 'Ignored for GPU/WebGPU search. The current GPU engine searches all K values.'
+    : toleranceSearchActive
+      ? 'Applies to CPU/WASM tolerance-based search.'
+      : 'Ignored for exact search (± 0). Use Auto or Manual uncertainty to enable it.';
 
   return (
     <>
-      {/* Toggle Arrow Button - visible when sidebar is collapsed */}
+      {/* Explicit reopen button */}
       {!isOpen && (
         <button
           onClick={onToggle}
-          className="fixed top-1/2 left-0 -translate-y-1/2 z-50 p-2 bg-white dark:bg-[#1a1a1d] rounded-r-lg shadow-lg border border-l-0 border-gray-200 dark:border-[#2a2a2e] hover:bg-gray-50 dark:hover:bg-[#2a2a2e] transition-colors"
-          aria-label="Open sidebar"
+          className="fixed left-4 bottom-4 z-50 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-lg transition-colors hover:bg-gray-50 dark:border-[#2a2a2e] dark:bg-[#1a1a1d] dark:text-gray-200 dark:hover:bg-[#2a2a2e]"
+          aria-label="Open search settings"
         >
-          <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M7 12h10m-7 6h4" />
           </svg>
+          <span>Search Settings</span>
         </button>
+      )}
+
+      {isMobile && isOpen && (
+        <button
+          type="button"
+          onClick={onToggle}
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px]"
+          aria-label="Close search settings"
+        />
       )}
 
       {/* Sidebar */}
       <aside className={`
-        relative
+        ${isMobile ? 'fixed inset-y-0 left-0 z-50 w-[min(20rem,calc(100vw-1rem))] max-w-[20rem] transform shadow-2xl' : 'relative'}
         bg-white dark:bg-[#1a1a1d] 
         border-r border-gray-200 dark:border-[#2a2a2e] 
         flex flex-col
         transition-all duration-300 ease-in-out
         overflow-x-hidden
-        ${isOpen ? 'w-80 min-w-80' : 'w-0 min-w-0 overflow-hidden'}
+        ${isMobile
+          ? (isOpen ? 'translate-x-0' : '-translate-x-full')
+          : (isOpen ? 'w-80 min-w-80' : 'w-0 min-w-0 overflow-hidden')}
       `}>
         {/* Header with collapse button */}
         <div className="p-4 border-b border-gray-200 dark:border-[#2a2a2e]">
@@ -106,11 +136,18 @@ export function Sidebar({
             <button
               onClick={onToggle}
               className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a2a2e] transition-colors"
-              aria-label="Collapse sidebar"
+              aria-label={isMobile ? 'Close search settings' : 'Collapse sidebar'}
+              title={isMobile ? 'Close' : 'Hide sidebar'}
             >
-              <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
+              {isMobile ? (
+                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
@@ -369,15 +406,55 @@ export function Sidebar({
                     step="0.05"
                     value={earlyExitCRThreshold}
                     onChange={(e) => setEarlyExitCRThreshold(parseFloat(e.target.value))}
-                    className="flex-1 accent-[#0066cc] h-2"
+                    disabled={!earlyExitCRActive}
+                    className="flex-1 accent-[#0066cc] h-2 disabled:cursor-not-allowed disabled:opacity-40"
                   />
-                  <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-12 text-right">
+                  <span
+                    className={`font-mono text-sm font-bold w-12 text-right ${
+                      earlyExitCRActive ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'
+                    }`}
+                  >
                     {earlyExitCRThreshold.toFixed(2)}
                   </span>
                 </div>
                 <p className="text-[10px] text-gray-400">
-                  Minimum compression ratio required for tolerance-based early exit
+                  Minimum compression ratio required for tolerance-based early exit.
                 </p>
+                <p
+                  className={`text-[10px] ${
+                    earlyExitCRActive
+                      ? 'text-gray-500 dark:text-gray-400'
+                      : 'text-amber-600 dark:text-amber-400'
+                  }`}
+                >
+                  {earlyExitCRNote}
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+                  Calculator
+                </label>
+                <select
+                  value={selectedCalculatorId}
+                  onChange={(e) => setSelectedCalculatorId(e.target.value as CalculatorId)}
+                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-[#2a2a2e] dark:bg-[#111113] dark:text-white"
+                >
+                  {CALCULATORS.map((calculator) => (
+                    <option key={calculator.id} value={calculator.id}>
+                      {calculator.name} · {calculator.shortName}
+                    </option>
+                  ))}
+                </select>
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-600 dark:text-gray-300">
+                    {selectedCalculator.description}
+                  </p>
+                  <p className="text-[10px] text-gray-400">
+                    {selectedCalculator.statusNote}
+                  </p>
+                </div>
+                <CalculatorPalette calculator={selectedCalculator} />
               </div>
             </div>
           )}
