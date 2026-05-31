@@ -204,4 +204,38 @@ char* search_function_wasm(
     return result;
 }
 
+/* Batch (Multiple Constants) recognition via WASM */
+EMSCRIPTEN_KEEPALIVE
+char* search_batch_wasm(
+    const double* x_values, const double* y_values, const double* dy_values,
+    int n_data,
+    int MinK, int MaxK,
+    int cpu_id, int ncpus)
+{
+    /* Convert arrays to DataPoint array */
+    DataPoint* data = (DataPoint*)malloc(n_data * sizeof(DataPoint));
+    if (!data) {
+        return strdup("{\"error\":\"Memory allocation failed\"}");
+    }
+    
+    for (int i = 0; i < n_data; i++) {
+        data[i].x = x_values[i];
+        data[i].y = y_values[i];
+        data[i].dy = (dy_values != NULL) ? dy_values[i] : 0.0;
+    }
+    
+    char* result = search_batch(
+        data, n_data,
+        n_data, /* num_to_find */
+        MinK, MaxK,
+        cpu_id, ncpus,
+        CALC4_CONSTS, CALC4_N_CONST,
+        CALC4_FUNCS,  CALC4_N_UNARY,
+        CALC4_OPS,    CALC4_N_BINARY,
+        ERROR_REL, COMPARE_STRICT);
+    
+    free(data);
+    return result;
+}
+
 #endif /* __EMSCRIPTEN__ */

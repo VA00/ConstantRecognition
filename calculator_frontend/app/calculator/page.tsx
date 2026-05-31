@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode, ComputeMode } from './lib/types';
+import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode, ComputeMode, RecognitionTarget, Domain, CalculatorMode } from './lib/types';
 import { CalculatorId, DEFAULT_CALCULATOR_ID } from './lib/calculators';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
 import { useWebGPU } from './hooks/useWebGPU';
@@ -45,6 +45,9 @@ export default function CalculatorPage() {
   const [selectedCalculatorId, setSelectedCalculatorId] = useState<CalculatorId>(DEFAULT_CALCULATOR_ID);
   const [earlyExitCRThreshold, setEarlyExitCRThreshold] = useState(0.9);
   const [lastSearchExact, setLastSearchExact] = useState(false);
+  const [recognitionTarget, setRecognitionTarget] = useState<RecognitionTarget>('constant');
+  const [domain, setDomain] = useState<Domain>('real');
+  const [calculatorMode, setCalculatorMode] = useState<CalculatorMode>('standard');
   
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
@@ -345,16 +348,20 @@ export default function CalculatorPage() {
     
     // Start computation on each worker
     workers.forEach((worker, i) => {
-      worker.postMessage({
-        initDelay: 0,
-        z: parseFloat(inputValue),
-        inputPrecision: deltaZNum,
-        MinCodeLength: 1,
-        MaxCodeLength: searchDepth,
-        cpuId: i,
-        ncpus: effectiveThreads,
-        earlyExitCRThreshold
-      });
+        const workerParams = {
+          initDelay: i * 5,
+          z: zNum,
+          inputValue: inputValue,
+          recognitionTarget: recognitionTarget,
+          calculatorMode: calculatorMode,
+          inputPrecision: deltaZNum,
+          MinCodeLength: 1,
+          MaxCodeLength: searchDepth,
+          cpuId: i,
+          ncpus: effectiveThreads,
+          earlyExitCRThreshold
+        };
+        worker.postMessage(workerParams);
     });
     
     // Wait for all workers to complete
@@ -437,6 +444,12 @@ export default function CalculatorPage() {
         setComputeMode={setComputeMode}
         selectedCalculatorId={selectedCalculatorId}
         setSelectedCalculatorId={setSelectedCalculatorId}
+        recognitionTarget={recognitionTarget}
+        setRecognitionTarget={setRecognitionTarget}
+        domain={domain}
+        setDomain={setDomain}
+        calculatorMode={calculatorMode}
+        setCalculatorMode={setCalculatorMode}
       />
 
       {/* Main content */}

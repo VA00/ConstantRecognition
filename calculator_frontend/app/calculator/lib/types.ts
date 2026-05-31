@@ -1,10 +1,19 @@
 // Types and interfaces for the calculator
 
-// Error mode for uncertainty handling
-export type ErrorMode = 'zero' | 'automatic' | 'manual';
+// What to recognize
+export type RecognitionTarget = 'constant' | 'multiple' | 'function' | 'sequence';
 
-// Compute mode - Auto, CPU (WASM), or GPU (WebGPU)
-export type ComputeMode = 'auto' | 'cpu' | 'gpu';
+// Error mode for uncertainty handling
+export type ErrorMode = 'zero' | 'automatic' | 'manual' | 'large_errors';
+
+// Domain of the search
+export type Domain = 'real' | 'complex';
+
+// Calculator modes for the search space
+export type CalculatorMode = 'standard' | 'list' | 'custom' | 'fire_everything';
+
+// Compute mode - Auto, CPU (WASM), GPU (WebGPU), or Apple Silicon
+export type ComputeMode = 'auto' | 'cpu' | 'gpu' | 'apple_silicon';
 
 export interface SearchResult {
   cpuId: number;
@@ -57,6 +66,7 @@ export const defaultErrorSettings: ErrorSettings = {
   autoError: true,
   customError: '0',
 };
+
 export const examples = [
   {
     value: '1.17809724509617246442', 

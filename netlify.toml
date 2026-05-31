@@ -1,0 +1,15 @@
+[build]
+  # Tell Netlify that our Next.js app is inside this subfolder
+  base = "calculator_frontend"
+  
+  # The command to build the app
+  command = "npm run build"
+  
+  # By default for Next.js, Netlify handles the publish directory automatically
+  # via the Next.js Runtime, but we can explicitly set it to .next just in case.
+  publish = ".next"
+
+# The Next.js Runtime plugin is automatically included by Netlify, 
+# but explicitly adding it ensures it uses the correct adapters for SSR/Static pages.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

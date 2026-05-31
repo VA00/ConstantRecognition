@@ -1,0 +1,2 @@
+call C:\Users\sorak\Desktop\ConstantRecognition\emsdk2\emsdk_env.bat
+emcc -O2 -Wall vsearch_RPN_wasm.c vsearch_RPN_core.c utils.c -s WASM=1 -s EXPORTED_FUNCTIONS="['_search_RPN','_search_RPN_with_cr','_search_RPN_hybrid','_search_RPN_custom','_search_function_wasm','_search_batch_wasm','_free','_malloc']" -s EXPORTED_RUNTIME_METHODS="['ccall','cwrap']" -o ../calculator_frontend/public/wasm/vsearch.js

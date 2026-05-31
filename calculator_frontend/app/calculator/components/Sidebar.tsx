@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ActiveWorker, Precision, ErrorMode, ComputeMode } from '../lib/types';
+import { ActiveWorker, Precision, ErrorMode, ComputeMode, RecognitionTarget, Domain, CalculatorMode } from '../lib/types';
 import { CALCULATORS, CalculatorId, getCalculatorById } from '../lib/calculators';
 import { CalculatorPalette } from './CalculatorPalette';
 
@@ -36,6 +36,13 @@ interface SidebarProps {
   setComputeMode: (mode: ComputeMode) => void;
   selectedCalculatorId: CalculatorId;
   setSelectedCalculatorId: (calculatorId: CalculatorId) => void;
+  // Professor's new configurations
+  recognitionTarget: RecognitionTarget;
+  setRecognitionTarget: (target: RecognitionTarget) => void;
+  domain: Domain;
+  setDomain: (domain: Domain) => void;
+  calculatorMode: CalculatorMode;
+  setCalculatorMode: (mode: CalculatorMode) => void;
 }
 
 export function Sidebar({
@@ -66,6 +73,12 @@ export function Sidebar({
   setComputeMode,
   selectedCalculatorId,
   setSelectedCalculatorId,
+  recognitionTarget,
+  setRecognitionTarget,
+  domain,
+  setDomain,
+  calculatorMode,
+  setCalculatorMode,
 }: SidebarProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const selectedCalculator = getCalculatorById(selectedCalculatorId);
@@ -116,7 +129,7 @@ export function Sidebar({
         overflow-x-hidden
         ${isMobile
           ? (isOpen ? 'translate-x-0' : '-translate-x-full')
-          : (isOpen ? 'w-80 min-w-80' : 'w-0 min-w-0 overflow-hidden')}
+          : (isOpen ? 'w-96 min-w-96' : 'w-0 min-w-0 overflow-hidden')}
       `}>
         {/* Header with collapse button */}
         <div className="p-4 border-b border-gray-200 dark:border-[#2a2a2e]">
@@ -153,7 +166,7 @@ export function Sidebar({
         </div>
 
         {/* Settings */}
-        <div className="flex-1 p-4 space-y-6 overflow-y-auto">
+        <div className="flex-1 p-4 space-y-6 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {/* Status */}
           <div className="space-y-2">
             <label className="text-xs lg:text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Status</label>
@@ -174,7 +187,81 @@ export function Sidebar({
             )}
           </div>
 
-{/* Compute Backend Selection */}
+          {/* Recognition Target */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+              Recognition Target
+            </label>
+            <div className="flex flex-col gap-1">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  checked={recognitionTarget === 'constant'}
+                  onChange={() => setRecognitionTarget('constant')}
+                  className="w-4 h-4 accent-[#0066cc]"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Constant</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  checked={recognitionTarget === 'multiple'}
+                  onChange={() => setRecognitionTarget('multiple')}
+                  className="w-4 h-4 accent-[#0066cc]"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Multiple Constants</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  checked={recognitionTarget === 'function'}
+                  onChange={() => setRecognitionTarget('function')}
+                  className="w-4 h-4 accent-[#0066cc]"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Function</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  checked={recognitionTarget === 'sequence'}
+                  onChange={() => setRecognitionTarget('sequence')}
+                  className="w-4 h-4 accent-[#0066cc]"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Sequence</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Domain Selection */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+              Domain
+            </label>
+            <div className="flex rounded-md shadow-sm">
+              <button
+                type="button"
+                onClick={() => setDomain('real')}
+                className={`flex-1 px-3 py-2 text-xs font-medium rounded-l-md border transition-colors
+                  ${domain === 'real' 
+                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
+                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}`}
+              >
+                Real
+              </button>
+              <button
+                type="button"
+                onClick={() => setDomain('complex')}
+                className={`flex-1 px-3 py-2 text-xs font-medium rounded-r-md border-t border-b border-r transition-colors
+                  ${domain === 'complex' 
+                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
+                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}`}
+              >
+                Complex
+              </button>
+            </div>
+          </div>
+
+          {/* Compute Backend Selection */}
           <div className="space-y-2">
             <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
               Compute Backend
@@ -208,13 +295,26 @@ export function Sidebar({
                 type="button"
                 onClick={() => setComputeMode('gpu')}
                 disabled={isCalculating || !gpuAvailable}
-                className={`flex-1 px-3 py-2 text-xs font-medium rounded-r-md border transition-colors
+                className={`flex-1 px-3 py-2 text-xs font-medium border-t border-b transition-colors
                   ${computeMode === 'gpu' 
                     ? 'bg-[#0066cc] text-white border-[#0066cc]' 
                     : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
                   disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                GPU {!gpuAvailable && '(N/A)'}
+                GPU
+              </button>
+              <button
+                type="button"
+                onClick={() => setComputeMode('apple_silicon')}
+                disabled={isCalculating || !gpuAvailable}
+                className={`flex-1 px-2 py-2 text-xs font-medium rounded-r-md border transition-colors
+                  ${computeMode === 'apple_silicon' 
+                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
+                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
+                  disabled:opacity-50 disabled:cursor-not-allowed`}
+                title="Apple Silicon (Metal via WebGPU)"
+              >
+                Apple Sil.
               </button>
             </div>
             {/* Status text */}
@@ -351,22 +451,11 @@ export function Sidebar({
                     <input
                       type="radio"
                       name="errorMode"
-                      checked={errorMode === 'automatic'}
-                      onChange={() => setErrorMode('automatic')}
-                      className="w-4 h-4 accent-[#0066cc]"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Auto</span>
-                    <span className="text-xs text-gray-400">(from decimals)</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="errorMode"
                       checked={errorMode === 'zero'}
                       onChange={() => setErrorMode('zero')}
                       className="w-4 h-4 accent-[#0066cc]"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Exact</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Exact / Symbolic</span>
                     <span className="text-xs text-gray-400">(± 0)</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -377,7 +466,7 @@ export function Sidebar({
                       onChange={() => setErrorMode('manual')}
                       className="w-4 h-4 accent-[#0066cc]"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Manual</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Arbitrary High Precision</span>
                   </label>
                   {errorMode === 'manual' && (
                     <div className="flex items-center gap-2 ml-6">
@@ -386,11 +475,33 @@ export function Sidebar({
                         type="text"
                         value={manualError}
                         onChange={(e) => setManualError(e.target.value)}
-                        placeholder="0.000001"
+                        placeholder="1e-128"
                         className="w-32 px-2 py-1 rounded border border-gray-300 dark:border-[#2a2a2e] bg-white dark:bg-[#111113] text-gray-900 dark:text-white font-mono text-sm"
                       />
                     </div>
                   )}
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="errorMode"
+                      checked={errorMode === 'automatic'}
+                      onChange={() => setErrorMode('automatic')}
+                      className="w-4 h-4 accent-[#0066cc]"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Machine Precision</span>
+                    <span className="text-xs text-gray-400">(few ULP)</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="errorMode"
+                      checked={errorMode === 'large_errors'}
+                      onChange={() => setErrorMode('large_errors')}
+                      className="w-4 h-4 accent-[#0066cc]"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Large Errors</span>
+                    <span className="text-xs text-gray-400">(fuzzy search)</span>
+                  </label>
                 </div>
               </div>
 
@@ -433,28 +544,65 @@ export function Sidebar({
 
               <div className="space-y-3">
                 <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-                  Calculator
+                  Calculator / Search Space
                 </label>
                 <select
-                  value={selectedCalculatorId}
-                  onChange={(e) => setSelectedCalculatorId(e.target.value as CalculatorId)}
+                  value={calculatorMode}
+                  onChange={(e) => setCalculatorMode(e.target.value as CalculatorMode)}
                   className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-[#2a2a2e] dark:bg-[#111113] dark:text-white"
                 >
-                  {CALCULATORS.map((calculator) => (
-                    <option key={calculator.id} value={calculator.id}>
-                      {calculator.name} · {calculator.shortName}
-                    </option>
-                  ))}
+                  <option value="standard">Standard scientific calculator</option>
+                  <option value="list">Choose from list</option>
+                  <option value="custom">Drag-n-drop builder</option>
+                  <option value="fire_everything">Fire everything!</option>
                 </select>
-                <div className="space-y-1">
-                  <p className="text-xs text-gray-600 dark:text-gray-300">
-                    {selectedCalculator.description}
-                  </p>
-                  <p className="text-[10px] text-gray-400">
-                    {selectedCalculator.statusNote}
-                  </p>
-                </div>
-                <CalculatorPalette calculator={selectedCalculator} />
+
+                {calculatorMode === 'standard' && (
+                  <div className="space-y-3 mt-4 border-t border-gray-200 dark:border-[#2a2a2e] pt-4">
+                    <select
+                      value={selectedCalculatorId}
+                      onChange={(e) => setSelectedCalculatorId(e.target.value as CalculatorId)}
+                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-[#2a2a2e] dark:bg-[#111113] dark:text-white"
+                    >
+                      {CALCULATORS.map((calculator) => (
+                        <option key={calculator.id} value={calculator.id}>
+                          {calculator.name} · {calculator.shortName}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="space-y-1">
+                      <p className="text-xs text-gray-600 dark:text-gray-300">
+                        {selectedCalculator.description}
+                      </p>
+                      <p className="text-[10px] text-gray-400">
+                        {selectedCalculator.statusNote}
+                      </p>
+                    </div>
+                    <CalculatorPalette calculator={selectedCalculator} />
+                  </div>
+                )}
+                
+                {calculatorMode === 'list' && (
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm">
+                    Function list selection will be implemented here.
+                  </div>
+                )}
+                
+                {calculatorMode === 'custom' && (
+                  <div className="p-3 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-lg text-sm flex flex-col items-center gap-2">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+                    <span>Visual Node Builder Coming Soon</span>
+                  </div>
+                )}
+                
+                {calculatorMode === 'fire_everything' && (
+                  <div className="p-3 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 rounded-lg text-sm flex items-start gap-2">
+                    <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" /></svg>
+                    <div>
+                      <strong>Warning:</strong> Exhaustive search across all functions is extremely computationally expensive.
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

@@ -1,0 +1,49 @@
+name: CI Tests
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./calculator_frontend
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: './calculator_frontend/package-lock.json'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run Vitest parser tests
+      run: npm run test
+
+  backend-tests:
+    name: Backend C Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install GCC
+      run: sudo apt-get update && sudo apt-get install -y gcc
+      
+    - name: Compile and Run Backend Tests
+      run: |
+        cd C/test
+        gcc -O2 -Wall test_vsearch_function.c ../vsearch_RPN_core.c ../utils.c -lm -o test_runner
+        ./test_runner
