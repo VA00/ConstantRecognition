@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { SearchResult, Filters } from '../lib/types';
 import { rpnToMathematica, createWolframLink, rpnToLatex } from '../lib/rpn';
+import { getCompressionRatio as computeCR } from '../lib/cr';
 import { copyTextToClipboard } from '../lib/clipboard';
 import { Latex } from './Latex';
 
@@ -14,6 +15,7 @@ interface ResultsTableProps {
   setSortColumn: (column: 'K' | 'REL_ERR' | 'CR' | null) => void;
   sortDirection: 'asc' | 'desc';
   setSortDirection: (direction: 'asc' | 'desc') => void;
+  instructionCount?: number; // enabled calculator buttons (36 = full CALC4)
 }
 
 function renderSortIcon(
@@ -35,6 +37,7 @@ export function ResultsTable({
   setSortColumn,
   sortDirection,
   setSortDirection,
+  instructionCount = 36,
 }: ResultsTableProps) {
   const [copyFeedback, setCopyFeedback] = useState<{ id: string; state: 'copied' | 'failed' } | null>(null);
   const copyFeedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -47,20 +50,8 @@ export function ResultsTable({
     };
   }, []);
 
-  // Calculate compression ratio for a result
-  const getCompressionRatio = (r: SearchResult): number => {
-    if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR === 0) {
-      return 16.0 / r.K / Math.log10(36);
-    }
-    if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
-      return Math.max(0, Number.isFinite(r.compressionRatio) ? r.compressionRatio : 0);
-    }
-    if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR < 1.0) {
-      const numerator = r.REL_ERR === 0 ? 16.0 : -Math.log10(r.REL_ERR);
-      return Math.max(0, numerator / r.K / Math.log10(36));
-    }
-    return 0;
-  };
+  // Calculate compression ratio for a result (n = enabled calculator buttons)
+  const getCompressionRatio = (r: SearchResult): number => computeCR(r, instructionCount);
 
   const getStatusPriority = (status: string): number => {
     switch (status) {

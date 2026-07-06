@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode, ComputeMode, RecognitionTarget, Domain, CalculatorMode } from './lib/types';
-import { CalculatorId, DEFAULT_CALCULATOR_ID } from './lib/calculators';
+import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode } from './lib/types';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
-import { buildTaskQueue, createResultFilter, SearchTask } from './lib/taskQueue';
-import { useWebGPU } from './hooks/useWebGPU';
+import {
+  buildTaskQueue, createResultFilter, SearchTask, CalculatorSelection,
+  CALC4_CONSTS, CALC4_FUNCS, CALC4_OPS
+} from './lib/taskQueue';
+import { getCompressionRatio as computeCR } from './lib/cr';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
+
+const ALL_TOKENS = [...CALC4_CONSTS, ...CALC4_FUNCS, ...CALC4_OPS];
 
 // Ensures that all worker/WASM fetches include the configured base path (if any).
 // - Trailing slashes are removed so "//" never appears in URLs.
@@ -43,14 +47,13 @@ export default function CalculatorPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
-  const [computeMode, setComputeMode] = useState<ComputeMode>('cpu');
-  const [selectedCalculatorId, setSelectedCalculatorId] = useState<CalculatorId>(DEFAULT_CALCULATOR_ID);
   const [earlyExitCRThreshold, setEarlyExitCRThreshold] = useState(0.9);
   const [lastSearchExact, setLastSearchExact] = useState(false);
-  const [recognitionTarget, setRecognitionTarget] = useState<RecognitionTarget>('constant');
-  const [domain, setDomain] = useState<Domain>('real');
-  const [calculatorMode, setCalculatorMode] = useState<CalculatorMode>('standard');
-  
+  // Calculator button palette: enabled button names, all 36 by default
+  const [enabledTokens, setEnabledTokens] = useState<string[]>(ALL_TOKENS);
+  // Button count of the search that produced the current results (for CR)
+  const [lastSearchN, setLastSearchN] = useState(ALL_TOKENS.length);
+
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -58,29 +61,16 @@ export default function CalculatorPage() {
   const resolveAllRef = useRef<(() => void) | null>(null);
   const searchEndedRef = useRef(false);
 
-  const {
-    gpuAvailable,
-    gpuInfo,
-    search: searchGPU,
-    abort: abortGPU
-  } = useWebGPU();
-  const gpuName = gpuInfo?.name;
-  
-  // Helper to calculate compression ratio
-  const getCompressionRatio = (r: SearchResult): number => {
-    if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR === 0) {
-      return 16.0 / r.K / Math.log10(36);
-    }
-    if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
-      return Math.max(0, Number.isFinite(r.compressionRatio) ? r.compressionRatio : 0);
-    }
-    if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR < 1.0) {
-      const numerator = r.REL_ERR === 0 ? 16.0 : -Math.log10(r.REL_ERR);
-      return Math.max(0, numerator / r.K / Math.log10(36));
-    }
-    return 0;
+  const toggleToken = (token: string) => {
+    setEnabledTokens(prev =>
+      prev.includes(token) ? prev.filter(t => t !== token) : [...prev, token]
+    );
   };
-  
+  const enableAllTokens = () => setEnabledTokens(ALL_TOKENS);
+  const hasConstants = enabledTokens.some(t => CALC4_CONSTS.includes(t));
+
+  const getCompressionRatio = (r: SearchResult): number => computeCR(r, lastSearchN);
+
   // Best result = MAXIMUM Compression Ratio (CR) - this is the correct identification criterion
   // CR rises initially as accuracy improves, then falls when overfitting starts
   // The maximum CR indicates the true match
@@ -96,7 +86,8 @@ export default function CalculatorPage() {
       if (aCR !== bCR) return bCR - aCR;
       return a.REL_ERR - b.REL_ERR;
     })[0];
-  }, [results, lastSearchExact]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results, lastSearchExact, lastSearchN]);
 
   // Check for WASM support and detect CPUs
   useEffect(() => {
@@ -137,8 +128,8 @@ export default function CalculatorPage() {
 
 
   const calculate = async () => {
-    if (!inputValue) return;
-    
+    if (!inputValue || !hasConstants) return;
+
     setIsCalculating(true);
     setResults([]);
     setSearchFinished(false);
@@ -180,51 +171,6 @@ export default function CalculatorPage() {
     setSortColumn(exactSearch ? 'REL_ERR' : 'CR');
     setSortDirection(exactSearch ? 'asc' : 'desc');
 
-    const shouldUseGpu =
-      (computeMode === 'gpu' && gpuAvailable) ||
-      (computeMode === 'auto' && gpuAvailable);
-
-    if (shouldUseGpu) {
-      setActiveWorkers([]);
-      try {
-        const gpuResults = await searchGPU(zNum, {
-          minK: 1,
-          maxK: searchDepth
-        });
-
-        const mappedResults: SearchResult[] = gpuResults.map(result => {
-          let numericValue: string;
-          try {
-            numericValue = evaluateRPN(result.RPN).toString();
-          } catch {
-            numericValue = 'N/A';
-          }
-
-          return {
-            cpuId: result.cpuId ?? 0,
-            K: result.K,
-            RPN: result.RPN,
-            result: numericValue,
-            REL_ERR: result.REL_ERR,
-            status: result.status
-          };
-        });
-
-        setResults(mappedResults);
-      } catch (err) {
-        console.error('GPU search failed:', err);
-      } finally {
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-          timerRef.current = null;
-        }
-        setElapsedTime(Date.now() - startTimeRef.current);
-        setIsCalculating(false);
-        setSearchFinished(true);
-      }
-      return;
-    }
-
     // CPU/WASM computation
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
 
@@ -232,13 +178,21 @@ export default function CalculatorPage() {
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
 
+    // Calculator restriction from the button palette (canonical CALC4 order)
+    const selection: CalculatorSelection = {
+      consts: CALC4_CONSTS.filter(t => enabledTokens.includes(t)),
+      funcs: CALC4_FUNCS.filter(t => enabledTokens.includes(t)),
+      ops: CALC4_OPS.filter(t => enabledTokens.includes(t)),
+    };
+    setLastSearchN(selection.consts.length + selection.funcs.length + selection.ops.length);
+
     // Dynamic load balancing: the search space is over-decomposed into many
     // small slices ("bag of tasks") and idle workers pull the next slice from
     // the queue. The thread count only controls how many workers run
     // simultaneously — no worker is married to a fixed slice, so uneven work
     // distribution (heavy gamma-chain structures, E-cores, tab throttling)
     // self-balances instead of leaving one lagging worker at the end.
-    const tasks = buildTaskQueue(searchDepth);
+    const tasks = buildTaskQueue(searchDepth, selection);
     const totalTasks = tasks.length;
     let nextTaskIndex = 0;
     let remainingTasks = totalTasks;
@@ -282,11 +236,7 @@ export default function CalculatorPage() {
           : [...prev, running];
       });
       worker.postMessage({
-        initDelay: 0,
         z: zNum,
-        inputValue: inputValue,
-        recognitionTarget: recognitionTarget,
-        calculatorMode: calculatorMode,
         inputPrecision: deltaZNum,
         MinCodeLength: task.minK,
         MaxCodeLength: task.maxK,
@@ -431,7 +381,6 @@ export default function CalculatorPage() {
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
     setActiveWorkers([]);
-    abortGPU();
     resolveAllRef.current?.();
     // Stop timer
     if (timerRef.current) {
@@ -484,18 +433,9 @@ export default function CalculatorPage() {
         setManualError={setManualError}
         earlyExitCRThreshold={earlyExitCRThreshold}
         setEarlyExitCRThreshold={setEarlyExitCRThreshold}
-        gpuAvailable={gpuAvailable}
-        gpuName={gpuName}
-        computeMode={computeMode}
-        setComputeMode={setComputeMode}
-        selectedCalculatorId={selectedCalculatorId}
-        setSelectedCalculatorId={setSelectedCalculatorId}
-        recognitionTarget={recognitionTarget}
-        setRecognitionTarget={setRecognitionTarget}
-        domain={domain}
-        setDomain={setDomain}
-        calculatorMode={calculatorMode}
-        setCalculatorMode={setCalculatorMode}
+        enabledTokens={enabledTokens}
+        onToggleToken={toggleToken}
+        onEnableAll={enableAllTokens}
       />
 
       {/* Main content */}
@@ -504,6 +444,7 @@ export default function CalculatorPage() {
           inputValue={inputValue}
           setInputValue={setInputValue}
           isCalculating={isCalculating}
+          canCalculate={hasConstants}
           onCalculate={calculate}
           onReset={handleReset}
           onAbort={handleAbort}
@@ -542,6 +483,7 @@ export default function CalculatorPage() {
               result={bestResult}
               allResults={results}
               crThreshold={earlyExitCRThreshold}
+              instructionCount={lastSearchN}
             />
             {/* Results table */}
             <ResultsTable
@@ -552,6 +494,7 @@ export default function CalculatorPage() {
               setSortColumn={setSortColumn}
               sortDirection={sortDirection}
               setSortDirection={setSortDirection}
+              instructionCount={lastSearchN}
             />
           </div>
         ) : (

@@ -5,7 +5,6 @@ export interface CalculatorDefinition {
   name: string;
   shortName: string;
   description: string;
-  statusNote: string;
   constantsCore: string[];
   constantsRedundant: string[];
   unaryCore: string[];
@@ -19,8 +18,7 @@ export const CALCULATORS: CalculatorDefinition[] = [
     id: 'calc4',
     name: 'CALC4',
     shortName: '36-button scientific RPN calculator',
-    description: 'Default search calculator used by the current WASM and CPU backends.',
-    statusNote: 'Display only for now: search still runs with CALC4 regardless of this selector.',
+    description: 'Default search calculator. Click buttons to restrict the search space.',
     constantsCore: ['PI', 'EULER', 'NEG', 'GOLDENRATIO'],
     constantsRedundant: ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE'],
     unaryCore: ['LOG', 'EXP'],

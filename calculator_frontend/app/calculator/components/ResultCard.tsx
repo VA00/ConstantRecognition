@@ -2,27 +2,14 @@
 
 import { SearchResult } from '../lib/types';
 import { rpnToMathematica, createWolframLink, rpnToLatex } from '../lib/rpn';
+import { getCompressionRatio } from '../lib/cr';
 import { Latex } from './Latex';
 
 interface ResultCardProps {
   result: SearchResult;
   allResults?: SearchResult[];  // For calculating accuracy jump
   crThreshold: number;
-}
-
-// Calculate compression ratio
-function getCompressionRatio(r: SearchResult): number {
-  if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR === 0) {
-    return 16.0 / r.K / Math.log10(36);
-  }
-  if (r.compressionRatio !== undefined && r.compressionRatio !== null) {
-    return Math.max(0, Number.isFinite(r.compressionRatio) ? r.compressionRatio : 0);
-  }
-  if (typeof r.REL_ERR === 'number' && r.K > 0 && Number.isFinite(r.REL_ERR) && r.REL_ERR < 1.0) {
-    const numerator = r.REL_ERR === 0 ? 16.0 : -Math.log10(r.REL_ERR);
-    return Math.max(0, numerator / r.K / Math.log10(36));
-  }
-  return 0;
+  instructionCount?: number;    // enabled calculator buttons (36 = full CALC4)
 }
 
 // Check if there's a significant accuracy jump (order of magnitude improvement)
@@ -54,9 +41,9 @@ function hasAccuracyJump(result: SearchResult, allResults: SearchResult[]): bool
   return prevErr / currErr >= 100;
 }
 
-export function ResultCard({ result, allResults = [], crThreshold }: ResultCardProps) {
-  const cr = getCompressionRatio(result);
-  const probability = Math.pow(36, -result.K);  // 1/36^K
+export function ResultCard({ result, allResults = [], crThreshold, instructionCount = 36 }: ResultCardProps) {
+  const cr = getCompressionRatio(result, instructionCount);
+  const probability = Math.pow(instructionCount, -result.K);  // 1/n^K
   const hasJump = hasAccuracyJump(result, allResults);
   
   // Criteria checks

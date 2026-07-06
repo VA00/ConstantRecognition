@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import katex from 'katex';
 
 interface LatexProps {
@@ -9,19 +9,18 @@ interface LatexProps {
 }
 
 export function Latex({ formula, className = '' }: LatexProps) {
-  const [html, setHtml] = useState<string>('');
-
-  useEffect(() => {
+  // katex.renderToString is a pure computation - memoize instead of
+  // rendering through an effect (avoids a cascading second render per row)
+  const html = useMemo(() => {
     try {
-      const rendered = katex.renderToString(formula, {
+      return katex.renderToString(formula, {
         throwOnError: false,
         displayMode: false,
         trust: true,
         strict: false,
       });
-      setHtml(rendered);
     } catch {
-      setHtml(formula);
+      return null;
     }
   }, [formula]);
 
@@ -30,9 +29,9 @@ export function Latex({ formula, className = '' }: LatexProps) {
   }
 
   return (
-    <span 
+    <span
       className={className}
-      dangerouslySetInnerHTML={{ __html: html }} 
+      dangerouslySetInnerHTML={{ __html: html }}
     />
   );
 }

@@ -1,19 +1,7 @@
 // Types and interfaces for the calculator
 
-// What to recognize
-export type RecognitionTarget = 'constant' | 'multiple' | 'function' | 'sequence';
-
 // Error mode for uncertainty handling
 export type ErrorMode = 'zero' | 'automatic' | 'manual' | 'large_errors';
-
-// Domain of the search
-export type Domain = 'real' | 'complex';
-
-// Calculator modes for the search space
-export type CalculatorMode = 'standard' | 'list' | 'custom' | 'fire_everything';
-
-// Compute mode - Auto, CPU (WASM), GPU (WebGPU), or Apple Silicon
-export type ComputeMode = 'auto' | 'cpu' | 'gpu' | 'apple_silicon';
 
 export interface SearchResult {
   cpuId: number;

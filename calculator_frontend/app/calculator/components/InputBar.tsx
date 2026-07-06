@@ -4,6 +4,8 @@ interface InputBarProps {
   inputValue: string;
   setInputValue: (value: string) => void;
   isCalculating: boolean;
+  /** false when the search cannot start (e.g. no constants enabled in the palette) */
+  canCalculate?: boolean;
   onCalculate: () => void;
   onReset: () => void;
   onAbort: () => void;
@@ -13,6 +15,7 @@ export function InputBar({
   inputValue,
   setInputValue,
   isCalculating,
+  canCalculate = true,
   onCalculate,
   onReset,
   onAbort
@@ -34,7 +37,8 @@ export function InputBar({
           <div className="flex gap-2">
             <button
               onClick={onCalculate}
-              disabled={!inputValue || isCalculating}
+              disabled={!inputValue || isCalculating || !canCalculate}
+              title={canCalculate ? undefined : 'Enable at least one constant in the calculator palette'}
               className="flex-1 sm:flex-none px-6 py-3 bg-[#0066cc] hover:bg-[#0052a3] disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed"
             >
               {isCalculating ? (

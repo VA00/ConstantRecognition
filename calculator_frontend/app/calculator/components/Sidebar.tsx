@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ActiveWorker, Precision, ErrorMode, ComputeMode, RecognitionTarget, Domain, CalculatorMode } from '../lib/types';
-import { CALCULATORS, CalculatorId, getCalculatorById } from '../lib/calculators';
+import { ActiveWorker, Precision, ErrorMode } from '../lib/types';
+import { getCalculatorById, DEFAULT_CALCULATOR_ID } from '../lib/calculators';
 import { CalculatorPalette } from './CalculatorPalette';
 
 interface SidebarProps {
@@ -28,21 +28,10 @@ interface SidebarProps {
   setManualError: (value: string) => void;
   earlyExitCRThreshold: number;
   setEarlyExitCRThreshold: (value: number) => void;
-  // GPU info (auto-detected)
-  gpuAvailable: boolean;
-  gpuName?: string;
-  //Compute mode selection
-  computeMode: ComputeMode;
-  setComputeMode: (mode: ComputeMode) => void;
-  selectedCalculatorId: CalculatorId;
-  setSelectedCalculatorId: (calculatorId: CalculatorId) => void;
-  // Professor's new configurations
-  recognitionTarget: RecognitionTarget;
-  setRecognitionTarget: (target: RecognitionTarget) => void;
-  domain: Domain;
-  setDomain: (domain: Domain) => void;
-  calculatorMode: CalculatorMode;
-  setCalculatorMode: (mode: CalculatorMode) => void;
+  // Calculator button palette
+  enabledTokens: string[];
+  onToggleToken: (token: string) => void;
+  onEnableAll: () => void;
 }
 
 export function Sidebar({
@@ -67,32 +56,21 @@ export function Sidebar({
   setManualError,
   earlyExitCRThreshold,
   setEarlyExitCRThreshold,
-  gpuAvailable,
-  gpuName,
-  computeMode,
-  setComputeMode,
-  selectedCalculatorId,
-  setSelectedCalculatorId,
-  recognitionTarget,
-  setRecognitionTarget,
-  domain,
-  setDomain,
-  calculatorMode,
-  setCalculatorMode,
+  enabledTokens,
+  onToggleToken,
+  onEnableAll,
 }: SidebarProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const selectedCalculator = getCalculatorById(selectedCalculatorId);
-  const gpuSearchActive = computeMode === 'gpu' || (computeMode === 'auto' && gpuAvailable);
+  const calculator = getCalculatorById(DEFAULT_CALCULATOR_ID);
   const manualTolerance = parseFloat(manualError);
   const toleranceSearchActive =
     errorMode === 'automatic' ||
     (errorMode === 'manual' && Number.isFinite(manualTolerance) && manualTolerance > 0);
-  const earlyExitCRActive = !gpuSearchActive && toleranceSearchActive;
-  const earlyExitCRNote = gpuSearchActive
-    ? 'Ignored for GPU/WebGPU search. The current GPU engine searches all K values.'
-    : toleranceSearchActive
-      ? 'Applies to CPU/WASM tolerance-based search.'
-      : 'Ignored for exact search (± 0). Use Auto or Manual uncertainty to enable it.';
+  const earlyExitCRActive = toleranceSearchActive;
+  const earlyExitCRNote = toleranceSearchActive
+    ? 'Applies to CPU/WASM tolerance-based search.'
+    : 'Ignored for exact search (± 0). Use Auto or Manual uncertainty to enable it.';
+  const noConstants = !enabledTokens.some((t) => calculator.constantsCore.includes(t) || calculator.constantsRedundant.includes(t));
 
   return (
     <>
@@ -122,8 +100,8 @@ export function Sidebar({
       {/* Sidebar */}
       <aside className={`
         ${isMobile ? 'fixed inset-y-0 left-0 z-50 w-[min(20rem,calc(100vw-1rem))] max-w-[20rem] transform shadow-2xl' : 'relative'}
-        bg-white dark:bg-[#1a1a1d] 
-        border-r border-gray-200 dark:border-[#2a2a2e] 
+        bg-white dark:bg-[#1a1a1d]
+        border-r border-gray-200 dark:border-[#2a2a2e]
         flex flex-col
         transition-all duration-300 ease-in-out
         overflow-x-hidden
@@ -135,9 +113,9 @@ export function Sidebar({
         <div className="p-4 border-b border-gray-200 dark:border-[#2a2a2e]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img 
-                src="/cdaaebfdc71641160f831c2a2fb564ce8d081055.png" 
-                alt="Logo" 
+              <img
+                src="/cdaaebfdc71641160f831c2a2fb564ce8d081055.png"
+                alt="Logo"
                 className="w-10 h-10 rounded-lg object-cover"
               />
               <div>
@@ -177,162 +155,25 @@ export function Sidebar({
             <div className="text-sm lg:text-xs text-gray-500 dark:text-gray-500">
               {detectedCPUs} logical CPUs detected
             </div>
-            {gpuAvailable && (
-              <div className="flex items-center gap-2 text-sm lg:text-xs text-green-600 dark:text-green-400">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                </svg>
-                <span>WebGPU: {gpuName || 'Available'}</span>
-              </div>
+          </div>
+
+          {/* Calculator button palette */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+              Calculator
+            </label>
+            <CalculatorPalette
+              calculator={calculator}
+              enabledTokens={enabledTokens}
+              onToggleToken={onToggleToken}
+              onEnableAll={onEnableAll}
+              disabled={isCalculating}
+            />
+            {noConstants && (
+              <p className="text-[11px] text-amber-600 dark:text-amber-400">
+                Enable at least one constant — formulas cannot be built without one.
+              </p>
             )}
-          </div>
-
-          {/* Recognition Target */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-              Recognition Target
-            </label>
-            <div className="flex flex-col gap-1">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={recognitionTarget === 'constant'}
-                  onChange={() => setRecognitionTarget('constant')}
-                  className="w-4 h-4 accent-[#0066cc]"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Constant</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={recognitionTarget === 'multiple'}
-                  onChange={() => setRecognitionTarget('multiple')}
-                  className="w-4 h-4 accent-[#0066cc]"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Multiple Constants</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={recognitionTarget === 'function'}
-                  onChange={() => setRecognitionTarget('function')}
-                  className="w-4 h-4 accent-[#0066cc]"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Function</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={recognitionTarget === 'sequence'}
-                  onChange={() => setRecognitionTarget('sequence')}
-                  className="w-4 h-4 accent-[#0066cc]"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Sequence</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Domain Selection */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-              Domain
-            </label>
-            <div className="flex rounded-md shadow-sm">
-              <button
-                type="button"
-                onClick={() => setDomain('real')}
-                className={`flex-1 px-3 py-2 text-xs font-medium rounded-l-md border transition-colors
-                  ${domain === 'real' 
-                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
-                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}`}
-              >
-                Real
-              </button>
-              <button
-                type="button"
-                onClick={() => setDomain('complex')}
-                className={`flex-1 px-3 py-2 text-xs font-medium rounded-r-md border-t border-b border-r transition-colors
-                  ${domain === 'complex' 
-                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
-                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}`}
-              >
-                Complex
-              </button>
-            </div>
-          </div>
-
-          {/* Compute Backend Selection */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-              Compute Backend
-            </label>
-            <div className="flex rounded-md shadow-sm">
-              <button
-                type="button"
-                onClick={() => setComputeMode('auto')}
-                disabled={isCalculating}
-                className={`flex-1 px-3 py-2 text-xs font-medium rounded-l-md border transition-colors
-                  ${computeMode === 'auto' 
-                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
-                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
-                  disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                Auto
-              </button>
-              <button
-                type="button"
-                onClick={() => setComputeMode('cpu')}
-                disabled={isCalculating}
-                className={`flex-1 px-3 py-2 text-xs font-medium border-t border-b transition-colors
-                  ${computeMode === 'cpu' 
-                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
-                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
-                  disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                CPU
-              </button>
-              <button
-                type="button"
-                onClick={() => setComputeMode('gpu')}
-                disabled={isCalculating || !gpuAvailable}
-                className={`flex-1 px-3 py-2 text-xs font-medium border-t border-b transition-colors
-                  ${computeMode === 'gpu' 
-                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
-                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
-                  disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                GPU
-              </button>
-              <button
-                type="button"
-                onClick={() => setComputeMode('apple_silicon')}
-                disabled={isCalculating || !gpuAvailable}
-                className={`flex-1 px-2 py-2 text-xs font-medium rounded-r-md border transition-colors
-                  ${computeMode === 'apple_silicon' 
-                    ? 'bg-[#0066cc] text-white border-[#0066cc]' 
-                    : 'bg-white dark:bg-[#111113] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-[#2a2a2e]'}
-                  disabled:opacity-50 disabled:cursor-not-allowed`}
-                title="Apple Silicon (Metal via WebGPU)"
-              >
-                Apple Sil.
-              </button>
-            </div>
-            {/* Status text */}
-            <div className="text-[10px] text-gray-400 dark:text-gray-500">
-              {computeMode === 'auto' && (
-                gpuAvailable 
-                  ? <span className="text-green-600 dark:text-green-400">Will use GPU (WebGPU available)</span>
-                  : <span>Will use CPU (WebGPU not available)</span>
-              )}
-              {computeMode === 'cpu' && (
-                <span>WASM Workers ({autoThreads ? detectedCPUs : threadCount} threads)</span>
-              )}
-              {computeMode === 'gpu' && (
-                gpuAvailable 
-                  ? <span className="text-green-600 dark:text-green-400">{gpuName || 'WebGPU'}</span>
-                  : <span className="text-amber-600 dark:text-amber-400">⚠️ GPU unavailable, will use CPU</span>
-              )}
-            </div>
           </div>
 
           {/* Precision Info */}
@@ -387,37 +228,35 @@ export function Sidebar({
             <p className="text-[10px] text-gray-400">Search expressions with up to K symbols</p>
           </div>
 
-          {/* Threads - only visible when CPU will be used */}
-          {(computeMode === 'cpu' || (computeMode === 'auto' && !gpuAvailable)) && (
-            <div className="space-y-2">
-              <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-                CPU Threads
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="range"
-                  min="1"
-                  max="32"
-                  value={threadCount}
-                  onChange={(e) => setThreadCount(parseInt(e.target.value))}
-                  disabled={autoThreads}
-                  className="flex-1 accent-[#0066cc] disabled:opacity-40 h-2"
-                />
-                <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-8">
-                  {autoThreads ? 'Auto' : threadCount}
-                </span>
-              </div>
-              <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={autoThreads}
-                  onChange={(e) => setAutoThreads(e.target.checked)}
-                  className="accent-[#0066cc] w-4 h-4"
-                />
-                Auto-detect ({detectedCPUs} CPUs)
-              </label>
+          {/* Threads */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+              CPU Threads
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min="1"
+                max="32"
+                value={threadCount}
+                onChange={(e) => setThreadCount(parseInt(e.target.value))}
+                disabled={autoThreads}
+                className="flex-1 accent-[#0066cc] disabled:opacity-40 h-2"
+              />
+              <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-8">
+                {autoThreads ? 'Auto' : threadCount}
+              </span>
             </div>
-          )}
+            <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={autoThreads}
+                onChange={(e) => setAutoThreads(e.target.checked)}
+                className="accent-[#0066cc] w-4 h-4"
+              />
+              Auto-detect ({detectedCPUs} CPUs)
+            </label>
+          </div>
 
           {/* Advanced Options Toggle */}
           <div className="border-t border-gray-200 dark:border-[#2a2a2e] pt-4">
@@ -426,10 +265,10 @@ export function Sidebar({
               className="flex items-center justify-between w-full text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               <span className="font-medium">Advanced Options</span>
-              <svg 
-                className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -440,7 +279,7 @@ export function Sidebar({
           {/* Advanced Options Content */}
           {showAdvanced && (
             <div className="space-y-6 pb-2">
-              
+
               {/* Uncertainty Mode */}
               <div className="space-y-2">
                 <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
@@ -541,69 +380,6 @@ export function Sidebar({
                   {earlyExitCRNote}
                 </p>
               </div>
-
-              <div className="space-y-3">
-                <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-                  Calculator / Search Space
-                </label>
-                <select
-                  value={calculatorMode}
-                  onChange={(e) => setCalculatorMode(e.target.value as CalculatorMode)}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-[#2a2a2e] dark:bg-[#111113] dark:text-white"
-                >
-                  <option value="standard">Standard scientific calculator</option>
-                  <option value="list">Choose from list</option>
-                  <option value="custom">Drag-n-drop builder</option>
-                  <option value="fire_everything">Fire everything!</option>
-                </select>
-
-                {calculatorMode === 'standard' && (
-                  <div className="space-y-3 mt-4 border-t border-gray-200 dark:border-[#2a2a2e] pt-4">
-                    <select
-                      value={selectedCalculatorId}
-                      onChange={(e) => setSelectedCalculatorId(e.target.value as CalculatorId)}
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-[#2a2a2e] dark:bg-[#111113] dark:text-white"
-                    >
-                      {CALCULATORS.map((calculator) => (
-                        <option key={calculator.id} value={calculator.id}>
-                          {calculator.name} · {calculator.shortName}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="space-y-1">
-                      <p className="text-xs text-gray-600 dark:text-gray-300">
-                        {selectedCalculator.description}
-                      </p>
-                      <p className="text-[10px] text-gray-400">
-                        {selectedCalculator.statusNote}
-                      </p>
-                    </div>
-                    <CalculatorPalette calculator={selectedCalculator} />
-                  </div>
-                )}
-                
-                {calculatorMode === 'list' && (
-                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm">
-                    Function list selection will be implemented here.
-                  </div>
-                )}
-                
-                {calculatorMode === 'custom' && (
-                  <div className="p-3 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-lg text-sm flex flex-col items-center gap-2">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
-                    <span>Visual Node Builder Coming Soon</span>
-                  </div>
-                )}
-                
-                {calculatorMode === 'fire_everything' && (
-                  <div className="p-3 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 rounded-lg text-sm flex items-start gap-2">
-                    <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" /></svg>
-                    <div>
-                      <strong>Warning:</strong> Exhaustive search across all functions is extremely computationally expensive.
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
           )}
 
@@ -620,15 +396,15 @@ export function Sidebar({
                 Abort
               </button>
             )}
-            
+
           </div>
         </div>
 
         {/* Footer */}
         <div className="p-4 border-t border-gray-200 dark:border-[#2a2a2e]">
-          <a 
-            href="https://github.com/Klaudiusz321/ConstantRecognition" 
-            target="_blank" 
+          <a
+            href="https://github.com/Klaudiusz321/ConstantRecognition"
+            target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-xs text-gray-500 hover:text-[#0066cc] transition-colors"
           >

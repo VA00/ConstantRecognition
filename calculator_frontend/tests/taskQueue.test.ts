@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   buildTaskQueue, createResultFilter, structureWeight, chainIndex,
-  BUNDLE_MAX_K, CHAIN_SPLIT_MIN_K, CALC4_CONSTS
+  BUNDLE_MAX_K, CHAIN_SPLIT_MIN_K, CALC4_CONSTS, CalculatorSelection
 } from '../app/calculator/lib/taskQueue';
 
 // Replicates the chunking in vsearch_RPN_core.c (vsearch_core):
@@ -106,6 +106,67 @@ describe('buildTaskQueue', () => {
   it('handles searchDepth below the bundle threshold', () => {
     const tasks = buildTaskQueue(2);
     expect(tasks).toMatchObject([{ minK: 1, maxK: 2, taskId: 0, taskCount: 1 }]);
+  });
+});
+
+describe('buildTaskQueue with a restricted calculator (button palette)', () => {
+  const subset: CalculatorSelection = {
+    consts: ['PI', 'EULER', 'TWO'],
+    funcs: ['LOG', 'EXP', 'SQRT'],
+    ops: ['PLUS', 'TIMES'],
+  };
+
+  it('carries explicit instruction lists on every task', () => {
+    const tasks = buildTaskQueue(7, subset);
+    expect(tasks.length).toBeGreaterThan(1);
+    for (const t of tasks) {
+      expect(t.funcList).toBe('LOG,EXP,SQRT');
+      expect(t.opList).toBe('PLUS,TIMES');
+      // either the full subset, or a single constant on a chain sub-task
+      expect(['PI,EULER,TWO', 'PI', 'EULER', 'TWO']).toContain(t.constList);
+    }
+  });
+
+  it('computes weights from subset sizes and covers the level total', () => {
+    const tasks = buildTaskQueue(7, subset);
+    const chain = chainIndex(7);
+    const chainTasks = tasks.filter(t => t.minK === 7 && t.taskId === chain && t.taskCount === Math.pow(3, 7));
+    // chain split into one task per enabled constant, each nu^(K-1)
+    expect(chainTasks.length).toBe(subset.consts.length);
+    for (const t of chainTasks) expect(t.weight).toBe(Math.pow(subset.funcs.length, 6));
+    // level total matches brute-force enumeration with (3,3,2)
+    const level7 = tasks.filter(t => t.minK === 7);
+    const total = level7.reduce((s, t) => s + t.weight, 0);
+    let expected = 0;
+    for (let k = 0; k < Math.pow(3, 7); k++) expected += structureWeight(k, 7, 3, 3, 2);
+    expect(total).toBe(expected);
+  });
+
+  it('does not split the chain for a single constant', () => {
+    const tasks = buildTaskQueue(7, { consts: ['PI'], funcs: ['LOG'], ops: ['PLUS'] });
+    const chainTasks = tasks.filter(t => t.minK === 7 && t.taskId === chainIndex(7));
+    expect(chainTasks.length).toBe(1); // splitting into 1 piece is pointless
+  });
+
+  it('skips unary-dependent structures when all functions are disabled', () => {
+    const tasks = buildTaskQueue(7, { consts: ['PI', 'TWO'], funcs: [], ops: ['PLUS'] });
+    // the pure-unary chain has weight 0 without functions -> no task for it
+    expect(tasks.some(t => t.taskId === chainIndex(7) && t.minK === 7)).toBe(false);
+    for (const t of tasks) expect(t.funcList).toBe('');
+  });
+
+  it('returns an empty queue when no constants are enabled', () => {
+    expect(buildTaskQueue(7, { consts: [], funcs: ['LOG'], ops: ['PLUS'] })).toEqual([]);
+  });
+
+  it('full selection uses the default entry point (no lists except chain)', () => {
+    const tasks = buildTaskQueue(7);
+    for (const t of tasks) {
+      const isChainSubTask = t.minK >= CHAIN_SPLIT_MIN_K && t.taskId === chainIndex(t.minK) && t.taskCount === Math.pow(3, t.minK);
+      if (!isChainSubTask) {
+        expect(t.constList, `task K=${t.minK} id=${t.taskId}`).toBeUndefined();
+      }
+    }
   });
 });
 
