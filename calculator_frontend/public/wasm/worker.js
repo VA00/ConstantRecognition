@@ -31,10 +31,41 @@ function allocateDoubleArray(arr) {
     return ptr;
 }
 
-function doWork(initDelay, z, inputValue, recognitionTarget, calculatorMode, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, earlyExitCRThreshold) {
+// Call a search function and free the returned JSON buffer.
+// The C side malloc()s a ~1MB buffer per call and never frees it; with the
+// task queue each worker makes dozens of calls per search and the WASM heap
+// is fixed-size, so leaking the buffer would abort with OOM mid-search.
+function callSearch(name, argTypes, args) {
+    const toStr = (typeof UTF8ToString === 'function') ? UTF8ToString : Module.UTF8ToString;
+    if (typeof toStr !== 'function') {
+        // Cannot read via pointer; fall back to the leaky string path
+        return JSON.parse(Module.ccall(name, 'string', argTypes, args));
+    }
+    const ptr = Module.ccall(name, 'number', argTypes, args);
+    if (!ptr) return { results: [] };
+    try {
+        return JSON.parse(toStr(ptr));
+    } finally {
+        Module._free(ptr);
+    }
+}
+
+function doWork(initDelay, z, inputValue, recognitionTarget, calculatorMode, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, earlyExitCRThreshold, constList, funcList, opList) {
     return new Promise(resolve => {
         setTimeout(() => {
             try {
+                // Restricted-instruction-set task (e.g. chain splitting: the
+                // pure-unary chain structure tiled by 13 single-constant
+                // calls). Lists must be complete — the C parser treats an
+                // empty string as "zero ops", not "all".
+                if (constList || funcList || opList) {
+                    const result = callSearch('search_RPN_custom',
+                        ['number', 'number', 'number', 'number', 'number', 'number', 'string', 'string', 'string'],
+                        [z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus,
+                         constList || "", funcList || "", opList || ""]);
+                    resolve(result);
+                    return;
+                }
                 if (recognitionTarget === 'function') {
                     const pairs = inputValue.split(/[\n;]/).map(p => p.trim()).filter(p => p);
                     const x_arr = [];
@@ -46,16 +77,16 @@ function doWork(initDelay, z, inputValue, recognitionTarget, calculatorMode, inp
                             y_arr.push(parseFloat(parts[1]));
                         }
                     });
-                    
+
                     if (x_arr.length > 0) {
                         const x_ptr = allocateDoubleArray(x_arr);
                         const y_ptr = allocateDoubleArray(y_arr);
-                        const result = Module.ccall('search_function_wasm', 'string',
+                        const result = callSearch('search_function_wasm',
                             ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
                             [x_ptr, y_ptr, 0, x_arr.length, MinCodeLength, MaxCodeLength, cpuId, ncpus]);
                         Module._free(x_ptr);
                         Module._free(y_ptr);
-                        resolve(JSON.parse(result));
+                        resolve(result);
                         return;
                     }
                 } else if (recognitionTarget === 'multiple') {
@@ -64,37 +95,37 @@ function doWork(initDelay, z, inputValue, recognitionTarget, calculatorMode, inp
                         const x_arr = new Array(vals.length).fill(0);
                         const x_ptr = allocateDoubleArray(x_arr);
                         const y_ptr = allocateDoubleArray(vals);
-                        const result = Module.ccall('search_batch_wasm', 'string',
+                        const result = callSearch('search_batch_wasm',
                             ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
                             [x_ptr, y_ptr, 0, vals.length, MinCodeLength, MaxCodeLength, cpuId, ncpus]);
                         Module._free(x_ptr);
                         Module._free(y_ptr);
-                        resolve(JSON.parse(result));
+                        resolve(result);
                         return;
                     }
                 }
-                
+
                 if (calculatorMode === 'list' || calculatorMode === 'custom') {
                     // Can be extended to pass custom operator lists
-                    const result = Module.ccall('search_RPN_custom', 'string',
+                    const result = callSearch('search_RPN_custom',
                         ['number', 'number', 'number', 'number', 'number', 'number', 'string', 'string', 'string'],
                         [z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, "", "", ""]);
-                    resolve(JSON.parse(result));
+                    resolve(result);
                     return;
                 }
 
                 if (typeof Module._search_RPN_with_cr === 'function') {
-                    const result = Module.ccall('search_RPN_with_cr', 'string',
+                    const result = callSearch('search_RPN_with_cr',
                                    ['number', 'number', 'number', 'number', 'number', 'number', 'number'],
                                    [z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, earlyExitCRThreshold]);
-                    resolve(JSON.parse(result));
+                    resolve(result);
                     return;
                 }
 
-                const result = Module.ccall('search_RPN', 'string',
+                const result = callSearch('search_RPN',
                                ['number', 'number', 'number', 'number', 'number', 'number'],
                                [z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus]);
-                resolve(JSON.parse(result));
+                resolve(result);
             } catch (err) {
                 console.error('WASM call error:', err);
                 resolve({ results: [], error: err.message });
@@ -115,20 +146,27 @@ onmessage = async function(e) {
         MaxCodeLength,
         cpuId,
         ncpus,
-        earlyExitCRThreshold = 0.9
+        earlyExitCRThreshold = 0.9,
+        workerId,
+        constList,
+        funcList,
+        opList
     } = e.data;
-    
+
     // Wait for WASM to be ready
     await waitForReady();
-    
-    console.log(`Worker ${cpuId} of ${ncpus} starting work for z=${z}, Target=${recognitionTarget}, Mode=${calculatorMode}`);
-    
-    const resultJSON = await doWork(initDelay, z, inputValue, recognitionTarget, calculatorMode, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, earlyExitCRThreshold);
-    
-    console.log(`Worker ${cpuId} finished work with result:`, resultJSON);
-    
+
+    // With the task queue a worker handles many small slices per search,
+    // so per-task logging is kept quiet to avoid console spam.
+    const resultJSON = await doWork(initDelay, z, inputValue, recognitionTarget, calculatorMode, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus, earlyExitCRThreshold, constList, funcList, opList);
+
+    if (resultJSON.error) {
+        console.error(`Worker ${workerId ?? cpuId} task error:`, resultJSON.error);
+    }
+
     postMessage({
         cpuId,
+        workerId,
         ...resultJSON
     });
 };

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode, ComputeMode, RecognitionTarget, Domain, CalculatorMode } from './lib/types';
 import { CalculatorId, DEFAULT_CALCULATOR_ID } from './lib/calculators';
 import { extractPrecision, evaluateRPN } from './lib/rpn';
+import { buildTaskQueue, createResultFilter, SearchTask } from './lib/taskQueue';
 import { useWebGPU } from './hooks/useWebGPU';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
@@ -33,6 +34,7 @@ export default function CalculatorPage() {
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [precision, setPrecision] = useState<Precision>({});
   const [activeWorkers, setActiveWorkers] = useState<ActiveWorker[]>([]);
+  const [taskProgress, setTaskProgress] = useState<{ done: number; total: number } | null>(null);
   const [sortColumn, setSortColumn] = useState<'K' | 'REL_ERR' | 'CR' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchFinished, setSearchFinished] = useState(false);
@@ -134,92 +136,13 @@ export default function CalculatorPage() {
   }, []);
 
 
-  const handleWorkerMessage = (cpuId: number, e: MessageEvent, onComplete?: () => void) => {
-    const data = e.data;
-    
-    // Skip ready message
-    if (data.type === 'ready') return;
-    
-    // Collect all results in one batch to avoid multiple re-renders
-    const newResults: SearchResult[] = [];
-    
-    // Worker completed with results array
-    if (data.results && Array.isArray(data.results)) {
-      data.results.forEach((r: { K: number; RPN: string; result: string; REL_ERR: number; status?: string; cpuId?: number; COMPRESSION_RATIO?: number }) => {
-        // Calculate numeric value from RPN
-        let numericValue: string;
-        try {
-          numericValue = evaluateRPN(r.RPN).toString();
-        } catch {
-          numericValue = 'N/A';
-        }
-        
-        const resolvedCpuId = r.cpuId ?? data.cpuId ?? cpuId;
-        newResults.push({
-          cpuId: resolvedCpuId,
-          K: r.K,
-          RPN: r.RPN,
-          result: numericValue,
-          REL_ERR: r.REL_ERR,
-          status: r.result === 'INTERMEDIATE' ? 'SEARCHING' : (r.result || r.status || 'K_BEST'),
-          compressionRatio: r.COMPRESSION_RATIO
-        });
-      });
-      
-      // Handle final result (SUCCESS/FAILURE/ABORTED) from top-level data
-      if (data.result && data.RPN) {
-        let numericValue: string;
-        try {
-          numericValue = evaluateRPN(data.RPN).toString();
-        } catch {
-          numericValue = 'N/A';
-        }
-        
-        newResults.push({
-          cpuId: data.cpuId ?? cpuId,
-          K: data.K,
-          RPN: data.RPN,
-          result: numericValue,
-          REL_ERR: data.REL_ERR,
-          status: data.result, // SUCCESS, FAILURE, ABORTED
-          compressionRatio: data.COMPRESSION_RATIO
-        });
-      }
-      
-      // Update state once with all results from this worker
-      if (newResults.length > 0) {
-        setResults(prev => [...prev, ...newResults]);
-      }
-      
-      const isSuccess = data.result === 'SUCCESS';
-      if (isSuccess && !searchEndedRef.current) {
-        searchEndedRef.current = true;
-        workersRef.current.forEach(w => w.terminate());
-        workersRef.current = [];
-        setActiveWorkers([]);
-        resolveAllRef.current?.();
-      } else {
-        // Worker finished
-        setActiveWorkers(prev => prev.filter(w => w.id !== cpuId));
-        
-        // Notify completion
-        if (onComplete) onComplete();
-      }
-    }
-  };
-
-  const handleWorkerError = (cpuId: number, error: ErrorEvent) => {
-    console.error(`Worker ${cpuId} error:`, error.message || error);
-    setActiveWorkers(prev => prev.filter(w => w.id !== cpuId));
-    setIsCalculating(false);
-  };
-
   const calculate = async () => {
     if (!inputValue) return;
     
     setIsCalculating(true);
     setResults([]);
     setSearchFinished(false);
+    setTaskProgress(null);
     searchEndedRef.current = false;
     isAbortedRef.current = false;
     resolveAllRef.current = null;
@@ -304,67 +227,190 @@ export default function CalculatorPage() {
 
     // CPU/WASM computation
     const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
-    
+
     // Terminate existing workers
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
-    
-    // Create new workers with completion tracking
-    const workers: Worker[] = [];
-    const initialActiveWorkers: ActiveWorker[] = [];
-    let completedCount = 0;
+
+    // Dynamic load balancing: the search space is over-decomposed into many
+    // small slices ("bag of tasks") and idle workers pull the next slice from
+    // the queue. The thread count only controls how many workers run
+    // simultaneously — no worker is married to a fixed slice, so uneven work
+    // distribution (heavy gamma-chain structures, E-cores, tab throttling)
+    // self-balances instead of leaving one lagging worker at the end.
+    const tasks = buildTaskQueue(searchDepth);
+    const totalTasks = tasks.length;
+    let nextTaskIndex = 0;
+    let remainingTasks = totalTasks;
+    let aliveWorkers = 0;
+    const inFlight = new Map<number, SearchTask>();          // workerId -> running task
+    const idlePool: { worker: Worker; workerId: number }[] = []; // parked workers (queue drained)
+    const keepRow = createResultFilter();
+
+    setTaskProgress({ done: 0, total: totalTasks });
 
     const allComplete = new Promise<void>(resolve => {
       resolveAllRef.current = resolve;
     });
-    
 
+    const endSearch = () => {
+      if (searchEndedRef.current) return;
+      searchEndedRef.current = true;
+      workersRef.current.forEach(w => w.terminate());
+      workersRef.current = [];
+      setActiveWorkers([]);
+      resolveAllRef.current?.();
+    };
 
-    //let resolveAll: () => void;
-    //const allComplete = new Promise<void>(resolve => { resolveAll = resolve; });
-    //resolveAllRef.current = resolveAll;
-    
-    for (let i = 0; i < effectiveThreads; i++) {
-      //const worker = new Worker('/wasm/worker.js');
-      const worker = new Worker(withBasePath('/wasm/worker.js'));
-      const cpuId = i;
-      
-      const onComplete = () => {
-        completedCount++;
-        if (completedCount >= effectiveThreads) {
-          resolveAllRef.current?.();
+    const assignTask = (worker: Worker, workerId: number) => {
+      if (searchEndedRef.current || isAbortedRef.current) return;
+      const task = tasks[nextTaskIndex];
+      if (!task) {
+        // Queue drained; park this worker (it may be revived if another
+        // worker dies and its task is requeued)
+        inFlight.delete(workerId);
+        idlePool.push({ worker, workerId });
+        setActiveWorkers(prev => prev.filter(w => w.id !== workerId));
+        return;
+      }
+      nextTaskIndex++;
+      inFlight.set(workerId, task);
+      setActiveWorkers(prev => {
+        const running = { id: workerId, status: 'running', currentK: task.maxK };
+        return prev.some(w => w.id === workerId)
+          ? prev.map(w => (w.id === workerId ? { ...w, currentK: task.maxK } : w))
+          : [...prev, running];
+      });
+      worker.postMessage({
+        initDelay: 0,
+        z: zNum,
+        inputValue: inputValue,
+        recognitionTarget: recognitionTarget,
+        calculatorMode: calculatorMode,
+        inputPrecision: deltaZNum,
+        MinCodeLength: task.minK,
+        MaxCodeLength: task.maxK,
+        cpuId: task.taskId,
+        ncpus: task.taskCount,
+        earlyExitCRThreshold,
+        workerId,
+        constList: task.constList,
+        funcList: task.funcList,
+        opList: task.opList
+      });
+    };
+
+    const onWorkerMessage = (worker: Worker, workerId: number) => (e: MessageEvent) => {
+      const data = e.data;
+      if (!data || data.type === 'ready') return;
+      if (searchEndedRef.current || isAbortedRef.current) return;
+
+      // Collect all results in one batch to avoid multiple re-renders.
+      // Rows that don't improve on what is already shown for their K are
+      // dropped — with hundreds of slices most task-local bests are redundant.
+      const newResults: SearchResult[] = [];
+      const rows = Array.isArray(data.results) ? data.results : [];
+
+      rows.forEach((r: { K: number; RPN: string; result: string; REL_ERR: number; status?: string; COMPRESSION_RATIO?: number }) => {
+        if (!r || typeof r.RPN !== 'string') return;
+        if (!keepRow(r.K, r.REL_ERR, r.RPN)) return;
+        let numericValue: string;
+        try {
+          numericValue = evaluateRPN(r.RPN).toString();
+        } catch {
+          numericValue = 'N/A';
         }
-      };
-      
-      worker.onmessage = (e) => handleWorkerMessage(cpuId, e, onComplete);
-      worker.onerror = (e) => handleWorkerError(cpuId, e);
-      
+        newResults.push({
+          cpuId: workerId,
+          K: r.K,
+          RPN: r.RPN,
+          result: numericValue,
+          REL_ERR: r.REL_ERR,
+          status: r.result === 'INTERMEDIATE' ? 'SEARCHING' : (r.result || r.status || 'K_BEST'),
+          compressionRatio: r.COMPRESSION_RATIO
+        });
+      });
+
+      // Handle final result (SUCCESS/FAILURE/ABORTED) from top-level data
+      const isSuccess = data.result === 'SUCCESS';
+      if (data.result && data.RPN && (isSuccess || keepRow(data.K, data.REL_ERR, data.RPN))) {
+        let numericValue: string;
+        try {
+          numericValue = evaluateRPN(data.RPN).toString();
+        } catch {
+          numericValue = 'N/A';
+        }
+        newResults.push({
+          cpuId: workerId,
+          K: data.K,
+          RPN: data.RPN,
+          result: numericValue,
+          REL_ERR: data.REL_ERR,
+          status: data.result, // SUCCESS, FAILURE, ABORTED
+          compressionRatio: data.COMPRESSION_RATIO
+        });
+      }
+
+      if (newResults.length > 0) {
+        setResults(prev => [...prev, ...newResults]);
+      }
+
+      if (isSuccess) {
+        endSearch();
+        return;
+      }
+
+      // Task finished without a definitive match — pull the next slice
+      remainingTasks--;
+      setTaskProgress({ done: totalTasks - remainingTasks, total: totalTasks });
+      if (remainingTasks <= 0) {
+        endSearch();
+        return;
+      }
+      assignTask(worker, workerId);
+    };
+
+    const onWorkerError = (worker: Worker, workerId: number) => (error: ErrorEvent) => {
+      console.error(`Worker ${workerId} error:`, error.message || error);
+      if (searchEndedRef.current || isAbortedRef.current) return;
+      aliveWorkers--;
+      worker.terminate();
+      workersRef.current = workersRef.current.filter(w => w !== worker);
+      setActiveWorkers(prev => prev.filter(w => w.id !== workerId));
+      // Requeue the slice this worker was computing so nothing is skipped
+      const task = inFlight.get(workerId);
+      if (task) {
+        inFlight.delete(workerId);
+        tasks.push(task);
+        const idle = idlePool.pop();
+        if (idle) assignTask(idle.worker, idle.workerId);
+      }
+      if (aliveWorkers <= 0) {
+        // Every worker died; end the search so the UI doesn't hang
+        endSearch();
+      }
+    };
+
+    const workerCount = Math.min(effectiveThreads, totalTasks);
+    const workers: Worker[] = [];
+    const initialActiveWorkers: ActiveWorker[] = [];
+
+    for (let i = 0; i < workerCount; i++) {
+      const worker = new Worker(withBasePath('/wasm/worker.js'));
+      worker.onmessage = onWorkerMessage(worker, i);
+      worker.onerror = onWorkerError(worker, i);
       workers.push(worker);
-      initialActiveWorkers.push({ id: cpuId, status: 'running', currentK: 1 });
+      initialActiveWorkers.push({ id: i, status: 'running', currentK: 1 });
     }
-    
+
+    aliveWorkers = workerCount;
     workersRef.current = workers;
     setActiveWorkers(initialActiveWorkers);
-    
-    // Start computation on each worker
-    workers.forEach((worker, i) => {
-        const workerParams = {
-          initDelay: i * 5,
-          z: zNum,
-          inputValue: inputValue,
-          recognitionTarget: recognitionTarget,
-          calculatorMode: calculatorMode,
-          inputPrecision: deltaZNum,
-          MinCodeLength: 1,
-          MaxCodeLength: searchDepth,
-          cpuId: i,
-          ncpus: effectiveThreads,
-          earlyExitCRThreshold
-        };
-        worker.postMessage(workerParams);
-    });
-    
-    // Wait for all workers to complete
+
+    // Hand each worker its first slice; afterwards they pull from the queue
+    workers.forEach((worker, i) => assignTask(worker, i));
+
+    // Wait for the task queue to drain (or SUCCESS/abort)
     await allComplete;
     
     // Stop timer
@@ -472,6 +518,11 @@ export default function CalculatorPage() {
             </svg>
             <span className="font-bold">Searching for formulas...</span>
             <span className="font-mono">{(elapsedTime / 1000).toFixed(1)}s</span>
+            {taskProgress && taskProgress.total > 1 && (
+              <span className="font-mono text-sm opacity-75">
+                chunk {taskProgress.done}/{taskProgress.total}
+              </span>
+            )}
             {precision.deltaZ && (
               <span className="text-sm opacity-75">(±{precision.deltaZ})</span>
             )}
