@@ -2,7 +2,7 @@
 // Hybrid FP32 GPU search + FP64 CPU verification
 // Idea: Use fast FP32 to find candidates, verify with FP64 for true precision
 // Code assist: Claude 4.5 Opus
-// Compile: nvcc -O3 constant_gpu_fp32_hybrid.cu -o constant_gpu_fp32_hybrid
+// Compile: nvcc -O3 constant_gpu_alpha_search_benchmark.cu -o alpha
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -461,7 +461,8 @@ int main(int argc, char** argv)
     double sigma = ALPHA_INV_SIGMA;
     double n_sigma = N_SIGMA_FILTER;
     int MaxCodeLength = 9;  
-    // Runtime for K=9: 76.458 s on RTX5080; 658.389 s on Tesla T4
+    // Runtime for K=9: 76.458 s on RTX5080; 658.389 s on Tesla T4; 39.5 s on RTX 6000 Pro
+    //        for K=10: ?????? s on RTX5080; ??????? s on Tesla T4; 1322 s on RTX 6000 Pro
     
     // Parse arguments
     if (argc > 1) MaxCodeLength = atoi(argv[1]);
