@@ -7,10 +7,12 @@ export interface SearchResult {
   cpuId: number;
   K: number;
   RPN: string;
-  result: string;
+  result: string;          // numeric value as text ("3.14", "1 + 2i")
   REL_ERR: number;
   status: string;
   compressionRatio?: number;
+  valueRe?: number;        // complex-domain rows: value computed by the engine
+  valueIm?: number;
   fp32Evals?: number;
   fp64Evals?: number;
 }
@@ -33,6 +35,7 @@ export interface Precision {
   z?: string;
   deltaZ?: string;
   relDeltaZ?: string;
+  domain?: 'real' | 'complex';
 }
 
 export interface ActiveWorker {
@@ -75,6 +78,11 @@ export const examples = [
     value: '-0.45158270528945',
     label: '\\displaystyle \\sum_{n=1}^{\\infty} (-1)^n \\ln{\\left( 1+\\frac{1}{n} \\right)}',
     description: 'Discover sum'
+  },
+  {
+    value: '0.5403023058681398+0.8414709848078965i',
+    label: 'e^{\\,i}',
+    description: 'Complex target: the complex domain is selected automatically'
   },
   {
     value: '10.185916357881301489208560855841',

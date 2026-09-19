@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { ActiveWorker, Precision, ErrorMode } from '../lib/types';
+import { Domain } from '../lib/complex';
+import { formatDuration } from '../lib/estimate';
 import { getCalculatorById, DEFAULT_CALCULATOR_ID } from '../lib/calculators';
 import { CalculatorPalette } from './CalculatorPalette';
 
@@ -32,6 +34,28 @@ interface SidebarProps {
   enabledTokens: string[];
   onToggleToken: (token: string) => void;
   onEnableAll: () => void;
+  // Number domain
+  domain: Domain;
+  setDomain: (domain: Domain) => void;
+  effectiveDomain: 'real' | 'complex';
+  inputIsComplex: boolean;
+  // Estimated number of formula evaluations for the current depth and palette
+  workEstimate: number;
+  // Upper bound on the search time at the current thread count
+  estimatedSeconds: number;
+  // true when the per-thread rate comes from a previous search on this machine
+  rateMeasured: boolean;
+  effectiveThreads: number;
+}
+
+// 8.4e7 -> "8.4·10⁷"
+function formatCount(n: number): string {
+  if (!Number.isFinite(n) || n <= 0) return '0';
+  if (n < 1e5) return Math.round(n).toLocaleString('en-US');
+  const sup = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  const [mant, exp] = n.toExponential(1).split('e');
+  const digits = String(parseInt(exp, 10)).split('').map((d) => sup[parseInt(d, 10)]).join('');
+  return `${mant}·10${digits}`;
 }
 
 export function Sidebar({
@@ -59,6 +83,14 @@ export function Sidebar({
   enabledTokens,
   onToggleToken,
   onEnableAll,
+  domain,
+  setDomain,
+  effectiveDomain,
+  inputIsComplex,
+  workEstimate,
+  estimatedSeconds,
+  rateMeasured,
+  effectiveThreads,
 }: SidebarProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const calculator = getCalculatorById(DEFAULT_CALCULATOR_ID);
@@ -70,7 +102,16 @@ export function Sidebar({
   const earlyExitCRNote = toleranceSearchActive
     ? 'Applies to CPU/WASM tolerance-based search.'
     : 'Ignored for exact search (± 0). Use Auto or Manual uncertainty to enable it.';
-  const noConstants = !enabledTokens.some((t) => calculator.constantsCore.includes(t) || calculator.constantsRedundant.includes(t));
+  const noConstants = !enabledTokens.some((t) =>
+    calculator.constantsCore.includes(t) || calculator.constantsDigits.includes(t) ||
+    (calculator.constantsExtra.includes(t) && (t !== 'I' || effectiveDomain === 'complex')));
+  const iBlocked = enabledTokens.includes('I') && effectiveDomain === 'real';
+  const tokenNotes: Record<string, string> = iBlocked ? { I: 'needs ℂ' } : {};
+  const workTone = estimatedSeconds < 15
+    ? 'text-emerald-600 dark:text-emerald-400'
+    : estimatedSeconds < 180
+      ? 'text-amber-600 dark:text-amber-400'
+      : 'text-red-600 dark:text-red-400';
 
   return (
     <>
@@ -145,6 +186,26 @@ export function Sidebar({
 
         {/* Settings */}
         <div className="flex-1 p-4 space-y-6 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          {/* Calculator button palette */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+              Calculator
+            </label>
+            <CalculatorPalette
+              calculator={calculator}
+              enabledTokens={enabledTokens}
+              onToggleToken={onToggleToken}
+              onEnableAll={onEnableAll}
+              disabled={isCalculating}
+              tokenNotes={tokenNotes}
+            />
+            {noConstants && (
+              <p className="text-[11px] text-amber-600 dark:text-amber-400">
+                Enable at least one constant — formulas cannot be built without one.
+              </p>
+            )}
+          </div>
+
           {/* Status */}
           <div className="space-y-2">
             <label className="text-xs lg:text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">Status</label>
@@ -157,21 +218,43 @@ export function Sidebar({
             </div>
           </div>
 
-          {/* Calculator button palette */}
+          {/* Number domain */}
           <div className="space-y-2">
             <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
-              Calculator
+              Domain
             </label>
-            <CalculatorPalette
-              calculator={calculator}
-              enabledTokens={enabledTokens}
-              onToggleToken={onToggleToken}
-              onEnableAll={onEnableAll}
-              disabled={isCalculating}
-            />
-            {noConstants && (
+            <div className="grid grid-cols-3 gap-1 rounded-lg bg-gray-100 p-1 dark:bg-[#111113]">
+              {([['auto', 'Auto'], ['real', 'Real ℝ'], ['complex', 'Complex ℂ']] as [Domain, string][]).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setDomain(value)}
+                  disabled={isCalculating}
+                  aria-pressed={domain === value}
+                  className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed
+                    ${domain === value
+                      ? 'bg-white text-[#0066cc] shadow-xs dark:bg-[#1a1a1d]'
+                      : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-gray-400">
+              {domain === 'auto'
+                ? `Auto: complex when the target has an imaginary part or i is enabled. Now: ${effectiveDomain === 'complex' ? 'complex ℂ' : 'real ℝ'}.`
+                : effectiveDomain === 'complex'
+                  ? 'Functions take complex values, e.g. log(−1) = iπ, √−1 = i.'
+                  : 'Real arithmetic only; formulas leaving ℝ are discarded.'}
+            </p>
+            {iBlocked && (
               <p className="text-[11px] text-amber-600 dark:text-amber-400">
-                Enable at least one constant — formulas cannot be built without one.
+                The i button is ignored in the real domain.
+              </p>
+            )}
+            {inputIsComplex && effectiveDomain === 'real' && (
+              <p className="text-[11px] text-amber-600 dark:text-amber-400">
+                The target is complex — switch the domain to Auto or Complex.
               </p>
             )}
           </div>
@@ -185,7 +268,8 @@ export function Sidebar({
               <div className="text-sm lg:text-xs font-mono text-gray-600 dark:text-gray-400 space-y-1 bg-gray-50 dark:bg-[#111113] p-3 lg:p-2 rounded">
                 <div>z = {precision.z}</div>
                 <div>Δz = {precision.deltaZ}</div>
-                <div>δz/z = {precision.relDeltaZ}</div>
+                <div>δz/|z| = {precision.relDeltaZ}</div>
+                {precision.domain && <div>domain: {precision.domain === 'complex' ? 'ℂ' : 'ℝ'}</div>}
               </div>
             </div>
           )}
@@ -218,14 +302,20 @@ export function Sidebar({
               <input
                 type="range"
                 min="2"
-                max="9"
+                max="16"
                 value={searchDepth}
                 onChange={(e) => setSearchDepth(parseInt(e.target.value))}
                 className="flex-1 accent-[#0066cc] h-2"
               />
-              <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-4">{searchDepth}</span>
+              <span className="font-mono text-sm font-bold text-gray-900 dark:text-white w-6 text-right">{searchDepth}</span>
             </div>
             <p className="text-[10px] text-gray-400">Search expressions with up to K symbols</p>
+            <p
+              className={`text-[10px] font-mono ${workTone}`}
+              title={`Formulas the full search evaluates for the current palette. Time is an upper bound (the search stops at the first exact match) at ${effectiveThreads} thread${effectiveThreads === 1 ? '' : 's'}, ${rateMeasured ? 'using the throughput measured in your previous search' : 'assuming a conservative per-thread rate until a search has been measured'}.`}
+            >
+              ≈ {formatCount(workEstimate)} formulas · up to {formatDuration(estimatedSeconds)} on {effectiveThreads} thread{effectiveThreads === 1 ? '' : 's'}{rateMeasured ? '' : ' (assumed rate)'}
+            </p>
           </div>
 
           {/* Threads */}

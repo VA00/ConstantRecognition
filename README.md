@@ -27,6 +27,24 @@ Constant Recognition provides a flexible, versatile, and easy-to-use application
 
 ---
 
+## Design Rationale
+
+The engine is a **memoryless exhaustive search**. This is a deliberate choice; every change to the C core must preserve it.
+
+**Enumerate, do not remember.** A search over codes of length K keeps O(K) state: the current ternary form, the current button indices and one evaluation stack of K values. There are no tables of previously computed values, no hashing, no memoization, no frontier sets. Memory use is independent of the search depth and of the button set, so the reachable depth is limited by time only, never by RAM.
+
+**Why.** Solvers that store intermediate results (meet-in-the-middle, dynamic programming over token counts, RIES-style trees, the Rust/Python EML solvers in `cuda/eml_competition`) are fast at moderate depth, but their memory grows exponentially with depth and they need shared state, which is awkward across GPU threads, WASM workers or cluster nodes. A memoryless search has a trivial parallel contract: the space of codes of length K is the index range [0, 3^K) over ternary forms, and any contiguous chunk `(cpu_id, ncpus)` can be computed by any thread on any device with no communication. This is what lets the same algorithm run in browser workers, on CUDA GPUs and in native batch jobs, and run for days without growing.
+
+**Shortest first, exhaustive.** Codes are generated in order of increasing length, and all codes of one length are evaluated before the next length starts. The first exact match is therefore the shortest formula in the chosen button set, and a completed level without a match is a proof that no formula of that length exists (up to floating-point tolerance). Heuristic engines can make neither claim.
+
+**Two-stage generation.** A code is a ternary form (which slots hold constants, unary functions and binary operators) combined with a button assignment for every slot. Only the forms that never underflow the stack and leave exactly one value are grammatical; their number is the Motzkin number M(K−1), e.g. 51 of the 3^7 = 2187 strings at K=7. Every grammatical form is a valid RPN program by construction. The engine loops over the forms and, for each, over the Cartesian product of button choices; the assignment stage is where the formula count explodes (about 2.3·10^9 formulas at K=7 for the 36-button CALC4).
+
+**Cost of the choice.** Without memoization, identical subexpressions are recomputed. Part of that is recovered by evaluating incrementally along the recursion (the stack after slot i is reused for every completion of slots i+1..K), which still needs only the single O(K) stack. Table-based caching of elementary functions appears in the roadmap as an idea, but it would trade the memory guarantee for speed and is not the default.
+
+**Floating-point semantics.** Values are IEEE doubles (or complex doubles). NaN and infinities propagate through intermediate results exactly as the hardware produces them, so `exp(log 0) = 0` and `atan(1/0) = π/2` are legitimate codes; only a formula whose final value is non-finite is discarded. The identification criteria (relative error, compression ratio, accuracy jump) are applied to final values only.
+
+---
+
 ## Use Cases
 
 ### 1. Real Number Identification
@@ -56,6 +74,9 @@ Create genuinely new problems with elegant solutions. Example: `11/13 = tanh(ln(
 
 ### Implemented
 - Input box with target constant and optional error specification
+- Complex-domain search (`1+2i` targets, imaginary unit `i` as a button, `log(-1) = iπ`) via a dedicated complex WASM engine
+- Buttons beyond CALC4: constant 0 and the arbitrary-base logarithm `Log[b, x]` (on by default); imaginary unit i, sign change `Minus[x]`, Glaisher, Catalan, Khinchin, EulerGamma (off by default); Γ and φ are off by default too
+- Direct enumeration of grammatical ternary forms (`C/rpn_forms.h`) and incremental stack evaluation in both engines: same candidates in the same order, about 4× faster (real engine 19 → 79 M formulas/s in WASM, 32 → 135 M/s native arm64)
 - Parallel CPU search via Web Workers + WASM
 - GPU search via WebGPU compute shaders
 - Sortable results table with filters
@@ -78,7 +99,7 @@ Create genuinely new problems with elegant solutions. Example: `11/13 = tanh(ln(
 |---------|-------------|------------|---------------------|---------------------
 | Calculator Creator UI | Drag-and-drop interface for defining custom instruction sets | High | Advanced options | Yes, via master CALC4 and string arg passing
 | Preset Calculator Selection | Choose from: CALC4, RIES-compatible, TI-35, CASIO, etc. | Medium | Dropdown list, CALC4 default | Yes, via calc/*.h
-| Complex Number Support | Search using complex constants and operations | Medium | Advanced options or autoselect if target is complex number | Not implemented, only via Wolfram/Mathematica legacy codegen
+| Complex Number Support | Search using complex constants and operations | Medium | Domain switch (Auto/Real/Complex), autoselected for complex targets or when `i` is enabled | Yes, `C/vsearch_RPN_complex.c` + `CALC4C.h`, exported as `search_RPN_complex`
 
 ### Medium Priority
 | Feature | Description | Complexity | Frontend Visibility | Backend availability
@@ -171,7 +192,7 @@ Understanding existing tools helps position our project:
 - Exhaustive brute-force search (guaranteed to find simplest expression)
 - Configurable instruction sets [TODO]
 - No database/backend hosting costs (runs entirely client-side)
-- Complex numbers [TODO]
+- Complex numbers
 
 ---
 

@@ -2,15 +2,28 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode } from './lib/types';
-import { extractPrecision, evaluateRPN } from './lib/rpn';
+import { evaluateRPN } from './lib/rpn';
 import {
-  buildTaskQueue, createResultFilter, SearchTask, CalculatorSelection,
-  CALC4_CONSTS, CALC4_FUNCS, CALC4_OPS
+  Domain, parseComplexInput, complexAutoDelta, complexAbs, formatComplex, resolveDomain
+} from './lib/complex';
+import {
+  buildTaskQueue, createResultFilter, estimateWork, SearchTask, CalculatorSelection,
+  CALC4_CONSTS, CALC4_FUNCS, CALC4_OPS, EXTRA_CONSTS, EXTRA_FUNCS, EXTRA_OPS, COMPLEX_ONLY_CONSTS
 } from './lib/taskQueue';
 import { getCompressionRatio as computeCR } from './lib/cr';
+import { ThroughputRecord, loadThroughput, saveThroughput, measureRate, estimateSeconds } from './lib/estimate';
+import { getCalculatorById, DEFAULT_CALCULATOR_ID, defaultEnabledTokens } from './lib/calculators';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
-const ALL_TOKENS = [...CALC4_CONSTS, ...CALC4_FUNCS, ...CALC4_OPS];
+// Buttons enabled on load: the palette's standard set (36 buttons: pi, e, -1,
+// 0, the digits, 17 functions, 6 operators). i, Gamma, the sign change and the
+// extra constants are off, so the Auto domain is the real line until the user
+// enables i or types a complex target.
+const DEFAULT_TOKENS = defaultEnabledTokens(getCalculatorById(DEFAULT_CALCULATOR_ID));
+// Constants and operators in canonical order, extras last
+const ALL_CONSTS = [...CALC4_CONSTS, ...EXTRA_CONSTS];
+const ALL_FUNCS = [...CALC4_FUNCS, ...EXTRA_FUNCS];
+const ALL_OPS = [...CALC4_OPS, ...EXTRA_OPS];
 
 // Ensures that all worker/WASM fetches include the configured base path (if any).
 // - Trailing slashes are removed so "//" never appears in URLs.
@@ -25,6 +38,17 @@ const withBasePath = (path: string) => {
   return new URL(`${normalizedBase}${normalizedPath}`, window.location.origin).toString();
 };
 
+// Raw result row as emitted by the WASM engine (real or complex)
+interface EngineRow {
+  K: number;
+  RPN: string;
+  result: string;
+  REL_ERR: number;
+  status?: string;
+  COMPRESSION_RATIO?: number;
+  value_re?: number;
+  value_im?: number;
+}
 
 export default function CalculatorPage() {
   const [inputValue, setInputValue] = useState('');
@@ -49,10 +73,14 @@ export default function CalculatorPage() {
   const [manualError, setManualError] = useState('');
   const [earlyExitCRThreshold, setEarlyExitCRThreshold] = useState(0.9);
   const [lastSearchExact, setLastSearchExact] = useState(false);
-  // Calculator button palette: enabled button names, all 36 by default
-  const [enabledTokens, setEnabledTokens] = useState<string[]>(ALL_TOKENS);
+  // Number domain: auto picks complex for complex targets or when i is enabled
+  const [domain, setDomain] = useState<Domain>('auto');
+  // Calculator button palette: enabled button names
+  const [enabledTokens, setEnabledTokens] = useState<string[]>(DEFAULT_TOKENS);
   // Button count of the search that produced the current results (for CR)
-  const [lastSearchN, setLastSearchN] = useState(ALL_TOKENS.length);
+  const [lastSearchN, setLastSearchN] = useState(DEFAULT_TOKENS.length);
+  // Per-thread throughput measured on this machine (persisted in localStorage)
+  const [throughput, setThroughput] = useState<ThroughputRecord>({});
 
   const workersRef = useRef<Worker[]>([]);
   const isAbortedRef = useRef(false);
@@ -66,8 +94,38 @@ export default function CalculatorPage() {
       prev.includes(token) ? prev.filter(t => t !== token) : [...prev, token]
     );
   };
-  const enableAllTokens = () => setEnabledTokens(ALL_TOKENS);
-  const hasConstants = enabledTokens.some(t => CALC4_CONSTS.includes(t));
+  const enableAllTokens = () => setEnabledTokens(DEFAULT_TOKENS);
+
+  // Target parsing and domain resolution
+  const parsedInput = useMemo(() => parseComplexInput(inputValue), [inputValue]);
+  const effectiveDomain = resolveDomain(domain, parsedInput, enabledTokens);
+
+  // Calculator restriction from the button palette (canonical order). In the
+  // real domain complex-only constants (i) are silently left out.
+  const selection: CalculatorSelection = useMemo(() => ({
+    consts: ALL_CONSTS.filter(t =>
+      enabledTokens.includes(t) && (effectiveDomain === 'complex' || !COMPLEX_ONLY_CONSTS.includes(t))),
+    funcs: ALL_FUNCS.filter(t => enabledTokens.includes(t)),
+    ops: ALL_OPS.filter(t => enabledTokens.includes(t)),
+  }), [enabledTokens, effectiveDomain]);
+  const hasConstants = selection.consts.length > 0;
+  const workEstimate = useMemo(() => estimateWork(searchDepth, selection), [searchDepth, selection]);
+  const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
+  const timeEstimate = useMemo(
+    () => estimateSeconds(workEstimate, effectiveThreads, effectiveDomain, throughput),
+    [workEstimate, effectiveThreads, effectiveDomain, throughput]
+  );
+
+  const canCalculate =
+    parsedInput !== null && hasConstants &&
+    !(parsedInput.isComplex && effectiveDomain === 'real');
+  const cannotCalculateReason = !parsedInput
+    ? 'Enter a real number (3.14) or a complex one (1+2i)'
+    : !hasConstants
+      ? 'Enable at least one constant in the calculator palette'
+      : parsedInput.isComplex && effectiveDomain === 'real'
+        ? 'Complex target: switch the domain to Auto or Complex'
+        : undefined;
 
   const getCompressionRatio = (r: SearchResult): number => computeCR(r, lastSearchN);
 
@@ -93,8 +151,7 @@ export default function CalculatorPage() {
   useEffect(() => {
     const checkWasm = async () => {
       try {
-        //const response = await fetch('/wasm/rpn_function.wasm');
-        const response = await fetch(withBasePath('/wasm/rpn_function.wasm'));
+        const response = await fetch(withBasePath('/wasm/vsearch.wasm'), { method: 'HEAD' });
         setWasmLoaded(response.ok);
       } catch {
         setWasmLoaded(false);
@@ -105,7 +162,7 @@ export default function CalculatorPage() {
     const cpus = navigator.hardwareConcurrency || 4;
     setDetectedCPUs(cpus);
     setThreadCount(cpus);
-    
+    setThroughput(loadThroughput());
   }, []);
 
   useEffect(() => {
@@ -128,7 +185,9 @@ export default function CalculatorPage() {
 
 
   const calculate = async () => {
-    if (!inputValue || !hasConstants) return;
+    const input = parsedInput;
+    if (!input || !canCalculate) return;
+    const searchDomain = effectiveDomain;
 
     setIsCalculating(true);
     setResults([]);
@@ -145,45 +204,37 @@ export default function CalculatorPage() {
       setElapsedTime(Date.now() - startTimeRef.current);
     }, 500);
     
-    // Calculate precision based on error mode
+    // Target and its uncertainty according to the error mode
+    const zNum = input.re;
+    const zIm = input.im;
     let deltaZNum: number;
-    const zNum = parseFloat(inputValue);
-    
     if (errorMode === 'zero') {
       deltaZNum = 0;
     } else if (errorMode === 'manual' && manualError) {
       deltaZNum = parseFloat(manualError) || 0;
     } else {
-      // automatic mode - use extractPrecision
-      const autoPrecision = extractPrecision(inputValue);
-      deltaZNum = parseFloat(autoPrecision.deltaZ || '0.5');
+      // automatic mode - infer from the number of decimals typed
+      deltaZNum = complexAutoDelta(input);
     }
     
     // Update precision display
-    const relDeltaZ = zNum !== 0 ? deltaZNum / Math.abs(zNum) : 0;
+    const zAbs = complexAbs(zNum, zIm);
+    const relDeltaZ = zAbs !== 0 ? deltaZNum / zAbs : 0;
     setPrecision({
       z: inputValue,
       deltaZ: deltaZNum === 0 ? '0' : deltaZNum.toExponential(2),
-      relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2)
+      relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2),
+      domain: searchDomain,
     });
     const exactSearch = deltaZNum === 0;
     setLastSearchExact(exactSearch);
     setSortColumn(exactSearch ? 'REL_ERR' : 'CR');
     setSortDirection(exactSearch ? 'asc' : 'desc');
 
-    // CPU/WASM computation
-    const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
-
     // Terminate existing workers
     workersRef.current.forEach(w => w.terminate());
     workersRef.current = [];
 
-    // Calculator restriction from the button palette (canonical CALC4 order)
-    const selection: CalculatorSelection = {
-      consts: CALC4_CONSTS.filter(t => enabledTokens.includes(t)),
-      funcs: CALC4_FUNCS.filter(t => enabledTokens.includes(t)),
-      ops: CALC4_OPS.filter(t => enabledTokens.includes(t)),
-    };
     setLastSearchN(selection.consts.length + selection.funcs.length + selection.ops.length);
 
     // Dynamic load balancing: the search space is over-decomposed into many
@@ -200,6 +251,15 @@ export default function CalculatorPage() {
     const inFlight = new Map<number, SearchTask>();          // workerId -> running task
     const idlePool: { worker: Worker; workerId: number }[] = []; // parked workers (queue drained)
     const keepRow = createResultFilter();
+    let totalEvaluations = 0;                                 // summed over finished tasks, for the rate
+
+    // The complex entry point has no "full calculator" default: lists are
+    // always explicit there.
+    const fullLists = {
+      constList: selection.consts.join(','),
+      funcList: selection.funcs.join(','),
+      opList: selection.ops.join(','),
+    };
 
     setTaskProgress({ done: 0, total: totalTasks });
 
@@ -235,8 +295,17 @@ export default function CalculatorPage() {
           ? prev.map(w => (w.id === workerId ? { ...w, currentK: task.maxK } : w))
           : [...prev, running];
       });
+      const lists = searchDomain === 'complex'
+        ? {
+            constList: task.constList ?? fullLists.constList,
+            funcList: task.funcList ?? fullLists.funcList,
+            opList: task.opList ?? fullLists.opList,
+          }
+        : { constList: task.constList, funcList: task.funcList, opList: task.opList };
       worker.postMessage({
         z: zNum,
+        zIm,
+        domain: searchDomain,
         inputPrecision: deltaZNum,
         MinCodeLength: task.minK,
         MaxCodeLength: task.maxK,
@@ -244,60 +313,64 @@ export default function CalculatorPage() {
         ncpus: task.taskCount,
         earlyExitCRThreshold,
         workerId,
-        constList: task.constList,
-        funcList: task.funcList,
-        opList: task.opList
+        ...lists,
       });
+    };
+
+    // Numeric value shown in the table: the engine's own value in the complex
+    // domain (it may be complex), a JS re-evaluation of the RPN otherwise.
+    const valueText = (r: EngineRow): string => {
+      if (searchDomain === 'complex' && typeof r.value_re === 'number') {
+        return formatComplex(r.value_re, r.value_im ?? 0);
+      }
+      try {
+        return evaluateRPN(r.RPN).toString();
+      } catch {
+        return 'N/A';
+      }
     };
 
     const onWorkerMessage = (worker: Worker, workerId: number) => (e: MessageEvent) => {
       const data = e.data;
-      if (!data || data.type === 'ready') return;
+      if (!data || data.type === 'ready' || data.type === 'evaluated') return;
       if (searchEndedRef.current || isAbortedRef.current) return;
+      if (typeof data.evaluations === 'number') totalEvaluations += data.evaluations;
 
       // Collect all results in one batch to avoid multiple re-renders.
       // Rows that don't improve on what is already shown for their K are
       // dropped — with hundreds of slices most task-local bests are redundant.
       const newResults: SearchResult[] = [];
-      const rows = Array.isArray(data.results) ? data.results : [];
+      const rows: EngineRow[] = Array.isArray(data.results) ? data.results : [];
 
-      rows.forEach((r: { K: number; RPN: string; result: string; REL_ERR: number; status?: string; COMPRESSION_RATIO?: number }) => {
+      rows.forEach((r) => {
         if (!r || typeof r.RPN !== 'string') return;
         if (!keepRow(r.K, r.REL_ERR, r.RPN)) return;
-        let numericValue: string;
-        try {
-          numericValue = evaluateRPN(r.RPN).toString();
-        } catch {
-          numericValue = 'N/A';
-        }
         newResults.push({
           cpuId: workerId,
           K: r.K,
           RPN: r.RPN,
-          result: numericValue,
+          result: valueText(r),
           REL_ERR: r.REL_ERR,
           status: r.result === 'INTERMEDIATE' ? 'SEARCHING' : (r.result || r.status || 'K_BEST'),
-          compressionRatio: r.COMPRESSION_RATIO
+          compressionRatio: r.COMPRESSION_RATIO,
+          valueRe: r.value_re,
+          valueIm: r.value_im,
         });
       });
 
       // Handle final result (SUCCESS/FAILURE/ABORTED) from top-level data
       const isSuccess = data.result === 'SUCCESS';
       if (data.result && data.RPN && (isSuccess || keepRow(data.K, data.REL_ERR, data.RPN))) {
-        let numericValue: string;
-        try {
-          numericValue = evaluateRPN(data.RPN).toString();
-        } catch {
-          numericValue = 'N/A';
-        }
         newResults.push({
           cpuId: workerId,
           K: data.K,
           RPN: data.RPN,
-          result: numericValue,
+          result: valueText(data),
           REL_ERR: data.REL_ERR,
           status: data.result, // SUCCESS, FAILURE, ABORTED
-          compressionRatio: data.COMPRESSION_RATIO
+          compressionRatio: data.COMPRESSION_RATIO,
+          valueRe: data.value_re,
+          valueIm: data.value_im,
         });
       }
 
@@ -368,11 +441,21 @@ export default function CalculatorPage() {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    setElapsedTime(Date.now() - startTimeRef.current);
+    const elapsedMs = Date.now() - startTimeRef.current;
+    setElapsedTime(elapsedMs);
     
     if (!isAbortedRef.current) {
       setIsCalculating(false);
       setSearchFinished(true);
+      // Calibrate the time estimate with this machine's real throughput
+      const rate = measureRate(totalEvaluations, elapsedMs / 1000, workerCount);
+      if (rate !== null) {
+        setThroughput(prev => {
+          const next = { ...prev, [searchDomain]: rate };
+          saveThroughput(next);
+          return next;
+        });
+      }
     }
   };
 
@@ -436,6 +519,14 @@ export default function CalculatorPage() {
         enabledTokens={enabledTokens}
         onToggleToken={toggleToken}
         onEnableAll={enableAllTokens}
+        domain={domain}
+        setDomain={setDomain}
+        effectiveDomain={effectiveDomain}
+        inputIsComplex={parsedInput?.isComplex ?? false}
+        workEstimate={workEstimate}
+        estimatedSeconds={timeEstimate.seconds}
+        rateMeasured={timeEstimate.measured}
+        effectiveThreads={effectiveThreads}
       />
 
       {/* Main content */}
@@ -444,7 +535,8 @@ export default function CalculatorPage() {
           inputValue={inputValue}
           setInputValue={setInputValue}
           isCalculating={isCalculating}
-          canCalculate={hasConstants}
+          canCalculate={canCalculate}
+          cannotCalculateReason={cannotCalculateReason}
           onCalculate={calculate}
           onReset={handleReset}
           onAbort={handleAbort}
@@ -457,7 +549,7 @@ export default function CalculatorPage() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            <span className="font-bold">Searching for formulas...</span>
+            <span className="font-bold">Searching for formulas{precision.domain === 'complex' ? ' in ℂ' : ''}...</span>
             <span className="font-mono">{(elapsedTime / 1000).toFixed(1)}s</span>
             {taskProgress && taskProgress.total > 1 && (
               <span className="font-mono text-sm opacity-75">

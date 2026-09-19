@@ -6,6 +6,8 @@ interface InputBarProps {
   isCalculating: boolean;
   /** false when the search cannot start (e.g. no constants enabled in the palette) */
   canCalculate?: boolean;
+  /** shown as tooltip on the disabled button */
+  cannotCalculateReason?: string;
   onCalculate: () => void;
   onReset: () => void;
   onAbort: () => void;
@@ -16,6 +18,7 @@ export function InputBar({
   setInputValue,
   isCalculating,
   canCalculate = true,
+  cannotCalculateReason,
   onCalculate,
   onReset,
   onAbort
@@ -29,7 +32,7 @@ export function InputBar({
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Enter a number, e.g. 3.14159265..."
+              placeholder="Enter a number, e.g. 3.14159265... or 0.5403+0.8415i"
               className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111113] border border-gray-200 dark:border-[#2a2a2e] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#0066cc] focus:outline-none focus:ring-1 focus:ring-[#0066cc] font-mono text-lg"
               onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
             />
@@ -38,7 +41,7 @@ export function InputBar({
             <button
               onClick={onCalculate}
               disabled={!inputValue || isCalculating || !canCalculate}
-              title={canCalculate ? undefined : 'Enable at least one constant in the calculator palette'}
+              title={canCalculate ? undefined : (cannotCalculateReason ?? 'Enable at least one constant in the calculator palette')}
               className="flex-1 sm:flex-none px-6 py-3 bg-[#0066cc] hover:bg-[#0052a3] disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed"
             >
               {isCalculating ? (

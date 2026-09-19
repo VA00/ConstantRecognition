@@ -47,3 +47,5 @@ jobs:
         cd C/test
         gcc -O2 -Wall test_vsearch_function.c ../vsearch_RPN_core.c ../utils.c -lm -o test_runner
         ./test_runner
+        gcc -O2 -Wall test_vsearch_complex.c ../vsearch_RPN_complex.c -lm -o test_complex
+        ./test_complex

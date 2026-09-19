@@ -22,7 +22,7 @@ export function EmptyState({ onExampleClick }: EmptyStateProps) {
           Ready to Identify
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">
-          Enter a decimal number above to search for matching mathematical expressions using 36 operations.
+          Enter a decimal number above to search for matching mathematical expressions built from the buttons of a scientific calculator. Complex targets such as 1+2i are searched in the complex plane.
         </p>
         <div className="flex flex-wrap gap-2 justify-center">
           {examples.map(ex => (

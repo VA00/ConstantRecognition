@@ -12,12 +12,25 @@
  * MODE_CONSTANT is internally treated as MODE_BATCH with n_data=1.
  *
  * Shared code:
- *   - Ternary form enumeration (Motzkin numbers)
+ *   - Ternary form enumeration (Motzkin numbers), see rpn_forms.h
  *   - Recursive generator structure  
  *   - Expression evaluation (with variable support)
  *   - Code formatting
  *   - JSON output
  *   - Stop criteria heuristics
+ *
+ * Enumeration (September 2026):
+ *   - Grammatical ternary forms are generated directly by rpn_enumerate_forms()
+ *     instead of scanning all 3^K strings and testing each. Same forms, same
+ *     order, same (cpu_id, ncpus) chunks; only the enumeration cost changes.
+ *   - For MODE_CONSTANT and MODE_BATCH the button assignment is evaluated
+ *     incrementally: the stack after slot i is kept and reused for every
+ *     completion of slots i+1..K-1, so a leaf costs one operation instead of
+ *     K. The state is still a single stack of K doubles; nothing is
+ *     tabulated or memoized. MODE_FUNCTION (one formula, many data points)
+ *     keeps the per-leaf evaluation.
+ *   - NaN and infinities propagate through intermediate values; only a
+ *     non-finite final value is rejected, as before.
  *
  * Compilation:
  *
@@ -39,6 +52,7 @@
 
 #include "vsearch_RPN_core.h"
 #include "utils.h"
+#include "rpn_forms.h"
 
 /* ============================================================================
  * CONFIGURATION
@@ -89,42 +103,6 @@ static const char OS_INFO[] =
 #else
     "Unknown";
 #endif
-
-/* ============================================================================
- * TERNARY UTILITIES
- *
- * Ternary encoding: 0=constant, 1=unary, 2=binary
- * Valid RPN iff stack depth remains >=1 throughout and equals 1 at end.
- * The count of valid ternary structures follows Motzkin numbers (OEIS A001006).
- * ============================================================================ */
-
-static int check_ternary_syntax(const char* ternary, int length) {
-    int stack = 0;
-    for (int i = 0; i < length; i++) {
-        switch (ternary[i]) {
-            case 0: stack++; break;
-            case 1: if (stack < 1) return 0; break;
-            case 2: if (stack < 2) return 0; stack--; break;
-        }
-    }
-    return (stack == 1);
-}
-
-static void int_to_ternary(uint64_t k, char* out, int K) {
-    for (int i = K - 1; i >= 0; i--) {
-        out[i] = (char)(k % 3);
-        k /= 3;
-    }
-}
-
-static int ternary_increment(char* ternary, int K) {
-    for (int i = K - 1; i >= 0; i--) {
-        ternary[i]++;
-        if (ternary[i] < 3) return 1;
-        ternary[i] = 0;
-    }
-    return 0;
-}
 
 /* ============================================================================
  * UNIFIED EXPRESSION EVALUATION
@@ -335,7 +313,151 @@ typedef struct {
 } SearchState;
 
 /* ============================================================================
- * UNIFIED RECURSIVE GENERATOR
+ * LEAF: MODE_CONSTANT / MODE_BATCH
+ *
+ * One fully assigned code, value already computed. Checks it against every
+ * target that has not been found yet. Returns 1 when the search must stop.
+ * ============================================================================ */
+
+static int process_constant_leaf(SearchState* st, const char* ternary, const int* indices, int K, double computed) {
+    st->evaluations++;
+    if (isnan(computed) || isinf(computed)) return 0;
+    
+    for (int t = 0; t < st->n_data; t++) {
+        if (st->targets[t].found) continue;
+        double target = st->data[t].y;
+        double delta = st->data[t].dy;
+        double err = compute_single_error(computed, target, st->metric);
+        int is_better = (st->compare == COMPARE_STRICT) ? (err < st->targets[t].best_err) : (err <= st->targets[t].best_err);
+        if (is_better) {
+            st->targets[t].best_err = err;
+            st->targets[t].best_K = K;
+            st->targets[t].computed_value = computed;
+            memcpy(st->targets[t].best_ternary, ternary, K);
+            memcpy(st->targets[t].best_indices, indices, K * sizeof(int));
+            
+            /* Output INTERMEDIATE result */
+            char code[512];
+            format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_CONSTANT, code, sizeof(code));
+            int hamming = compute_hamming_distance(target, computed);
+            
+            if (st->result_count > 0) {
+                int w = snprintf(st->json_ptr, st->json_remaining, ",\n");
+                st->json_ptr += w;
+                st->json_remaining -= w;
+            }
+            int w = snprintf(st->json_ptr, st->json_remaining,
+                "{"
+                "\"K\":%d, "
+                "\"REL_ERR\":%.5e, "
+                "\"result\":\"INTERMEDIATE\", "
+                "\"status\":\"RUNNING\", "
+                "\"cpuId\":%d, "
+                "\"HAMMING_DISTANCE\":%d, "
+                "\"RPN\":\"%s\""
+                "}",
+                K, err, st->cpu_id, hamming, code);
+            st->json_ptr += w;
+            st->json_remaining -= w;
+            st->result_count++;
+        }
+        if (is_exact_match(err, computed, target, delta, K, st->n_total, st->cr_threshold)) {
+            st->targets[t].found = 1;
+            st->num_found++;
+            
+            /* For batch mode (n_data > 1), output SUCCESS entry in results array.
+               For single-target (CONSTANT mode), skip to preserve backward compatibility. */
+            if (st->n_data > 1) {
+                char code[512];
+                format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_CONSTANT, code, sizeof(code));
+                int hamming = compute_hamming_distance(target, computed);
+                
+                if (st->result_count > 0) {
+                    int w = snprintf(st->json_ptr, st->json_remaining, ",\n");
+                    st->json_ptr += w;
+                    st->json_remaining -= w;
+                }
+                int w = snprintf(st->json_ptr, st->json_remaining,
+                    "{"
+                    "\"target_id\":%.0f, "
+                    "\"target\":%.17g, "
+                    "\"K\":%d, "
+                    "\"REL_ERR\":%.5e, "
+                    "\"result\":\"SUCCESS\", "
+                    "\"HAMMING_DISTANCE\":%d, "
+                    "\"RPN\":\"%s\""
+                    "}",
+                    st->data[t].x, target, K, err, hamming, code);
+                st->json_ptr += w;
+                st->json_remaining -= w;
+                st->result_count++;
+            }
+            
+            if (st->num_to_find > 0 && st->num_found >= st->num_to_find) {
+                st->stop_search = 1;
+                return 1;
+            }
+            break; /* One formula matches ONE target - enables finding multiple formulas for same value */
+        }
+    }
+    return 0;
+}
+
+/* ============================================================================
+ * BUTTON ASSIGNMENT, MODE_CONSTANT / MODE_BATCH: incremental evaluation
+ *
+ * The stack after slot pos is computed once and shared by every completion of
+ * the remaining slots. Invariant: on return stack[0..sp-1] is unchanged.
+ * Leaves are visited in the same order as the per-leaf generator below.
+ * ============================================================================ */
+
+static void generate_incremental(SearchState* st, const char* ternary, int* indices, int K,
+                                 int pos, double* stack, int sp) {
+    if (pos == K) {
+        process_constant_leaf(st, ternary, indices, K, stack[0]);
+        return;
+    }
+
+    switch (ternary[pos]) {
+        case 0:  /* constant: push */
+            for (int i = 0; i < st->n_const && !st->stop_search; i++) {
+                indices[pos] = i;
+                stack[sp] = st->const_ops[i].value;
+                generate_incremental(st, ternary, indices, K, pos + 1, stack, sp + 1);
+            }
+            break;
+
+        case 1: {  /* unary: replace top */
+            double x = stack[sp - 1];
+            for (int i = 0; i < st->n_unary && !st->stop_search; i++) {
+                indices[pos] = i;
+                stack[sp - 1] = st->unary_ops[i].func(x);
+                generate_incremental(st, ternary, indices, K, pos + 1, stack, sp);
+            }
+            stack[sp - 1] = x;
+            break;
+        }
+
+        case 2: {  /* binary: f(top, second) replaces both */
+            double b = stack[sp - 1];
+            double a = stack[sp - 2];
+            for (int i = 0; i < st->n_binary && !st->stop_search; i++) {
+                indices[pos] = i;
+                stack[sp - 2] = st->binary_ops[i].func(b, a);
+                generate_incremental(st, ternary, indices, K, pos + 1, stack, sp - 1);
+            }
+            stack[sp - 2] = a;
+            stack[sp - 1] = b;
+            break;
+        }
+    }
+}
+
+/* ============================================================================
+ * BUTTON ASSIGNMENT, MODE_FUNCTION: per-leaf evaluation
+ *
+ * One formula must fit all data points, so every leaf is evaluated at each x.
+ * Index 0 in a constant slot is the variable x, 1..n_const the constants.
  * ============================================================================ */
 
 static int generate_and_evaluate(const char* ternary, int* indices, int pos, int K, SearchState* st) {
@@ -384,89 +506,7 @@ static int generate_and_evaluate(const char* ternary, int* indices, int pos, int
             }
             return 0;
         }
-        
-        /* MODE_CONSTANT or MODE_BATCH: evaluate once, check against each unfound target */
-        double computed = evaluate_expression(ternary, indices, K, st->const_ops, st->n_const, st->unary_ops, st->binary_ops, MODE_CONSTANT, 0.0);
-        if (isnan(computed) || isinf(computed)) return 0;
-        
-        for (int t = 0; t < st->n_data; t++) {
-            if (st->targets[t].found) continue;
-            double target = st->data[t].y;
-            double delta = st->data[t].dy;
-            double err = compute_single_error(computed, target, st->metric);
-            int is_better = (st->compare == COMPARE_STRICT) ? (err < st->targets[t].best_err) : (err <= st->targets[t].best_err);
-            if (is_better) {
-                st->targets[t].best_err = err;
-                st->targets[t].best_K = K;
-                st->targets[t].computed_value = computed;
-                memcpy(st->targets[t].best_ternary, ternary, K);
-                memcpy(st->targets[t].best_indices, indices, K * sizeof(int));
-                
-                /* Output INTERMEDIATE result */
-                char code[512];
-                format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_CONSTANT, code, sizeof(code));
-                int hamming = compute_hamming_distance(target, computed);
-                
-                if (st->result_count > 0) {
-                    int w = snprintf(st->json_ptr, st->json_remaining, ",\n");
-                    st->json_ptr += w;
-                    st->json_remaining -= w;
-                }
-                int w = snprintf(st->json_ptr, st->json_remaining,
-                    "{"
-                    "\"K\":%d, "
-                    "\"REL_ERR\":%.5e, "
-                    "\"result\":\"INTERMEDIATE\", "
-                    "\"status\":\"RUNNING\", "
-                    "\"cpuId\":%d, "
-                    "\"HAMMING_DISTANCE\":%d, "
-                    "\"RPN\":\"%s\""
-                    "}",
-                    K, err, st->cpu_id, hamming, code);
-                st->json_ptr += w;
-                st->json_remaining -= w;
-                st->result_count++;
-            }
-            if (is_exact_match(err, computed, target, delta, K, st->n_total, st->cr_threshold)) {
-                st->targets[t].found = 1;
-                st->num_found++;
-                
-                /* For batch mode (n_data > 1), output SUCCESS entry in results array.
-                   For single-target (CONSTANT mode), skip to preserve backward compatibility. */
-                if (st->n_data > 1) {
-                    char code[512];
-                    format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_CONSTANT, code, sizeof(code));
-                    int hamming = compute_hamming_distance(target, computed);
-                    
-                    if (st->result_count > 0) {
-                        int w = snprintf(st->json_ptr, st->json_remaining, ",\n");
-                        st->json_ptr += w;
-                        st->json_remaining -= w;
-                    }
-                    int w = snprintf(st->json_ptr, st->json_remaining,
-                        "{"
-                        "\"target_id\":%.0f, "
-                        "\"target\":%.17g, "
-                        "\"K\":%d, "
-                        "\"REL_ERR\":%.5e, "
-                        "\"result\":\"SUCCESS\", "
-                        "\"HAMMING_DISTANCE\":%d, "
-                        "\"RPN\":\"%s\""
-                        "}",
-                        st->data[t].x, target, K, err, hamming, code);
-                    st->json_ptr += w;
-                    st->json_remaining -= w;
-                    st->result_count++;
-                }
-                
-                if (st->num_to_find > 0 && st->num_found >= st->num_to_find) {
-                    st->stop_search = 1;
-                    return 1;
-                }
-                break; /* One formula matches ONE target - enables finding multiple formulas for same value */
-            }
-        }
-        return 0;
+        return 0;   /* constant/batch leaves are handled by generate_incremental() */
     }
     
     /* Recursion: determine options for this position */
@@ -482,6 +522,24 @@ static int generate_and_evaluate(const char* ternary, int* indices, int pos, int
         if (generate_and_evaluate(ternary, indices, pos + 1, K, st)) return 1;
     }
     return 0;
+}
+
+/* ============================================================================
+ * FORM VISITOR: one grammatical ternary form -> all button assignments
+ * ============================================================================ */
+
+static int visit_form(void* ctx, const char* form, int K, uint64_t index) {
+    SearchState* st = (SearchState*)ctx;
+    (void)index;
+    st->valid_ternary++;
+    int indices[MAX_CODE_LENGTH];
+    if (st->mode == MODE_FUNCTION) {
+        generate_and_evaluate(form, indices, 0, K, st);
+    } else {
+        double stack[MAX_STACK_DEPTH];
+        generate_incremental(st, form, indices, K, 0, stack, 0);
+    }
+    return st->stop_search;
 }
 
 /* ============================================================================
@@ -503,6 +561,10 @@ char* vsearch_core(
 {
     char* json_output = (char*)malloc(JSON_BUFFER_SIZE);
     if (!json_output) return strdup("{\"error\":\"Memory allocation failed\"}");
+    
+    if (MaxK > MAX_CODE_LENGTH) MaxK = MAX_CODE_LENGTH;
+    if (MinK < 1) MinK = 1;
+    if (ncpus < 1) ncpus = 1;
     
     /* For MODE_CONSTANT/MODE_BATCH: allocate per-target state */
     TargetState* targets = NULL;
@@ -566,24 +628,21 @@ char* vsearch_core(
     st.json_ptr += w;
     st.json_remaining -= w;
     
-    char ternary[MAX_CODE_LENGTH];
-    int indices[MAX_CODE_LENGTH];
-    
     for (int K = MinK; K <= MaxK && !st.stop_search; K++) {
-        uint64_t n_ternary = 1;
-        for (int i = 0; i < K; i++) n_ternary *= 3;
+        uint64_t n_ternary = rpn_pow3(K);
         uint64_t chunk = (n_ternary + ncpus - 1) / ncpus;
         uint64_t start = (uint64_t)cpu_id * chunk;
         uint64_t end = MIN(start + chunk, n_ternary);
-        int_to_ternary(start, ternary, K);
         
-        for (uint64_t t = start; t < end && !st.stop_search; t++) {
-            st.total_ternary++;
-            if (check_ternary_syntax(ternary, K)) {
-                st.valid_ternary++;
-                generate_and_evaluate(ternary, indices, 0, K, &st);
-            }
-            if (t < end - 1) ternary_increment(ternary, K);
+        /* Every grammatical form of this chunk, in increasing index order */
+        uint64_t stopped_at = UINT64_MAX;
+        rpn_enumerate_forms(K, start, end, visit_form, &st, &stopped_at);
+        
+        /* Strings the former linear scan of [start, end) would have touched
+           before stopping; kept so the JSON counters and the abort heuristic
+           below report exactly what they always did. */
+        if (end > start) {
+            st.total_ternary += (stopped_at != UINT64_MAX) ? (stopped_at - start + 1) : (end - start);
         }
         
         /* Emit K_BEST after each level (for CONSTANT/BATCH mode) */

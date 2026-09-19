@@ -5,6 +5,18 @@ This is a Next.js 16 frontend for the constant recognizer. The project is config
 ## Development
 - Install dependencies: `npm install`
 - Start the dev server: `npm run dev`
+- Run the unit tests: `npm test`
+
+## Rebuilding the WASM engine
+The search engine lives in `../C` and is compiled with Emscripten into `public/wasm/vsearch.js` + `vsearch.wasm`
+(both committed, so a plain `npm run build` needs no emcc):
+
+```
+cd ../C && make wasm
+```
+
+Exports used by `public/wasm/worker.js`: `search_RPN_with_cr` (full CALC4), `search_RPN_custom_cr` (any button
+set, with the CR early-exit threshold), `search_RPN_complex` (complex domain, target `z_re + i z_im`), `evaluate_RPN_complex` (value of a named RPN code).
 
 ## Static production build
 - Build the site: `npm run build`

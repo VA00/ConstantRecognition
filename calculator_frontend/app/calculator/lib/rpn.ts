@@ -7,7 +7,9 @@ export const namedConstants: Record<string, string> = {
   "NEG": "-1", "ZERO": "0", "ONE": "1", "TWO": "2", "THREE": "3",
   "FOUR": "4", "FIVE": "5", "SIX": "6", "SEVEN": "7", "EIGHT": "8",
   "NINE": "9", "POL": "½", "PI": "π", "EULER": "e", "GOLDENRATIO": "φ",
-  "EULER_GAMMA": "γ"  // Euler-Mascheroni constant (not in WASM yet)
+  // beyond CALC4 (CALC4C.h): imaginary unit and witness constants
+  "I": "i", "GLAISHER": "A", "CATALAN": "G", "KHINCHIN": "K₀", "EULERGAMMA": "γ",
+  "EULER_GAMMA": "γ"  // legacy spelling
 };
 
 export const namedFunctions: Record<string, string> = {
@@ -19,14 +21,20 @@ export const namedFunctions: Record<string, string> = {
 };
 
 export const namedOperators: Record<string, string> = {
-  "PLUS": "+", "SUBTRACT": "-", "TIMES": "*", "DIVIDE": "/", "POWER": "^"
+  "PLUS": "+", "SUBTRACT": "-", "TIMES": "*", "DIVIDE": "/", "POWER": "^",
+  "LOGARITHM": "log"   // rendered as log_base(x), see the converters below
 };
 
 // Numerical constants for evaluation
 export const numConstants: Record<string, number> = {
   "NEG": -1, "ZERO": 0, "ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5,
   "SIX": 6, "SEVEN": 7, "EIGHT": 8, "NINE": 9, "POL": 0.5,
-  "PI": Math.PI, "EULER": Math.E, "GOLDENRATIO": (1 + Math.sqrt(5)) / 2
+  "PI": Math.PI, "EULER": Math.E, "GOLDENRATIO": (1 + Math.sqrt(5)) / 2,
+  // values shared with C/extra_constants.h
+  "GLAISHER": 1.2824271291006226, "CATALAN": 0.915965594177219,
+  "KHINCHIN": 2.6854520010653064, "EULERGAMMA": 0.5772156649015329,
+  "EULER_GAMMA": 0.5772156649015329,
+  "I": NaN  // complex-only; real evaluation of a formula with i is undefined
 };
 
 export const numFunctions: Record<string, (x: number) => number> = {
@@ -40,7 +48,8 @@ export const numFunctions: Record<string, (x: number) => number> = {
 export const numOperators: Record<string, (a: number, b: number) => number> = {
   "PLUS": (a, b) => a + b, "SUBTRACT": (a, b) => a - b,
   "TIMES": (a, b) => a * b, "DIVIDE": (a, b) => a / b,
-  "POWER": (a, b) => Math.pow(a, b)
+  "POWER": (a, b) => Math.pow(a, b),
+  "LOGARITHM": (base, x) => Math.log(x) / Math.log(base)   // same order as ln() in C/math2.h
 };
 
 // Gamma function approximation (Lanczos)
@@ -150,12 +159,13 @@ export function rpnToInfix(rpn: string | string[]): string {
     } else if (namedOperators[token]) {
       const right = stack.pop() || '?';  // top of stack
       const left = stack.pop() || '?';   // second from top
-      if (isShort) {
-        // Standard RPN: "a b op" means op(a, b)
-        stack.push(`(${left} ${namedOperators[token]} ${right})`);
+      // Standard RPN: "a b op" means op(a, b); WASM RPN: "a b op" means op(b, a)
+      const lhs = isShort ? left : right;
+      const rhs = isShort ? right : left;
+      if (token === 'LOGARITHM') {
+        stack.push(`log_${lhs}(${rhs})`);
       } else {
-        // WASM non-standard RPN: "a b op" means op(b, a)
-        stack.push(`(${right} ${namedOperators[token]} ${left})`);
+        stack.push(`(${lhs} ${namedOperators[token]} ${rhs})`);
       }
     } else if (token) {
       // Unknown token - push as-is
@@ -190,7 +200,8 @@ export function evaluateRPN(rpn: string | string[]): number {
       }
     }
   });
-  return stack.pop() || NaN;
+  // `??` not `||`: a legitimate result of 0 (e.g. "ZERO", "ONE, ONE, SUBTRACT") is not an error
+  return stack.pop() ?? NaN;
 }
 
 // Extract precision info from input string
@@ -228,7 +239,8 @@ export function rpnToMathematica(rpn: string | string[]): string {
     "NEG": "(-1)", "ZERO": "0", "ONE": "1", "TWO": "2", "THREE": "3",
     "FOUR": "4", "FIVE": "5", "SIX": "6", "SEVEN": "7", "EIGHT": "8",
     "NINE": "9", "PI": "Pi", "EULER": "E", "GOLDENRATIO": "GoldenRatio",
-    "EULER_GAMMA": "EulerGamma", "POL": "(1/2)"
+    "I": "I", "GLAISHER": "Glaisher", "CATALAN": "Catalan", "KHINCHIN": "Khinchin",
+    "EULERGAMMA": "EulerGamma", "EULER_GAMMA": "EulerGamma", "POL": "(1/2)"
   };
   const mmaFunctions: Record<string, string> = {
     "EXP": "Exp", "LOG": "Log", "SIN": "Sin", "ARCSIN": "ArcSin",
@@ -243,7 +255,7 @@ export function rpnToMathematica(rpn: string | string[]): string {
     "MINUS": x => `(-${x})`
   };
   const mmaOperators: Record<string, string> = {
-    "PLUS": "+", "SUBTRACT": "-", "TIMES": "*", "DIVIDE": "/", "POWER": "^"
+    "PLUS": "+", "SUBTRACT": "-", "TIMES": "*", "DIVIDE": "/", "POWER": "^", "LOGARITHM": "Log"
   };
 
   const stack: string[] = [];
@@ -259,12 +271,13 @@ export function rpnToMathematica(rpn: string | string[]): string {
     } else if (mmaOperators[token]) {
       const right = stack.pop() || '?';  // top
       const left = stack.pop() || '?';   // second
-      if (isShort) {
-        // Standard RPN: "a b op" means op(a, b)
-        stack.push(`(${left} ${mmaOperators[token]} ${right})`);
+      // Standard RPN: "a b op" means op(a, b); WASM RPN: "a b op" means op(b, a)
+      const lhs = isShort ? left : right;
+      const rhs = isShort ? right : left;
+      if (token === 'LOGARITHM') {
+        stack.push(`Log[${lhs}, ${rhs}]`);   // Log[base, x]
       } else {
-        // WASM non-standard RPN: "a b op" means op(b, a)
-        stack.push(`(${right} ${mmaOperators[token]} ${left})`);
+        stack.push(`(${lhs} ${mmaOperators[token]} ${rhs})`);
       }
     } else if (token) {
       // Unknown token - push as-is
@@ -297,7 +310,8 @@ export function rpnToLatex(rpn: string | string[]): string {
     "NEG": "(-1)", "ZERO": "0", "ONE": "1", "TWO": "2", "THREE": "3",
     "FOUR": "4", "FIVE": "5", "SIX": "6", "SEVEN": "7", "EIGHT": "8",
     "NINE": "9", "PI": "\\pi", "EULER": "e", "GOLDENRATIO": "\\varphi",
-    "EULER_GAMMA": "\\gamma"
+    "I": "i", "GLAISHER": "A", "CATALAN": "G", "KHINCHIN": "K_0",
+    "EULERGAMMA": "\\gamma", "EULER_GAMMA": "\\gamma"
   };
   
   const latexFunctions: Record<string, (x: string) => string> = {
@@ -322,7 +336,7 @@ export function rpnToLatex(rpn: string | string[]): string {
     "MINUS": x => `(-${x})`
   };
   
-  const latexOperators = new Set(["PLUS", "SUBTRACT", "TIMES", "DIVIDE", "POWER"]);
+  const latexOperators = new Set(["PLUS", "SUBTRACT", "TIMES", "DIVIDE", "POWER", "LOGARITHM"]);
 
   const stack: LatexNode[] = [];
   tokens.forEach(token => {
@@ -365,6 +379,11 @@ export function rpnToLatex(rpn: string | string[]): string {
         const leftLatex = wrapWithParens(lhs, 3);
         const rightLatex = wrapWithParens(rhs, 4);
         stack.push({ latex: `{${leftLatex}}^{${rightLatex}}`, precedence: 3 });
+        return;
+      }
+      if (token === 'LOGARITHM') {
+        // log to base lhs of rhs (base is the top of the stack in WASM order)
+        stack.push({ latex: `\\log_{${lhs.latex}}\\left(${rhs.latex}\\right)`, precedence: 4 });
         return;
       }
     } else if (token) {

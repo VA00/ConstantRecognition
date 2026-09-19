@@ -26,6 +26,14 @@
 //    by exact leaf weight, so big slices start while there is still plenty
 //    of other work to run alongside them.
 //
+// Deep levels of small calculators are handled differently. With only a few
+// buttons the number of valid structures explodes (Motzkin numbers: 2188 at
+// K=11, 310572 at K=16) while each structure carries very little work, so
+// one-task-per-structure would drown in message overhead. Such levels are
+// cut into a fixed number of contiguous index ranges instead; the engine's
+// pruned depth-first enumeration skips the invalid indices inside a range
+// cheaply, and with a small alphabet the work per range is nearly uniform.
+//
 // The queue also supports a user-restricted calculator (button palette):
 // pass the enabled subsets and every task carries explicit const/func/op
 // lists for search_RPN_custom, with weights computed from the subset sizes.
@@ -35,7 +43,7 @@ export interface SearchTask {
   maxK: number;      // MaxCodeLength passed to WASM for this slice
   taskId: number;    // passed to WASM as cpuId  (slice index within level)
   taskCount: number; // passed to WASM as ncpus  (total slices of this level)
-  weight: number;    // exact leaf count of this slice (for ordering/debug)
+  weight: number;    // leaf count of this slice (exact for structures, average for ranges)
   // When set, the worker calls search_RPN_custom with these exact lists
   // instead of the full-calculator entry point. NOTE: the C parser treats an
   // empty string as "zero ops", which matches "user disabled all of them" —
@@ -46,7 +54,7 @@ export interface SearchTask {
   opList?: string;
 }
 
-// Enabled button subsets, in canonical CALC4 order.
+// Enabled button subsets, in canonical order.
 export interface CalculatorSelection {
   consts: string[];
   funcs: string[];
@@ -65,16 +73,28 @@ export const CALC4_FUNCS = [
 ];
 export const CALC4_OPS = ['PLUS', 'TIMES', 'SUBTRACT', 'DIVIDE', 'POWER'];
 
+// Buttons beyond CALC4 (CALC4C.h / CALC4_EXTRA_* tables in CALC4.h).
+// I is only meaningful in the complex domain; everything else is real.
+export const EXTRA_CONSTS = ['ZERO', 'I', 'GLAISHER', 'CATALAN', 'KHINCHIN', 'EULERGAMMA'];
+export const EXTRA_FUNCS = ['MINUS'];     // sign change, -x
+export const EXTRA_OPS = ['LOGARITHM'];   // "a, b, LOGARITHM" = log_b(a), base pushed last
+export const COMPLEX_ONLY_CONSTS = ['I'];
+
 export const FULL_CALCULATOR: CalculatorSelection = {
   consts: CALC4_CONSTS,
   funcs: CALC4_FUNCS,
   ops: CALC4_OPS,
 };
 
+const sameSet = (a: string[], b: string[]) =>
+  a.length === b.length && a.every((x) => b.includes(x));
+
+// True iff the selection is exactly the 36-button CALC4 (no extras, nothing
+// missing). Only then may the default full-calculator entry point be used.
 export function isFullCalculator(calc: CalculatorSelection): boolean {
-  return calc.consts.length === CALC4_CONSTS.length &&
-         calc.funcs.length === CALC4_FUNCS.length &&
-         calc.ops.length === CALC4_OPS.length;
+  return sameSet(calc.consts, CALC4_CONSTS) &&
+         sameSet(calc.funcs, CALC4_FUNCS) &&
+         sameSet(calc.ops, CALC4_OPS);
 }
 
 // Levels 1..BUNDLE_MAX_K are enumerated in a single task: together they
@@ -85,6 +105,55 @@ export const BUNDLE_MAX_K = 4;
 // Split the pure-unary chain into single-constant tasks from this level up.
 // Below it the chain is small enough to stay a normal task.
 export const CHAIN_SPLIT_MIN_K = 6;
+
+// Levels with more valid structures than this are cut into contiguous index
+// ranges instead of one task per structure.
+export const MAX_STRUCTURE_TASKS = 1500;
+
+// Number of contiguous ranges a deep level is cut into.
+export const RANGE_TASKS_PER_LEVEL = 512;
+
+// Number of syntactically valid ternary structures of length K: the Motzkin
+// number M(K-1) (OEIS A001006). M(0..5) = 1, 1, 2, 4, 9, 21.
+export function validStructureCount(K: number): number {
+  if (K < 1) return 0;
+  let a = 1, b = 1; // M(0), M(1)
+  if (K === 1 || K === 2) return 1;
+  for (let n = 2; n <= K - 1; n++) {
+    // M(n) = ((2n+1) M(n-1) + (3n-3) M(n-2)) / (n+2)
+    const c = ((2 * n + 1) * b + (3 * n - 3) * a) / (n + 2);
+    a = b;
+    b = c;
+  }
+  return b;
+}
+
+// Total number of leaf evaluations at level K for a calculator with nc
+// constants, nu unary functions and nb binary operators, summed over all
+// valid structures. Dynamic programme over (position, stack depth).
+export function levelWork(K: number, nc: number, nu: number, nb: number): number {
+  if (K < 1 || nc === 0) return 0;
+  let dp = new Map<number, number>([[0, 1]]);
+  for (let i = 0; i < K; i++) {
+    const next = new Map<number, number>();
+    const add = (s: number, w: number) => next.set(s, (next.get(s) ?? 0) + w);
+    for (const [s, w] of dp) {
+      add(s + 1, w * nc);
+      if (s >= 1) add(s, w * nu);
+      if (s >= 2) add(s - 1, w * nb);
+    }
+    dp = next;
+  }
+  return dp.get(1) ?? 0;
+}
+
+// Cumulative evaluations for levels 1..searchDepth (what a full search costs).
+export function estimateWork(searchDepth: number, calc: CalculatorSelection): number {
+  const nc = calc.consts.length, nu = calc.funcs.length, nb = calc.ops.length;
+  let total = 0;
+  for (let K = 1; K <= searchDepth; K++) total += levelWork(K, nc, nu, nb);
+  return total;
+}
 
 // Exact leaf count of ternary structure k at level K (0 if syntactically
 // invalid) for a calculator with nc constants, nu unary functions and nb
@@ -142,13 +211,25 @@ export function buildTaskQueue(
   const bundleMax = Math.min(BUNDLE_MAX_K, searchDepth);
   tasks.push({ minK: 1, maxK: bundleMax, taskId: 0, taskCount: 1, weight: 0, ...lists });
 
-  // Valid structures are sparse (Motzkin numbers: 21 of 3^5, 51 of 3^7,
-  // 323 of 3^9), so every valid structure simply becomes its own task:
-  // ncpus = 3^K makes the WASM chunk exactly one structure. Task counts
-  // stay tiny (~340 calls at depth 9) while no task can hide a cluster of
-  // heavy structures the way fixed-size ranges did.
   for (let K = bundleMax + 1; K <= searchDepth; K++) {
     const N = Math.pow(3, K);
+
+    if (validStructureCount(K) > MAX_STRUCTURE_TASKS) {
+      // Deep level of a small calculator: contiguous index ranges. Ranges
+      // are equal in index count, and with few buttons nearly equal in work.
+      const count = Math.min(RANGE_TASKS_PER_LEVEL, N);
+      const perTask = levelWork(K, nc, nu, nb) / count;
+      for (let j = 0; j < count; j++) {
+        tasks.push({ minK: K, maxK: K, taskId: j, taskCount: count, weight: perTask, ...lists });
+      }
+      continue;
+    }
+
+    // Valid structures are sparse (Motzkin numbers: 21 of 3^5, 51 of 3^7,
+    // 323 of 3^9), so every valid structure simply becomes its own task:
+    // ncpus = 3^K makes the WASM chunk exactly one structure. Task counts
+    // stay small (~340 calls at depth 9) while no task can hide a cluster of
+    // heavy structures the way fixed-size ranges did.
     // Splitting needs >=2 constants to matter and >=1 unary to exist
     const splitChain = K >= CHAIN_SPLIT_MIN_K && nc >= 2 && nu >= 1;
     const chain = chainIndex(K);

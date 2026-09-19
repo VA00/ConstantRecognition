@@ -29,6 +29,7 @@
 #include <math.h>
 #include "vsearch_RPN_core.h"
 #include "math2.h"
+#include "extra_constants.h"
 
 /* ============================================================================
  * CONSTANTS (13)
@@ -54,6 +55,50 @@ static const ConstOp CALC4_CONSTS[] = {
 };
 
 #define CALC4_N_CONST ((int)ARRAY_SIZE(CALC4_CONSTS))
+
+/* ============================================================================
+ * EXTRA CONSTANTS (4)
+ *
+ * Not part of the 36-button CALC4 set. Accepted by name by the string-based
+ * WASM wrapper so the frontend can enable them individually. Values are
+ * shared with the complex calculator (CALC4C.h) via extra_constants.h.
+ * ============================================================================ */
+
+static const ConstOp CALC4_EXTRA_CONSTS[] = {
+    { 0.0,              "ZERO"       },
+    { GLAISHER_VALUE,   "GLAISHER"   },
+    { CATALAN_VALUE,    "CATALAN"    },
+    { KHINCHIN_VALUE,   "KHINCHIN"   },
+    { EULERGAMMA_VALUE, "EULERGAMMA" }
+};
+
+#define CALC4_N_EXTRA_CONST ((int)ARRAY_SIZE(CALC4_EXTRA_CONSTS))
+
+/* ============================================================================
+ * EXTRA UNARY FUNCTIONS (1)
+ *
+ * MINUS: sign change, Minus[x] = -x in Mathematica.
+ * ============================================================================ */
+
+static const UnaryOp CALC4_EXTRA_FUNCS[] = {
+    { minus, "MINUS" }   /* from math2.h */
+};
+
+#define CALC4_N_EXTRA_UNARY ((int)ARRAY_SIZE(CALC4_EXTRA_FUNCS))
+
+/* ============================================================================
+ * EXTRA BINARY OPERATORS (1)
+ *
+ * LOGARITHM: logarithm to an arbitrary base, Log[base, x] in Mathematica.
+ * With the engine's f(top, second) convention the RPN code "a, b, LOGARITHM"
+ * evaluates ln(b, a) = log(a)/log(b) = log_b(a): the base is pushed last.
+ * ============================================================================ */
+
+static const BinaryOp CALC4_EXTRA_OPS[] = {
+    { ln, "LOGARITHM" }   /* from math2.h: ln(x, y) = log(y)/log(x) */
+};
+
+#define CALC4_N_EXTRA_BINARY ((int)ARRAY_SIZE(CALC4_EXTRA_OPS))
 
 /* ============================================================================
  * UNARY FUNCTIONS (18)
