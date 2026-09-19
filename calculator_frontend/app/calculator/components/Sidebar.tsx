@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ActiveWorker, Precision, ErrorMode } from '../lib/types';
 import { Domain } from '../lib/complex';
 import { formatDuration } from '../lib/estimate';
+import { assetPath } from '../lib/basePath';
 import { getCalculatorById, DEFAULT_CALCULATOR_ID } from '../lib/calculators';
 import { CalculatorPalette } from './CalculatorPalette';
 
@@ -155,7 +156,7 @@ export function Sidebar({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img
-                src="/cdaaebfdc71641160f831c2a2fb564ce8d081055.png"
+                src={assetPath('/cdaaebfdc71641160f831c2a2fb564ce8d081055.png')}
                 alt="Logo"
                 className="w-10 h-10 rounded-lg object-cover"
               />

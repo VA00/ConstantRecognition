@@ -1,4 +1,23 @@
 import type { NextConfig } from "next";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+// Content hash of the hand-referenced WASM files, used as a cache-busting
+// query (?v=...) on worker.js, vsearch.js and vsearch.wasm. Static servers
+// (e.g. plain Apache) send no cache-control headers for them, and browsers
+// would otherwise keep running an old engine against a new page.
+const wasmVersion = (() => {
+  const hash = createHash("md5");
+  for (const f of ["worker.js", "vsearch.js", "vsearch.wasm"]) {
+    try {
+      hash.update(readFileSync(join(__dirname, "public", "wasm", f)));
+    } catch {
+      hash.update(f);
+    }
+  }
+  return hash.digest("hex").slice(0, 10);
+})();
 
 
   
@@ -11,6 +30,9 @@ import type { NextConfig } from "next";
 
   const nextConfig: NextConfig = {
 
+    env: {
+      NEXT_PUBLIC_WASM_VERSION: wasmVersion,
+    },
   
     // Generate a static export in `out/` when running `next build`
     output: "export",

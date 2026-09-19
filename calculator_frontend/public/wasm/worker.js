@@ -1,5 +1,13 @@
 // Worker script: worker.js
-importScripts('vsearch.js');
+//
+// The page loads this file as worker.js?v=<hash>. The same query is forwarded
+// to vsearch.js and vsearch.wasm so that all three are cache-busted together
+// (static servers send no cache-control headers for them).
+var wasmQuery = (typeof self !== 'undefined' && self.location && self.location.search) ? self.location.search : '';
+var Module = {
+    locateFile: function(path, prefix) { return (prefix || '') + path + wasmQuery; }
+};
+importScripts('vsearch.js' + wasmQuery);
 
 let isReady = false;
 

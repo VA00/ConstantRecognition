@@ -12,6 +12,7 @@ import {
 } from './lib/taskQueue';
 import { getCompressionRatio as computeCR } from './lib/cr';
 import { ThroughputRecord, loadThroughput, saveThroughput, measureRate, estimateSeconds } from './lib/estimate';
+import { withBasePath, wasmVersionQuery } from './lib/basePath';
 import { getCalculatorById, DEFAULT_CALCULATOR_ID, defaultEnabledTokens } from './lib/calculators';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
@@ -24,19 +25,6 @@ const DEFAULT_TOKENS = defaultEnabledTokens(getCalculatorById(DEFAULT_CALCULATOR
 const ALL_CONSTS = [...CALC4_CONSTS, ...EXTRA_CONSTS];
 const ALL_FUNCS = [...CALC4_FUNCS, ...EXTRA_FUNCS];
 const ALL_OPS = [...CALC4_OPS, ...EXTRA_OPS];
-
-// Ensures that all worker/WASM fetches include the configured base path (if any).
-// - Trailing slashes are removed so "//" never appears in URLs.
-// - A leading "/" is added when needed so a value like "~user/app" becomes "/~user/app".
-// - In the browser we return an absolute URL using window.location.origin; on the server we
-//   return a path that Next.js can understand during static export.
-const withBasePath = (path: string) => {
-  const base = process.env.NEXT_PUBLIC_BASE_PATH?.replace(/\/+$/g, '') ?? '';
-  const normalizedBase = base ? (base.startsWith('/') ? base : `/${base}`) : '';
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  if (typeof window === 'undefined') return `${normalizedBase}${normalizedPath}`;
-  return new URL(`${normalizedBase}${normalizedPath}`, window.location.origin).toString();
-};
 
 // Raw result row as emitted by the WASM engine (real or complex)
 interface EngineRow {
@@ -151,7 +139,7 @@ export default function CalculatorPage() {
   useEffect(() => {
     const checkWasm = async () => {
       try {
-        const response = await fetch(withBasePath('/wasm/vsearch.wasm'), { method: 'HEAD' });
+        const response = await fetch(withBasePath('/wasm/vsearch.wasm') + wasmVersionQuery(), { method: 'HEAD' });
         setWasmLoaded(response.ok);
       } catch {
         setWasmLoaded(false);
@@ -419,7 +407,8 @@ export default function CalculatorPage() {
     const initialActiveWorkers: ActiveWorker[] = [];
 
     for (let i = 0; i < workerCount; i++) {
-      const worker = new Worker(withBasePath('/wasm/worker.js'));
+      // The query is forwarded by worker.js to vsearch.js and vsearch.wasm
+      const worker = new Worker(withBasePath('/wasm/worker.js') + wasmVersionQuery());
       worker.onmessage = onWorkerMessage(worker, i);
       worker.onerror = onWorkerError(worker, i);
       workers.push(worker);

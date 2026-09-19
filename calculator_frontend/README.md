@@ -32,22 +32,34 @@ path baked in so all assets resolve correctly:
 NEXT_PUBLIC_BASE_PATH=/constant npm run build
 ```
 
-This sets both the Next.js `basePath` and the URLs used to load the WASM worker so the static files under `out/`
-remain portable.
+This sets the Next.js `basePath` and the URLs used to load the worker, the WASM files and the images in `public/`,
+so the static files under `out/` remain portable. The three hand-referenced engine files (`wasm/worker.js`,
+`wasm/vsearch.js`, `wasm/vsearch.wasm`) are requested with a `?v=<content hash>` query computed at build time, so
+browsers pick up a new engine even when the server sends no cache-control headers.
 
-**Example for FreeBSD server**
+### Deployment to the FreeBSD server (th.if.uj.edu.pl)
 
-Target URL: `http://th.if.uj.edu.pl/~odrzywolek/WASM/calculator/`
+Target: `http://th.if.uj.edu.pl/~odrzywolek/WASM/calculator/` (landing page) and
+`http://th.if.uj.edu.pl/~odrzywolek/WASM/calculator/calculator/` (the recognizer). Plain Apache, no Node.js.
 
-1. In PowerShell, set the base path (note: use the path portion, not the full URL):
-   ```powershell
-   $env:NEXT_PUBLIC_BASE_PATH = "/~odrzywolek/WASM/calculator"
-   npm run build
+1. Make sure the committed WASM engine is current (`cd ../C && make wasm` if the C sources changed, then commit
+   `public/wasm/vsearch.js` and `vsearch.wasm`).
+2. Build with the base path (macOS/Linux shell; on PowerShell set `$env:NEXT_PUBLIC_BASE_PATH` first):
    ```
-2. Copy the generated `out/` directory to `http://th.if.uj.edu.pl/~odrzywolek/WASM/calculator/` on the server (so
-   `out/index.html` ends up at `.../calculator/index.html`, `out/wasm/worker.js` at `.../calculator/wasm/worker.js`,
-   etc.).
-3. Serve the contents of `out/` with any HTTP server (Apache `httpd`, `nginx`, etc.) — no Node.js runtime is needed
-   on the server because everything is static.
+   rm -rf out && NEXT_PUBLIC_BASE_PATH=/~odrzywolek/WASM/calculator npm run build
+   ```
+3. Copy the *contents* of `out/` to the directory Apache serves as `~odrzywolek/WASM/calculator/`, so that
+   `out/index.html` becomes `.../calculator/index.html` and `out/wasm/worker.js` becomes `.../calculator/wasm/worker.js`:
+   ```
+   rsync -avz --delete out/ USER@th.if.uj.edu.pl:public_html/WASM/calculator/
+   ```
+   `--delete` removes the hashed chunks of the previous build (only use it if the directory holds nothing else).
+   Without rsync on the server: `tar czf - -C out . | ssh USER@th.if.uj.edu.pl 'tar xzf - -C public_html/WASM/calculator'`.
+4. Files must be world-readable: `chmod -R a+rX public_html/WASM/calculator` on the server if needed.
+5. Optional: if `AllowOverride` permits it, a `.htaccess` with `AddType application/wasm .wasm` lets browsers use
+   streaming compilation. Without it the engine still works (the loader falls back to ArrayBuffer instantiation).
+6. Check in the browser: the sidebar status should say "WASM Ready"; in the console, the JSON returned by the
+   workers carries a `buildTime` field that must match the new build. No COOP/COEP headers are required (the
+   workers do not share memory), so plain `http://` is fine.
 
 If you prefer to run the Next.js server instead of exporting static files, omit `output: "export"` in `next.config.ts` and use `npm run start` after `npm run build`.
