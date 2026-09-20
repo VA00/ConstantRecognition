@@ -1,9 +1,19 @@
 # EML reduction game — plan and hand-over notes
 
-Game page for the Małopolska Noc Naukowców talk. This directory will hold the
-Next.js route `/game/` (`page.tsx` + components). Nothing is implemented here
-yet; this file records what is agreed, what is already available, and how to
-continue.
+Game page for the Małopolska Noc Naukowców talk: the Next.js route `/game/`.
+
+**Status (2026-09-20):** prototype implemented and deployed under the
+calculator (`.../calculator/game/`). Start set = `CALC_Milei.png` (38 buttons),
+easy mode only (1, Exp, Log, − locked), exact one-point match, no second-witness
+verification, game clock from the first attempt to the win. Files: `page.tsx`,
+`lib/game.ts` (rules), `lib/depth.ts` (search depth for a time budget),
+`lib/searchPool.ts` (worker pool), `components/Keypad.tsx`, `RemovalLog.tsx`,
+`ResultOverlay.tsx` (phone pop-up); tests in `../../tests/game.test.ts`.
+Local dev needs a base path, e.g. `NEXT_PUBLIC_BASE_PATH=/cr npm run dev` and
+`http://localhost:3000/cr/game/`; plain `npm run dev` serves nested routes
+without working scripts (relative `assetPrefix`).
+
+The rest of this file is the original plan and the agreed rules.
 
 ## The game
 
