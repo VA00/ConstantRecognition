@@ -7,7 +7,7 @@ import {
   GameState, Removal, RemovalTask, newGame, removeButton, undo, isWon, isLocked, isRemoved,
   removalTask, identityOf, buttonLatex, EML_BUTTONS, START_BUTTONS,
 } from './lib/game';
-import { DepthPlan, planDepth, nextLevel, DEFAULT_BUDGET_SECONDS } from './lib/depth';
+import { DepthPlan, planDepth, nextLevel } from './lib/depth';
 import { SearchPool } from './lib/searchPool';
 import { Keypad, KEY_LABELS } from './components/Keypad';
 import { RemovalLog } from './components/RemovalLog';
@@ -19,6 +19,8 @@ type Phase =
   | { kind: 'found'; removal: Removal; seconds: number }
   | { kind: 'notfound'; task: RemovalTask; plan: DepthPlan; seconds: number; deeper: DepthPlan }
   | { kind: 'error'; message: string };
+
+const MAX_THREADS = 32;
 
 // "1:23.4"
 function formatClock(seconds: number): string {
@@ -42,14 +44,13 @@ export default function GamePage() {
   const [selected, setSelected] = useState<string | null>(null);   // identity shown from the log
   const [elapsed, setElapsed] = useState(0);
   const [threads, setThreads] = useState(4);
-  const [maxThreads, setMaxThreads] = useState(8);
   const [throughput, setThroughput] = useState<ThroughputRecord>({});
-  const [budget, setBudget] = useState(DEFAULT_BUDGET_SECONDS);
   // Game clock: starts at the first attempt, stops at the win (undo resumes it)
   const [clock, setClock] = useState<{ start: number | null; end: number | null }>({ start: null, end: null });
   const [now, setNow] = useState(0);
   // Small screens: the result pops up over the keypad until tapped away
   const [overlayDismissed, setOverlayDismissed] = useState(false);
+  const [winDismissed, setWinDismissed] = useState(false);
 
   const poolRef = useRef<SearchPool | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -57,7 +58,6 @@ export default function GamePage() {
   useEffect(() => {
     const cpus = navigator.hardwareConcurrency || 4;
     setThreads(cpus);
-    setMaxThreads(cpus);
     setThroughput(loadThroughput());
     poolRef.current = new SearchPool(cpus);
     return () => {
@@ -88,6 +88,9 @@ export default function GamePage() {
     const id = setTimeout(() => setOverlayDismissed(true), 3000);
     return () => clearTimeout(id);
   }, [phase]);
+  useEffect(() => {
+    if (!won) setWinDismissed(false);
+  }, [won]);
   const removedCount = START_BUTTONS.length - game.remaining.length;
 
   const startTimer = () => {
@@ -155,7 +158,7 @@ export default function GamePage() {
       return;
     }
     const task = removalTask(game, button);
-    const plan = planDepth(task.selection, threads, throughput, budget);
+    const plan = planDepth(task.selection, threads, throughput);
     if (clock.start === null) {
       const t = performance.now();
       setClock({ start: t, end: null });
@@ -216,6 +219,10 @@ export default function GamePage() {
     } else if (phase.kind === 'error') {
       overlay = { kind: 'error', message: phase.message };
     }
+  }
+  // Victory card once the last hit has been shown (or tapped away)
+  if (overlay === null && won && !winDismissed && phase.kind !== 'searching') {
+    overlay = { kind: 'won', time: formatClock(clockSeconds), removals: removedCount };
   }
 
   return (
@@ -346,23 +353,16 @@ export default function GamePage() {
           <details className="rounded-xl border border-gray-200 bg-white p-4 text-sm dark:border-[#2a2a2e] dark:bg-[#111113]">
             <summary className="cursor-pointer text-xs font-medium uppercase tracking-wider text-gray-500">Settings</summary>
             <div className="mt-3 space-y-3">
-              <label className="flex items-center gap-3">
-                <span className="w-40">Time budget per attempt</span>
-                <input type="range" min={5} max={120} step={5} value={budget} disabled={searching}
-                  onChange={e => setBudget(Number(e.target.value))} className="flex-1" />
-                <span className="w-14 text-right font-mono">{budget} s</span>
-              </label>
+              {/* Browsers under-report cores (Safari says 8 on a 14-core M4), so the slider goes past that */}
               <label className="flex items-center gap-3">
                 <span className="w-40">Threads</span>
-                <input type="range" min={1} max={maxThreads} value={threads} disabled={searching}
+                <input type="range" min={1} max={MAX_THREADS} value={threads} disabled={searching}
                   onChange={e => { setThreads(Number(e.target.value)); poolRef.current?.dispose(); poolRef.current = new SearchPool(Number(e.target.value)); }}
                   className="flex-1" />
                 <span className="w-14 text-right font-mono">{threads}</span>
               </label>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 Measured rate: {throughput.complex ? `${formatCount(throughput.complex)} formulas/s per thread` : 'not yet measured (conservative default)'}.
-                Depth is chosen so the estimated time stays within the budget; exact match only (relative error ≤ 64 ε).
-                {' '}Functions are searched at the witness x = G (Catalan, 0.9159…), operators at x = G, y = γ (EulerGamma, 0.5772…).
               </p>
             </div>
           </details>
@@ -372,7 +372,7 @@ export default function GamePage() {
       {overlay && (
         <ResultOverlay
           content={overlay}
-          onClose={() => setOverlayDismissed(true)}
+          onClose={() => (overlay.kind === 'won' ? setWinDismissed(true) : setOverlayDismissed(true))}
           onAbort={handleAbort}
           onDeeper={handleDeeper}
         />

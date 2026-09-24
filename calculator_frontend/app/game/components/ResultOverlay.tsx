@@ -7,11 +7,13 @@ import { formatDuration } from '../../calculator/lib/estimate';
 // Small-screen companion to the status card: the keypad fills a phone screen
 // and the card sits below it, out of sight. The overlay repeats what matters
 // on top of the keypad: progress while searching, the found identity for a
-// moment, or the decision after a miss.
+// moment, the decision after a miss, or the victory card with the total time
+// (shown on every screen size: the player presents it to claim the prize).
 export type OverlayContent =
   | { kind: 'searching'; lhs: string; elapsed: number; maxK: number; estimate: number }
   | { kind: 'found'; identity: Identity; label: string; K: number }
   | { kind: 'notfound'; lhs: string; maxK: number; seconds: number; deeperK: number; deeperSeconds: number }
+  | { kind: 'won'; time: string; removals: number }
   | { kind: 'error'; message: string };
 
 interface ResultOverlayProps {
@@ -24,13 +26,15 @@ interface ResultOverlayProps {
 export function ResultOverlay({ content, onClose, onAbort, onDeeper }: ResultOverlayProps) {
   const card = 'w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl dark:bg-[#1a1a1d]';
   const button = 'rounded-md px-3 py-2 text-sm font-medium';
+  // Cards without controls close on a tap anywhere, including the card itself
+  const tapToClose = content.kind === 'found' || content.kind === 'won';
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 lg:hidden"
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 ${content.kind === 'won' ? '' : 'lg:hidden'}`}
       onClick={content.kind === 'searching' ? undefined : onClose}
       role="dialog"
     >
-      <div className={card} onClick={e => e.stopPropagation()}>
+      <div className={card} onClick={tapToClose ? undefined : e => e.stopPropagation()}>
         {content.kind === 'searching' && (
           <div className="space-y-3 text-center">
             <div className="flex items-center justify-center gap-3">
@@ -53,7 +57,20 @@ export function ResultOverlay({ content, onClose, onAbort, onDeeper }: ResultOve
               <Latex formula={`${content.identity.lhs} = ${content.identity.rhs}`} />
             </div>
             <div className="font-mono text-[11px] text-gray-500">{content.identity.mathematica}</div>
-            <div className="text-xs text-gray-400">K = {content.K} · tap to continue</div>
+            <div className="text-xs text-gray-400">K = {content.K} · Tap anywhere to continue</div>
+          </div>
+        )}
+
+        {content.kind === 'won' && (
+          <div className="space-y-3 text-center">
+            <div className="text-5xl">🏆</div>
+            <div className="text-2xl font-semibold text-emerald-600">Reduced to EML!</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              {content.removals} buttons removed, only <span className="font-mono">1, Exp, −, Log</span> remain.
+            </div>
+            <div className="text-xs uppercase tracking-wider text-gray-500">Total time</div>
+            <div className="font-mono text-5xl tabular-nums">{content.time}</div>
+            <div className="text-xs text-gray-400">Tap anywhere to close</div>
           </div>
         )}
 

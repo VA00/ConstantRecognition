@@ -15,7 +15,7 @@ export function RemovalLog({ history, selected, onSelect }: RemovalLogProps) {
   if (history.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        No button removed yet. The order matters: remove <span className="font-mono">Exp</span> or{' '}
+        No button removed yet. The order matters: remove <span className="font-mono">√x</span> or{' '}
         <span className="font-mono">i</span> too early and the remaining formulas get long.
       </p>
     );
