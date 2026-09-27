@@ -4,7 +4,7 @@ import { Latex } from './Latex';
 
 
 interface EmptyStateProps {
-  onExampleClick: (value: string) => void;
+  onExampleClick: (value: string, enable?: string[]) => void;
 }
 
 export function EmptyState({ onExampleClick }: EmptyStateProps) {
@@ -28,7 +28,7 @@ export function EmptyState({ onExampleClick }: EmptyStateProps) {
           {examples.map(ex => (
             <button
               key={ex.value}
-              onClick={() => onExampleClick(ex.value)}
+              onClick={() => onExampleClick(ex.value, ex.enable)}
               className="px-4 py-2 text-sm bg-gray-100 dark:bg-[#2a2a2e] hover:bg-gray-200 dark:hover:bg-[#3a3a3e] text-gray-700 dark:text-gray-300 rounded-lg transition-colors group relative"
               title={ex.description}
             >

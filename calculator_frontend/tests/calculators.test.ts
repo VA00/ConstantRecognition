@@ -6,10 +6,9 @@ describe('default palette', () => {
   const calc = getCalculatorById('calc4');
   const enabled = defaultEnabledTokens(calc);
 
-  it('starts with 36 buttons, real domain, no extras', () => {
-    expect(enabled).toHaveLength(36);
-    expect(enabled).not.toContain('I');
-    expect(enabled).toContain('ZERO');
+  it('starts with 34 buttons, real domain, no extras', () => {
+    expect(enabled).toHaveLength(34);
+    for (const t of ['I', 'NEG', 'ZERO']) expect(enabled).not.toContain(t);
     expect(enabled).toContain('LOGARITHM');
     for (const t of [...calc.constantsExtra, ...calc.extra]) expect(enabled).not.toContain(t);
     expect(resolveDomain('auto', parseComplexInput('3.14'), enabled)).toBe('real');

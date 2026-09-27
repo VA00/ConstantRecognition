@@ -16,7 +16,7 @@ export interface CalculatorDefinition {
   operators: string[];
   /** Beyond the standard button set (functions or operators); disabled by default */
   extra: string[];
-  /** Standard buttons that nevertheless start disabled (e.g. i, which forces the complex domain) */
+  /** Standard buttons that nevertheless start disabled (-1, 0, and i, which forces the complex domain) */
   defaultDisabled: string[];
 }
 
@@ -26,37 +26,28 @@ export const CALCULATORS: CalculatorDefinition[] = [
     name: 'CALC4',
     shortName: '36-button scientific RPN calculator',
     description: 'Default search calculator. Click buttons to restrict the search space.',
-    // Euler's identity e^(i pi) + 1 = 0: pi, e, -1, 0, i. i starts disabled
-    // (see defaultDisabled): enabling it switches the Auto domain to the
-    // complex plane.
+    // Euler's identity e^(i pi) + 1 = 0: pi, e, -1, 0, i. -1, 0 and i start
+    // disabled (see defaultDisabled); enabling i switches the Auto domain to
+    // the complex plane.
     constantsCore: ['PI', 'EULER', 'NEG', 'ZERO', 'I'],
     constantsDigits: ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE'],
     // Off by default. The last four are transcendental constants with no known
     // relation to the rest, handy as generic "witness" values.
     constantsExtra: ['GOLDENRATIO', 'GLAISHER', 'CATALAN', 'KHINCHIN', 'EULERGAMMA'],
     unaryCore: ['LOG', 'EXP'],
+    // rows of three: 1/x √x x² | sin cos tan | asin acos atan | sinh cosh tanh | asinh acosh atanh
     unaryOther: [
-      'INV',
-      'SQRT',
-      'SQR',
-      'SIN',
-      'ARCSIN',
-      'COS',
-      'ARCCOS',
-      'TAN',
-      'ARCTAN',
-      'SINH',
-      'ARCSINH',
-      'COSH',
-      'ARCCOSH',
-      'TANH',
-      'ARCTANH',
+      'INV', 'SQRT', 'SQR',
+      'SIN', 'COS', 'TAN',
+      'ARCSIN', 'ARCCOS', 'ARCTAN',
+      'SINH', 'COSH', 'TANH',
+      'ARCSINH', 'ARCCOSH', 'ARCTANH',
     ],
     // rows: + −  |  × ÷  |  x^y log_b(x)   ("a, b, LOGARITHM" = log_b(a))
     operators: ['PLUS', 'SUBTRACT', 'TIMES', 'DIVIDE', 'POWER', 'LOGARITHM'],
     // Off by default: Gamma (not elementary) and the sign change -x
     extra: ['GAMMA', 'MINUS'],
-    defaultDisabled: ['I'],
+    defaultDisabled: ['NEG', 'ZERO', 'I'],
   },
 ];
 

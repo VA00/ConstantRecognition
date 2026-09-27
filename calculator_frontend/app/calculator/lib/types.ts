@@ -58,7 +58,8 @@ export const defaultErrorSettings: ErrorSettings = {
   customError: '0',
 };
 
-export const examples = [
+// enable: buttons switched on together with the example (e.g. i for a complex search)
+export const examples: { value: string; label: string; description: string; enable?: string[] }[] = [
   {
     value: '1.17809724509617246442', 
     label: '\\displaystyle \\int_0^{\\infty} \\left(\\frac{\\sin(x)}{x}\\right)^3 \\, dx', 
@@ -80,9 +81,10 @@ export const examples = [
     description: 'Discover sum'
   },
   {
-    value: '0.5403023058681398+0.8414709848078965i',
-    label: 'e^{\\,i}',
-    description: 'Complex target: the complex domain is selected automatically'
+    value: '0.20787957635076190854695561983497877',
+    label: 'e^{-\\pi/2}',
+    description: 'Complex search: enables i, which switches the domain to complex; expect i^i',
+    enable: ['I']
   },
   {
     value: '10.185916357881301489208560855841',

@@ -16,10 +16,10 @@ import { withBasePath, wasmVersionQuery } from './lib/basePath';
 import { getCalculatorById, DEFAULT_CALCULATOR_ID, defaultEnabledTokens } from './lib/calculators';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
-// Buttons enabled on load: the palette's standard set (36 buttons: pi, e, -1,
-// 0, the digits, 17 functions, 6 operators). i, Gamma, the sign change and the
-// extra constants are off, so the Auto domain is the real line until the user
-// enables i or types a complex target.
+// Buttons enabled on load: the palette's standard set minus defaultDisabled
+// (34 buttons: pi, e, the digits, 17 functions, 6 operators). -1, 0, i, Gamma,
+// the sign change and the extra constants are off, so the Auto domain is the
+// real line until the user enables i or types a complex target.
 const DEFAULT_TOKENS = defaultEnabledTokens(getCalculatorById(DEFAULT_CALCULATOR_ID));
 // Constants and operators in canonical order, extras last
 const ALL_CONSTS = [...CALC4_CONSTS, ...EXTRA_CONSTS];
@@ -476,8 +476,11 @@ export default function CalculatorPage() {
     setElapsedTime(0);
   };
 
-  const handleExampleClick = (value: string) => {
+  const handleExampleClick = (value: string, enable: string[] = []) => {
     setInputValue(value);
+    if (enable.length > 0) {
+      setEnabledTokens(prev => [...prev, ...enable.filter(t => !prev.includes(t))]);
+    }
   };
 
   return (

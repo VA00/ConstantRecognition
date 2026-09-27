@@ -94,7 +94,7 @@ export function CalculatorPalette({
   const countEnabled = (tokens: string[]) => tokens.filter((t) => enabled.has(t)).length;
 
   // The standard set is what the page enables on load; everything else
-  // (extras and default-disabled buttons such as i) is counted separately
+  // (extras and default-disabled buttons: -1, 0, i) is counted separately
   const standardTokens = defaultEnabledTokens(calculator);
   const totalButtons = standardTokens.length;
   const totalEnabled = countEnabled(standardTokens);
@@ -135,7 +135,7 @@ export function CalculatorPalette({
               onClick={onEnableAll}
               disabled={disabled}
               className="text-[10px] font-medium text-[#0066cc] hover:underline disabled:cursor-not-allowed disabled:opacity-60"
-              title="Enable the 36 standard buttons, disable the extras"
+              title={`Enable the ${totalButtons} default buttons, disable the rest`}
             >
               Reset to standard
             </button>
@@ -151,15 +151,6 @@ export function CalculatorPalette({
             total={calculator.constantsCore.length}
           />
           {renderGrid(calculator.constantsCore, 'grid-cols-5')}
-        </div>
-
-        <div>
-          <SectionHeader
-            label="Extra Constants"
-            enabled={extrasEnabled}
-            total={calculator.constantsExtra.length}
-          />
-          {renderGrid(calculator.constantsExtra, 'grid-cols-5')}
         </div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
@@ -180,15 +171,6 @@ export function CalculatorPalette({
                 total={calculator.operators.length}
               />
               {renderGrid(calculator.operators, 'grid-cols-2')}
-            </div>
-
-            <div>
-              <SectionHeader
-                label="Extra"
-                enabled={countEnabled(calculator.extra)}
-                total={calculator.extra.length}
-              />
-              {renderGrid(calculator.extra, 'grid-cols-2')}
             </div>
           </div>
 
@@ -211,6 +193,25 @@ export function CalculatorPalette({
               {renderGrid(calculator.unaryOther, 'grid-cols-3')}
             </div>
           </div>
+        </div>
+
+        {/* Off-by-default buttons, full width at the bottom */}
+        <div>
+          <SectionHeader
+            label="Extra Constants"
+            enabled={countEnabled(calculator.constantsExtra)}
+            total={calculator.constantsExtra.length}
+          />
+          {renderGrid(calculator.constantsExtra, 'grid-cols-5')}
+        </div>
+
+        <div>
+          <SectionHeader
+            label="Extra"
+            enabled={countEnabled(calculator.extra)}
+            total={calculator.extra.length}
+          />
+          {renderGrid(calculator.extra, 'grid-cols-5')}
         </div>
       </div>
     </div>
