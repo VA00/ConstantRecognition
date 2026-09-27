@@ -52,6 +52,15 @@ export const numOperators: Record<string, (a: number, b: number) => number> = {
   "LOGARITHM": (base, x) => Math.log(x) / Math.log(base)   // same order as ln() in C/math2.h
 };
 
+// A plain decimal number used as a constant ("29", "0.20787957635076191"):
+// the difficult integers and user-typed constants. The engine reads such
+// tokens with strtod (C/numeric_literal.h) and echoes them in the RPN.
+const NUMERIC_LITERAL = /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/;
+export const isNumericLiteral = (token: string): boolean => NUMERIC_LITERAL.test(token);
+
+// Display form of a numeric literal: a negative one in parentheses, like NEG
+const literalText = (token: string): string => (token.startsWith('-') ? `(${token})` : token);
+
 // Gamma function approximation (Lanczos)
 export function gamma(z: number): number {
   if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
@@ -99,6 +108,10 @@ const ALL_SHORT_CHARS = new Set([
 function isShortFormRPN(rpn: string): boolean {
   // Short-form RPN has no delimiters and all chars are from the GPU charset
   if (rpn.includes(',') || rpn.includes(' ')) return false;
+  // The GPU charset contains digits, so a one-button WASM result such as "13"
+  // would read as "EULER, GOLDENRATIO". The calculator page runs no GPU
+  // engine; a bare number is always a WASM numeric literal.
+  if (isNumericLiteral(rpn)) return false;
   // Must have at least one char and all chars must be valid short-form
   return rpn.length > 0 && [...rpn].every(c => ALL_SHORT_CHARS.has(c));
 }
@@ -167,6 +180,8 @@ export function rpnToInfix(rpn: string | string[]): string {
       } else {
         stack.push(`(${lhs} ${namedOperators[token]} ${rhs})`);
       }
+    } else if (isNumericLiteral(token)) {
+      stack.push(literalText(token));
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);
@@ -185,6 +200,8 @@ export function evaluateRPN(rpn: string | string[]): number {
   tokens.forEach(token => {
     if (numConstants[token] !== undefined) {
       stack.push(numConstants[token]);
+    } else if (isNumericLiteral(token)) {
+      stack.push(parseFloat(token));
     } else if (numFunctions[token]) {
       const arg = stack.pop() || 0;
       stack.push(numFunctions[token](arg));
@@ -279,6 +296,8 @@ export function rpnToMathematica(rpn: string | string[]): string {
       } else {
         stack.push(`(${lhs} ${mmaOperators[token]} ${rhs})`);
       }
+    } else if (isNumericLiteral(token)) {
+      stack.push(literalText(token));
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);
@@ -386,6 +405,8 @@ export function rpnToLatex(rpn: string | string[]): string {
         stack.push({ latex: `\\log_{${lhs.latex}}\\left(${rhs.latex}\\right)`, precedence: 4 });
         return;
       }
+    } else if (isNumericLiteral(token)) {
+      stack.push({ latex: literalText(token), precedence: 5 });
     } else if (token) {
       stack.push({ latex: token, precedence: 5 });
     }

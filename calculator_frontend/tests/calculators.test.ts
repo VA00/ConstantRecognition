@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getCalculatorById, defaultEnabledTokens } from '../app/calculator/lib/calculators';
+import { getCalculatorById, defaultEnabledTokens, parseCustomInteger, CUSTOM_INT } from '../app/calculator/lib/calculators';
 import { resolveDomain, parseComplexInput } from '../app/calculator/lib/complex';
 
 describe('default palette', () => {
@@ -17,5 +17,26 @@ describe('default palette', () => {
   it('switches Auto to complex when i is enabled or the target is complex', () => {
     expect(resolveDomain('auto', parseComplexInput('3.14'), [...enabled, 'I'])).toBe('complex');
     expect(resolveDomain('auto', parseComplexInput('1+i'), enabled)).toBe('complex');
+  });
+});
+
+describe('custom integer button', () => {
+  it('accepts integers without a button of their own, in canonical form', () => {
+    expect(parseCustomInteger('29')).toEqual({ value: '29' });
+    expect(parseCustomInteger(' 029 ')).toEqual({ value: '29' });
+    expect(parseCustomInteger('1000000')).toEqual({ value: '1000000' });
+  });
+
+  it('rejects everything else with a short reason', () => {
+    for (const t of ['', '  ']) expect(parseCustomInteger(t)).toEqual({ error: 'empty' });
+    for (const t of ['2.5', '-29', '1e3', 'abc']) expect(parseCustomInteger(t)).toEqual({ error: 'integer' });
+    for (const t of ['0', '7', '13']) expect(parseCustomInteger(t)).toEqual({ error: 'has button' });
+    expect(parseCustomInteger('1000001')).toEqual({ error: '≤ 10⁶' });
+  });
+
+  it('is off by default, like the rest of the difficult integers', () => {
+    const calc = getCalculatorById('calc4');
+    const enabled = defaultEnabledTokens(calc);
+    for (const t of [...calc.constantsInt, CUSTOM_INT]) expect(enabled).not.toContain(t);
   });
 });

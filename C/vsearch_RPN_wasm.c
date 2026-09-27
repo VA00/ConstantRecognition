@@ -30,6 +30,7 @@
 
 #include "vsearch_RPN_core.h"
 #include "CALC4.h"
+#include "numeric_literal.h"
 
 /* ============================================================================
  * STRING-BASED WRAPPER (real domain)
@@ -40,8 +41,12 @@
 #define MAX_OPS 64
 
 /* Resolves comma-separated button names into CALC4 (+ extra) table entries.
-   NULL means "all CALC4 buttons of that kind", "" means none. */
-static void build_tables(
+   NULL means "all CALC4 buttons of that kind", "" means none. A constant
+   token that is a plain decimal number ("29", see numeric_literal.h) becomes
+   a constant with that value, named by the token.
+   Returns the parsed copy of const_list (or NULL): the names of numeric
+   constants point into it, so the caller frees it after the search. */
+static char* build_tables(
     const char* const_list, const char* fun_list, const char* op_list,
     ConstOp* const_ops, int* out_n_const,
     UnaryOp* unary_ops, int* out_n_unary,
@@ -50,19 +55,22 @@ static void build_tables(
     int n_const = 0;
     int n_unary = 0;
     int n_binary = 0;
-    
+    char* const_names = NULL;
+
     /* Parse constants (or use all CALC4 constants if NULL).
-       Names are looked up in CALC4_CONSTS first, then in CALC4_EXTRA_CONSTS. */
+       Names are looked up in CALC4_CONSTS first, then in CALC4_EXTRA_CONSTS,
+       then read as numeric literals. */
     if (const_list == NULL) {
         n_const = CALC4_N_CONST;
         for (int i = 0; i < CALC4_N_CONST; i++) {
             const_ops[i] = CALC4_CONSTS[i];
         }
     } else if (const_list[0] != '\0') {
-        char* copy = strdup(const_list);
-        char* token = strtok(copy, ",");
+        const_names = strdup(const_list);
+        char* token = strtok(const_names, ",");
         while (token != NULL && n_const < MAX_OPS) {
             int found = 0;
+            double value;
             for (int i = 0; i < CALC4_N_CONST && !found; i++) {
                 if (strcmp(token, CALC4_CONSTS[i].name) == 0) {
                     const_ops[n_const++] = CALC4_CONSTS[i];
@@ -75,9 +83,13 @@ static void build_tables(
                     found = 1;
                 }
             }
+            if (!found && parse_numeric_literal(token, &value)) {
+                const_ops[n_const].value = value;
+                const_ops[n_const].name = token;
+                n_const++;
+            }
             token = strtok(NULL, ",");
         }
-        free(copy);
     }
     
     /* Parse unary functions (or use all if NULL) */
@@ -139,6 +151,7 @@ static void build_tables(
     *out_n_const = n_const;
     *out_n_unary = n_unary;
     *out_n_binary = n_binary;
+    return const_names;
 }
 
 char* vsearch_RPN(
@@ -153,12 +166,14 @@ char* vsearch_RPN(
     UnaryOp unary_ops[MAX_OPS];
     BinaryOp binary_ops[MAX_OPS];
     int n_const, n_unary, n_binary;
-    build_tables(const_list, fun_list, op_list, const_ops, &n_const, unary_ops, &n_unary, binary_ops, &n_binary);
-    return search_constant(z, dz, MinK, MaxK, cpu_id, ncpus,
+    char* const_names = build_tables(const_list, fun_list, op_list, const_ops, &n_const, unary_ops, &n_unary, binary_ops, &n_binary);
+    char* json = search_constant(z, dz, MinK, MaxK, cpu_id, ncpus,
                           const_ops, n_const,
                           unary_ops, n_unary,
                           binary_ops, n_binary,
                           ERROR_REL, COMPARE_STRICT);
+    free(const_names);
+    return json;
 }
 
 /* Same, with the compression-ratio threshold for tolerance-based early exit */
@@ -175,12 +190,14 @@ char* vsearch_RPN_cr(
     UnaryOp unary_ops[MAX_OPS];
     BinaryOp binary_ops[MAX_OPS];
     int n_const, n_unary, n_binary;
-    build_tables(const_list, fun_list, op_list, const_ops, &n_const, unary_ops, &n_unary, binary_ops, &n_binary);
-    return search_constant_with_cr(z, dz, MinK, MaxK, cpu_id, ncpus,
+    char* const_names = build_tables(const_list, fun_list, op_list, const_ops, &n_const, unary_ops, &n_unary, binary_ops, &n_binary);
+    char* json = search_constant_with_cr(z, dz, MinK, MaxK, cpu_id, ncpus,
                           const_ops, n_const,
                           unary_ops, n_unary,
                           binary_ops, n_binary,
                           ERROR_REL, COMPARE_STRICT, cr_threshold);
+    free(const_names);
+    return json;
 }
 
 /* ============================================================================
@@ -208,23 +225,32 @@ char* vsearch_RPN_complex(
     CUnaryOp unary_ops[MAX_OPS];
     CBinaryOp binary_ops[MAX_OPS];
     int n_const = 0, n_unary = 0, n_binary = 0;
+    /* Parsed copy of const_list; names of numeric constants point into it */
+    char* const_names = NULL;
 
     if (const_list == NULL) {
         n_const = CALC4C_N_CONST;
         for (int i = 0; i < CALC4C_N_CONST; i++) const_ops[i] = CALC4C_CONSTS[i];
     } else if (const_list[0] != '\0') {
-        char* copy = strdup(const_list);
-        char* token = strtok(copy, ",");
+        const_names = strdup(const_list);
+        char* token = strtok(const_names, ",");
         while (token != NULL && n_const < MAX_OPS) {
+            int found = 0;
+            double value;
             for (int i = 0; i < CALC4C_N_CONST; i++) {
                 if (strcmp(token, CALC4C_CONSTS[i].name) == 0) {
                     const_ops[n_const++] = CALC4C_CONSTS[i];
+                    found = 1;
                     break;
                 }
             }
+            if (!found && parse_numeric_literal(token, &value)) {
+                const_ops[n_const].value = value;
+                const_ops[n_const].name = token;
+                n_const++;
+            }
             token = strtok(NULL, ",");
         }
-        free(copy);
     }
 
     if (fun_list == NULL) {
@@ -263,11 +289,13 @@ char* vsearch_RPN_complex(
         free(copy);
     }
 
-    return search_constant_complex(z_re + z_im * I, dz, MinK, MaxK, cpu_id, ncpus,
-                                   const_ops, n_const,
-                                   unary_ops, n_unary,
-                                   binary_ops, n_binary,
-                                   cr_threshold);
+    char* json = search_constant_complex(z_re + z_im * I, dz, MinK, MaxK, cpu_id, ncpus,
+                                         const_ops, n_const,
+                                         unary_ops, n_unary,
+                                         binary_ops, n_binary,
+                                         cr_threshold);
+    free(const_names);
+    return json;
 }
 
 #endif /* !_MSC_VER */

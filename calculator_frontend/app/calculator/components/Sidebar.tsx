@@ -35,6 +35,11 @@ interface SidebarProps {
   enabledTokens: string[];
   onToggleToken: (token: string) => void;
   onEnableAll: () => void;
+  // Text of the custom integer button
+  customInt: string;
+  onCustomIntChange: (text: string) => void;
+  // false when the enabled buttons contain no usable constant
+  hasConstants: boolean;
   // Number domain
   domain: Domain;
   setDomain: (domain: Domain) => void;
@@ -84,6 +89,9 @@ export function Sidebar({
   enabledTokens,
   onToggleToken,
   onEnableAll,
+  customInt,
+  onCustomIntChange,
+  hasConstants,
   domain,
   setDomain,
   effectiveDomain,
@@ -103,9 +111,6 @@ export function Sidebar({
   const earlyExitCRNote = toleranceSearchActive
     ? 'Applies to CPU/WASM tolerance-based search.'
     : 'Ignored for exact search (± 0). Use Auto or Manual uncertainty to enable it.';
-  const noConstants = !enabledTokens.some((t) =>
-    calculator.constantsCore.includes(t) || calculator.constantsDigits.includes(t) ||
-    (calculator.constantsExtra.includes(t) && (t !== 'I' || effectiveDomain === 'complex')));
   const iBlocked = enabledTokens.includes('I') && effectiveDomain === 'real';
   const tokenNotes: Record<string, string> = iBlocked ? { I: 'needs ℂ' } : {};
   const workTone = estimatedSeconds < 15
@@ -197,10 +202,12 @@ export function Sidebar({
               enabledTokens={enabledTokens}
               onToggleToken={onToggleToken}
               onEnableAll={onEnableAll}
+              customInt={customInt}
+              onCustomIntChange={onCustomIntChange}
               disabled={isCalculating}
               tokenNotes={tokenNotes}
             />
-            {noConstants && (
+            {!hasConstants && (
               <p className="text-[11px] text-amber-600 dark:text-amber-400">
                 Enable at least one constant — formulas cannot be built without one.
               </p>

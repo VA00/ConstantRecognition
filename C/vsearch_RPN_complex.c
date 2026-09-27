@@ -51,6 +51,7 @@
 
 #include "vsearch_RPN_complex.h"
 #include "rpn_forms.h"
+#include "numeric_literal.h"
 
 /* ============================================================================
  * CONFIGURATION
@@ -436,7 +437,17 @@ int evaluate_rpn_complex(
                 matched = 1;
             }
         }
-        if (!matched) return 0;
+        if (!matched) {
+            /* Not a button: a plain decimal number (see numeric_literal.h) */
+            char literal[64];
+            double value;
+            if (len >= sizeof literal) return 0;
+            memcpy(literal, q - len, len);
+            literal[len] = '\0';
+            if (!parse_numeric_literal(literal, &value)) return 0;
+            if (sp >= MAX_CODE_LENGTH) return 0;
+            stack[sp++] = value;
+        }
     }
 
     if (sp != 1) return 0;

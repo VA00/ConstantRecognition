@@ -65,7 +65,8 @@ char* search_constant_complex(
  * EVALUATION
  *
  * Evaluates a comma-separated RPN code of button names, e.g.
- * "I, NEG, LOG, DIVIDE". Returns 1 on success and stores the value in
+ * "I, NEG, LOG, DIVIDE"; a token that is a plain decimal number ("29")
+ * is a constant with that value. Returns 1 on success and stores the value in
  * *result (possibly non-finite); returns 0 on an unknown token or a
  * syntactically invalid code.
  * ============================================================================ */

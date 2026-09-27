@@ -1,12 +1,17 @@
 'use client';
 
-import { CalculatorDefinition, calculatorTokenLabel, defaultEnabledTokens } from '../lib/calculators';
+import {
+  CalculatorDefinition, calculatorTokenLabel, defaultEnabledTokens, CUSTOM_INT, parseCustomInteger
+} from '../lib/calculators';
 
 interface CalculatorPaletteProps {
   calculator: CalculatorDefinition;
   enabledTokens: string[];
   onToggleToken: (token: string) => void;
   onEnableAll: () => void;
+  /** Text of the custom integer button (CUSTOM_INT) */
+  customInt: string;
+  onCustomIntChange: (text: string) => void;
   disabled?: boolean; // true while a search is running
   /** Short notes shown under a button instead of its name (e.g. "needs ℂ") */
   tokenNotes?: Record<string, string>;
@@ -61,6 +66,64 @@ function TokenButton({
   );
 }
 
+// Button whose value the user types: an input box in place of the label.
+// Typing a usable integer switches it on; the caption toggles it or says why
+// the number cannot be used.
+function CustomIntegerButton({
+  text,
+  enabled,
+  onChange,
+  onToggle,
+  disabled,
+}: {
+  text: string;
+  enabled: boolean;
+  onChange: (text: string) => void;
+  onToggle: () => void;
+  disabled?: boolean;
+}) {
+  const parsed = parseCustomInteger(text);
+  const usable = 'value' in parsed;
+  const active = enabled && usable;
+  // An empty box is not an error: the caption only names the button
+  const problem = usable || text.trim() === '' ? null : parsed.error;
+  return (
+    <div
+      className={`rounded-md border px-1 py-2 text-center shadow-xs transition-colors
+        ${disabled ? 'cursor-not-allowed opacity-60' : ''}
+        ${active
+          ? 'border-[#0066cc]/40 bg-white dark:bg-[#111113] hover:border-[#0066cc]'
+          : 'border-gray-200 bg-gray-100 dark:border-[#2a2a2e] dark:bg-[#1a1a1d]'}`}
+    >
+      <input
+        type="text"
+        inputMode="numeric"
+        value={text}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        placeholder="int"
+        aria-label="Custom integer constant"
+        title="Type an integer from 14 to 1000000"
+        className={`block w-full bg-transparent text-center text-sm font-semibold leading-none outline-none
+          placeholder:text-gray-400 dark:placeholder:text-gray-500
+          ${active ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}
+      />
+      <button
+        type="button"
+        onClick={onToggle}
+        disabled={disabled || !usable}
+        aria-pressed={active}
+        title={usable ? (active ? `${parsed.value} — click to disable` : `${parsed.value} — click to enable`) : undefined}
+        className={`mt-1 block w-full text-[9px] uppercase tracking-wide disabled:cursor-default
+          ${problem ? 'text-amber-600 dark:text-amber-400 font-medium' : 'text-gray-400 dark:text-gray-500'}
+          ${usable && !active ? 'line-through' : ''}`}
+      >
+        {problem ?? 'custom'}
+      </button>
+    </div>
+  );
+}
+
 function SectionHeader({
   label,
   enabled,
@@ -87,6 +150,8 @@ export function CalculatorPalette({
   enabledTokens,
   onToggleToken,
   onEnableAll,
+  customInt,
+  onCustomIntChange,
   disabled,
   tokenNotes = {},
 }: CalculatorPaletteProps) {
@@ -98,7 +163,10 @@ export function CalculatorPalette({
   const standardTokens = defaultEnabledTokens(calculator);
   const totalButtons = standardTokens.length;
   const totalEnabled = countEnabled(standardTokens);
-  const extrasEnabled = countEnabled([
+  // The custom integer counts only while its typed number is usable
+  const customActive = enabled.has(CUSTOM_INT) && 'value' in parseCustomInteger(customInt);
+  const intsEnabled = countEnabled(calculator.constantsInt) + (customActive ? 1 : 0);
+  const extrasEnabled = intsEnabled + countEnabled([
     ...calculator.constantsExtra, ...calculator.extra, ...calculator.defaultDisabled,
   ]);
   const isStandard = totalEnabled === totalButtons && extrasEnabled === 0;
@@ -196,6 +264,33 @@ export function CalculatorPalette({
         </div>
 
         {/* Off-by-default buttons, full width at the bottom */}
+        <div>
+          <SectionHeader
+            label="Difficult Integers"
+            enabled={intsEnabled}
+            total={calculator.constantsInt.length + 1}
+          />
+          <div className="grid grid-cols-5 gap-2">
+            {calculator.constantsInt.map((token) => (
+              <TokenButton
+                key={token}
+                token={token}
+                enabled={enabled.has(token)}
+                onToggle={() => onToggleToken(token)}
+                disabled={disabled}
+                note={tokenNotes[token]}
+              />
+            ))}
+            <CustomIntegerButton
+              text={customInt}
+              enabled={enabled.has(CUSTOM_INT)}
+              onChange={onCustomIntChange}
+              onToggle={() => onToggleToken(CUSTOM_INT)}
+              disabled={disabled}
+            />
+          </div>
+        </div>
+
         <div>
           <SectionHeader
             label="Extra Constants"

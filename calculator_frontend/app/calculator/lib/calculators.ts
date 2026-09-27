@@ -10,6 +10,8 @@ export interface CalculatorDefinition {
   constantsDigits: string[];
   /** Beyond the standard button set; disabled by default */
   constantsExtra: string[];
+  /** Integers beyond the digits, sent to the engine as numeric literals; disabled by default */
+  constantsInt: string[];
   unaryCore: string[];
   unaryOther: string[];
   /** Binary operators in display order (two per row) */
@@ -34,6 +36,11 @@ export const CALCULATORS: CalculatorDefinition[] = [
     // Off by default. The last four are transcendental constants with no known
     // relation to the rest, handy as generic "witness" values.
     constantsExtra: ['GOLDENRATIO', 'GLAISHER', 'CATALAN', 'KHINCHIN', 'EULERGAMMA'],
+    // Off by default. Integers that short RPN codes over the digits reach
+    // poorly; a digit range 4..13 serves them better than 1..9. The engine
+    // reads each token as a numeric literal (C/numeric_literal.h). The fifth
+    // button of the row is CUSTOM_INT, an integer the user types.
+    constantsInt: ['10', '11', '12', '13'],
     unaryCore: ['LOG', 'EXP'],
     // rows of three: 1/x √x x² | sin cos tan | asin acos atan | sinh cosh tanh | asinh acosh atanh
     unaryOther: [
@@ -64,6 +71,22 @@ export const defaultEnabledTokens = (calculator: CalculatorDefinition): string[]
   ...calculator.unaryOther,
   ...calculator.operators,
 ].filter((t) => !calculator.defaultDisabled.includes(t));
+
+// Palette token of the user-typed integer. It is never sent to the engine:
+// the page replaces it with the typed number (see parseCustomInteger).
+export const CUSTOM_INT = 'CUSTOM_INT';
+export const CUSTOM_INT_MAX = 1_000_000;
+
+/** The typed integer in canonical form ("029" -> "29"), or a short note why it is not usable */
+export function parseCustomInteger(text: string): { value: string } | { error: string } {
+  const s = text.trim();
+  if (s === '') return { error: 'empty' };   // not shown: the palette just says "custom"
+  if (!/^\d+$/.test(s)) return { error: 'integer' };
+  const n = parseInt(s, 10);
+  if (n <= 13) return { error: 'has button' };   // 0..13 are buttons already
+  if (n > CUSTOM_INT_MAX) return { error: '≤ 10⁶' };
+  return { value: String(n) };
+}
 
 export const calculatorTokenLabel: Record<string, string> = {
   PI: 'π',

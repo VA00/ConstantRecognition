@@ -13,7 +13,9 @@ import {
 import { getCompressionRatio as computeCR } from './lib/cr';
 import { ThroughputRecord, loadThroughput, saveThroughput, measureRate, estimateSeconds } from './lib/estimate';
 import { withBasePath, wasmVersionQuery } from './lib/basePath';
-import { getCalculatorById, DEFAULT_CALCULATOR_ID, defaultEnabledTokens } from './lib/calculators';
+import {
+  getCalculatorById, DEFAULT_CALCULATOR_ID, defaultEnabledTokens, CUSTOM_INT, parseCustomInteger
+} from './lib/calculators';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
 // Buttons enabled on load: the palette's standard set minus defaultDisabled
@@ -25,6 +27,8 @@ const DEFAULT_TOKENS = defaultEnabledTokens(getCalculatorById(DEFAULT_CALCULATOR
 const ALL_CONSTS = [...CALC4_CONSTS, ...EXTRA_CONSTS];
 const ALL_FUNCS = [...CALC4_FUNCS, ...EXTRA_FUNCS];
 const ALL_OPS = [...CALC4_OPS, ...EXTRA_OPS];
+// Difficult integers 10..13 (numeric-literal tokens); the typed one follows them
+const INT_CONSTS = getCalculatorById(DEFAULT_CALCULATOR_ID).constantsInt;
 
 // Raw result row as emitted by the WASM engine (real or complex)
 interface EngineRow {
@@ -65,6 +69,8 @@ export default function CalculatorPage() {
   const [domain, setDomain] = useState<Domain>('auto');
   // Calculator button palette: enabled button names
   const [enabledTokens, setEnabledTokens] = useState<string[]>(DEFAULT_TOKENS);
+  // Text of the custom "difficult integer" button (CUSTOM_INT token)
+  const [customInt, setCustomInt] = useState('');
   // Button count of the search that produced the current results (for CR)
   const [lastSearchN, setLastSearchN] = useState(DEFAULT_TOKENS.length);
   // Per-thread throughput measured on this machine (persisted in localStorage)
@@ -83,19 +89,37 @@ export default function CalculatorPage() {
     );
   };
   const enableAllTokens = () => setEnabledTokens(DEFAULT_TOKENS);
+  // Typing a usable integer switches its button on, clearing the box switches it off
+  const changeCustomInt = (text: string) => {
+    setCustomInt(text);
+    const usable = 'value' in parseCustomInteger(text);
+    setEnabledTokens(prev => {
+      if (usable) return prev.includes(CUSTOM_INT) ? prev : [...prev, CUSTOM_INT];
+      return text.trim() === '' ? prev.filter(t => t !== CUSTOM_INT) : prev;
+    });
+  };
 
   // Target parsing and domain resolution
   const parsedInput = useMemo(() => parseComplexInput(inputValue), [inputValue]);
   const effectiveDomain = resolveDomain(domain, parsedInput, enabledTokens);
 
   // Calculator restriction from the button palette (canonical order). In the
-  // real domain complex-only constants (i) are silently left out.
-  const selection: CalculatorSelection = useMemo(() => ({
-    consts: ALL_CONSTS.filter(t =>
-      enabledTokens.includes(t) && (effectiveDomain === 'complex' || !COMPLEX_ONLY_CONSTS.includes(t))),
-    funcs: ALL_FUNCS.filter(t => enabledTokens.includes(t)),
-    ops: ALL_OPS.filter(t => enabledTokens.includes(t)),
-  }), [enabledTokens, effectiveDomain]);
+  // real domain complex-only constants (i) are silently left out. The custom
+  // integer button contributes its typed number, when that is usable.
+  const selection: CalculatorSelection = useMemo(() => {
+    const custom = parseCustomInteger(customInt);
+    const customConsts = enabledTokens.includes(CUSTOM_INT) && 'value' in custom ? [custom.value] : [];
+    return {
+      consts: [
+        ...ALL_CONSTS.filter(t =>
+          enabledTokens.includes(t) && (effectiveDomain === 'complex' || !COMPLEX_ONLY_CONSTS.includes(t))),
+        ...INT_CONSTS.filter(t => enabledTokens.includes(t)),
+        ...customConsts,
+      ],
+      funcs: ALL_FUNCS.filter(t => enabledTokens.includes(t)),
+      ops: ALL_OPS.filter(t => enabledTokens.includes(t)),
+    };
+  }, [enabledTokens, effectiveDomain, customInt]);
   const hasConstants = selection.consts.length > 0;
   const workEstimate = useMemo(() => estimateWork(searchDepth, selection), [searchDepth, selection]);
   const effectiveThreads = autoThreads ? detectedCPUs : threadCount;
@@ -511,6 +535,9 @@ export default function CalculatorPage() {
         enabledTokens={enabledTokens}
         onToggleToken={toggleToken}
         onEnableAll={enableAllTokens}
+        customInt={customInt}
+        onCustomIntChange={changeCustomInt}
+        hasConstants={hasConstants}
         domain={domain}
         setDomain={setDomain}
         effectiveDomain={effectiveDomain}

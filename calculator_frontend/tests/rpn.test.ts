@@ -23,3 +23,27 @@ describe('LOGARITHM (arbitrary-base logarithm) in the RPN converters', () => {
     expect(rpnToLatex('I, PI, TIMES, EXP')).toBe('e^{\\pi \\cdot i}');
   });
 });
+
+// Difficult integers and typed constants reach the engine as numeric literals
+// (C/numeric_literal.h) and come back verbatim in the RPN.
+describe('numeric-literal constants', () => {
+  it('evaluates them', () => {
+    expect(evaluateRPN('29, SQRT')).toBe(Math.sqrt(29));
+    expect(evaluateRPN('13, INV')).toBe(1 / 13);
+    expect(evaluateRPN('0.20787957635076191, SQR')).toBe(0.20787957635076191 ** 2);
+  });
+
+  it('does not read a one-button result as a GPU short code', () => {
+    expect(evaluateRPN('13')).toBe(13);      // not EULER, GOLDENRATIO
+    expect(evaluateRPN('29')).toBe(29);      // not NEG, GAMMA
+    expect(rpnToLatex('10')).toBe('10');
+    expect(rpnToMathematica('12')).toBe('12');
+  });
+
+  it('renders them, a negative one in parentheses', () => {
+    expect(rpnToLatex('29, SQRT')).toBe('\\sqrt{29}');
+    expect(rpnToMathematica('11, TWO, POWER')).toBe('(2 ^ 11)');
+    expect(rpnToInfix('-2.5, SQR')).toBe('sqr((-2.5))');
+    expect(rpnToMathematica('-2.5, SQR')).toBe('((-2.5))^2');
+  });
+});
