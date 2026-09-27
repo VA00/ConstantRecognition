@@ -11,6 +11,7 @@ import {
   CALC4_CONSTS, CALC4_FUNCS, CALC4_OPS, EXTRA_CONSTS, EXTRA_FUNCS, EXTRA_OPS, COMPLEX_ONLY_CONSTS
 } from './lib/taskQueue';
 import { getCompressionRatio as computeCR } from './lib/cr';
+import { ShortestSuccess } from './lib/shortest';
 import {
   ThroughputRecord, loadThroughput, saveThroughput, measureRate, estimateSeconds, formatCount, formatDuration
 } from './lib/estimate';
@@ -194,6 +195,11 @@ export default function CalculatorPage() {
   // The maximum CR indicates the true match
   const bestResult = useMemo(() => {
     if (results.length === 0) return null;
+    // An accepted formula is the answer: the shortest SUCCESS, then the most accurate
+    const successes = results.filter(r => r.status === 'SUCCESS');
+    if (successes.length > 0) {
+      return [...successes].sort((a, b) => (a.K - b.K) || (a.REL_ERR - b.REL_ERR))[0];
+    }
     return [...results].sort((a, b) => {
       const aCR = getCompressionRatio(a);
       const bCR = getCompressionRatio(b);
@@ -316,6 +322,13 @@ export default function CalculatorPage() {
     const idlePool: { worker: Worker; workerId: number }[] = []; // parked workers (queue drained)
     const keepRow = createResultFilter();
     let totalEvaluations = 0;                                 // summed over finished tasks, for the rate
+    // A SUCCESS ends the search only once no shorter level is still being
+    // searched (lib/shortest.ts): workers finish in any order
+    const shortest = new ShortestSuccess();
+    const pendingMinKs = () => [
+      ...tasks.slice(nextTaskIndex).map(t => t.minK),
+      ...[...inFlight.values()].map(t => t.minK),
+    ];
 
     // The complex entry point has no "full calculator" default: lists are
     // always explicit there.
@@ -342,6 +355,11 @@ export default function CalculatorPage() {
 
     const assignTask = (worker: Worker, workerId: number) => {
       if (searchEndedRef.current || isAbortedRef.current) return;
+      // Skip tasks that cannot beat a SUCCESS already found
+      while (tasks[nextTaskIndex] && !shortest.needed(tasks[nextTaskIndex].minK)) {
+        nextTaskIndex++;
+        remainingTasks--;
+      }
       const task = tasks[nextTaskIndex];
       if (!task) {
         // Queue drained; park this worker (it may be revived if another
@@ -399,6 +417,7 @@ export default function CalculatorPage() {
       if (!data || data.type === 'ready' || data.type === 'evaluated') return;
       if (searchEndedRef.current || isAbortedRef.current) return;
       if (typeof data.evaluations === 'number') totalEvaluations += data.evaluations;
+      inFlight.delete(workerId);   // this worker's task is finished
 
       // Collect all results in one batch to avoid multiple re-renders.
       // Rows that don't improve on what is already shown for their K are
@@ -422,8 +441,11 @@ export default function CalculatorPage() {
         });
       });
 
-      // Handle final result (SUCCESS/FAILURE/ABORTED) from top-level data
+      // Handle final result (SUCCESS/FAILURE/ABORTED) from top-level data.
+      // A SUCCESS longer than one already found is only the best of its K.
       const isSuccess = data.result === 'SUCCESS';
+      const newShortest = isSuccess && shortest.offer(data.K);
+      const accepted = isSuccess && data.K <= shortest.bestK;
       if (data.result && data.RPN && (isSuccess || keepRow(data.K, data.REL_ERR, data.RPN))) {
         newResults.push({
           cpuId: workerId,
@@ -431,26 +453,28 @@ export default function CalculatorPage() {
           RPN: data.RPN,
           result: valueText(data),
           REL_ERR: data.REL_ERR,
-          status: data.result, // SUCCESS, FAILURE, ABORTED
+          status: isSuccess && !accepted ? 'K_BEST' : data.result, // SUCCESS, FAILURE, ABORTED
           compressionRatio: data.COMPRESSION_RATIO,
           valueRe: data.value_re,
           valueIm: data.value_im,
         });
       }
 
-      if (newResults.length > 0) {
-        setResults(prev => [...prev, ...newResults]);
+      if (newResults.length > 0 || newShortest) {
+        const bestK = shortest.bestK;
+        setResults(prev => [
+          // A shorter SUCCESS demotes the longer ones shown before it
+          ...(newShortest
+            ? prev.map(r => (r.status === 'SUCCESS' && r.K > bestK ? { ...r, status: 'K_BEST' } : r))
+            : prev),
+          ...newResults,
+        ]);
       }
 
-      if (isSuccess) {
-        endSearch();
-        return;
-      }
-
-      // Task finished without a definitive match — pull the next slice
       remainingTasks--;
       setTaskProgress({ done: totalTasks - remainingTasks, total: totalTasks });
-      if (remainingTasks <= 0) {
+      // Done: a SUCCESS with nothing shorter left to search, or the queue is empty
+      if (shortest.settled(pendingMinKs()) || remainingTasks <= 0) {
         endSearch();
         return;
       }
