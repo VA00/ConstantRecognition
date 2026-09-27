@@ -266,7 +266,7 @@ export default function LandingPage() {
             © Andrzej Odrzywołek & Klaudiusz Sroka, UJ 2025
           </div>
           <a 
-            href="https://github.com/Klaudiusz321/ConstantRecognition" 
+            href="https://github.com/VA00/ConstantRecognition" 
             target="_blank" 
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:text-white transition-colors"

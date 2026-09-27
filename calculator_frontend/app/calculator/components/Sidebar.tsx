@@ -490,7 +490,7 @@ export function Sidebar({
         {/* Footer */}
         <div className="p-4 border-t border-gray-200 dark:border-[#2a2a2e]">
           <a
-            href="https://github.com/Klaudiusz321/ConstantRecognition"
+            href="https://github.com/VA00/ConstantRecognition"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-xs text-gray-500 hover:text-[#0066cc] transition-colors"
