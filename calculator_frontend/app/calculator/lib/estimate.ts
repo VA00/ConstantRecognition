@@ -74,3 +74,13 @@ export function formatDuration(seconds: number): string {
   const d = seconds / 86400;
   return `~${d < 10 ? d.toFixed(1) : Math.round(d)} days`;
 }
+
+// 8.4e7 -> "8.4·10⁷"
+export function formatCount(n: number): string {
+  if (!Number.isFinite(n) || n <= 0) return '0';
+  if (n < 1e5) return Math.round(n).toLocaleString('en-US');
+  const sup = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  const [mant, exp] = n.toExponential(1).split('e');
+  const digits = String(parseInt(exp, 10)).split('').map((d) => sup[parseInt(d, 10)]).join('');
+  return `${mant}·10${digits}`;
+}

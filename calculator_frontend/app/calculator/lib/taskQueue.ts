@@ -97,6 +97,9 @@ export function isFullCalculator(calc: CalculatorSelection): boolean {
          sameSet(calc.ops, CALC4_OPS);
 }
 
+// Deepest level the K slider offers (and "search deeper" continues to)
+export const MAX_SEARCH_DEPTH = 16;
+
 // Levels 1..BUNDLE_MAX_K are enumerated in a single task: together they
 // contain at most 3+9+27+81 = 120 ternary structures, far less work than one
 // slice of a deep level, so splitting them would be pure overhead.
@@ -186,9 +189,12 @@ export function chainIndex(K: number): number {
   return (Math.pow(3, K - 1) - 1) / 2;
 }
 
+// Tasks for levels startK..searchDepth. startK > 1 continues a finished
+// search one level deeper without repeating the levels already done.
 export function buildTaskQueue(
   searchDepth: number,
-  calc: CalculatorSelection = FULL_CALCULATOR
+  calc: CalculatorSelection = FULL_CALCULATOR,
+  startK: number = 1
 ): SearchTask[] {
   const nc = calc.consts.length;
   const nu = calc.funcs.length;
@@ -209,9 +215,11 @@ export function buildTaskQueue(
 
   const tasks: SearchTask[] = [];
   const bundleMax = Math.min(BUNDLE_MAX_K, searchDepth);
-  tasks.push({ minK: 1, maxK: bundleMax, taskId: 0, taskCount: 1, weight: 0, ...lists });
+  if (startK <= bundleMax) {
+    tasks.push({ minK: startK, maxK: bundleMax, taskId: 0, taskCount: 1, weight: 0, ...lists });
+  }
 
-  for (let K = bundleMax + 1; K <= searchDepth; K++) {
+  for (let K = Math.max(bundleMax + 1, startK); K <= searchDepth; K++) {
     const N = Math.pow(3, K);
 
     if (validStructureCount(K) > MAX_STRUCTURE_TASKS) {

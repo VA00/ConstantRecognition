@@ -7,11 +7,13 @@ import {
   Domain, parseComplexInput, complexAutoDelta, complexAbs, formatComplex, resolveDomain
 } from './lib/complex';
 import {
-  buildTaskQueue, createResultFilter, estimateWork, SearchTask, CalculatorSelection,
+  buildTaskQueue, createResultFilter, estimateWork, levelWork, SearchTask, CalculatorSelection, MAX_SEARCH_DEPTH,
   CALC4_CONSTS, CALC4_FUNCS, CALC4_OPS, EXTRA_CONSTS, EXTRA_FUNCS, EXTRA_OPS, COMPLEX_ONLY_CONSTS
 } from './lib/taskQueue';
 import { getCompressionRatio as computeCR } from './lib/cr';
-import { ThroughputRecord, loadThroughput, saveThroughput, measureRate, estimateSeconds } from './lib/estimate';
+import {
+  ThroughputRecord, loadThroughput, saveThroughput, measureRate, estimateSeconds, formatCount, formatDuration
+} from './lib/estimate';
 import { withBasePath, wasmVersionQuery } from './lib/basePath';
 import {
   getCalculatorById, DEFAULT_CALCULATOR_ID, defaultEnabledTokens, CUSTOM_INT, parseCustomInteger
@@ -73,6 +75,8 @@ export default function CalculatorPage() {
   const [customInt, setCustomInt] = useState('');
   // Button count of the search that produced the current results (for CR)
   const [lastSearchN, setLastSearchN] = useState(DEFAULT_TOKENS.length);
+  // Settings and depth of the last search, for "search deeper" (continue at K+1)
+  const [lastSearch, setLastSearch] = useState<{ key: string; depth: number } | null>(null);
   // Per-thread throughput measured on this machine (persisted in localStorage)
   const [throughput, setThroughput] = useState<ThroughputRecord>({});
 
@@ -141,6 +145,23 @@ export default function CalculatorPage() {
 
   const getCompressionRatio = (r: SearchResult): number => computeCR(r, lastSearchN);
 
+  // The engine accepted a formula (as opposed to only reporting approximations)
+  const searchSucceeded = useMemo(() => results.some(r => r.status === 'SUCCESS'), [results]);
+
+  // Everything that decides what a search computes except its depth. "Search
+  // deeper" continues the last search only while this is unchanged; after an
+  // edit the user starts a new search instead.
+  const searchKey = JSON.stringify({
+    inputValue, errorMode, manualError, earlyExitCRThreshold, domain: effectiveDomain, selection,
+  });
+  const deeperK = lastSearch && lastSearch.key === searchKey && lastSearch.depth < MAX_SEARCH_DEPTH
+    ? lastSearch.depth + 1
+    : null;
+  const deeperFormulas = deeperK
+    ? levelWork(deeperK, selection.consts.length, selection.funcs.length, selection.ops.length)
+    : 0;
+  const deeperSeconds = estimateSeconds(deeperFormulas, effectiveThreads, effectiveDomain, throughput).seconds;
+
   // Best result = MAXIMUM Compression Ratio (CR) - this is the correct identification criterion
   // CR rises initially as accuracy improves, then falls when overfitting starts
   // The maximum CR indicates the true match
@@ -196,22 +217,31 @@ export default function CalculatorPage() {
   }, []);
 
 
-  const calculate = async () => {
+  // A new search over levels 1..searchDepth, or with continueToK the same
+  // search continued by the single level continueToK: earlier results, sort
+  // order and time are kept, the finished levels are not repeated.
+  const runSearch = async (continueToK?: number) => {
     const input = parsedInput;
     if (!input || !canCalculate) return;
     const searchDomain = effectiveDomain;
+    const depth = continueToK ?? searchDepth;
+    const startK = continueToK ?? 1;
+    const continuing = continueToK !== undefined;
 
     setIsCalculating(true);
-    setResults([]);
+    if (!continuing) setResults([]);
     setSearchFinished(false);
     setTaskProgress(null);
+    setLastSearch({ key: searchKey, depth });
     searchEndedRef.current = false;
     isAbortedRef.current = false;
     resolveAllRef.current = null;
     
-    // Start timer (update every 500ms to reduce re-renders)
-    setElapsedTime(0);
-    startTimeRef.current = Date.now();
+    // Start timer (update every 500ms to reduce re-renders). A continued
+    // search counts on from the time already spent.
+    const runStart = Date.now();
+    if (!continuing) setElapsedTime(0);
+    startTimeRef.current = runStart - (continuing ? elapsedTime : 0);
     timerRef.current = setInterval(() => {
       setElapsedTime(Date.now() - startTimeRef.current);
     }, 500);
@@ -240,8 +270,10 @@ export default function CalculatorPage() {
     });
     const exactSearch = deltaZNum === 0;
     setLastSearchExact(exactSearch);
-    setSortColumn(exactSearch ? 'REL_ERR' : 'CR');
-    setSortDirection(exactSearch ? 'asc' : 'desc');
+    if (!continuing) {
+      setSortColumn(exactSearch ? 'REL_ERR' : 'CR');
+      setSortDirection(exactSearch ? 'asc' : 'desc');
+    }
 
     // Terminate existing workers
     workersRef.current.forEach(w => w.terminate());
@@ -255,7 +287,7 @@ export default function CalculatorPage() {
     // simultaneously — no worker is married to a fixed slice, so uneven work
     // distribution (heavy gamma-chain structures, E-cores, tab throttling)
     // self-balances instead of leaving one lagging worker at the end.
-    const tasks = buildTaskQueue(searchDepth, selection);
+    const tasks = buildTaskQueue(depth, selection, startK);
     const totalTasks = tasks.length;
     let nextTaskIndex = 0;
     let remainingTasks = totalTasks;
@@ -461,7 +493,8 @@ export default function CalculatorPage() {
       setIsCalculating(false);
       setSearchFinished(true);
       // Calibrate the time estimate with this machine's real throughput
-      const rate = measureRate(totalEvaluations, elapsedMs / 1000, workerCount);
+      // (this run only: a continued search adds to an earlier elapsed time)
+      const rate = measureRate(totalEvaluations, (Date.now() - runStart) / 1000, workerCount);
       if (rate !== null) {
         setThroughput(prev => {
           const next = { ...prev, [searchDomain]: rate };
@@ -485,6 +518,15 @@ export default function CalculatorPage() {
     }
     setElapsedTime(Date.now() - startTimeRef.current);
     setIsCalculating(false);
+  };
+
+  const calculate = () => runSearch();
+
+  // Continue a failed search by one level; the K slider follows
+  const searchDeeper = () => {
+    if (deeperK === null) return;
+    setSearchDepth(deeperK);
+    void runSearch(deeperK);
   };
 
   const handleReset = () => {
@@ -583,11 +625,35 @@ export default function CalculatorPage() {
 
         {results.length > 0 && bestResult ? (
           <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-white dark:bg-[#1a1a1d]">
-            {/* Success banner */}
+            {/* Outcome banner: green only when the engine accepted a formula
+                (SUCCESS: exact match, or within the uncertainty with CR above
+                the threshold); otherwise the rows are just the best
+                approximations per K and the search failed */}
             {searchFinished && !isCalculating && (
-              <div className="bg-green-500 text-white py-2 px-4 text-center text-sm">
-                Found {results.length} result{results.length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s
-              </div>
+              searchSucceeded ? (
+                <div className="bg-green-500 text-white py-2 px-4 text-center text-sm">
+                  {lastSearchExact
+                    ? 'Exact formula selected'
+                    : `Formula selected within ±${precision.deltaZ}`} in {(elapsedTime / 1000).toFixed(2)}s
+                </div>
+              ) : (
+                <div className="bg-red-500 text-white py-2 px-4 text-sm flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+                  <span>
+                    Found {results.length} approximation{results.length !== 1 ? 's' : ''} in {(elapsedTime / 1000).toFixed(2)}s,
+                    none meets the selection criteria
+                  </span>
+                  {deeperK !== null && (
+                    <button
+                      type="button"
+                      onClick={searchDeeper}
+                      title={`Search level K = ${deeperK} only; levels up to ${deeperK - 1} are done`}
+                      className="rounded-md bg-white px-3 py-1 font-medium text-red-600 hover:bg-red-50"
+                    >
+                      Search deeper: K = {deeperK}, {formatCount(deeperFormulas)} formulas, {formatDuration(deeperSeconds)}
+                    </button>
+                  )}
+                </div>
+              )
             )}
             {/* Best result card */}
             <ResultCard

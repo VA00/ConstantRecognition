@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
-  buildTaskQueue, createResultFilter, structureWeight, chainIndex,
-  BUNDLE_MAX_K, CHAIN_SPLIT_MIN_K, CALC4_CONSTS, CalculatorSelection
+  buildTaskQueue, createResultFilter, structureWeight, chainIndex, levelWork,
+  BUNDLE_MAX_K, CHAIN_SPLIT_MIN_K, CALC4_CONSTS, CALC4_FUNCS, CALC4_OPS, CalculatorSelection
 } from '../app/calculator/lib/taskQueue';
 
 // Replicates the chunking in vsearch_RPN_core.c (vsearch_core):
@@ -220,5 +220,30 @@ describe('createResultFilter', () => {
     expect(keep(2, NaN, 'weird')).toBe(true);      // first row still shown
     expect(keep(2, 1.0, 'better')).toBe(true);     // any finite error beats it
     expect(keep(2, Infinity, 'weird2')).toBe(false);
+  });
+});
+
+// "Search deeper": a finished search continued by one level
+describe('buildTaskQueue continuing at startK', () => {
+  const leaves = (tasks: ReturnType<typeof buildTaskQueue>) => tasks.reduce((sum, t) => sum + t.weight, 0);
+
+  it('covers only the new level, with the full work of that level', () => {
+    for (const K of [7, 8]) {
+      const tasks = buildTaskQueue(K, undefined, K);
+      expect(tasks.every((t) => t.minK === K && t.maxK === K)).toBe(true);
+      expect(leaves(tasks)).toBe(levelWork(K, CALC4_CONSTS.length, CALC4_FUNCS.length, CALC4_OPS.length));
+    }
+  });
+
+  it('adds up to the one-shot search: levels 1..6 then 7 equal levels 1..7', () => {
+    const oneShot = buildTaskQueue(7).filter((t) => t.minK > BUNDLE_MAX_K);
+    const split = [...buildTaskQueue(6), ...buildTaskQueue(7, undefined, 7)].filter((t) => t.minK > BUNDLE_MAX_K);
+    expect(leaves(split)).toBe(leaves(oneShot));
+  });
+
+  it('starts the bundle at startK below the bundle threshold', () => {
+    const tasks = buildTaskQueue(3, undefined, 3);
+    expect(tasks).toHaveLength(1);
+    expect(tasks[0]).toMatchObject({ minK: 3, maxK: 3 });
   });
 });

@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { ActiveWorker, Precision, ErrorMode } from '../lib/types';
 import { Domain } from '../lib/complex';
-import { formatDuration } from '../lib/estimate';
+import { formatDuration, formatCount } from '../lib/estimate';
+import { MAX_SEARCH_DEPTH } from '../lib/taskQueue';
 import { assetPath } from '../lib/basePath';
 import { getCalculatorById, DEFAULT_CALCULATOR_ID } from '../lib/calculators';
 import { CalculatorPalette } from './CalculatorPalette';
@@ -52,16 +53,6 @@ interface SidebarProps {
   // true when the per-thread rate comes from a previous search on this machine
   rateMeasured: boolean;
   effectiveThreads: number;
-}
-
-// 8.4e7 -> "8.4·10⁷"
-function formatCount(n: number): string {
-  if (!Number.isFinite(n) || n <= 0) return '0';
-  if (n < 1e5) return Math.round(n).toLocaleString('en-US');
-  const sup = '⁰¹²³⁴⁵⁶⁷⁸⁹';
-  const [mant, exp] = n.toExponential(1).split('e');
-  const digits = String(parseInt(exp, 10)).split('').map((d) => sup[parseInt(d, 10)]).join('');
-  return `${mant}·10${digits}`;
 }
 
 export function Sidebar({
@@ -310,7 +301,7 @@ export function Sidebar({
               <input
                 type="range"
                 min="2"
-                max="16"
+                max={MAX_SEARCH_DEPTH}
                 value={searchDepth}
                 onChange={(e) => setSearchDepth(parseInt(e.target.value))}
                 className="flex-1 accent-[#0066cc] h-2"
