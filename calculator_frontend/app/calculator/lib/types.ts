@@ -1,7 +1,8 @@
 // Types and interfaces for the calculator
 
-// Error mode for uncertainty handling
-export type ErrorMode = 'zero' | 'automatic' | 'manual' | 'large_errors';
+// Uncertainty of the target: ± 0, the typed ±, or automatic (integers and
+// formulas exact, decimals ± half a unit of the last digit); see targetDelta
+export type ErrorMode = 'zero' | 'automatic' | 'manual';
 
 export interface SearchResult {
   cpuId: number;
@@ -33,6 +34,7 @@ export interface ErrorSettings {
 
 export interface Precision {
   z?: string;
+  value?: string;          // value of a formula target ("2/3" -> 0.666...)
   deltaZ?: string;
   relDeltaZ?: string;
   domain?: 'real' | 'complex';

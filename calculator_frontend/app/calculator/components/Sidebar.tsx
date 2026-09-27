@@ -30,6 +30,10 @@ interface SidebarProps {
   setErrorMode: (mode: ErrorMode) => void;
   manualError: string;
   setManualError: (value: string) => void;
+  // Uncertainty the current target gets under the selected mode (e.g. "exact (integer)")
+  uncertaintyNote: string | null;
+  // true when the current target is searched with a tolerance (δ > 0), where the CR threshold applies
+  toleranceSearch: boolean;
   earlyExitCRThreshold: number;
   setEarlyExitCRThreshold: (value: number) => void;
   // Calculator button palette
@@ -75,6 +79,8 @@ export function Sidebar({
   setErrorMode,
   manualError,
   setManualError,
+  uncertaintyNote,
+  toleranceSearch,
   earlyExitCRThreshold,
   setEarlyExitCRThreshold,
   enabledTokens,
@@ -94,14 +100,10 @@ export function Sidebar({
 }: SidebarProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const calculator = getCalculatorById(DEFAULT_CALCULATOR_ID);
-  const manualTolerance = parseFloat(manualError);
-  const toleranceSearchActive =
-    errorMode === 'automatic' ||
-    (errorMode === 'manual' && Number.isFinite(manualTolerance) && manualTolerance > 0);
-  const earlyExitCRActive = toleranceSearchActive;
-  const earlyExitCRNote = toleranceSearchActive
+  const earlyExitCRActive = toleranceSearch;
+  const earlyExitCRNote = toleranceSearch
     ? 'Applies to CPU/WASM tolerance-based search.'
-    : 'Ignored for exact search (± 0). Use Auto or Manual uncertainty to enable it.';
+    : 'Ignored for exact search (± 0, integers, formulas). Needs a target with an uncertainty.';
   const iBlocked = enabledTokens.includes('I') && effectiveDomain === 'real';
   const tokenNotes: Record<string, string> = iBlocked ? { I: 'needs ℂ' } : {};
   const workTone = estimatedSeconds < 15
@@ -266,6 +268,7 @@ export function Sidebar({
               </label>
               <div className="text-sm lg:text-xs font-mono text-gray-600 dark:text-gray-400 space-y-1 bg-gray-50 dark:bg-[#111113] p-3 lg:p-2 rounded">
                 <div>z = {precision.z}</div>
+                {precision.value && <div>&nbsp;&nbsp;= {precision.value}</div>}
                 <div>Δz = {precision.deltaZ}</div>
                 <div>δz/|z| = {precision.relDeltaZ}</div>
                 {precision.domain && <div>domain: {precision.domain === 'complex' ? 'ℂ' : 'ℝ'}</div>}
@@ -394,7 +397,8 @@ export function Sidebar({
                       onChange={() => setErrorMode('manual')}
                       className="w-4 h-4 accent-[#0066cc]"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Arbitrary High Precision</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Manual</span>
+                    <span className="text-xs text-gray-400">(type the ±)</span>
                   </label>
                   {errorMode === 'manual' && (
                     <div className="flex items-center gap-2 ml-6">
@@ -416,21 +420,15 @@ export function Sidebar({
                       onChange={() => setErrorMode('automatic')}
                       className="w-4 h-4 accent-[#0066cc]"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Machine Precision</span>
-                    <span className="text-xs text-gray-400">(few ULP)</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="errorMode"
-                      checked={errorMode === 'large_errors'}
-                      onChange={() => setErrorMode('large_errors')}
-                      className="w-4 h-4 accent-[#0066cc]"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Large Errors</span>
-                    <span className="text-xs text-gray-400">(fuzzy search)</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Auto</span>
+                    <span className="text-xs text-gray-400">(± ½ last digit; integers, formulas exact)</span>
                   </label>
                 </div>
+                {uncertaintyNote && (
+                  <p className="text-xs font-mono text-gray-500 dark:text-gray-400">
+                    Current target: {uncertaintyNote}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">

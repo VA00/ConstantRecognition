@@ -8,6 +8,8 @@ interface InputBarProps {
   canCalculate?: boolean;
   /** shown as tooltip on the disabled button */
   cannotCalculateReason?: string;
+  /** Line under the box: the value of a formula and the uncertainty in use, or a parse error */
+  hint?: { text: string; error: boolean } | null;
   onCalculate: () => void;
   onReset: () => void;
   onAbort: () => void;
@@ -19,6 +21,7 @@ export function InputBar({
   isCalculating,
   canCalculate = true,
   cannotCalculateReason,
+  hint,
   onCalculate,
   onReset,
   onAbort
@@ -32,10 +35,15 @@ export function InputBar({
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Enter a number, e.g. 3.14159265... or 0.5403+0.8415i"
+              placeholder="A number or a formula, e.g. 3.14159265, 2/3, asin(-1/3), 1+2i"
               className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111113] border border-gray-200 dark:border-[#2a2a2e] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#0066cc] focus:outline-none focus:ring-1 focus:ring-[#0066cc] font-mono text-lg"
               onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
             />
+            {hint && (
+              <p className={`mt-1 px-1 font-mono text-xs ${hint.error ? 'text-amber-600 dark:text-amber-400' : 'text-gray-500 dark:text-gray-400'}`}>
+                {hint.text}
+              </p>
+            )}
           </div>
           <div className="flex gap-2">
             <button

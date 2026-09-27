@@ -1,10 +1,13 @@
 // Complex-number helpers for the frontend: parsing user input, deriving its
 // precision, and formatting values returned by the WASM engine.
 //
-// All complex arithmetic happens in the WASM engine (every result row carries
-// value_re/value_im), so nothing here evaluates formulas.
+// Search results carry their own values (value_re/value_im from the WASM
+// engine); only a formula typed as the target is evaluated in the page, see
+// formula.ts.
 
 import { extractPrecision } from './rpn';
+import { evaluateFormula } from './formula';
+import { ErrorMode } from './types';
 
 export type Domain = 'auto' | 'real' | 'complex';
 
@@ -14,6 +17,10 @@ export interface ComplexInput {
   isComplex: boolean;   // true when the text had an imaginary part
   reText: string;       // textual parts, for precision extraction ('' if absent)
   imText: string;
+  // true for integers (3, -7, 3+4i, 2i) and formulas: searched exactly, since
+  // their value carries no rounding of typed decimals
+  exact: boolean;
+  formula?: boolean;    // the text was a formula, evaluated in the page
 }
 
 const NUM = '(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?';
@@ -21,6 +28,8 @@ const RE_REAL = new RegExp(`^[+-]?${NUM}$`);
 const RE_RE_IM = new RegExp(`^([+-]?${NUM})([+-](?:${NUM})?)i$`);   // a+bi, a-i
 const RE_IM = new RegExp(`^([+-]?(?:${NUM})?)i$`);                    // bi, i, -i
 const RE_IM_RE = new RegExp(`^([+-]?(?:${NUM})?)i([+-]${NUM})$`);    // bi+a
+// Integer parts: "7", "-3", and the bare coefficients of "i", "+i", "-i"
+const isIntegerText = (t: string) => /^[+-]?\d*$/.test(t);
 
 // Accepts "3.14", "1+2i", "1 - 2.5 i", "2i", "-i", "i", "0.5+0.3I", "1+2*i",
 // Mathematica-style "1 + 2 I", unicode minus. Returns null when unparsable.
@@ -36,7 +45,7 @@ export function parseComplexInput(raw: string): ComplexInput | null {
   if (!s) return null;
 
   if (RE_REAL.test(s)) {
-    return { re: parseFloat(s), im: 0, isComplex: false, reText: s, imText: '' };
+    return { re: parseFloat(s), im: 0, isComplex: false, reText: s, imText: '', exact: isIntegerText(s) };
   }
 
   const coef = (t: string): number => {
@@ -45,19 +54,46 @@ export function parseComplexInput(raw: string): ComplexInput | null {
     return parseFloat(t);
   };
 
+  const complex = (re: number, im: number, reText: string, imText: string): ComplexInput =>
+    ({ re, im, isComplex: true, reText, imText, exact: isIntegerText(reText) && isIntegerText(imText) });
   let m = RE_RE_IM.exec(s);
-  if (m) {
-    return { re: parseFloat(m[1]), im: coef(m[2]), isComplex: true, reText: m[1], imText: m[2] };
-  }
+  if (m) return complex(parseFloat(m[1]), coef(m[2]), m[1], m[2]);
   m = RE_IM_RE.exec(s);
-  if (m) {
-    return { re: parseFloat(m[2]), im: coef(m[1]), isComplex: true, reText: m[2], imText: m[1] };
-  }
+  if (m) return complex(parseFloat(m[2]), coef(m[1]), m[2], m[1]);
   m = RE_IM.exec(s);
-  if (m) {
-    return { re: 0, im: coef(m[1]), isComplex: true, reText: '', imText: m[1] };
-  }
+  if (m) return complex(0, coef(m[1]), '', m[1]);
   return null;
+}
+
+// The search box: a number as above, or else a formula ("2/3", "asin(-1/3)",
+// "5 Pi^2/96"). null for an empty box, { error } when neither parses.
+export function parseTargetInput(raw: string): ComplexInput | { error: string } | null {
+  if (!raw.trim()) return null;
+  const number = parseComplexInput(raw);
+  if (number) return number;
+  const f = evaluateFormula(raw);
+  if (!f.ok) return { error: f.error };
+  const { re, im } = f.value;
+  return { re, im, isComplex: im !== 0, reText: '', imText: '', exact: true, formula: true };
+}
+
+// Absolute uncertainty used by the search, and where it comes from. The one
+// rule for every place that shows or uses it:
+//   zero      -> 0
+//   manual    -> the typed ±, which must be a positive number
+//   automatic -> 0 for integers and formulas, else half a unit of the last
+//                typed decimal (complexAutoDelta)
+export function targetDelta(
+  input: ComplexInput, mode: ErrorMode, manualError: string
+): { delta: number; source: string } | { error: string } {
+  if (mode === 'zero') return { delta: 0, source: '± 0 selected' };
+  if (mode === 'manual') {
+    const d = parseFloat(manualError);
+    if (!(Number.isFinite(d) && d > 0)) return { error: 'Type the manual ± in Advanced Options' };
+    return { delta: d, source: 'manual' };
+  }
+  if (input.exact) return { delta: 0, source: input.formula ? 'formula' : 'integer' };
+  return { delta: complexAutoDelta(input), source: 'from typed digits' };
 }
 
 // Absolute uncertainty implied by the number of decimals typed. For a

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { SearchResult, Filters, Precision, ActiveWorker, defaultFilters, ErrorMode } from './lib/types';
 import { evaluateRPN } from './lib/rpn';
 import {
-  Domain, parseComplexInput, complexAutoDelta, complexAbs, formatComplex, resolveDomain
+  Domain, parseTargetInput, targetDelta, complexAbs, formatComplex, resolveDomain
 } from './lib/complex';
 import {
   buildTaskQueue, createResultFilter, estimateWork, levelWork, SearchTask, CalculatorSelection, MAX_SEARCH_DEPTH,
@@ -103,8 +103,12 @@ export default function CalculatorPage() {
     });
   };
 
-  // Target parsing and domain resolution
-  const parsedInput = useMemo(() => parseComplexInput(inputValue), [inputValue]);
+  // Target parsing (a number or a formula), its uncertainty, and the domain
+  const target = useMemo(() => parseTargetInput(inputValue), [inputValue]);
+  const parsedInput = target && !('error' in target) ? target : null;
+  const formulaError = target && 'error' in target ? target.error : null;
+  const deltaInfo = parsedInput ? targetDelta(parsedInput, errorMode, manualError) : null;
+  const deltaError = deltaInfo && 'error' in deltaInfo ? deltaInfo.error : null;
   const effectiveDomain = resolveDomain(domain, parsedInput, enabledTokens);
 
   // Calculator restriction from the button palette (canonical order). In the
@@ -133,15 +137,38 @@ export default function CalculatorPage() {
   );
 
   const canCalculate =
-    parsedInput !== null && hasConstants &&
+    parsedInput !== null && deltaError === null && hasConstants &&
     !(parsedInput.isComplex && effectiveDomain === 'real');
-  const cannotCalculateReason = !parsedInput
-    ? 'Enter a real number (3.14) or a complex one (1+2i)'
-    : !hasConstants
-      ? 'Enable at least one constant in the calculator palette'
-      : parsedInput.isComplex && effectiveDomain === 'real'
-        ? 'Complex target: switch the domain to Auto or Complex'
-        : undefined;
+  const cannotCalculateReason = formulaError
+    ? `Formula: ${formulaError}`
+    : !parsedInput
+      ? 'Enter a number (3.14, 1+2i) or a formula (2/3, asin(-1/3))'
+      : deltaError
+        ? deltaError
+        : !hasConstants
+          ? 'Enable at least one constant in the calculator palette'
+          : parsedInput.isComplex && effectiveDomain === 'real'
+            ? 'Complex target: switch the domain to Auto or Complex'
+            : undefined;
+
+  // Uncertainty the target gets, as text: "exact (integer)", "± 5.00e-3 (from typed digits)"
+  const deltaText = !deltaInfo
+    ? null
+    : 'error' in deltaInfo
+      ? deltaInfo.error
+      : deltaInfo.delta === 0
+        ? `exact (${deltaInfo.source})`
+        : `± ${deltaInfo.delta.toExponential(2)} (${deltaInfo.source})`;
+
+  // Line under the search box: what will be searched, or why it cannot be
+  const inputHint: { text: string; error: boolean } | null = formulaError
+    ? { text: `Formula: ${formulaError}`, error: true }
+    : parsedInput && deltaText
+      ? {
+          text: parsedInput.formula ? `= ${formatComplex(parsedInput.re, parsedInput.im)} · ${deltaText}` : deltaText,
+          error: deltaError !== null,
+        }
+      : null;
 
   const getCompressionRatio = (r: SearchResult): number => computeCR(r, lastSearchN);
 
@@ -222,7 +249,7 @@ export default function CalculatorPage() {
   // order and time are kept, the finished levels are not repeated.
   const runSearch = async (continueToK?: number) => {
     const input = parsedInput;
-    if (!input || !canCalculate) return;
+    if (!input || !canCalculate || !deltaInfo || 'error' in deltaInfo) return;
     const searchDomain = effectiveDomain;
     const depth = continueToK ?? searchDepth;
     const startK = continueToK ?? 1;
@@ -246,24 +273,17 @@ export default function CalculatorPage() {
       setElapsedTime(Date.now() - startTimeRef.current);
     }, 500);
     
-    // Target and its uncertainty according to the error mode
+    // Target and its uncertainty (targetDelta: the same rule the hints show)
     const zNum = input.re;
     const zIm = input.im;
-    let deltaZNum: number;
-    if (errorMode === 'zero') {
-      deltaZNum = 0;
-    } else if (errorMode === 'manual' && manualError) {
-      deltaZNum = parseFloat(manualError) || 0;
-    } else {
-      // automatic mode - infer from the number of decimals typed
-      deltaZNum = complexAutoDelta(input);
-    }
+    const deltaZNum = deltaInfo.delta;
     
     // Update precision display
     const zAbs = complexAbs(zNum, zIm);
     const relDeltaZ = zAbs !== 0 ? deltaZNum / zAbs : 0;
     setPrecision({
       z: inputValue,
+      value: input.formula ? formatComplex(zNum, zIm) : undefined,
       deltaZ: deltaZNum === 0 ? '0' : deltaZNum.toExponential(2),
       relDeltaZ: relDeltaZ === 0 ? '0' : relDeltaZ.toExponential(2),
       domain: searchDomain,
@@ -572,6 +592,8 @@ export default function CalculatorPage() {
         setErrorMode={setErrorMode}
         manualError={manualError}
         setManualError={setManualError}
+        uncertaintyNote={deltaText}
+        toleranceSearch={deltaInfo && !('error' in deltaInfo) ? deltaInfo.delta > 0 : errorMode !== 'zero'}
         earlyExitCRThreshold={earlyExitCRThreshold}
         setEarlyExitCRThreshold={setEarlyExitCRThreshold}
         enabledTokens={enabledTokens}
@@ -598,6 +620,7 @@ export default function CalculatorPage() {
           isCalculating={isCalculating}
           canCalculate={canCalculate}
           cannotCalculateReason={cannotCalculateReason}
+          hint={inputHint}
           onCalculate={calculate}
           onReset={handleReset}
           onAbort={handleAbort}
