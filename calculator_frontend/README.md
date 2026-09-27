@@ -7,6 +7,20 @@ This is a Next.js 16 frontend for the constant recognizer. The project is config
 - Start the dev server: `npm run dev`
 - Run the unit tests: `npm test`
 
+### Opening the calculator in the dev server
+
+Open the root URL printed by `npm run dev` (http://localhost:3000/) and **click the animated logo** to
+enter the calculator.
+
+Do not type http://localhost:3000/calculator/ into the address bar: in the dev server that page loads
+without styles and scripts (404 for every `/calculator/_next/...` file). Asset URLs are relative
+(`assetPrefix: "./"` in `next.config.ts`, so the static export works from any directory), and they resolve
+against the URL the browser loaded first. Entering from `/` makes them resolve correctly; a direct deep
+link does not. This is expected, not a bug.
+
+The dev server keeps running until you stop it with Ctrl+C. Stop it when you are done testing, or the next
+`npm run dev` picks another port (3001, ...).
+
 ## Rebuilding the WASM engine
 
 The search engine lives in `../C` and is compiled with Emscripten (`emcc`) into two files,
