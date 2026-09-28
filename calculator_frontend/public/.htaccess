@@ -1,0 +1,6 @@
+# Apache: make browsers ask the server for a newer version
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|txt)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
