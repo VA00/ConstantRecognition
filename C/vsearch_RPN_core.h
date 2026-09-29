@@ -173,8 +173,8 @@ char* search_constant(
     ErrorMetric metric,
     CompareMode compare);
 
-/* Same, with final steps (final_step.h): FINAL_MINUS, FINAL_ABS and
-   FINAL_ARG apply to real values; FINAL_RE and FINAL_IM are ignored
+/* Same, with final steps (final_step.h): FINAL_MINUS, FINAL_ABS, FINAL_ARG
+   and FINAL_FRAC apply to real values; FINAL_RE and FINAL_IM are ignored
    (Re x = x, Im x = 0). */
 char* search_constant_with_cr_final(
     double target, double delta,

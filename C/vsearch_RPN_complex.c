@@ -84,6 +84,8 @@ typedef struct {
     unsigned finals;             /* FINAL_* flags besides Identity */
     double final_floor2;         /* least rel_err2 of a real value: (Im target)^2 / |target|^2 */
     double err2_zero, err2_pi, err2_mpi;   /* rel_err2 of 0, pi, -pi: Im and arg of a real value */
+    double complex frac_target;  /* {Re target} + i {Im target}, for FINAL_FRAC */
+    double frac_scale2;          /* |frac_target|^2, or 1 when it is 0 (absolute error) */
 
     /* calculator */
     const CConstOp*  const_ops;  int n_const;
@@ -136,6 +138,7 @@ static inline double complex apply_final(double complex v, unsigned flag) {
         case FINAL_ABS: return cabs(v);
         case FINAL_ARG: return carg(v);
         case FINAL_MINUS: return -v;
+        case FINAL_FRAC: return (creal(v) - floor(creal(v))) + (cimag(v) - floor(cimag(v))) * I;
         default:        return v;
     }
 }
@@ -240,7 +243,7 @@ static inline void check_leaf(CSearchState* st, double complex v) {
         double e = rel_err2(st, -v);
         if (e < err2) { err2 = e; final = FINAL_MINUS; }
     }
-    if ((st->finals & ~FINAL_MINUS) && err2 > st->final_floor2) {
+    if ((st->finals & ~(FINAL_MINUS | FINAL_FRAC)) && err2 > st->final_floor2) {
         const unsigned fl = st->finals;
         const double vr = creal(v), vi = cimag(v);
         double e;
@@ -260,8 +263,23 @@ static inline void check_leaf(CSearchState* st, double complex v) {
             if ((fl & FINAL_ABS) && (e = rel_err2_real(st, hypot(vr, vi))) < err2) { err2 = e; final = FINAL_ABS; }
             if ((fl & FINAL_ARG) && (e = rel_err2_real(st, atan2(vi, vr))) < err2) { err2 = e; final = FINAL_ARG; }
         }
-        if (final != FINAL_IDENTITY) v = apply_final(v, final);
     }
+    /* Frac: {v} against {target}, per component, distance around the circle */
+    double complex cmp_target = st->target;   /* what v is compared with */
+    if (st->finals & FINAL_FRAC) {
+        double dr = (creal(v) - floor(creal(v))) - creal(st->frac_target);
+        double di = (cimag(v) - floor(cimag(v))) - cimag(st->frac_target);
+        dr -= rint(dr);
+        di -= rint(di);
+        double e = (dr * dr + di * di) / st->frac_scale2;
+        if (e < err2) {
+            err2 = e;
+            final = FINAL_FRAC;
+            cmp_target = st->frac_target;
+            v = st->frac_target + dr + di * I;   /* {v}, unwrapped next to {target} */
+        }
+    }
+    if (final != FINAL_IDENTITY && final != FINAL_FRAC) v = apply_final(v, final);
 
     if (err2 < st->best_err2) {
         st->best_err2 = err2;
@@ -277,7 +295,7 @@ static inline void check_leaf(CSearchState* st, double complex v) {
     }
 
     int exact = (err2 <= st->exact_err2);
-    if (!exact && st->delta > 0.0 && cnorm2(v - st->target) <= 4.0 * st->delta * st->delta) {
+    if (!exact && st->delta > 0.0 && cnorm2(v - cmp_target) <= 4.0 * st->delta * st->delta) {
         double err = sqrt(err2);
         double compression = (err > 0.0)
             ? -log10(err) / (st->K * log10((double)st->n_total))
@@ -385,6 +403,8 @@ char* search_constant_complex(
     st.err2_zero = rel_err2_real(&st, 0.0);
     st.err2_pi   = rel_err2_real(&st, atan2(0.0, -1.0));    /* carg(-1 + 0i) */
     st.err2_mpi  = rel_err2_real(&st, atan2(-0.0, -1.0));   /* carg(-1 - 0i) */
+    st.frac_target = (creal(target) - floor(creal(target))) + (cimag(target) - floor(cimag(target))) * I;
+    st.frac_scale2 = (cnorm2(st.frac_target) > 0.0) ? cnorm2(st.frac_target) : 1.0;
     st.const_ops = const_ops;   st.n_const = n_const;
     st.unary_ops = unary_ops;   st.n_unary = n_unary;
     st.binary_ops = binary_ops; st.n_binary = n_binary;

@@ -93,12 +93,14 @@ export function parseCustomInteger(text: string): { value: string } | { error: s
 // analytic. Identity is always applied and not listed. They do not count in K.
 // complexOnly: no effect on real values (Re x = x, Im x = 0), so a real search
 // leaves them out; Abs and Arg act in both searches.
-export const FINAL_STEPS: { token: string; label: string; complexOnly: boolean }[] = [
+export const FINAL_STEPS: { token: string; label: string; complexOnly: boolean; hint?: string }[] = [
   { token: 'MINUS', label: 'Minus', complexOnly: false },   // -f; token of the sign-change button
   { token: 'RE', label: 'Re', complexOnly: true },
   { token: 'IM', label: 'Im', complexOnly: true },
   { token: 'ABS', label: 'Abs', complexOnly: false },
   { token: 'ARG', label: 'Arg', complexOnly: false },
+  { token: 'FRAC', label: 'Frac', complexOnly: false,
+    hint: 'Fractional part {x} = x - floor(x): matches the target up to any integer offset' },
 ];
 // Real search: Minus; complex search: Minus, Re, Im. Abs and Arg off.
 export const DEFAULT_FINAL_STEPS = ['MINUS', 'RE', 'IM'];

@@ -442,13 +442,13 @@ export function Sidebar({
                   Final Step
                 </label>
                 <div className="flex flex-wrap gap-x-4 gap-y-1">
-                  {FINAL_STEPS.map(({ token, label, complexOnly }) => {
+                  {FINAL_STEPS.map(({ token, label, complexOnly, hint }) => {
                     // Re and Im change nothing on real values: greyed out in a real search
                     const inactive = complexOnly && effectiveDomain === 'real';
                     return (
                       <label
                         key={token}
-                        title={inactive ? 'Complex search only' : undefined}
+                        title={inactive ? 'Complex search only' : hint}
                         className={`flex items-center gap-1.5 ${inactive ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <input

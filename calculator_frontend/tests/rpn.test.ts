@@ -58,6 +58,8 @@ describe('final-step tokens', () => {
     expect(rpnToInfix('I, LOG, IM')).toBe('Im(ln(i))');
     expect(rpnToMathematica('EULER, EXP, MINUS')).toBe('(-Exp[E])');   // Minus: token of the sign-change button
     expect(rpnToLatex('EULER, EXP, MINUS')).toBe('(-e^{e})');
+    expect(rpnToMathematica('PI, FRAC')).toBe('Mod[Pi, 1]');   // x - Floor[x], also for x < 0
+    expect(rpnToLatex('PI, FRAC')).toBe('\\left\\{\\pi\\right\\}');
   });
 
   it('evaluate on real values as Re x = x, Im x = 0, |x|, arg x', () => {
@@ -67,5 +69,7 @@ describe('final-step tokens', () => {
     expect(evaluateRPN('TWO, ONE, SUBTRACT, ARG')).toBe(Math.PI);
     expect(evaluateRPN('ONE, TWO, SUBTRACT, ARG')).toBe(0);   // 2 - 1 > 0
     expect(evaluateRPN('EULER, EXP, MINUS')).toBe(-Math.exp(Math.E));
+    expect(evaluateRPN('PI, NINE, PLUS, FRAC')).toBeCloseTo(Math.PI - 3, 14);
+    expect(evaluateRPN('SIX, PI, SUBTRACT, FRAC')).toBeCloseTo(Math.PI - 3, 14);   // {pi - 6}: x - floor(x), also for x < 0
   });
 });

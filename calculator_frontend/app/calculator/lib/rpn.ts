@@ -19,7 +19,7 @@ export const namedFunctions: Record<string, string> = {
   "COSH": "cosh", "ARCCOSH": "arcosh", "TANH": "tanh", "ARCTANH": "artanh",
   "SQRT": "sqrt", "SQR": "sqr", "GAMMA": "Γ",
   // final step (complex engine): only ever the last token
-  "RE": "Re", "IM": "Im", "ABS": "abs", "ARG": "arg"
+  "RE": "Re", "IM": "Im", "ABS": "abs", "ARG": "arg", "FRAC": "frac"
 };
 
 export const namedOperators: Record<string, string> = {
@@ -46,7 +46,8 @@ export const numFunctions: Record<string, (x: number) => number> = {
   "COSH": Math.cosh, "ARCCOSH": Math.acosh, "TANH": Math.tanh, "ARCTANH": Math.atanh,
   "SQRT": Math.sqrt, "SQR": x => x*x, "GAMMA": x => gamma(x),
   // final step on a real value (complex rows show the engine's own value)
-  "RE": x => x, "IM": () => 0, "ABS": Math.abs, "ARG": x => Math.atan2(0, x)
+  "RE": x => x, "IM": () => 0, "ABS": Math.abs, "ARG": x => Math.atan2(0, x),
+  "FRAC": x => x - Math.floor(x)
 };
 
 export const numOperators: Record<string, (a: number, b: number) => number> = {
@@ -272,6 +273,7 @@ export function rpnToMathematica(rpn: string | string[]): string {
   };
   const mmaUnnamed: Record<string, (x: string) => string> = {
     "SQR": x => `(${x})^2`,
+    "FRAC": x => `Mod[${x}, 1]`,   // x - Floor[x]; FractionalPart differs for x < 0
     "INV": x => `1/(${x})`,
     "MINUS": x => `(-${x})`
   };
@@ -360,7 +362,8 @@ export function rpnToLatex(rpn: string | string[]): string {
     "RE": x => `\\operatorname{Re}(${x})`,
     "IM": x => `\\operatorname{Im}(${x})`,
     "ABS": x => `\\left|${x}\\right|`,
-    "ARG": x => `\\arg(${x})`
+    "ARG": x => `\\arg(${x})`,
+    "FRAC": x => `\\left\\{${x}\\right\\}`
   };
   
   const latexOperators = new Set(["PLUS", "SUBTRACT", "TIMES", "DIVIDE", "POWER", "LOGARITHM"]);

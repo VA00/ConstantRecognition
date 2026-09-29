@@ -286,6 +286,7 @@ typedef struct {
     unsigned best_final;       /* FINAL_* of the best candidate */
     double arg_err_zero;       /* error of arg = 0 and of arg = pi: the only real values */
     double arg_err_pi;
+    double frac_target;        /* {target} = target - floor(target), for FINAL_FRAC */
     int best_indices[MAX_CODE_LENGTH];
     char best_ternary[MAX_CODE_LENGTH];
 } TargetState;
@@ -311,7 +312,7 @@ typedef struct {
     int num_found;
     int stop_search;
     double cr_threshold;
-    unsigned finals;           /* FINAL_MINUS | FINAL_ABS | FINAL_ARG (final_step.h), CONSTANT/BATCH only */
+    unsigned finals;           /* FINAL_MINUS | FINAL_ABS | FINAL_ARG | FINAL_FRAC (final_step.h), CONSTANT/BATCH only */
     TargetState* targets;      /* Per-target state for CONSTANT/BATCH */
     double func_best_err;      /* Best error for FUNCTION mode */
     double func_best_value;
@@ -361,6 +362,14 @@ static unsigned real_final_step(const SearchState* st, const TargetState* ts, do
         e = neg ? ts->arg_err_pi : ts->arg_err_zero;
         if (e < *err) { *err = e; *value = neg ? atan2(0.0, -1.0) : 0.0; final = FINAL_ARG; }
     }
+    /* {raw} against {target}, distance around the circle; the value is {raw}
+       unwrapped next to {target}, so the tolerance test below can use it */
+    if (st->finals & FINAL_FRAC) {
+        double d = (raw - floor(raw)) - ts->frac_target;
+        d -= rint(d);
+        e = compute_single_error(ts->frac_target + d, ts->frac_target, st->metric);
+        if (e < *err) { *err = e; *value = ts->frac_target + d; final = FINAL_FRAC; }
+    }
     return final;
 }
 
@@ -376,11 +385,13 @@ static int process_constant_leaf(SearchState* st, const char* ternary, const int
         double err = compute_single_error(raw, target, st->metric);
         unsigned final = FINAL_IDENTITY;
         computed = raw;
-        if (st->finals && ((st->finals & FINAL_ARG) ||
+        if (st->finals && ((st->finals & (FINAL_ARG | FINAL_FRAC)) ||
                            (signbit(raw) && (st->finals & FINAL_ABS)) ||
                            ((st->finals & FINAL_MINUS) && raw * target < 0.0))) {
             final = real_final_step(st, &st->targets[t], raw, target, &err, &computed);
         }
+        /* Frac is compared with {target}: so are the tolerance test and the Hamming distance */
+        if (final == FINAL_FRAC) target = st->targets[t].frac_target;
         int is_better = (st->compare == COMPARE_STRICT) ? (err < st->targets[t].best_err) : (err <= st->targets[t].best_err);
         if (is_better) {
             st->targets[t].best_err = err;
@@ -631,6 +642,7 @@ static char* vsearch_core_final(
             targets[i].best_err = DBL_MAX; targets[i].best_K = 1;
             targets[i].arg_err_zero = compute_single_error(0.0, data[i].y, metric);
             targets[i].arg_err_pi = compute_single_error(atan2(0.0, -1.0), data[i].y, metric);
+            targets[i].frac_target = data[i].y - floor(data[i].y);
         }
     }
     
@@ -648,7 +660,7 @@ static char* vsearch_core_final(
     st.n_total = n_total;
     st.num_to_find = effective_num;
     st.cr_threshold = cr_threshold;
-    st.finals = (mode == MODE_FUNCTION) ? 0 : (finals & (FINAL_MINUS | FINAL_ABS | FINAL_ARG));
+    st.finals = (mode == MODE_FUNCTION) ? 0 : (finals & (FINAL_MINUS | FINAL_ABS | FINAL_ARG | FINAL_FRAC));
     st.targets = targets;
     st.func_best_err = DBL_MAX; st.func_best_K = 1;
     st.json_ptr = json_output; st.json_remaining = JSON_BUFFER_SIZE;

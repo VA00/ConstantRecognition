@@ -51,6 +51,7 @@ describe('final steps sent to the engine', () => {
 
   it('keeps the engine order and drops Re, Im from real searches', () => {
     expect(finalStepList(['ARG', 'RE', 'ABS', 'MINUS'], 'complex')).toBe('MINUS,RE,ABS,ARG');
+    expect(finalStepList(['FRAC', 'MINUS'], 'real')).toBe('MINUS,FRAC');
     expect(finalStepList(['ARG', 'RE', 'IM'], 'real')).toBe('ARG');
     expect(finalStepList([], 'complex')).toBe('');
   });

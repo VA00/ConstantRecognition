@@ -6,14 +6,19 @@
  *
  * Operations applied only to a finished formula, never inside it, so every
  * generated formula stays analytic. Identity is always applied; the flags add
- * -f, Re, Im, |.|, arg. A finished formula f is compared with the target as f
- * and as each enabled phi(f); the closest wins, and on a tie the earlier one
- * in the order Identity, Minus, Re, Im, Abs, Arg. The final step is free: it
+ * -f, Re, Im, |.|, arg, {.}. A finished formula f is compared with the target
+ * as f and as each enabled phi(f); the closest wins, and on a tie the earlier
+ * one in the order Identity, Minus, Re, Im, Abs, Arg, Frac. The final step is free: it
  * is not counted in K. In the RPN output it is one more token at the end
  * ("PI, SQRT, RE"; Minus is "MINUS", the name of the sign-change button);
  * Identity adds none.
  *
- * Complex engine: all five. Real engine: Minus, Abs, Arg (Re x = x, Im x = 0).
+ * Frac is the fractional part {x} = x - floor(x) (Mathematica Mod[x, 1]; in
+ * the complex engine for the real and imaginary parts separately), compared
+ * with {target} by the distance around the unit circle: a match up to any
+ * integer offset, for a user who knows the result may be off by one.
+ *
+ * Complex engine: all six. Real engine: Minus, Abs, Arg, Frac (Re x = x, Im x = 0).
  *
  * Header-only and free of <complex.h>, so the real engine and MSVC builds
  * share the names and the list parser.
@@ -31,11 +36,13 @@
 #define FINAL_ABS      4u
 #define FINAL_ARG      8u
 #define FINAL_MINUS   16u
-#define FINAL_ALL      (FINAL_MINUS | FINAL_RE | FINAL_IM | FINAL_ABS | FINAL_ARG)
+#define FINAL_FRAC    32u
+#define FINAL_ALL      (FINAL_MINUS | FINAL_RE | FINAL_IM | FINAL_ABS | FINAL_ARG | FINAL_FRAC)
 
 static const struct { unsigned flag; const char* name; } FINAL_STEP_NAMES[] = {
     { FINAL_MINUS, "MINUS" },
     { FINAL_RE, "RE" }, { FINAL_IM, "IM" }, { FINAL_ABS, "ABS" }, { FINAL_ARG, "ARG" },
+    { FINAL_FRAC, "FRAC" },
 };
 #define N_FINAL_STEP_NAMES ((int)(sizeof(FINAL_STEP_NAMES) / sizeof(FINAL_STEP_NAMES[0])))
 
