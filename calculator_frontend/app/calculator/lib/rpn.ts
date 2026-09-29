@@ -17,7 +17,9 @@ export const namedFunctions: Record<string, string> = {
   "SIN": "sin", "ARCSIN": "arcsin", "COS": "cos", "ARCCOS": "arccos",
   "TAN": "tan", "ARCTAN": "arctan", "SINH": "sinh", "ARCSINH": "arsinh",
   "COSH": "cosh", "ARCCOSH": "arcosh", "TANH": "tanh", "ARCTANH": "artanh",
-  "SQRT": "sqrt", "SQR": "sqr", "GAMMA": "Γ"
+  "SQRT": "sqrt", "SQR": "sqr", "GAMMA": "Γ",
+  // final step (complex engine): only ever the last token
+  "RE": "Re", "IM": "Im", "ABS": "abs", "ARG": "arg"
 };
 
 export const namedOperators: Record<string, string> = {
@@ -42,7 +44,9 @@ export const numFunctions: Record<string, (x: number) => number> = {
   "SIN": Math.sin, "ARCSIN": Math.asin, "COS": Math.cos, "ARCCOS": Math.acos,
   "TAN": Math.tan, "ARCTAN": Math.atan, "SINH": Math.sinh, "ARCSINH": Math.asinh,
   "COSH": Math.cosh, "ARCCOSH": Math.acosh, "TANH": Math.tanh, "ARCTANH": Math.atanh,
-  "SQRT": Math.sqrt, "SQR": x => x*x, "GAMMA": x => gamma(x)
+  "SQRT": Math.sqrt, "SQR": x => x*x, "GAMMA": x => gamma(x),
+  // final step on a real value (complex rows show the engine's own value)
+  "RE": x => x, "IM": () => 0, "ABS": Math.abs, "ARG": x => Math.atan2(0, x)
 };
 
 export const numOperators: Record<string, (a: number, b: number) => number> = {
@@ -264,7 +268,7 @@ export function rpnToMathematica(rpn: string | string[]): string {
     "COS": "Cos", "ARCCOS": "ArcCos", "TAN": "Tan", "ARCTAN": "ArcTan",
     "SINH": "Sinh", "ARCSINH": "ArcSinh", "COSH": "Cosh", "ARCCOSH": "ArcCosh",
     "TANH": "Tanh", "ARCTANH": "ArcTanh", "SQRT": "Sqrt", "GAMMA": "Gamma",
-    "MINUS": "Minus"
+    "MINUS": "Minus", "RE": "Re", "IM": "Im", "ABS": "Abs", "ARG": "Arg"
   };
   const mmaUnnamed: Record<string, (x: string) => string> = {
     "SQR": x => `(${x})^2`,
@@ -352,7 +356,11 @@ export function rpnToLatex(rpn: string | string[]): string {
     "SQR": x => `(${x})^2`,
     "GAMMA": x => `\\Gamma(${x})`,
     "INV": x => `\\frac{1}{${x}}`,
-    "MINUS": x => `(-${x})`
+    "MINUS": x => `(-${x})`,
+    "RE": x => `\\operatorname{Re}(${x})`,
+    "IM": x => `\\operatorname{Im}(${x})`,
+    "ABS": x => `\\left|${x}\\right|`,
+    "ARG": x => `\\arg(${x})`
   };
   
   const latexOperators = new Set(["PLUS", "SUBTRACT", "TIMES", "DIVIDE", "POWER", "LOGARITHM"]);

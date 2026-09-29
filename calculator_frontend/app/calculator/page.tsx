@@ -17,7 +17,8 @@ import {
 } from './lib/estimate';
 import { withBasePath, wasmVersionQuery } from './lib/basePath';
 import {
-  getCalculatorById, DEFAULT_CALCULATOR_ID, defaultEnabledTokens, CUSTOM_INT, parseCustomInteger
+  getCalculatorById, DEFAULT_CALCULATOR_ID, defaultEnabledTokens, CUSTOM_INT, parseCustomInteger,
+  DEFAULT_FINAL_STEPS, finalStepList
 } from './lib/calculators';
 import { Sidebar, InputBar, ResultCard, ResultsTable, EmptyState } from './components';
 
@@ -74,6 +75,8 @@ export default function CalculatorPage() {
   const [enabledTokens, setEnabledTokens] = useState<string[]>(DEFAULT_TOKENS);
   // Text of the custom "difficult integer" button (CUSTOM_INT token)
   const [customInt, setCustomInt] = useState('');
+  // Final steps besides Identity for complex searches (lib/calculators.ts)
+  const [finalSteps, setFinalSteps] = useState<string[]>(DEFAULT_FINAL_STEPS);
   // Button count of the search that produced the current results (for CR)
   const [lastSearchN, setLastSearchN] = useState(DEFAULT_TOKENS.length);
   // Settings and depth of the last search, for "search deeper" (continue at K+1)
@@ -180,7 +183,7 @@ export default function CalculatorPage() {
   // deeper" continues the last search only while this is unchanged; after an
   // edit the user starts a new search instead.
   const searchKey = JSON.stringify({
-    inputValue, errorMode, manualError, earlyExitCRThreshold, domain: effectiveDomain, selection,
+    inputValue, errorMode, manualError, earlyExitCRThreshold, domain: effectiveDomain, selection, finalSteps,
   });
   const deeperK = lastSearch && lastSearch.key === searchKey && lastSearch.depth < MAX_SEARCH_DEPTH
     ? lastSearch.depth + 1
@@ -337,6 +340,8 @@ export default function CalculatorPage() {
       funcList: selection.funcs.join(','),
       opList: selection.ops.join(','),
     };
+    // Final steps (Re and Im only in complex searches), in the engine's tie order
+    const finalList = finalStepList(finalSteps, searchDomain);
 
     setTaskProgress({ done: 0, total: totalTasks });
 
@@ -377,7 +382,9 @@ export default function CalculatorPage() {
           ? prev.map(w => (w.id === workerId ? { ...w, currentK: task.maxK } : w))
           : [...prev, running];
       });
-      const lists = searchDomain === 'complex'
+      // Explicit lists always in the complex domain, and in the real domain
+      // whenever final steps are on (the full-calculator entry has none)
+      const lists = searchDomain === 'complex' || finalList !== ''
         ? {
             constList: task.constList ?? fullLists.constList,
             funcList: task.funcList ?? fullLists.funcList,
@@ -394,6 +401,7 @@ export default function CalculatorPage() {
         cpuId: task.taskId,
         ncpus: task.taskCount,
         earlyExitCRThreshold,
+        finalList,
         workerId,
         ...lists,
       });
@@ -617,6 +625,8 @@ export default function CalculatorPage() {
         manualError={manualError}
         setManualError={setManualError}
         uncertaintyNote={deltaText}
+        finalSteps={finalSteps}
+        setFinalSteps={setFinalSteps}
         toleranceSearch={deltaInfo && !('error' in deltaInfo) ? deltaInfo.delta > 0 : errorMode !== 'zero'}
         earlyExitCRThreshold={earlyExitCRThreshold}
         setEarlyExitCRThreshold={setEarlyExitCRThreshold}

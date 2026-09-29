@@ -6,7 +6,7 @@ import { Domain } from '../lib/complex';
 import { formatDuration, formatCount } from '../lib/estimate';
 import { MAX_SEARCH_DEPTH } from '../lib/taskQueue';
 import { assetPath } from '../lib/basePath';
-import { getCalculatorById, DEFAULT_CALCULATOR_ID } from '../lib/calculators';
+import { getCalculatorById, DEFAULT_CALCULATOR_ID, FINAL_STEPS } from '../lib/calculators';
 import { CalculatorPalette } from './CalculatorPalette';
 
 interface SidebarProps {
@@ -32,6 +32,9 @@ interface SidebarProps {
   setManualError: (value: string) => void;
   // Uncertainty the current target gets under the selected mode (e.g. "exact (integer)")
   uncertaintyNote: string | null;
+  // Final steps besides Identity (complex search only)
+  finalSteps: string[];
+  setFinalSteps: (steps: string[]) => void;
   // true when the current target is searched with a tolerance (δ > 0), where the CR threshold applies
   toleranceSearch: boolean;
   earlyExitCRThreshold: number;
@@ -80,6 +83,8 @@ export function Sidebar({
   manualError,
   setManualError,
   uncertaintyNote,
+  finalSteps,
+  setFinalSteps,
   toleranceSearch,
   earlyExitCRThreshold,
   setEarlyExitCRThreshold,
@@ -429,6 +434,42 @@ export function Sidebar({
                     Current target: {uncertaintyNote}
                   </p>
                 )}
+              </div>
+
+              {/* Final step: applied to the finished formula only */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-medium text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+                  Final Step
+                </label>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {FINAL_STEPS.map(({ token, label, complexOnly }) => {
+                    // Re and Im change nothing on real values: greyed out in a real search
+                    const inactive = complexOnly && effectiveDomain === 'real';
+                    return (
+                      <label
+                        key={token}
+                        title={inactive ? 'Complex search only' : undefined}
+                        className={`flex items-center gap-1.5 ${inactive ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={finalSteps.includes(token)}
+                          onChange={() => setFinalSteps(
+                            finalSteps.includes(token) ? finalSteps.filter(t => t !== token) : [...finalSteps, token]
+                          )}
+                          disabled={isCalculating || inactive}
+                          className="w-4 h-4 accent-[#0066cc]"
+                        />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {effectiveDomain === 'complex'
+                    ? 'Also tried on every finished formula, e.g. Re[Sqrt[i]]; never inside it, and not counted in K.'
+                    : 'Also tried on every finished formula, e.g. Abs[Sin[4]]; Re and Im only in complex search.'}
+                </p>
               </div>
 
               <div className="space-y-2">

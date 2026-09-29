@@ -25,7 +25,7 @@
  *   search_constant_complex(z, 0.0, 1, 7, 0, 1,
  *       CALC4C_CONSTS, CALC4C_N_CONST,
  *       CALC4C_FUNCS,  CALC4C_N_UNARY,
- *       CALC4C_OPS,    CALC4C_N_BINARY, 0.0);
+ *       CALC4C_OPS,    CALC4C_N_BINARY, 0.0, FINAL_RE | FINAL_IM);
  */
 
 #ifndef CALC4C_H

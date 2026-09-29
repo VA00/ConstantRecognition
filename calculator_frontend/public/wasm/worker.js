@@ -54,16 +54,17 @@ function callJSON(name, argTypes, args) {
 function doWork(task) {
     const {
         z, zIm, domain, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus,
-        earlyExitCRThreshold, constList, funcList, opList
+        earlyExitCRThreshold, constList, funcList, opList, finalList
     } = task;
     try {
         // Complex domain: target z + i*zIm. Button lists are always explicit
         // here (the main thread fills them in for the full calculator too).
+        // finalList: final steps besides Identity ("RE,IM"); "" for none.
         if (domain === 'complex') {
             return callJSON('search_RPN_complex',
-                ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'string', 'string', 'string', 'number'],
+                ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'string', 'string', 'string', 'number', 'string'],
                 [z, zIm || 0, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus,
-                 constList || "", funcList || "", opList || "", earlyExitCRThreshold]);
+                 constList || "", funcList || "", opList || "", earlyExitCRThreshold, finalList || ""]);
         }
 
         // Restricted-instruction-set task: user-disabled palette buttons or
@@ -73,9 +74,9 @@ function doWork(task) {
         if (constList !== undefined || funcList !== undefined || opList !== undefined) {
             if (typeof Module._search_RPN_custom_cr === 'function') {
                 return callJSON('search_RPN_custom_cr',
-                    ['number', 'number', 'number', 'number', 'number', 'number', 'string', 'string', 'string', 'number'],
+                    ['number', 'number', 'number', 'number', 'number', 'number', 'string', 'string', 'string', 'number', 'string'],
                     [z, inputPrecision, MinCodeLength, MaxCodeLength, cpuId, ncpus,
-                     constList || "", funcList || "", opList || "", earlyExitCRThreshold]);
+                     constList || "", funcList || "", opList || "", earlyExitCRThreshold, finalList || ""]);
             }
             return callJSON('search_RPN_custom',
                 ['number', 'number', 'number', 'number', 'number', 'number', 'string', 'string', 'string'],

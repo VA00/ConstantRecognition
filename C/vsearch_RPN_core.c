@@ -53,6 +53,7 @@
 #include "vsearch_RPN_core.h"
 #include "utils.h"
 #include "rpn_forms.h"
+#include "final_step.h"
 
 /* ============================================================================
  * CONFIGURATION
@@ -165,6 +166,7 @@ static void format_code(
     const UnaryOp* unary_ops,
     const BinaryOp* binary_ops,
     SearchMode mode,
+    unsigned final,            /* FINAL_* appended as a last token; 0: none */
     char* out, int out_size)
 {
     int pos = 0;
@@ -199,6 +201,15 @@ static void format_code(
                 memcpy(out + pos, name, len);
                 pos += len;
             }
+        }
+    }
+    const char* fname = final_step_name(final);
+    if (fname && K > 0) {
+        int len = (int)strlen(fname);
+        if (pos + len + 3 < out_size) {
+            out[pos++] = ','; out[pos++] = ' ';
+            memcpy(out + pos, fname, len);
+            pos += len;
         }
     }
     out[pos] = '\0';
@@ -270,8 +281,11 @@ static double compute_function_error(
 typedef struct {
     int found;
     double best_err;
-    double computed_value;
+    double computed_value;     /* after the final step */
     int best_K;
+    unsigned best_final;       /* FINAL_* of the best candidate */
+    double arg_err_zero;       /* error of arg = 0 and of arg = pi: the only real values */
+    double arg_err_pi;
     int best_indices[MAX_CODE_LENGTH];
     char best_ternary[MAX_CODE_LENGTH];
 } TargetState;
@@ -297,6 +311,7 @@ typedef struct {
     int num_found;
     int stop_search;
     double cr_threshold;
+    unsigned finals;           /* FINAL_ABS | FINAL_ARG (final_step.h), CONSTANT/BATCH only */
     TargetState* targets;      /* Per-target state for CONSTANT/BATCH */
     double func_best_err;      /* Best error for FUNCTION mode */
     double func_best_value;
@@ -319,26 +334,58 @@ typedef struct {
  * target that has not been found yet. Returns 1 when the search must stop.
  * ============================================================================ */
 
+/* Final step for a real value, only called when st->finals is set: replaces
+   *err and *value by those of |raw| or arg(raw) when closer; strict < keeps
+   Identity on a tie. Out of line so the leaf's hot path stays as it was. */
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((noinline))
+#elif defined(_MSC_VER)
+__declspec(noinline)
+#endif
+static unsigned real_final_step(const SearchState* st, const TargetState* ts, double raw, double target,
+                                double* err, double* value) {
+    unsigned final = FINAL_IDENTITY;
+    double e;
+    /* |raw| = raw for raw >= 0: never closer, not computed */
+    if ((st->finals & FINAL_ABS) && raw < 0.0 && (e = compute_single_error(-raw, target, st->metric)) < *err) {
+        *err = e; *value = -raw; final = FINAL_ABS;
+    }
+    /* arg(raw) = atan2(0, raw): pi when raw is negative (or -0), else 0 */
+    if (st->finals & FINAL_ARG) {
+        int neg = signbit(raw) != 0;
+        e = neg ? ts->arg_err_pi : ts->arg_err_zero;
+        if (e < *err) { *err = e; *value = neg ? atan2(0.0, -1.0) : 0.0; final = FINAL_ARG; }
+    }
+    return final;
+}
+
 static int process_constant_leaf(SearchState* st, const char* ternary, const int* indices, int K, double computed) {
     st->evaluations++;
     if (isnan(computed) || isinf(computed)) return 0;
+    const double raw = computed;   /* before the final step */
     
     for (int t = 0; t < st->n_data; t++) {
         if (st->targets[t].found) continue;
         double target = st->data[t].y;
         double delta = st->data[t].dy;
-        double err = compute_single_error(computed, target, st->metric);
+        double err = compute_single_error(raw, target, st->metric);
+        unsigned final = FINAL_IDENTITY;
+        computed = raw;
+        if (st->finals && (signbit(raw) || (st->finals & FINAL_ARG))) {
+            final = real_final_step(st, &st->targets[t], raw, target, &err, &computed);
+        }
         int is_better = (st->compare == COMPARE_STRICT) ? (err < st->targets[t].best_err) : (err <= st->targets[t].best_err);
         if (is_better) {
             st->targets[t].best_err = err;
             st->targets[t].best_K = K;
             st->targets[t].computed_value = computed;
+            st->targets[t].best_final = final;
             memcpy(st->targets[t].best_ternary, ternary, K);
             memcpy(st->targets[t].best_indices, indices, K * sizeof(int));
             
             /* Output INTERMEDIATE result */
             char code[512];
-            format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_CONSTANT, code, sizeof(code));
+            format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_CONSTANT, final, code, sizeof(code));
             int hamming = compute_hamming_distance(target, computed);
             
             if (st->result_count > 0) {
@@ -369,7 +416,7 @@ static int process_constant_leaf(SearchState* st, const char* ternary, const int
                For single-target (CONSTANT mode), skip to preserve backward compatibility. */
             if (st->n_data > 1) {
                 char code[512];
-                format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_CONSTANT, code, sizeof(code));
+                format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_CONSTANT, final, code, sizeof(code));
                 int hamming = compute_hamming_distance(target, computed);
                 
                 if (st->result_count > 0) {
@@ -478,7 +525,7 @@ static int generate_and_evaluate(const char* ternary, int* indices, int pos, int
                 memcpy(st->func_best_ternary, ternary, K);
                 memcpy(st->func_best_indices, indices, K * sizeof(int));
                 char code[512];
-                format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_FUNCTION, code, sizeof(code));
+                format_code(ternary, indices, K, st->const_ops, st->unary_ops, st->binary_ops, MODE_FUNCTION, FINAL_IDENTITY, code, sizeof(code));
                 
                 if (st->result_count > 0) {
                     int w = snprintf(st->json_ptr, st->json_remaining, ",\n");
@@ -546,7 +593,8 @@ static int visit_form(void* ctx, const char* form, int K, uint64_t index) {
  * UNIFIED CORE SEARCH FUNCTION
  * ============================================================================ */
 
-char* vsearch_core(
+/* vsearch_core with final steps (FINAL_ABS | FINAL_ARG, CONSTANT/BATCH modes) */
+static char* vsearch_core_final(
     SearchMode mode,
     const DataPoint* data, int n_data,
     int MinK, int MaxK,
@@ -557,7 +605,8 @@ char* vsearch_core(
     ErrorMetric metric,
     CompareMode compare,
     int num_to_find,
-    double cr_threshold)
+    double cr_threshold,
+    unsigned finals)
 {
     char* json_output = (char*)malloc(JSON_BUFFER_SIZE);
     if (!json_output) return strdup("{\"error\":\"Memory allocation failed\"}");
@@ -571,7 +620,11 @@ char* vsearch_core(
     if (mode != MODE_FUNCTION) {
         targets = (TargetState*)calloc(n_data, sizeof(TargetState));
         if (!targets) { free(json_output); return strdup("{\"error\":\"Memory allocation failed\"}"); }
-        for (int i = 0; i < n_data; i++) { targets[i].best_err = DBL_MAX; targets[i].best_K = 1; }
+        for (int i = 0; i < n_data; i++) {
+            targets[i].best_err = DBL_MAX; targets[i].best_K = 1;
+            targets[i].arg_err_zero = compute_single_error(0.0, data[i].y, metric);
+            targets[i].arg_err_pi = compute_single_error(atan2(0.0, -1.0), data[i].y, metric);
+        }
     }
     
     int n_total = n_const + n_unary + n_binary;
@@ -588,6 +641,7 @@ char* vsearch_core(
     st.n_total = n_total;
     st.num_to_find = effective_num;
     st.cr_threshold = cr_threshold;
+    st.finals = (mode == MODE_FUNCTION) ? 0 : (finals & (FINAL_ABS | FINAL_ARG));
     st.targets = targets;
     st.func_best_err = DBL_MAX; st.func_best_K = 1;
     st.json_ptr = json_output; st.json_remaining = JSON_BUFFER_SIZE;
@@ -652,7 +706,7 @@ char* vsearch_core(
                 if (targets[i].best_K > 0) {
                     char code[512];
                     format_code(targets[i].best_ternary, targets[i].best_indices, targets[i].best_K,
-                               const_ops, unary_ops, binary_ops, MODE_CONSTANT, code, sizeof(code));
+                               const_ops, unary_ops, binary_ops, MODE_CONSTANT, targets[i].best_final, code, sizeof(code));
                     int hamming = compute_hamming_distance(data[i].y, targets[i].computed_value);
                     
                     if (st.result_count > 0) {
@@ -688,7 +742,7 @@ char* vsearch_core(
     /* Finalize JSON */
     if (mode == MODE_FUNCTION) {
         char code[512];
-        format_code(st.func_best_ternary, st.func_best_indices, st.func_best_K, const_ops, unary_ops, binary_ops, MODE_FUNCTION, code, sizeof(code));
+        format_code(st.func_best_ternary, st.func_best_indices, st.func_best_K, const_ops, unary_ops, binary_ops, MODE_FUNCTION, FINAL_IDENTITY, code, sizeof(code));
         const char* result_type = (st.func_best_err < 1e-12) ? "SUCCESS" : "FAILURE";
         w = snprintf(st.json_ptr, st.json_remaining,
             "],\n \"result\":\"%s\", \"RPN\":\"%s\", \"REL_ERR\":%.17e, "
@@ -707,7 +761,7 @@ char* vsearch_core(
                 not_found++;
                 if (n_data > 1) {  /* Only for batch mode */
                     char code[512];
-                    format_code(targets[i].best_ternary, targets[i].best_indices, targets[i].best_K, const_ops, unary_ops, binary_ops, MODE_CONSTANT, code, sizeof(code));
+                    format_code(targets[i].best_ternary, targets[i].best_indices, targets[i].best_K, const_ops, unary_ops, binary_ops, MODE_CONSTANT, targets[i].best_final, code, sizeof(code));
                     int hamming = compute_hamming_distance(data[i].y, targets[i].computed_value);
                     
                     if (st.result_count > 0) {
@@ -736,7 +790,7 @@ char* vsearch_core(
         /* For backward compatibility, use first target's best result in final summary */
         char final_code[512];
         format_code(targets[0].best_ternary, targets[0].best_indices, targets[0].best_K,
-                   const_ops, unary_ops, binary_ops, MODE_CONSTANT, final_code, sizeof(final_code));
+                   const_ops, unary_ops, binary_ops, MODE_CONSTANT, targets[0].best_final, final_code, sizeof(final_code));
         int final_hamming = compute_hamming_distance(data[0].y, targets[0].computed_value);
         
         /* Compute compression ratio */
@@ -775,6 +829,24 @@ char* vsearch_core(
     return json_output;
 }
 
+char* vsearch_core(
+    SearchMode mode,
+    const DataPoint* data, int n_data,
+    int MinK, int MaxK,
+    int cpu_id, int ncpus,
+    const ConstOp* const_ops, int n_const,
+    const UnaryOp* unary_ops, int n_unary,
+    const BinaryOp* binary_ops, int n_binary,
+    ErrorMetric metric,
+    CompareMode compare,
+    int num_to_find,
+    double cr_threshold)
+{
+    return vsearch_core_final(mode, data, n_data, MinK, MaxK, cpu_id, ncpus,
+                              const_ops, n_const, unary_ops, n_unary, binary_ops, n_binary,
+                              metric, compare, num_to_find, cr_threshold, FINAL_IDENTITY);
+}
+
 /* ============================================================================
  * PUBLIC API WRAPPERS
  * ============================================================================ */
@@ -810,6 +882,24 @@ char* search_constant_with_cr(
     return vsearch_core(MODE_CONSTANT, data, 1, MinK, MaxK, cpu_id, ncpus,
                        const_ops, n_const, unary_ops, n_unary, binary_ops, n_binary,
                        metric, compare, 1, cr_threshold);
+}
+
+char* search_constant_with_cr_final(
+    double target, double delta,
+    int MinK, int MaxK,
+    int cpu_id, int ncpus,
+    const ConstOp* const_ops, int n_const,
+    const UnaryOp* unary_ops, int n_unary,
+    const BinaryOp* binary_ops, int n_binary,
+    ErrorMetric metric,
+    CompareMode compare,
+    double cr_threshold,
+    unsigned finals)
+{
+    DataPoint data[1] = {{.x = 0.0, .y = target, .dy = delta}};
+    return vsearch_core_final(MODE_CONSTANT, data, 1, MinK, MaxK, cpu_id, ncpus,
+                              const_ops, n_const, unary_ops, n_unary, binary_ops, n_binary,
+                              metric, compare, 1, cr_threshold, finals);
 }
 
 /* ============================================================================

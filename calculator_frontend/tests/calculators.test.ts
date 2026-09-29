@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { getCalculatorById, defaultEnabledTokens, parseCustomInteger, CUSTOM_INT } from '../app/calculator/lib/calculators';
+import {
+  getCalculatorById, defaultEnabledTokens, parseCustomInteger, CUSTOM_INT, DEFAULT_FINAL_STEPS, finalStepList
+} from '../app/calculator/lib/calculators';
 import { resolveDomain, parseComplexInput } from '../app/calculator/lib/complex';
 
 describe('default palette', () => {
@@ -38,5 +40,18 @@ describe('custom integer button', () => {
     const calc = getCalculatorById('calc4');
     const enabled = defaultEnabledTokens(calc);
     for (const t of [...calc.constantsInt, CUSTOM_INT]) expect(enabled).not.toContain(t);
+  });
+});
+
+describe('final steps sent to the engine', () => {
+  it('defaults: Abs in a real search, Re, Im, Abs in a complex one', () => {
+    expect(finalStepList(DEFAULT_FINAL_STEPS, 'real')).toBe('ABS');
+    expect(finalStepList(DEFAULT_FINAL_STEPS, 'complex')).toBe('RE,IM,ABS');
+  });
+
+  it('keeps the engine order and drops Re, Im from real searches', () => {
+    expect(finalStepList(['ARG', 'RE', 'ABS'], 'complex')).toBe('RE,ABS,ARG');
+    expect(finalStepList(['ARG', 'RE', 'IM'], 'real')).toBe('ARG');
+    expect(finalStepList([], 'complex')).toBe('');
   });
 });

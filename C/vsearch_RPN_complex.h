@@ -14,6 +14,7 @@
 #ifndef _MSC_VER
 
 #include <complex.h>
+#include "final_step.h"
 
 /* ============================================================================
  * CALCULATOR OPERATION TYPES (complex)
@@ -46,6 +47,8 @@ typedef struct {
  *                  identical to the real engine
  *   cr_threshold - minimum compression ratio for a tolerance-based match
  *                  (only used when delta > 0)
+ *   finals       - FINAL_* flags of the final steps besides Identity
+ *                  (final_step.h; 0: Identity only)
  *
  * Returns a JSON string in the same format as the real engine, with extra
  * fields "domain":"COMPLEX", "target_im", and per-row "value_re"/"value_im".
@@ -59,14 +62,15 @@ char* search_constant_complex(
     const CConstOp* const_ops, int n_const,
     const CUnaryOp* unary_ops, int n_unary,
     const CBinaryOp* binary_ops, int n_binary,
-    double cr_threshold);
+    double cr_threshold, unsigned finals);
 
 /* ============================================================================
  * EVALUATION
  *
  * Evaluates a comma-separated RPN code of button names, e.g.
  * "I, NEG, LOG, DIVIDE"; a token that is a plain decimal number ("29")
- * is a constant with that value. Returns 1 on success and stores the value in
+ * is a constant with that value, and RE, IM, ABS, ARG are the final-step
+ * operations (accepted anywhere). Returns 1 on success and stores the value in
  * *result (possibly non-finite); returns 0 on an unknown token or a
  * syntactically invalid code.
  * ============================================================================ */

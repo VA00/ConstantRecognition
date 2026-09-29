@@ -24,6 +24,10 @@
  *   - Every JSON row carries the computed value ("value_re", "value_im") so
  *     the frontend needs no complex arithmetic of its own.
  *
+ *   - Optional final step (FINAL_* in vsearch_RPN_complex.h): a finished
+ *     formula is also compared as Re, Im, |.| or arg of its value; the
+ *     closest wins and is reported with the operation as a last RPN token.
+ *
  * Memory: the search is memoryless like the real engine. The whole state is
  * the current ternary form (K bytes), the current button indices (K ints),
  * one evaluation stack of K complex values and a copy of the best code so
@@ -77,6 +81,9 @@ typedef struct {
     double delta;
     double cr_threshold;
     double exact_err2;           /* squared relative error accepted as exact */
+    unsigned finals;             /* FINAL_* flags besides Identity */
+    double final_floor2;         /* least rel_err2 of a real value: (Im target)^2 / |target|^2 */
+    double err2_zero, err2_pi, err2_mpi;   /* rel_err2 of 0, pi, -pi: Im and arg of a real value */
 
     /* calculator */
     const CConstOp*  const_ops;  int n_const;
@@ -95,6 +102,7 @@ typedef struct {
     double best_err2;
     double complex best_value;
     int  best_K;
+    unsigned best_final;         /* FINAL_* of the best candidate */
     int  best_indices[MAX_CODE_LENGTH];
     char best_ternary[MAX_CODE_LENGTH];
 
@@ -117,11 +125,26 @@ static inline double cnorm2(double complex z) {
 }
 
 /* ============================================================================
+ * FINAL STEP
+ * ============================================================================ */
+
+/* Names, flags and list parsing: final_step.h */
+static inline double complex apply_final(double complex v, unsigned flag) {
+    switch (flag) {
+        case FINAL_RE:  return creal(v);
+        case FINAL_IM:  return cimag(v);
+        case FINAL_ABS: return cabs(v);
+        case FINAL_ARG: return carg(v);
+        default:        return v;
+    }
+}
+
+/* ============================================================================
  * CODE FORMATTING: "PI, EULER, PLUS"
  * ============================================================================ */
 
 static void format_code(const CSearchState* st, const char* ternary, const int* indices,
-                        int K, char* out, int out_size) {
+                        int K, unsigned final, char* out, int out_size) {
     int pos = 0;
     for (int i = 0; i < K; i++) {
         const char* name = NULL;
@@ -136,6 +159,15 @@ static void format_code(const CSearchState* st, const char* ternary, const int* 
         if (i > 0) { out[pos++] = ','; out[pos++] = ' '; }
         memcpy(out + pos, name, len);
         pos += len;
+    }
+    const char* fname = final_step_name(final);
+    if (fname && K > 0) {
+        int len = (int)strlen(fname);
+        if (pos + len + 3 < out_size) {
+            out[pos++] = ','; out[pos++] = ' ';
+            memcpy(out + pos, fname, len);
+            pos += len;
+        }
     }
     out[pos] = '\0';
 }
@@ -177,22 +209,62 @@ static void json_row(CSearchState* st, const char* result, int K, double err,
  * LEAF: compare a fully evaluated expression with the target
  * ============================================================================ */
 
+static inline double rel_err2(const CSearchState* st, double complex v) {
+    return (st->target_abs2 == 0.0) ? cnorm2(v) : cnorm2(v - st->target) / st->target_abs2;
+}
+
+/* rel_err2 of the real value x + 0i, with the same arithmetic: for a real
+   formula Re v equals v bit for bit, so Identity keeps winning the tie */
+static inline double rel_err2_real(const CSearchState* st, double x) {
+    if (st->target_abs2 == 0.0) return x * x + 0.0 * 0.0;
+    double d = x - creal(st->target), t = 0.0 - cimag(st->target);
+    return (d * d + t * t) / st->target_abs2;
+}
+
 static inline void check_leaf(CSearchState* st, double complex v) {
     st->evaluations++;
     if (!cfinite(v)) return;   /* same rule as the real engine: only the final value must be finite */
 
-    double err2 = (st->target_abs2 == 0.0) ? cnorm2(v)
-                                           : cnorm2(v - st->target) / st->target_abs2;
+    double err2 = rel_err2(st, v);
+
+    /* Final step: the closest of v, Re v, Im v, |v|, arg v among the enabled
+       ones. Strict < keeps the earlier one on a tie, Identity first. The
+       results are real, so none can come closer than final_floor2 (the
+       target's own imaginary part): then they are skipped. */
+    unsigned final = FINAL_IDENTITY;
+    if (st->finals && err2 > st->final_floor2) {
+        const unsigned fl = st->finals;
+        const double vr = creal(v), vi = cimag(v);
+        double e;
+        if (vi == 0.0) {
+            /* Real value (most leaves): Re v = v never comes closer, Im v = +-0,
+               |v| = v unless v < 0, arg v = +-0 or +-pi. Same errors as the
+               general branch, from constants computed once. */
+            if ((fl & FINAL_IM) && st->err2_zero < err2) { err2 = st->err2_zero; final = FINAL_IM; }
+            if ((fl & FINAL_ABS) && vr < 0.0 && (e = rel_err2_real(st, -vr)) < err2) { err2 = e; final = FINAL_ABS; }
+            if (fl & FINAL_ARG) {
+                e = !signbit(vr) ? st->err2_zero : (signbit(vi) ? st->err2_mpi : st->err2_pi);
+                if (e < err2) { err2 = e; final = FINAL_ARG; }
+            }
+        } else {
+            if ((fl & FINAL_RE)  && (e = rel_err2_real(st, vr)) < err2) { err2 = e; final = FINAL_RE; }
+            if ((fl & FINAL_IM)  && (e = rel_err2_real(st, vi)) < err2) { err2 = e; final = FINAL_IM; }
+            if ((fl & FINAL_ABS) && (e = rel_err2_real(st, hypot(vr, vi))) < err2) { err2 = e; final = FINAL_ABS; }
+            if ((fl & FINAL_ARG) && (e = rel_err2_real(st, atan2(vi, vr))) < err2) { err2 = e; final = FINAL_ARG; }
+        }
+        if (final != FINAL_IDENTITY) v = apply_final(v, final);
+    }
 
     if (err2 < st->best_err2) {
         st->best_err2 = err2;
         st->best_value = v;
         st->best_K = st->K;
+        st->best_final = final;
         memcpy(st->best_ternary, st->ternary, st->K);
         memcpy(st->best_indices, st->indices, st->K * sizeof(int));
 
         char code[512];
-        format_code(st, st->ternary, st->indices, st->K, code, sizeof(code));
+        format_code(st, st->ternary, st->indices, st->K, final, code, sizeof(code));
         json_row(st, "INTERMEDIATE", st->K, sqrt(err2), v, code);
     }
 
@@ -283,7 +355,7 @@ char* search_constant_complex(
     const CConstOp* const_ops, int n_const,
     const CUnaryOp* unary_ops, int n_unary,
     const CBinaryOp* binary_ops, int n_binary,
-    double cr_threshold)
+    double cr_threshold, unsigned finals)
 {
     char* json_output = (char*)malloc(JSON_BUFFER_SIZE);
     if (!json_output) return strdup("{\"error\":\"Memory allocation failed\"}");
@@ -300,6 +372,11 @@ char* search_constant_complex(
     st.delta = delta;
     st.cr_threshold = cr_threshold;
     st.exact_err2 = (EPS_MAX * DBL_EPSILON) * (EPS_MAX * DBL_EPSILON);
+    st.finals = finals & FINAL_ALL;
+    st.final_floor2 = (st.target_abs2 == 0.0) ? 0.0 : cimag(target) * cimag(target) / st.target_abs2;
+    st.err2_zero = rel_err2_real(&st, 0.0);
+    st.err2_pi   = rel_err2_real(&st, atan2(0.0, -1.0));    /* carg(-1 + 0i) */
+    st.err2_mpi  = rel_err2_real(&st, atan2(-0.0, -1.0));   /* carg(-1 - 0i) */
     st.const_ops = const_ops;   st.n_const = n_const;
     st.unary_ops = unary_ops;   st.n_unary = n_unary;
     st.binary_ops = binary_ops; st.n_binary = n_binary;
@@ -348,14 +425,14 @@ char* search_constant_complex(
         /* Best of the level so far (same role as K_BEST in the real engine) */
         if (!st.stop && st.best_K > 0) {
             char code[512];
-            format_code(&st, st.best_ternary, st.best_indices, st.best_K, code, sizeof(code));
+            format_code(&st, st.best_ternary, st.best_indices, st.best_K, st.best_final, code, sizeof(code));
             json_row(&st, "K_BEST", K, sqrt(st.best_err2), st.best_value, code);
         }
     }
 
     /* Finalize */
     char final_code[512];
-    format_code(&st, st.best_ternary, st.best_indices, st.best_K, final_code, sizeof(final_code));
+    format_code(&st, st.best_ternary, st.best_indices, st.best_K, st.best_final, final_code, sizeof(final_code));
     double best_err = (st.best_K > 0) ? sqrt(st.best_err2) : DBL_MAX;
 
     double compression = 0.0;
@@ -434,6 +511,14 @@ int evaluate_rpn_complex(
                 double complex a = stack[sp - 2];
                 stack[sp - 2] = binary_ops[i].func(b, a);
                 sp--;
+                matched = 1;
+            }
+        }
+        if (!matched) {
+            unsigned f = final_step_flag(q - len, len);
+            if (f) {
+                if (sp < 1) return 0;
+                stack[sp - 1] = apply_final(stack[sp - 1], f);
                 matched = 1;
             }
         }

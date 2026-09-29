@@ -47,3 +47,22 @@ describe('numeric-literal constants', () => {
     expect(rpnToMathematica('-2.5, SQR')).toBe('((-2.5))^2');
   });
 });
+
+// Final step of the complex engine: the operation is the last RPN token
+describe('final-step tokens', () => {
+  it('render as functions of the whole formula', () => {
+    expect(rpnToMathematica('I, SQRT, RE')).toBe('Re[Sqrt[I]]');
+    expect(rpnToMathematica('ONE, I, PLUS, ARG')).toBe('Arg[(I + 1)]');
+    expect(rpnToLatex('I, SQRT, RE')).toBe('\\operatorname{Re}(\\sqrt{i})');
+    expect(rpnToLatex('TWO, I, TIMES, ABS')).toBe('\\left|i \\cdot 2\\right|');   // WASM order: op(top, second)
+    expect(rpnToInfix('I, LOG, IM')).toBe('Im(ln(i))');
+  });
+
+  it('evaluate on real values as Re x = x, Im x = 0, |x|, arg x', () => {
+    expect(evaluateRPN('PI, RE')).toBe(Math.PI);
+    expect(evaluateRPN('PI, IM')).toBe(0);
+    expect(evaluateRPN('TWO, ONE, SUBTRACT, ABS')).toBe(1);   // |1 - 2|, WASM order: op(top, second)
+    expect(evaluateRPN('TWO, ONE, SUBTRACT, ARG')).toBe(Math.PI);
+    expect(evaluateRPN('ONE, TWO, SUBTRACT, ARG')).toBe(0);   // 2 - 1 > 0
+  });
+});

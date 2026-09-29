@@ -31,6 +31,7 @@
 #include "vsearch_RPN_core.h"
 #include "CALC4.h"
 #include "numeric_literal.h"
+#include "final_step.h"
 
 /* ============================================================================
  * STRING-BASED WRAPPER (real domain)
@@ -184,18 +185,20 @@ char* vsearch_RPN_cr(
     const char* const_list,
     const char* fun_list,
     const char* op_list,
-    double cr_threshold)
+    double cr_threshold,
+    const char* final_list)   /* final steps, e.g. "ABS"; only ABS and ARG act on reals */
 {
     ConstOp const_ops[MAX_OPS];
     UnaryOp unary_ops[MAX_OPS];
     BinaryOp binary_ops[MAX_OPS];
     int n_const, n_unary, n_binary;
     char* const_names = build_tables(const_list, fun_list, op_list, const_ops, &n_const, unary_ops, &n_unary, binary_ops, &n_binary);
-    char* json = search_constant_with_cr(z, dz, MinK, MaxK, cpu_id, ncpus,
+    char* json = search_constant_with_cr_final(z, dz, MinK, MaxK, cpu_id, ncpus,
                           const_ops, n_const,
                           unary_ops, n_unary,
                           binary_ops, n_binary,
-                          ERROR_REL, COMPARE_STRICT, cr_threshold);
+                          ERROR_REL, COMPARE_STRICT, cr_threshold,
+                          final_step_list(final_list));
     free(const_names);
     return json;
 }
@@ -219,7 +222,8 @@ char* vsearch_RPN_complex(
     const char* const_list,
     const char* fun_list,
     const char* op_list,
-    double cr_threshold)
+    double cr_threshold,
+    const char* final_list)   /* final steps besides Identity, e.g. "RE,IM"; NULL or "" for none */
 {
     CConstOp const_ops[MAX_OPS];
     CUnaryOp unary_ops[MAX_OPS];
@@ -289,11 +293,13 @@ char* vsearch_RPN_complex(
         free(copy);
     }
 
+    unsigned finals = final_step_list(final_list);
+
     char* json = search_constant_complex(z_re + z_im * I, dz, MinK, MaxK, cpu_id, ncpus,
                                          const_ops, n_const,
                                          unary_ops, n_unary,
                                          binary_ops, n_binary,
-                                         cr_threshold);
+                                         cr_threshold, finals);
     free(const_names);
     return json;
 }
@@ -346,15 +352,18 @@ char* search_RPN_custom(double z, double dz, int MinK, int MaxK, int cpu_id, int
 /* Configurable search via strings, honouring the CR early-exit threshold */
 EMSCRIPTEN_KEEPALIVE
 char* search_RPN_custom_cr(double z, double dz, int MinK, int MaxK, int cpu_id, int ncpus,
-                           const char* consts, const char* funcs, const char* ops, double cr_threshold) {
-    return vsearch_RPN_cr(z, dz, MinK, MaxK, cpu_id, ncpus, consts, funcs, ops, cr_threshold);
+                           const char* consts, const char* funcs, const char* ops, double cr_threshold,
+                           const char* finals) {
+    return vsearch_RPN_cr(z, dz, MinK, MaxK, cpu_id, ncpus, consts, funcs, ops, cr_threshold, finals);
 }
 
-/* Complex-domain configurable search. Target is z_re + i z_im. */
+/* Complex-domain configurable search. Target is z_re + i z_im. finals lists
+   the final steps besides Identity ("RE,IM,ABS,ARG" or a subset, "" for none). */
 EMSCRIPTEN_KEEPALIVE
 char* search_RPN_complex(double z_re, double z_im, double dz, int MinK, int MaxK, int cpu_id, int ncpus,
-                         const char* consts, const char* funcs, const char* ops, double cr_threshold) {
-    return vsearch_RPN_complex(z_re, z_im, dz, MinK, MaxK, cpu_id, ncpus, consts, funcs, ops, cr_threshold);
+                         const char* consts, const char* funcs, const char* ops, double cr_threshold,
+                         const char* finals) {
+    return vsearch_RPN_complex(z_re, z_im, dz, MinK, MaxK, cpu_id, ncpus, consts, funcs, ops, cr_threshold, finals);
 }
 
 /* Evaluate a named RPN code (e.g. "I, NEG, LOG, DIVIDE") in the complex

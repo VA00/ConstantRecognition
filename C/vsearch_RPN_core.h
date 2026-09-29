@@ -173,6 +173,20 @@ char* search_constant(
     ErrorMetric metric,
     CompareMode compare);
 
+/* Same, with final steps (final_step.h): FINAL_ABS and FINAL_ARG apply to
+   real values; FINAL_RE and FINAL_IM are ignored (Re x = x, Im x = 0). */
+char* search_constant_with_cr_final(
+    double target, double delta,
+    int MinK, int MaxK,
+    int cpu_id, int ncpus,
+    const ConstOp* const_ops, int n_const,
+    const UnaryOp* unary_ops, int n_unary,
+    const BinaryOp* binary_ops, int n_binary,
+    ErrorMetric metric,
+    CompareMode compare,
+    double cr_threshold,
+    unsigned finals);
+
 char* search_constant_with_cr(
     double target, double delta,
     int MinK, int MaxK,

@@ -135,7 +135,7 @@ static void test_search_nine(void) {
     CConstOp consts[64];
     int nc = select_consts(consts, excl, 1, 0);
     char* json = search_constant_complex(9.0, 0.0, 1, 4, 0, 1,
-        consts, nc, CALC4C_FUNCS, CALC4C_N_UNARY, CALC4C_OPS, CALC4C_N_BINARY, 0.0);
+        consts, nc, CALC4C_FUNCS, CALC4C_N_UNARY, CALC4C_OPS, CALC4C_N_BINARY, 0.0, 0);
     char rpn[256];
     final_rpn(json, rpn, sizeof(rpn));
     int K = (int)json_final_number(json, "K");
@@ -154,7 +154,7 @@ static void test_search_pi_complex(void) {
     int nc = select_consts(consts, excl_c, 1, 1);
     int nu = select_funcs(funcs, excl_f, 7);
     char* json = search_constant_complex(M_PI, 0.0, 1, 4, 0, 1,
-        consts, nc, funcs, nu, CALC4C_OPS, CALC4C_N_BINARY, 0.0);
+        consts, nc, funcs, nu, CALC4C_OPS, CALC4C_N_BINARY, 0.0, 0);
     char rpn[256];
     final_rpn(json, rpn, sizeof(rpn));
     int K = (int)json_final_number(json, "K");
@@ -173,7 +173,7 @@ static void test_search_sqrt_witness(void) {
     int nu = select_funcs(funcs, excl_f, 2);
     double complex target = csqrt(CATALAN_VALUE + 0.0 * I);
     char* json = search_constant_complex(target, 0.0, 1, 5, 0, 1,
-        CALC4C_CONSTS, CALC4C_N_CONST, funcs, nu, CALC4C_OPS, CALC4C_N_BINARY, 0.0);
+        CALC4C_CONSTS, CALC4C_N_CONST, funcs, nu, CALC4C_OPS, CALC4C_N_BINARY, 0.0, 0);
     char rpn[256];
     final_rpn(json, rpn, sizeof(rpn));
     int K = (int)json_final_number(json, "K");
@@ -188,7 +188,7 @@ static void test_search_complex_target(void) {
     CUnaryOp funcs[64];
     int nu = select_funcs(funcs, excl_f, 1);
     char* json = search_constant_complex(1.0 + 1.0 * I, 0.0, 1, 4, 0, 1,
-        CALC4C_CONSTS, CALC4C_N_CONST, funcs, nu, CALC4C_OPS, CALC4C_N_BINARY, 0.0);
+        CALC4C_CONSTS, CALC4C_N_CONST, funcs, nu, CALC4C_OPS, CALC4C_N_BINARY, 0.0, 0);
     char rpn[256];
     final_rpn(json, rpn, sizeof(rpn));
     int K = (int)json_final_number(json, "K");
@@ -206,7 +206,7 @@ static void test_chunk_coverage(void) {
     unsigned long long total_valid = 0, total_evals = 0;
     for (int cpu = 0; cpu < ncpus; cpu++) {
         char* json = search_constant_complex(123456.789 + 0.5 * I, 0.0, 1, 7, cpu, ncpus,
-            CALC4C_CONSTS, 3, CALC4C_FUNCS, 2, CALC4C_OPS, 2, 0.0);   /* tiny calculator */
+            CALC4C_CONSTS, 3, CALC4C_FUNCS, 2, CALC4C_OPS, 2, 0.0, 0);   /* tiny calculator */
         total_valid += (unsigned long long)json_final_number(json, "valid_ternary");
         total_evals += (unsigned long long)json_final_number(json, "evaluations");
         free(json);
@@ -215,7 +215,7 @@ static void test_chunk_coverage(void) {
 
     /* Single chunk must agree with the union */
     char* json = search_constant_complex(123456.789 + 0.5 * I, 0.0, 1, 7, 0, 1,
-        CALC4C_CONSTS, 3, CALC4C_FUNCS, 2, CALC4C_OPS, 2, 0.0);
+        CALC4C_CONSTS, 3, CALC4C_FUNCS, 2, CALC4C_OPS, 2, 0.0, 0);
     unsigned long long single_evals = (unsigned long long)json_final_number(json, "evaluations");
     free(json);
     CHECK(single_evals == total_evals, "evaluation count independent of chunking (%llu vs %llu)", single_evals, total_evals);
@@ -228,7 +228,7 @@ static void test_nonfinite_propagation(void) {
     CConstOp consts[1] = { { 9.0, "NINE" } };
     CUnaryOp funcs[2] = { { c_exp, "EXP" }, { c_atan, "ARCTAN" } };
     char* json = search_constant_complex(M_PI / 2.0, 0.0, 1, 5, 0, 1,
-        consts, 1, funcs, 2, CALC4C_OPS, 0, 0.0);
+        consts, 1, funcs, 2, CALC4C_OPS, 0, 0.0, 0);
     char rpn[256];
     final_rpn(json, rpn, sizeof(rpn));
     CHECK(strstr(json, "\"result\":\"SUCCESS\"") && strcmp(rpn, "NINE, EXP, EXP, ARCTAN") == 0,
@@ -238,7 +238,7 @@ static void test_nonfinite_propagation(void) {
     /* exp(log(0)) = 0 with {ZERO} x {LOG, EXP}: -inf as an intermediate is fine */
     CConstOp zero[1] = { { 0.0, "ZERO" } };
     CUnaryOp lf[2] = { { c_log, "LOG" }, { c_exp, "EXP" } };
-    json = search_constant_complex(0.0, 0.0, 3, 3, 0, 1, zero, 1, lf, 2, CALC4C_OPS, 0, 0.0);
+    json = search_constant_complex(0.0, 0.0, 3, 3, 0, 1, zero, 1, lf, 2, CALC4C_OPS, 0, 0.0, 0);
     final_rpn(json, rpn, sizeof(rpn));
     CHECK(strstr(json, "\"result\":\"SUCCESS\"") && strcmp(rpn, "ZERO, LOG, EXP") == 0,
           "exp(log 0) = 0 is accepted: %s", rpn);
@@ -251,7 +251,7 @@ static void test_tolerance(void) {
     CUnaryOp funcs[64];
     int nu = select_funcs(funcs, excl_f, 1);
     char* json = search_constant_complex(3.1416, 5e-5, 1, 3, 0, 1,
-        CALC4C_CONSTS, CALC4C_N_CORE_CONST, funcs, nu, CALC4C_OPS, CALC4C_N_BINARY, 1.0);
+        CALC4C_CONSTS, CALC4C_N_CORE_CONST, funcs, nu, CALC4C_OPS, CALC4C_N_BINARY, 1.0, 0);
     char rpn[256];
     final_rpn(json, rpn, sizeof(rpn));
     CHECK(strstr(json, "\"result\":\"SUCCESS\"") && strcmp(rpn, "PI") == 0, "3.1416 +- 5e-5 -> %s", rpn);
