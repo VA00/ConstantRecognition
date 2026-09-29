@@ -1009,7 +1009,7 @@ Cell[BoxData[
       RowBox[{"\"\<Universal parabolic constant\>\"", ",", 
        RowBox[{
         RowBox[{"ArcSinh", "[", "1", "]"}], "+", 
-        RowBox[{"Sqrt", "[", "2", "]"}]}], ",", "2.29558714933926807403"}], 
+        RowBox[{"Sqrt", "[", "2", "]"}]}], ",", "2.29558714939263807403"}], 
       "}"}], ",", "\[IndentingNewLine]", 
      RowBox[{"{", 
       RowBox[{
@@ -1364,7 +1364,7 @@ Cell[BoxData[
        RowBox[{"6", " ", 
         RowBox[{"Log", "[", "2", "]"}], 
         RowBox[{
-         RowBox[{"Log", "[", "1", "]"}], "/", 
+        RowBox[{"Log", "[", "10", "]"}], "/", 
          RowBox[{"Pi", "^", "2"}]}]}], ",", "0.97027011439203392574"}], "}"}],
       ",", "\[IndentingNewLine]", 
      RowBox[{"{", 
@@ -1685,7 +1685,7 @@ Cell[BoxData[
          2 #^55 + 3 #^56 + 5 #^57 + 
          2 #^58 - #^59 - #^60 - #^61 - #^62 - #^63 + #^64 + 2 #^65 + 
          2 #^66 - #^67 - 2 #^68 - #^69 + #^71& , 3, 0]], ",", 
-       "1.303577126903429639125"}], "}"}], ",", "\[IndentingNewLine]", 
+       "1.303577269034296391257"}], "}"}], ",", "\[IndentingNewLine]", 
      RowBox[{"{", 
       RowBox[{
       "\"\<Hafner\[Dash]Sarnak\[Dash]McCurley constant\>\"", ",", "Undefined",
@@ -2131,7 +2131,7 @@ Cell[BoxData[
      ",", "\<\"Glaisher-Kinkelin constant\"\>"}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{
-    "1.303577126903429639125`21.115136731551644", 
+    "1.303577269034296391257`21.115136731551644", 
      ",", "\<\"Conway's constant\"\>"}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{
@@ -2219,7 +2219,7 @@ Cell[BoxData[
     ",", 
    RowBox[{"{", 
     RowBox[{
-    "2.29558714933926807403`20.36089378490805", 
+    "2.29558714939263807403`20.36089378490805", 
      ",", "\<\"Universal parabolic constant\"\>"}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{
