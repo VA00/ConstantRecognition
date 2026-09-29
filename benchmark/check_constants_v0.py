@@ -1,0 +1,147 @@
+"""check_constants_v0.py - independent check of constants_v0.tsv with mpmath
+
+Author: Andrzej Odrzywolek
+Date: September 29, 2026
+Code assist: Claude Opus 5.5
+
+The values in constants_v0.tsv come from Mathematica (N[formula, 96] with
+Precision >= 80) or from published digits. Mathematica can claim a precision
+it does not have: N[Product[Cos[Pi/n], {n, 3, Infinity}], 80] reports
+Precision 80 but is wrong after 26 digits. So every value with a formula is
+recomputed here with a second, independent tool, mpmath:
+
+  - most formulas are translated directly: Mathematica syntax to Python, every
+    number an exact mpmath number, the function names bound to mpmath
+    (MMA below), algebraic Root[poly &, k] by its real roots in Mathematica's
+    order;
+  - sums, products, integrals, derivatives and roots with a seed use a
+    hand-written mpmath expression (MANUAL below).
+
+Prints every constant that mpmath does not reproduce to its stated digits,
+and every constant it could not check.
+
+Usage (from this directory):  python check_constants_v0.py
+"""
+import csv
+import re
+import sys
+
+import mpmath as mp
+
+mp.mp.dps = 80
+
+
+def Log(*a):
+    return mp.log(a[0]) if len(a) == 1 else mp.log(a[1]) / mp.log(a[0])   # Log[b, x] = log_b x
+
+
+MMA = {
+    'Sqrt': mp.sqrt, 'CubeRoot': mp.cbrt, 'Log': Log, 'Log10': mp.log10, 'Exp': mp.exp,
+    'Sin': mp.sin, 'Cos': mp.cos, 'Tan': mp.tan, 'Cot': mp.cot, 'Sec': mp.sec, 'Csc': mp.csc,
+    'ArcSin': mp.asin, 'ArcCos': mp.acos, 'ArcTan': mp.atan, 'ArcCot': mp.acot,
+    'Sinh': mp.sinh, 'Cosh': mp.cosh, 'Tanh': mp.tanh,
+    'ArcSinh': mp.asinh, 'ArcCosh': mp.acosh, 'ArcTanh': mp.atanh,
+    'Gamma': mp.gamma, 'Zeta': mp.zeta, 'PolyGamma': lambda n, x: mp.psi(n, x),
+    'BesselI': mp.besseli, 'ArithmeticGeometricMean': mp.agm, 'InverseErf': mp.erfinv,
+    'ExpIntegralEi': mp.ei, 'ProductLog': lambda x: mp.re(mp.lambertw(x)),
+    'Pi': mp.pi, 'E': mp.e, 'GoldenRatio': mp.phi, 'EulerGamma': mp.euler, 'Catalan': mp.catalan,
+    'Glaisher': mp.glaisher, 'Khinchin': mp.khinchin, 'Degree': mp.pi / 180,
+    'mpf': mp.mpf,
+}
+
+
+def fib(n):
+    a, b = 0, 1
+    for _ in range(int(n)):
+        a, b = b, a + b
+    return a
+
+
+# mpmath expressions for formulas the translator does not handle (keyed by name)
+MANUAL = {
+    'Kepler–Bouwkamp constant': lambda: mp.exp(-mp.nsum(lambda k: (4**k - 1) * mp.zeta(2*k) * mp.zeta(2*k, 3) / k, [1, mp.inf])),
+    "Liouville's constant": lambda: mp.fsum(mp.mpf(10) ** -mp.factorial(n) for n in range(1, 8)),
+    'Champernowne constant': lambda: mp.mpf('0.' + ''.join(str(i) for i in range(1, 60))),
+    'Omega constant': lambda: mp.re(mp.lambertw(1)),
+    'Laplace limit': lambda: mp.findroot(lambda x: x * mp.exp(mp.sqrt(1 + x**2)) - 1 - mp.sqrt(1 + x**2), 0.6627),
+    'Dottie number': lambda: mp.findroot(lambda x: mp.cos(x) - x, 0.739),
+    'Soldner constant': lambda: mp.findroot(mp.li, 1.45),
+    'Erdős–Borwein constant': lambda: mp.nsum(lambda n: 1 / (2**n - 1), [1, mp.inf]),
+    'Reciprocal Fibonacci constant': lambda: mp.fsum(mp.mpf(1) / fib(n) for n in range(1, 400)),
+    'Niven\'s constant': lambda: 1 + mp.nsum(lambda n: 1 - 1 / mp.zeta(n), [2, mp.inf]),
+    'Regular paperfolding sequence': lambda: mp.fsum(mp.mpf(8) ** (2**n) / (mp.mpf(2) ** (2 ** (2 + n)) - 1) for n in range(0, 12)),
+    'MRB constant': lambda: mp.nsum(lambda n: (-1)**n * (n ** (1 / n) - 1), [1, mp.inf]),
+    'Fransén–Robinson constant': lambda: mp.quad(lambda x: 1 / mp.gamma(x), [0, 1, 2, 4, 8, mp.inf]),
+    "Porter's constant": lambda: -mp.mpf(1)/2 + 6 * mp.log(2) * (-2 + 4 * mp.euler + 3 * mp.log(2) - 24 * mp.zeta(2, derivative=1) / mp.pi**2) / mp.pi**2,
+    "Somos' quadratic recurrence constant": lambda: mp.exp(-mp.diff(lambda s: mp.polylog(s, mp.mpf(1)/2), 0)),
+    # sum_k log(k)/(4k^2-1) = -sum_j 4^-j zeta'(2j): geometric; nsum of the log series itself is inaccurate
+    'Asymptotic behavior of Lebesgue constants': lambda: (-4 * mp.psi(0, mp.mpf(1)/2) - 8 * mp.nsum(lambda j: mp.mpf(4)**-j * mp.zeta(2*j, derivative=1), [1, mp.inf])) / mp.pi**2,
+    'Imaginary part of first non-trivial zero of zeta function': lambda: mp.im(mp.zetazero(1)),
+    'Meissel-Mertens constant': lambda: mp.mertens,
+    'Twin primes constant': lambda: mp.twinprime,
+}
+
+
+def root(formula):
+    """Root[poly &, k] or Root[poly &, k, 0]: k-th root in Mathematica's order (real roots ascending first)."""
+    m = re.match(r'^Root\[(.*?)\s*&\s*,\s*(\d+)(?:\s*,\s*0)?\]$', formula)
+    poly, k = m.group(1), int(m.group(2))
+    coeffs = {}
+    for term in re.findall(r'[+-]?[^+-]+', poly.replace(' ', '')):
+        tm = re.match(r'^([+-]?\d*)\*?(?:#1(?:\^(\d+))?)?$', term)
+        c = tm.group(1)
+        c = int(c) if c not in ('', '+', '-') else (-1 if c == '-' else 1)
+        d = 0 if '#1' not in term else int(tm.group(2) or 1)
+        coeffs[d] = coeffs.get(d, 0) + c
+    deg = max(coeffs)
+    roots = mp.polyroots([coeffs.get(d, 0) for d in range(deg, -1, -1)], maxsteps=500, extraprec=400)
+    real = sorted(mp.re(r) for r in roots if abs(mp.im(r)) < mp.mpf(10) ** -40)
+    return real[k - 1]
+
+
+def translate(formula):
+    s = re.sub(r'(?<![\w.#])(\d+\.\d*|\d+)(?![\w.])', r"mpf('\1')", formula)   # exact numbers
+    return s.replace('[', '(').replace(']', ')').replace('^', '**')
+
+
+def mp_value(name, formula):
+    if name in MANUAL:
+        return mp.mpf(MANUAL[name]()), 'manual'
+    if formula.startswith('Root['):
+        return root(formula), 'Root'
+    if re.search(r'Sum\[|Product\[|Integrate\[|Derivative|Prime\[|#', formula):
+        raise ValueError('needs a MANUAL entry')
+    return mp.mpf(mp.re(eval(translate(formula), {'__builtins__': {}}, MMA))), 'translated'
+
+
+def main():
+    sys.stdout.reconfigure(encoding='utf-8')   # names such as Erdős on a Windows console
+    rows = list(csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t'))
+    low, unchecked, n_checked = [], [], 0
+    for r in rows:
+        stated = int(r['digits'])
+        if not r['formula'] and r['name'] not in MANUAL:
+            unchecked.append((r['name'], 'no formula: value from published digits only'))
+            continue
+        try:
+            v, how = mp_value(r['name'], r['formula'])
+        except Exception as e:
+            unchecked.append((r['name'], f'{type(e).__name__}: {str(e)[:70]}'))
+            continue
+        n_checked += 1
+        ref = mp.mpf(r['value'])
+        agree = 80.0 if v == ref else float(-mp.log10(abs(v - ref) / max(abs(ref), mp.mpf(10)**-80)))
+        if agree < min(stated, 64) - 1:
+            low.append((r['name'], stated, agree, how, r['formula']))
+    print(f'{len(rows)} constants, {n_checked} recomputed with mpmath')
+    print(f'\nBELOW their stated digits ({len(low)}):')
+    for name, stated, agree, how, f in low:
+        print(f'  {name}: stated {stated}, mpmath agrees to {agree:.1f} ({how})   {f[:70]}')
+    print(f'\nNot checked by mpmath ({len(unchecked)}):')
+    for name, why in unchecked:
+        print(f'  {name}: {why}')
+    return 1 if low else 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

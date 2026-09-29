@@ -1,0 +1,305 @@
+source	key	name	formula	published	note
+GSL gsl_math.h	M_E	e	E	2.71828182845904523536028747135	
+GSL gsl_math.h	M_LOG2E	log2(e)	1/Log[2]	1.44269504088896340735992468100	
+GSL gsl_math.h	M_LOG10E	log10(e)	1/Log[10]	0.43429448190325182765112891892	
+GSL gsl_math.h	M_SQRT2	sqrt(2)	Sqrt[2]	1.41421356237309504880168872421	
+GSL gsl_math.h	M_SQRT1_2	sqrt(1/2)	1/Sqrt[2]	0.70710678118654752440084436210	
+GSL gsl_math.h	M_SQRT3	sqrt(3)	Sqrt[3]	1.73205080756887729352744634151	
+GSL gsl_math.h	M_PI	pi	Pi	3.14159265358979323846264338328	
+GSL gsl_math.h	M_PI_2	pi/2	Pi/2	1.57079632679489661923132169164	
+GSL gsl_math.h	M_PI_4	pi/4	Pi/4	0.78539816339744830961566084582	
+GSL gsl_math.h	M_SQRTPI	sqrt(pi)	Sqrt[Pi]	1.77245385090551602729816748334	
+GSL gsl_math.h	M_2_SQRTPI	2/sqrt(pi)	2/Sqrt[Pi]	1.12837916709551257389615890312	
+GSL gsl_math.h	M_1_PI	1/pi	1/Pi	0.31830988618379067153776752675	
+GSL gsl_math.h	M_2_PI	2/pi	2/Pi	0.63661977236758134307553505349	
+GSL gsl_math.h	M_LN10	ln(10)	Log[10]	2.30258509299404568401799145468	
+GSL gsl_math.h	M_LN2	ln(2)	Log[2]	0.69314718055994530941723212146	
+GSL gsl_math.h	M_LNPI	ln(pi)	Log[Pi]	1.14472988584940017414342735135	
+GSL gsl_math.h	M_EULER	Euler gamma	EulerGamma	0.57721566490153286060651209008	
+Boost.Math constants.hpp	half	half	1/2	5.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e-01	
+Boost.Math constants.hpp	third	third	1/3	3.33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333e-01	
+Boost.Math constants.hpp	twothirds	twothirds	2/3	6.66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667e-01	
+Boost.Math constants.hpp	two_thirds	two thirds	2/3	6.66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667e-01	
+Boost.Math constants.hpp	sixth	sixth	1/6	1.66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667e-01	
+Boost.Math constants.hpp	three_quarters	three quarters	3/4	7.50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e-01	
+Boost.Math constants.hpp	root_two	root two	Sqrt[2]	1.41421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157273501384623e+00	
+Boost.Math constants.hpp	root_three	root three	Sqrt[3]	1.73205080756887729352744634150587236694280525381038062805580697945193301690880003708114618675724857567562614142e+00	
+Boost.Math constants.hpp	half_root_two	half root two	Sqrt[2]/2	7.07106781186547524400844362104849039284835937688474036588339868995366239231053519425193767163820786367506923115e-01	
+Boost.Math constants.hpp	ln_two	ln two	Log[2]	6.93147180559945309417232121458176568075500134360255254120680009493393621969694715605863326996418687542001481021e-01	
+Boost.Math constants.hpp	ln_ln_two	ln ln two	Log[Log[2]]	-3.66512920581664327012439158232669469454263447837105263053677713670561615319352738549455822856698908358302523045e-01	
+Boost.Math constants.hpp	root_ln_four	root ln four	Sqrt[Log[4]]	1.17741002251547469101156932645969963774738568938582053852252575650002658854698492680841813836877081106747157858e+00	
+Boost.Math constants.hpp	one_div_root_two	one div root two	1/Sqrt[2]	7.07106781186547524400844362104849039284835937688474036588339868995366239231053519425193767163820786367506923115e-01	
+Boost.Math constants.hpp	pi	pi	Pi	3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651e+00	
+Boost.Math constants.hpp	half_pi	half pi	Pi/2	1.57079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105853399107404326e+00	
+Boost.Math constants.hpp	third_pi	third pi	Pi/3	1.04719755119659774615421446109316762806572313312503527365831486410260546876206966620934494178070568932738269550e+00	
+Boost.Math constants.hpp	sixth_pi	sixth pi	Pi/6	5.23598775598298873077107230546583814032861566562517636829157432051302734381034833104672470890352844663691347752e-01	
+Boost.Math constants.hpp	two_pi	two pi	2*Pi	6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423413596429617303e+00	
+Boost.Math constants.hpp	two_thirds_pi	two thirds pi	2*Pi/3	2.09439510239319549230842892218633525613144626625007054731662972820521093752413933241868988356141137865476539101e+00	
+Boost.Math constants.hpp	three_quarters_pi	three quarters pi	3*Pi/4	2.35619449019234492884698253745962716314787704953132936573120844423086230471465674897102611900658780098661106488e+00	
+Boost.Math constants.hpp	four_thirds_pi	four thirds pi	4*Pi/3	4.18879020478639098461685784437267051226289253250014109463325945641042187504827866483737976712282275730953078202e+00	
+Boost.Math constants.hpp	one_div_two_pi	one div two pi	1/(2*Pi)	1.59154943091895335768883763372514362034459645740456448747667344058896797634226535090113802766253085956072842727e-01	
+Boost.Math constants.hpp	one_div_root_two_pi	one div root two pi	1/Sqrt[2*Pi]	3.98942280401432677939946059934381868475858631164934657665925829670657925899301838501252333907306936430302558863e-01	
+Boost.Math constants.hpp	log_pi	log pi	Log[Pi]	1.14472988584940017414342735135305871164729481291531157151362307147213776988482607978362327027548970770200981223e+00	
+Boost.Math constants.hpp	root_pi	root pi	Sqrt[Pi]	1.77245385090551602729816748334114518279754945612238712821380778985291128459103218137495065673854466541622682362e+00	
+Boost.Math constants.hpp	root_half_pi	root half pi	Sqrt[Pi/2]	1.25331413731550025120788264240552262650349337030496915831496178817114682730392098747329791918902863305800498633e+00	
+Boost.Math constants.hpp	root_two_pi	root two pi	Sqrt[2*Pi]	2.50662827463100050241576528481104525300698674060993831662992357634229365460784197494659583837805726611600997267e+00	
+Boost.Math constants.hpp	log_root_two_pi	log root two pi	Log[Sqrt[2*Pi]]	9.18938533204672741780329736405617639861397473637783412817151540482765695927260397694743298635954197622005646625e-01	
+Boost.Math constants.hpp	one_div_root_pi	one div root pi	1/Sqrt[Pi]	5.64189583547756286948079451560772585844050629328998856844085721710642468441493414486743660202107363443028347906e-01	
+Boost.Math constants.hpp	root_one_div_pi	root one div pi	Sqrt[1/Pi]	5.64189583547756286948079451560772585844050629328998856844085721710642468441493414486743660202107363443028347906e-01	
+Boost.Math constants.hpp	pi_minus_three	pi minus three	Pi - 3	1.41592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513e-01	
+Boost.Math constants.hpp	four_minus_pi	four minus pi	4 - Pi	8.58407346410206761537356616720497115802830600624894179025055407692183593713791001371965174657882932017851913487e-01	
+Boost.Math constants.hpp	pi_pow_e	pi pow e	Pi^E	2.24591577183610454734271522045437350275893151339966922492030025540669260403991179123185197527271430315314500731e+01	
+Boost.Math constants.hpp	pi_sqr	pi sqr	Pi^2	9.86960440108935861883449099987615113531369940724079062641334937622004482241920524300177340371855223182402591377e+00	
+Boost.Math constants.hpp	pi_sqr_div_six	pi sqr div six	Pi^2/6	1.64493406684822643647241516664602518921894990120679843773555822937000747040320087383362890061975870530400431896e+00	
+Boost.Math constants.hpp	pi_cubed	pi cubed	Pi^3	3.10062766802998201754763150671013952022252885658851076941445381038063949174657060375667010326028861930301219616e+01	
+Boost.Math constants.hpp	cbrt_pi	cbrt pi	Pi^(1/3)	1.46459188756152326302014252726379039173859685562793717435725593713839364979828626614568206782035382089750397002e+00	
+Boost.Math constants.hpp	one_div_cbrt_pi	one div cbrt pi	Pi^(-1/3)	6.82784063255295681467020833158164598108367515632448804042681583118899226433403918237673501922595519865685577274e-01	
+Boost.Math constants.hpp	log2_e	log2 e	1/Log[2]	1.44269504088896340735992468100189213742664595415298593413544940693110921918118507988552662289350634449699751830965e+00	
+Boost.Math constants.hpp	e	e	E	2.71828182845904523536028747135266249775724709369995957496696762772407663035354759457138217852516642742746639193e+00	
+Boost.Math constants.hpp	exp_minus_half	exp minus half	Exp[-1/2]	6.06530659712633423603799534991180453441918135487186955682892158735056519413748423998647611507989456026423789794e-01	
+Boost.Math constants.hpp	exp_minus_one	exp minus one	Exp[-1]	3.67879441171442321595523770161460867445811131031767834507836801697461495744899803357147274345919643746627325277e-01	
+Boost.Math constants.hpp	e_pow_pi	e pow pi	E^Pi	2.31406926327792690057290863679485473802661062426002119934450464095243423506904527835169719970675492196759527048e+01	
+Boost.Math constants.hpp	root_e	root e	Sqrt[E]	1.64872127070012814684865078781416357165377610071014801157507931164066102119421560863277652005636664300286663776e+00	
+Boost.Math constants.hpp	log10_e	log10 e	1/Log[10]	4.34294481903251827651128918916605082294397005803666566114453783165864649208870774729224949338431748318706106745e-01	
+Boost.Math constants.hpp	one_div_log10_e	one div log10 e	Log[10]	2.30258509299404568401799145468436420760110148862877297603332790096757260967735248023599720508959829834196778404e+00	
+Boost.Math constants.hpp	ln_ten	ln ten	Log[10]	2.30258509299404568401799145468436420760110148862877297603332790096757260967735248023599720508959829834196778404e+00	
+Boost.Math constants.hpp	degree	degree	Pi/180	1.74532925199432957692369076848861271344287188854172545609719144017100911460344944368224156963450948221230449251e-02	
+Boost.Math constants.hpp	radian	radian	180/Pi	5.72957795130823208767981548141051703324054724665643215491602438612028471483215526324409689958511109441862233816e+01	
+Boost.Math constants.hpp	sin_one	sin one	Sin[1]	8.41470984807896506652502321630298999622563060798371065672751709991910404391239668948639743543052695854349037908e-01	
+Boost.Math constants.hpp	cos_one	cos one	Cos[1]	5.40302305868139717400936607442976603732310420617922227670097255381100394774471764517951856087183089343571731160e-01	
+Boost.Math constants.hpp	sinh_one	sinh one	Sinh[1]	1.17520119364380145688238185059560081515571798133409587022956541301330756730432389560711745208962339184041953333e+00	
+Boost.Math constants.hpp	cosh_one	cosh one	Cosh[1]	1.54308063481524377847790562075706168260152911236586370473740221471076906304922369896426472643554303558704685860e+00	
+Boost.Math constants.hpp	phi	phi	GoldenRatio	1.61803398874989484820458683436563811772030917980576286213544862270526046281890244970720720418939113748475408808e+00	
+Boost.Math constants.hpp	ln_phi	ln phi	Log[GoldenRatio]	4.81211825059603447497758913424368423135184334385660519661018168840163867608221774412009429122723474997231839958e-01	
+Boost.Math constants.hpp	one_div_ln_phi	one div ln phi	1/Log[GoldenRatio]	2.07808692123502753760132260611779576774219226778328348027813992191974386928553540901445615414453604821933918634e+00	
+Boost.Math constants.hpp	euler	euler	EulerGamma	5.77215664901532860606512090082402431042159335939923598805767234884867726777664670936947063291746749514631447250e-01	
+Boost.Math constants.hpp	one_div_euler	one div euler	1/EulerGamma	1.73245471460063347358302531586082968115577655226680502204843613287065531408655243008832840219409928068072365714e+00	
+Boost.Math constants.hpp	euler_sqr	euler sqr	EulerGamma^2	3.33177923807718674318376136355244226659417140249629743150833338002265793695756669661263268631715977303039565603e-01	
+Boost.Math constants.hpp	zeta_two	zeta two	Zeta[2]	1.64493406684822643647241516664602518921894990120679843773555822937000747040320087383362890061975870530400431896e+00	
+Boost.Math constants.hpp	zeta_three	zeta three	Zeta[3]	1.20205690315959428539973816151144999076498629234049888179227155534183820578631309018645587360933525814619915780e+00	
+Boost.Math constants.hpp	catalan	catalan	Catalan	9.15965594177219015054603514932384110774149374281672134266498119621763019776254769479356512926115106248574422619e-01	
+Boost.Math constants.hpp	glaisher	glaisher	Glaisher	1.28242712910062263687534256886979172776768892732500119206374002174040630885882646112973649195820237439420646120e+00	
+Boost.Math constants.hpp	khinchin	khinchin	Khinchin	2.68545200106530644530971483548179569382038229399446295305115234555721885953715200280114117493184769799515346591e+00	
+Boost.Math constants.hpp	extreme_value_skewness	extreme value skewness	12*Sqrt[6]*Zeta[3]/Pi^3	1.13954709940464865749279301938984611208759979583655182472165571008524800770607068570718754688693851501894272049e+00	
+Boost.Math constants.hpp	rayleigh_skewness	rayleigh skewness	2*Sqrt[Pi]*(Pi - 3)/(4 - Pi)^(3/2)	6.31110657818937138191899351544227779844042203134719497658094585692926819617473725459905027032537306794400047264e-01	
+Boost.Math constants.hpp	rayleigh_kurtosis	rayleigh kurtosis	(32 - 3*Pi^2)/(4 - Pi)^2	3.24508930068763806284866041061975441541706673178920936177133764493367904540874159051490619368679348977426462633e+00	
+Boost.Math constants.hpp	rayleigh_kurtosis_excess	rayleigh kurtosis excess	-(6*Pi^2 - 24*Pi + 16)/(4 - Pi)^2	2.45089300687638062848660410619754415417066731789209361771337644933679045408741590514906193686793489774264626328e-01	
+Boost.Math constants.hpp	two_div_pi	two div pi	2/Pi	6.36619772367581343075535053490057448137838582961825794990669376235587190536906140360455211065012343824291370907e-01	
+Boost.Math constants.hpp	root_two_div_pi	root two div pi	Sqrt[2/Pi]	7.97884560802865355879892119868763736951717262329869315331851659341315851798603677002504667814613872860605117725e-01	
+Boost.Math constants.hpp	quarter_pi	quarter pi	Pi/4	0.785398163397448309615660845819875721049292349843776455243736148076954101571552249657008706335529266995537021628320576661773	
+Boost.Math constants.hpp	one_div_pi	one div pi	1/Pi	0.31830988618379067153776752674502872406891929148091289749533468811779359526845307018022760553250617191214568545351	
+Boost.Math constants.hpp	two_div_root_pi	two div root pi	2/Sqrt[Pi]	1.12837916709551257389615890312154517168810125865799771368817144342128493688298682897348732040421472688605669581272	
+Boost.Math constants.hpp	first_feigenbaum	first feigenbaum		4.6692016091029906718532038204662016172581855774757686327456513430041343302113147371386897440239480138171	
+Boost.Math constants.hpp	plastic	plastic	Root[#1^3 - #1 - 1 &, 1]	1.32471795724474602596090885447809734073440405690173336453401505030282785124554759405469934798178728032991	
+Boost.Math constants.hpp	gauss	gauss	1/ArithmeticGeometricMean[1, Sqrt[2]]	0.83462684167407318628142973279904680899399301349034700244982737010368199270952641186969116035127532412906785	
+Boost.Math constants.hpp	dottie	dottie	Root[{Cos[#1] - #1 &, 0.7390851332151607}]	0.739085133215160641655312087673873404013411758900757464965680635773284654883547594599376106931766531849801246	
+Boost.Math constants.hpp	reciprocal_fibonacci	reciprocal fibonacci	Sum[1/Fibonacci[n], {n, 1, Infinity}]	3.35988566624317755317201130291892717968890513373196848649555381532513031899668338361541621645679008729704	
+Boost.Math constants.hpp	laplace_limit	laplace limit	Root[{-1 + E^Sqrt[1 + #1^2]*#1 - Sqrt[1 + #1^2] &, 0.6627434193491816}]	0.66274341934918158097474209710925290705623354911502241752039253499097185308651127724965480259895818168	
+Wikipedia list of mathematical constants	One	One	1	1.	
+Wikipedia list of mathematical constants	Two	Two	2	2.	
+Wikipedia list of mathematical constants	Half	Half	1/2	0.5	
+Wikipedia list of mathematical constants	Pi	Pi	Pi	3.1415926535897932384	
+Wikipedia list of mathematical constants	Tau	Tau	2*Pi	6.2831853071795864769	
+Wikipedia list of mathematical constants	Pythagoras constant	Pythagoras constant	Sqrt[2]	1.4142135623730950488	
+Wikipedia list of mathematical constants	Theodorus constant	Theodorus constant	Sqrt[3]	1.7320508075688772935	
+Wikipedia list of mathematical constants	Sqrt 5	Sqrt 5	Sqrt[5]	2.2360679774997896964	
+Wikipedia list of mathematical constants	Golden ratio	Golden ratio	GoldenRatio	1.6180339887498948482	
+Wikipedia list of mathematical constants	Silver ratio	Silver ratio	1 + Sqrt[2]	2.4142135623730950488	
+Wikipedia list of mathematical constants	Zero	Zero	0	0.	
+Wikipedia list of mathematical constants	Neg	Neg	-1	-1.	
+Wikipedia list of mathematical constants	Cube root of 2	Cube root of 2	2^(1/3)	1.2599210498948731647	
+Wikipedia list of mathematical constants	Cube root of 3	Cube root of 3	3^(1/3)	1.4422495703074083823	
+Wikipedia list of mathematical constants	Twelfth root of 2	Twelfth root of 2	2^(1/12)	1.0594630943592952645	
+Wikipedia list of mathematical constants	Supergolden ratio	Supergolden ratio	(1 + (29/2 - (3*Sqrt[93])/2)^(1/3) + ((29 + 3*Sqrt[93])/2)^(1/3))/3	1.4655712318767680266	
+Wikipedia list of mathematical constants	Connective constant	Connective constant	Sqrt[2 + Sqrt[2]]	1.8477590650225735122	
+Wikipedia list of mathematical constants	Kepler–Bouwkamp constant	Kepler–Bouwkamp constant	Product[Cos[Pi/n], {n, 3, Infinity}]	0.1149420448532962007	N-unreliable: Mathematica N[] of this product is wrong after 26.8 digits although it reports Precision 80 (checked 2026-09-29)
+Wikipedia list of mathematical constants	Wallis's constant	Wallis's constant	(135/2 - (3*Sqrt[1929])/2)^(1/3)/3 + ((45 + Sqrt[1929])/2)^(1/3)/3^(2/3)	2.0945514815423265914	
+Wikipedia list of mathematical constants	Euler number	Euler number	E	2.7182818284590452353	
+Wikipedia list of mathematical constants	Natural logarithm of 2	Natural logarithm of 2	Log[2]	0.69314718055994530941	
+Wikipedia list of mathematical constants	Lemniscate constant	Lemniscate constant	Gamma[1/4]^2/(2*Sqrt[2*Pi])	2.6220575542921198104	
+Wikipedia list of mathematical constants	Euler gamma	Euler gamma	EulerGamma	0.5772156649015328606	
+Wikipedia list of mathematical constants	Erdős–Borwein constant	Erdős–Borwein constant	(Log[2] - QPolyGamma[0, 1, 1/2])/Log[2]	1.6066951524152917637	
+Wikipedia list of mathematical constants	Omega constant	Omega constant	ProductLog[1]	0.56714329040978387299	
+Wikipedia list of mathematical constants	Apéry's constant	Apéry's constant	Zeta[3]	1.2020569031595942853	
+Wikipedia list of mathematical constants	Imaginary part of first non-trivial zero of zeta function	Imaginary part of first non-trivial zero of zeta function	Im[ZetaZero[1]]	14.134725141734693790	
+Wikipedia list of mathematical constants	Laplace limit	Laplace limit	Root[{-1 + E^Sqrt[1 + #1^2]*#1 - Sqrt[1 + #1^2] & , 0.6627434193491815809747420971092529070562335491150224175204`30.}]	0.66274341934918158097	
+Wikipedia list of mathematical constants	Soldner constant	Soldner constant	Root[{LogIntegral[#1] & , 1.4513692348833810502839684858920274494930322836480158630931`30.}]	1.4513692348833810502	
+Wikipedia list of mathematical constants	Gauss's constant	Gauss's constant	ArithmeticGeometricMean[1, Sqrt[2]]^(-1)	0.83462684167407318628	
+Wikipedia list of mathematical constants	Second Hermite constant	Second Hermite constant	2/Sqrt[3]	1.1547005383792515290	
+Wikipedia list of mathematical constants	Liouville's constant	Liouville's constant	Sum[10^(-n!), {n, 1, Infinity}]	0.110001	
+Wikipedia list of mathematical constants	First continued fraction constant	First continued fraction constant	BesselI[1, 2]/BesselI[0, 2]	0.69777465796400798201	
+Wikipedia list of mathematical constants	Ramanujan's constant	Ramanujan's constant	E^(Sqrt[163]*Pi)	2.6253741264076874399e17	
+Wikipedia list of mathematical constants	Glaisher-Kinkelin constant	Glaisher-Kinkelin constant	Glaisher	1.2824271291006226368	
+Wikipedia list of mathematical constants	Catalan's constant	Catalan's constant	Catalan	0.91596559417721901505	
+Wikipedia list of mathematical constants	Dottie number	Dottie number	Root[{Cos[#1] - #1 & , 0.7390851332151606416553120876738734040134117589007574649656`30.}]	0.73908513321516064165	
+Wikipedia list of mathematical constants	Meissel-Mertens constant	Meissel-Mertens constant	EulerGamma + Sum[Log[1 - Prime[n]^(-1)] + Prime[n]^(-1), {n, 1, Infinity}]	0.26149721284764278375	
+Wikipedia list of mathematical constants	Universal parabolic constant	Universal parabolic constant	Sqrt[2] + ArcSinh[1]	2.2955871493392680740	erratum: listed digits 2.2955871493392... are garbled; correct 2.2955871493926...
+Wikipedia list of mathematical constants	Cahen's constant	Cahen's constant		0.64341054628833802618	
+Wikipedia list of mathematical constants	Gelfond's constant	Gelfond's constant	E^Pi	23.140692632779269005	
+Wikipedia list of mathematical constants	Gelfond-Schneider constant	Gelfond-Schneider constant	2^Sqrt[2]	2.6651441426902251886	
+Wikipedia list of mathematical constants	Second Favard constant	Second Favard constant	Pi^2/8	1.2337005501361698273	
+Wikipedia list of mathematical constants	Golden angle	Golden angle	(2*Pi)/GoldenRatio^2	2.3999632297286533222	
+Wikipedia list of mathematical constants	Golden angle degrees	Golden angle degrees	180*(3 - Sqrt[5])	137.50776405003785464	
+Wikipedia list of mathematical constants	Sierpiński's constant	Sierpiński's constant	Pi*(2*EulerGamma - Log[Pi] + 4*Log[Gamma[3/4]])	2.5849817595792532170	
+Wikipedia list of mathematical constants	Landau-Ramanujan constant	Landau-Ramanujan constant		0.76422365358920066299	
+Wikipedia list of mathematical constants	First Nielsen-Ramanujan constant	First Nielsen-Ramanujan constant	Pi^2/12	0.82246703342411321823	
+Wikipedia list of mathematical constants	Gieseking constant	Gieseking constant	(3*Sqrt[3]*(1 - PolyGamma[1, 2/3]/9 + PolyGamma[1, 4/3]/9))/4	1.0149416064096536250	
+Wikipedia list of mathematical constants	Bernstein's constant	Bernstein's constant		0.28016949902386913303	
+Wikipedia list of mathematical constants	Tribonacci constant	Tribonacci constant	(1 + (19 - 3*Sqrt[33])^(1/3) + (19 + 3*Sqrt[33])^(1/3))/3	1.8392867552141611325	
+Wikipedia list of mathematical constants	Brun's constant	Brun's constant		1.902160583104	
+Wikipedia list of mathematical constants	Twin primes constant	Twin primes constant		0.66016181584686957392	
+Wikipedia list of mathematical constants	Plastic ratio	Plastic ratio	(27/2 - (3*Sqrt[69])/2)^(1/3)/3 + ((9 + Sqrt[69])/2)^(1/3)/3^(2/3)	1.3247179572447460259	
+Wikipedia list of mathematical constants	Bloch constant lower limit	Bloch constant lower limit	1/5000 + Sqrt[3]/4	0.43321270189221932338	
+Wikipedia list of mathematical constants	Bloch constant upper limit	Bloch constant upper limit	(Sqrt[(-1 + Sqrt[3])/2]*Gamma[1/3]*Gamma[11/12])/Gamma[1/4]	0.47186165345268178487	
+Wikipedia list of mathematical constants	Z score	Z score	Sqrt[2]*InverseErf[19/20]	1.9599639845400542355	
+Wikipedia list of mathematical constants	Landau constant upper limit	Landau constant upper limit	(Gamma[1/3]*Gamma[5/6])/Gamma[1/6]	0.54325896534297670695	
+Wikipedia list of mathematical constants	Prouhet–Thue–Morse constant	Prouhet–Thue–Morse constant		0.41245403364010759778	
+Wikipedia list of mathematical constants	Golomb–Dickman constant	Golomb–Dickman constant		0.62432998854355087099	
+Wikipedia list of mathematical constants	Asymptotic behavior of Lebesgue constants	Asymptotic behavior of Lebesgue constants	(-4*PolyGamma[0, 1/2])/Pi^2 + (8*Sum[Log[k]/(-1 + 4*k^2), {k, 1, Infinity}])/Pi^2	0.98943127383114695174	N-unreliable: Mathematica N[] of this sum is wrong after 29 digits although it reports Precision 80 (checked 2026-09-29)
+Wikipedia list of mathematical constants	Feller–Tornier constant	Feller–Tornier constant	1/2 + Product[1 - 2/Prime[n]^2, {n, 1, Infinity}]/2	0.6613170494696223352	
+Wikipedia list of mathematical constants	Champernowne constant	Champernowne constant	ChampernowneNumber[]	0.12345678910111213141	
+Wikipedia list of mathematical constants	Salem constant	Salem constant	Root[1 + #1 - #1^3 - #1^4 - #1^5 - #1^6 - #1^7 + #1^9 + #1^10 & , 2, 0]	1.1762808182599175065	
+Wikipedia list of mathematical constants	Khinchin's constant	Khinchin's constant	Khinchin	2.6854520010653064453	
+Wikipedia list of mathematical constants	Lévy's constant	Lévy's constant	Pi^2/(12*Log[2])	1.1865691104156254528	
+Wikipedia list of mathematical constants	Lévy's constant 2	Lévy's constant 2	E^(Pi^2/(12*Log[2]))	3.2758229187218111597	
+Wikipedia list of mathematical constants	Copeland–Erdős constant	Copeland–Erdős constant		0.23571113171923293137	
+Wikipedia list of mathematical constants	Mills' constant	Mills' constant		1.3063778838630806904	
+Wikipedia list of mathematical constants	Gompertz constant	Gompertz constant	-(E*ExpIntegralEi[-1])	0.59634736232319407434	
+Wikipedia list of mathematical constants	Van der Pauw constant	Van der Pauw constant	Pi/Log[2]	4.5323601418271938096	
+Wikipedia list of mathematical constants	Magic angle	Magic angle	ArcCos[1/Sqrt[3]]	0.95531661812450927816	
+Wikipedia list of mathematical constants	Artin's constant	Artin's constant	Product[1 - 1/((-1 + Prime[n])*Prime[n]), {n, 1, Infinity}]	0.37395581361920228805	
+Wikipedia list of mathematical constants	Porter's constant	Porter's constant	-1/2 + (6*Log[2]*(-2 + 4*EulerGamma + 3*Log[2] - (24*Derivative[1][Zeta][2])/Pi^2))/Pi^2	1.4670780794339754728	
+Wikipedia list of mathematical constants	Lochs constant	Lochs constant	6*Log[2]*Log[10]/Pi^2	0.97027011439203392574	
+Wikipedia list of mathematical constants	DeVicci's tesseract constant	DeVicci's tesseract constant	Root[16 + 16*#1^2 - 7*#1^4 - 28*#1^6 + 4*#1^8 & , 3, 0]	1.0074347568842793760	
+Wikipedia list of mathematical constants	Lieb's square ice constant	Lieb's square ice constant	8/(3*Sqrt[3])	1.5396007178390020386	
+Wikipedia list of mathematical constants	Niven's constant	Niven's constant	1 + Sum[1 - Zeta[n]^(-1), {n, 2, Infinity}]	1.7052111401053677642	
+Wikipedia list of mathematical constants	Stephens' constant	Stephens' constant	Product[1 - Prime[n]/(-1 + Prime[n]^3), {n, 1, Infinity}]	0.57595996889294543964	
+Wikipedia list of mathematical constants	Regular paperfolding sequence	Regular paperfolding sequence	Sum[8^2^n/(-1 + 2^2^(2 + n)), {n, 0, Infinity}]	0.85073618820186726036	
+Wikipedia list of mathematical constants	Reciprocal Fibonacci constant	Reciprocal Fibonacci constant	(Sqrt[5]*(EllipticTheta[2, 0, GoldenRatio^(-2)]^2 + (Log[5] + 2*QPolyGamma[0, 1, GoldenRatio^(-4)] - 4*QPolyGamma[0, 1, GoldenRatio^(-2)])/(2*Log[(1 + Sqrt[5])/2])))/4	3.3598856662431775531	
+Wikipedia list of mathematical constants	Feigenbaum delta	Feigenbaum delta		4.6692016091029906718	
+Wikipedia list of mathematical constants	Robbins constant	Robbins constant	(4 + 17*Sqrt[2] - 6*Sqrt[3] - 7*Pi)/105 + Log[1 + Sqrt[2]]/5 + (2*Log[2 + Sqrt[3]])/5	0.66170718226717623515	
+Wikipedia list of mathematical constants	Weierstrass constant	Weierstrass constant	(2*2^(1/4)*E^(Pi/8)*Sqrt[Pi])/Gamma[1/4]^2	0.47494937998792065033	
+Wikipedia list of mathematical constants	Fransén–Robinson constant	Fransén–Robinson constant	Integrate[Gamma[x]^(-1), {x, 0, Infinity}]	2.8077702420285193652	
+Wikipedia list of mathematical constants	Feigenbaum alpha	Feigenbaum alpha		2.5029078750958928222	
+Wikipedia list of mathematical constants	Second du Bois-Reymond constant	Second du Bois-Reymond constant	(-7 + E^2)/2	0.19452804946532511361	
+Wikipedia list of mathematical constants	Erdős–Tenenbaum–Ford constant	Erdős–Tenenbaum–Ford constant	1 - (1 + Log[Log[2]])/Log[2]	0.08607133205593420688	
+Wikipedia list of mathematical constants	Conway's constant	Conway's constant	Root[-6 + 3*#1 - 6*#1^2 + 12*#1^3 - 4*#1^4 + 7*#1^5 - 7*#1^6 + #1^7 + 5*#1^9 - 2*#1^10 - 4*#1^11 - 12*#1^12 + 2*#1^13 + 7*#1^14 + 12*#1^15 - 7*#1^16 - 10*#1^17 - 4*#1^18 + 3*#1^19 + 9*#1^20 - 7*#1^21 - 8*#1^23 + 14*#1^24 - 3*#1^25 + 9*#1^26 + 2*#1^27 - 3*#1^28 - 10*#1^29 - 2*#1^30 - 6*#1^31 + #1^32 + 10*#1^33 - 3*#1^34 + #1^35 + 7*#1^36 - 7*#1^37 + 7*#1^38 - 12*#1^39 - 5*#1^40 + 8*#1^41 + 6*#1^42 + 10*#1^43 - 8*#1^44 - 8*#1^45 - 7*#1^46 - 3*#1^47 + 9*#1^48 + #1^49 + 6*#1^50 + 6*#1^51 - 2*#1^52 - 3*#1^53 - 10*#1^54 - 2*#1^55 + 3*#1^56 + 5*#1^57 + 2*#1^58 - #1^59 - #1^60 - #1^61 - #1^62 - #1^63 + #1^64 + 2*#1^65 + 2*#1^66 - #1^67 - 2*#1^68 - #1^69 + #1^71 & , 3, 0]	1.3035771269034296391	erratum: listed digits 1.3035771269... have an extra 1; correct 1.303577269...
+Wikipedia list of mathematical constants	Hafner–Sarnak–McCurley constant	Hafner–Sarnak–McCurley constant		0.35323637185499598454	
+Wikipedia list of mathematical constants	Backhouse's constant	Backhouse's constant		1.4560749485826896713	
+Wikipedia list of mathematical constants	Viswanath constant	Viswanath constant		1.1319882487943	
+Wikipedia list of mathematical constants	Komornik–Loreti constant	Komornik–Loreti constant		1.7872316501829659330	
+Wikipedia list of mathematical constants	Heath-Brown–Moroz constant	Heath-Brown–Moroz constant	Product[(1 - Prime[n]^(-1))^7*(1 + (1 + 7*Prime[n])/Prime[n]^2), {n, 1, Infinity}]	0.0013176411548531781	
+Wikipedia list of mathematical constants	MRB constant	MRB constant	Sum[(-1)^n*(-1 + n^n^(-1)), {n, 1, Infinity}]	0.18785964246206712024	
+Wikipedia list of mathematical constants	Prime constant	Prime constant	Sum[2^(-Prime[n]), {n, 1, Infinity}]	0.41468250985111166024	
+Wikipedia list of mathematical constants	Somos' quadratic recurrence constant	Somos' quadratic recurrence constant	E^(-Derivative[1, 0][PolyLog][0, 1/2])	1.6616879496335941212	
+Wikipedia list of mathematical constants	Foias constant	Foias constant		1.1874523511265010545	
+Wikipedia list of mathematical constants	Logarithmic capacity of the unit disk	Logarithmic capacity of the unit disk	Gamma[1/4]^2/(4*Pi^(3/2))	0.59017029950804811302	
+Wikipedia list of mathematical constants	Taniguchi constant	Taniguchi constant	Product[1 - Prime[n]^(-6) + Prime[n]^(-5) + 2/Prime[n]^4 - 3/Prime[n]^3, {n, 1, Infinity}]	0.67823449191739197803	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π	π	Pi	3.141593	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π	log π	Log10[Pi]	0.49715	
+Bronstein, Taschenbuch der Mathematik, Table A.1	2π	2π	2*Pi	6.283185	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 2π	log 2π	Log10[2*Pi]	0.79818	
+Bronstein, Taschenbuch der Mathematik, Table A.1	3π	3π	3*Pi	9.424778	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 3π	log 3π	Log10[3*Pi]	0.97427	
+Bronstein, Taschenbuch der Mathematik, Table A.1	4π	4π	4*Pi	12.566371	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 4π	log 4π	Log10[4*Pi]	1.09921	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π/2	π/2	Pi/2	1.570796	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π/2	log π/2	Log10[Pi/2]	0.19612	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π/3	π/3	Pi/3	1.047198	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π/3	log π/3	Log10[Pi/3]	0.02003	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π/4	π/4	Pi/4	0.785398	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π/4	log π/4	Log10[Pi/4]	-0.10491	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π/6	π/6	Pi/6	0.523599	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π/6	log π/6	Log10[Pi/6]	-0.28100	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π/180	π/180	Pi/180	0.017453	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π/180	log π/180	Log10[Pi/180]	-1.75812	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π/10800	π/10800	Pi/10800	0.000291	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π/10800	log π/10800	Log10[Pi/10800]	-3.53627	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π/648000	π/648000	Pi/648000	0.000005	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π/648000	log π/648000	Log10[Pi/648000]	-5.31443	
+Bronstein, Taschenbuch der Mathematik, Table A.1	π^2	π^2	Pi^2	9.869604	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log π^2	log π^2	Log10[Pi^2]	0.99430	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Sqrt[π]	Sqrt[π]	Sqrt[Pi]	1.772454	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Sqrt[π]	log Sqrt[π]	Log10[Sqrt[Pi]]	0.24857	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Sqrt[2π]	Sqrt[2π]	Sqrt[2*Pi]	2.506628	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Sqrt[2π]	log Sqrt[2π]	Log10[Sqrt[2*Pi]]	0.39909	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Sqrt[π/2]	Sqrt[π/2]	Sqrt[Pi/2]	1.253314	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Sqrt[π/2]	log Sqrt[π/2]	Log10[Sqrt[Pi/2]]	0.09806	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Cbrt[π]	Cbrt[π]	CubeRoot[Pi]	1.464592	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Cbrt[π]	log Cbrt[π]	Log10[CubeRoot[Pi]]	0.16572	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Cbrt[4π/3]	Cbrt[4π/3]	CubeRoot[4*Pi/3]	1.611992	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Cbrt[4π/3]	log Cbrt[4π/3]	Log10[CubeRoot[4*Pi/3]]	0.20736	
+Bronstein, Taschenbuch der Mathematik, Table A.1	e	e	E	2.718282	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log e	log e	Log10[E]	0.43429	
+Bronstein, Taschenbuch der Mathematik, Table A.1	e^2	e^2	E^2	7.389056	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log e^2	log e^2	Log10[E^2]	0.86859	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Sqrt[e]	Sqrt[e]	Sqrt[E]	1.648721	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Sqrt[e]	log Sqrt[e]	Log10[Sqrt[E]]	0.21715	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Cbrt[e]	Cbrt[e]	CubeRoot[E]	1.395612	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Cbrt[e]	log Cbrt[e]	Log10[CubeRoot[E]]	0.14476	
+Bronstein, Taschenbuch der Mathematik, Table A.1	e^(π/2)	e^(π/2)	E^(Pi/2)	4.810477	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log e^(π/2)	log e^(π/2)	Log10[E^(Pi/2)]	0.68219	
+Bronstein, Taschenbuch der Mathematik, Table A.1	e^π	e^π	E^Pi	23.140693	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log e^π	log e^π	Log10[E^Pi]	1.36438	
+Bronstein, Taschenbuch der Mathematik, Table A.1	e^(2π)	e^(2π)	E^(2*Pi)	535.491656	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log e^(2π)	log e^(2π)	Log10[E^(2*Pi)]	2.72875	
+Bronstein, Taschenbuch der Mathematik, Table A.1	γ	γ	EulerGamma	0.577216	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log γ	log γ	Log10[EulerGamma]	-0.23866	
+Bronstein, Taschenbuch der Mathematik, Table A.1	M = log e	M = log e	Log10[E]	0.434294	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log M = log e	log M = log e	Log10[Log10[E]]	-0.36222	
+Bronstein, Taschenbuch der Mathematik, Table A.1	1/π	1/π	1/Pi	0.318310	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 1/π	log 1/π	Log10[1/Pi]	-0.49715	
+Bronstein, Taschenbuch der Mathematik, Table A.1	1/2π	1/2π	1/(2*Pi)	0.159155	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 1/2π	log 1/2π	Log10[1/(2*Pi)]	-0.79818	
+Bronstein, Taschenbuch der Mathematik, Table A.1	1/3π	1/3π	1/(3*Pi)	0.106103	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 1/3π	log 1/3π	Log10[1/(3*Pi)]	-0.97427	
+Bronstein, Taschenbuch der Mathematik, Table A.1	1/4π	1/4π	1/(4*Pi)	0.079577	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 1/4π	log 1/4π	Log10[1/(4*Pi)]	-1.09921	
+Bronstein, Taschenbuch der Mathematik, Table A.1	2/π	2/π	2/Pi	0.636620	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 2/π	log 2/π	Log10[2/Pi]	-0.19612	
+Bronstein, Taschenbuch der Mathematik, Table A.1	3/π	3/π	3/Pi	0.954930	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 3/π	log 3/π	Log10[3/Pi]	-0.02003	
+Bronstein, Taschenbuch der Mathematik, Table A.1	4/π	4/π	4/Pi	1.273240	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 4/π	log 4/π	Log10[4/Pi]	0.10491	
+Bronstein, Taschenbuch der Mathematik, Table A.1	6/π	6/π	6/Pi	1.909859	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 6/π	log 6/π	Log10[6/Pi]	0.28100	
+Bronstein, Taschenbuch der Mathematik, Table A.1	180/π	180/π	180/Pi	57.295780	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 180/π	log 180/π	Log10[180/Pi]	1.75812	
+Bronstein, Taschenbuch der Mathematik, Table A.1	10800/π	10800/π	10800/Pi	3437.7468	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 10800/π	log 10800/π	Log10[10800/Pi]	3.53627	
+Bronstein, Taschenbuch der Mathematik, Table A.1	648000/π	648000/π	648000/Pi	206264.81	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 648000/π	log 648000/π	Log10[648000/Pi]	5.31443	
+Bronstein, Taschenbuch der Mathematik, Table A.1	1/π^2	1/π^2	1/Pi^2	0.101321	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 1/π^2	log 1/π^2	Log10[1/Pi^2]	-0.99430	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Sqrt[1/π]	Sqrt[1/π]	Sqrt[1/Pi]	0.564190	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Sqrt[1/π]	log Sqrt[1/π]	Log10[Sqrt[1/Pi]]	-0.24857	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Sqrt[1/2π]	Sqrt[1/2π]	Sqrt[1/(2*Pi)]	0.398942	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Sqrt[1/2π]	log Sqrt[1/2π]	Log10[Sqrt[1/(2*Pi)]]	-0.39909	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Sqrt[2/π]	Sqrt[2/π]	Sqrt[2/Pi]	0.797885	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Sqrt[2/π]	log Sqrt[2/π]	Log10[Sqrt[2/Pi]]	-0.09806	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Cbrt[1/π]	Cbrt[1/π]	CubeRoot[1/Pi]	0.682784	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Cbrt[1/π]	log Cbrt[1/π]	Log10[CubeRoot[1/Pi]]	-0.16572	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Cbrt[3/4π]	Cbrt[3/4π]	CubeRoot[3/(4*Pi)]	0.620350	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Cbrt[3/4π]	log Cbrt[3/4π]	Log10[CubeRoot[3/(4*Pi)]]	-0.20736	
+Bronstein, Taschenbuch der Mathematik, Table A.1	1/e	1/e	1/E	0.367879	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 1/e	log 1/e	Log10[1/E]	-0.43429	
+Bronstein, Taschenbuch der Mathematik, Table A.1	1/e^2	1/e^2	1/E^2	0.135335	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 1/e^2	log 1/e^2	Log10[1/E^2]	-0.86859	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Sqrt[1/e]	Sqrt[1/e]	Sqrt[1/E]	0.606531	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Sqrt[1/e]	log Sqrt[1/e]	Log10[Sqrt[1/E]]	-0.21715	
+Bronstein, Taschenbuch der Mathematik, Table A.1	Cbrt[1/e]	Cbrt[1/e]	CubeRoot[1/E]	0.716532	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log Cbrt[1/e]	log Cbrt[1/e]	Log10[CubeRoot[1/E]]	-0.14476	
+Bronstein, Taschenbuch der Mathematik, Table A.1	e^(-π/2)	e^(-π/2)	E^(-Pi/2)	0.207880	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log e^(-π/2)	log e^(-π/2)	Log10[E^(-Pi/2)]	-0.68219	
+Bronstein, Taschenbuch der Mathematik, Table A.1	e^(-π)	e^(-π)	E^(-Pi)	0.043214	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log e^(-π)	log e^(-π)	Log10[E^(-Pi)]	-1.36438	
+Bronstein, Taschenbuch der Mathematik, Table A.1	e^(-2π)	e^(-2π)	E^(-2*Pi)	0.001867	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log e^(-2π)	log e^(-2π)	Log10[E^(-2*Pi)]	-2.72875	
+Bronstein, Taschenbuch der Mathematik, Table A.1	ln π	ln π	Log[Pi]	1.144730	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log ln π	log ln π	Log10[Log[Pi]]	0.05870	
+Bronstein, Taschenbuch der Mathematik, Table A.1	1/M = ln 10	1/M = ln 10	Log[10]	2.302585	
+Bronstein, Taschenbuch der Mathematik, Table A.1	log 1/M = ln 10	log 1/M = ln 10	Log10[Log[10]]	0.36222	
+fast-converging series, computed	Kepler–Bouwkamp constant	Kepler–Bouwkamp constant	Exp[-Sum[(4^k - 1)*Zeta[N[2*k, 128]]*HurwitzZeta[N[2*k, 128], N[3, 128]]/k, {k, 1, 320}]]		value from log K = -sum_k (4^k-1) zeta(2k) zeta(2k,3)/k, terms ~ (4/9)^k; numeric arguments keep Mathematica from rewriting HurwitzZeta[2k, 3] into the cancelling zeta(2k) - 1 - 4^-k
+fast-converging series, computed	Asymptotic behavior of Lebesgue constants	Asymptotic behavior of Lebesgue constants	-4*PolyGamma[0, 1/2]/Pi^2 - 8*Sum[4^-j*Derivative[1][Zeta][N[2*j, 128]], {j, 1, 160}]/Pi^2		value from sum_k log(k)/(4k^2-1) = -sum_j 4^-j zeta'(2j), terms ~ 16^-j
+fast-converging series, computed	Kepler–Bouwkamp constant	Kepler–Bouwkamp constant	Exp[-Sum[(4^k - 1)*Zeta[N[2*k, 128]]*HurwitzZeta[N[2*k, 128], N[3, 128]]/k, {k, 1, 320}]]		value from log K = -sum_k (4^k-1) zeta(2k) zeta(2k,3)/k, terms ~ (4/9)^k; numeric arguments keep Mathematica from rewriting HurwitzZeta[2k, 3] into the cancelling zeta(2k) - 1 - 4^-k
+fast-converging series, computed	Asymptotic behavior of Lebesgue constants	Asymptotic behavior of Lebesgue constants	-4*PolyGamma[0, 1/2]/Pi^2 - 8*Sum[4^-j*Derivative[1][Zeta][N[2*j, 128]], {j, 1, 160}]/Pi^2		value from sum_k log(k)/(4k^2-1) = -sum_j 4^-j zeta'(2j), terms ~ 16^-j
