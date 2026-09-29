@@ -109,6 +109,7 @@ Create genuinely new problems with elegant solutions. Example: `11/13 = tanh(ln(
 | Multiple Norm Selection | Relative error, absolute error, ULP distance, Hamming distance, string dissimilarity, integer/rational/RPN relationships | Low | Advanced options | Partial implementation
 | Sorting Toggle | Choose `<` vs `≤` for discrete metrics | Low | Advanced options | Yes, via CompareMode in vsearch_core()
 | Sorting Direction Toggle | Choose from `alternating` (default)  vs `from above`/`from below` for continuous discrete metrics | Low | Advanced options | No
+| Branch Cut Convention | Complex search: value of the inverse functions exactly on their branch cuts, **IEEE 754** (C99 `casin`, `catanh`, ... choose the side by the sign of the zero imaginary/real part) or **Wolfram Mathematica** (counter-clockwise continuity, no signed zero). They differ for ArcTanh(x>1), ArcSin(x>1), ArcCos(x>1), ArcTan(-iy), ArcSinh(-iy), y>1: the engine gives Im[ArcTanh[E]/90] = +π/180, Mathematica -π/180. Signed zeros also make one number give two values in the engine (log(-2) = +iπ from `NEG, TWO, TIMES`, -iπ from `TWO, MINUS`), and the page's formula evaluator (`lib/formula.ts`) already follows Mathematica, so a typed target on a cut (`ArcTanh[E]`) cannot match the engine's own formula. Fix in the `cmath2.h` wrappers: pick the side by the selected rule for arguments exactly on a cut | Low | Advanced options, 2 choices | No
 
 ### Lower Priority / Exploratory
 | Feature | Description | Complexity | Frontend Visibility | Backend availability
