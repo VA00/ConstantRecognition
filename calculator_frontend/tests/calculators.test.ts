@@ -44,13 +44,13 @@ describe('custom integer button', () => {
 });
 
 describe('final steps sent to the engine', () => {
-  it('defaults: Abs in a real search, Re, Im, Abs in a complex one', () => {
-    expect(finalStepList(DEFAULT_FINAL_STEPS, 'real')).toBe('ABS');
-    expect(finalStepList(DEFAULT_FINAL_STEPS, 'complex')).toBe('RE,IM,ABS');
+  it('defaults: Minus in a real search, Minus, Re, Im in a complex one', () => {
+    expect(finalStepList(DEFAULT_FINAL_STEPS, 'real')).toBe('MINUS');
+    expect(finalStepList(DEFAULT_FINAL_STEPS, 'complex')).toBe('MINUS,RE,IM');
   });
 
   it('keeps the engine order and drops Re, Im from real searches', () => {
-    expect(finalStepList(['ARG', 'RE', 'ABS'], 'complex')).toBe('RE,ABS,ARG');
+    expect(finalStepList(['ARG', 'RE', 'ABS', 'MINUS'], 'complex')).toBe('MINUS,RE,ABS,ARG');
     expect(finalStepList(['ARG', 'RE', 'IM'], 'real')).toBe('ARG');
     expect(finalStepList([], 'complex')).toBe('');
   });

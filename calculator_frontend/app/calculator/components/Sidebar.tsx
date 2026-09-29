@@ -468,7 +468,7 @@ export function Sidebar({
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   {effectiveDomain === 'complex'
                     ? 'Also tried on every finished formula, e.g. Re[Sqrt[i]]; never inside it, and not counted in K.'
-                    : 'Also tried on every finished formula, e.g. Abs[Sin[4]]; Re and Im only in complex search.'}
+                    : 'Also tried on every finished formula, e.g. -Exp[E]; Re and Im only in complex search.'}
                 </p>
               </div>
 

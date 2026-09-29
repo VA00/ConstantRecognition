@@ -135,6 +135,7 @@ static inline double complex apply_final(double complex v, unsigned flag) {
         case FINAL_IM:  return cimag(v);
         case FINAL_ABS: return cabs(v);
         case FINAL_ARG: return carg(v);
+        case FINAL_MINUS: return -v;
         default:        return v;
     }
 }
@@ -232,7 +233,14 @@ static inline void check_leaf(CSearchState* st, double complex v) {
        results are real, so none can come closer than final_floor2 (the
        target's own imaginary part): then they are skipped. */
     unsigned final = FINAL_IDENTITY;
-    if (st->finals && err2 > st->final_floor2) {
+    /* Minus: -v is closer than v exactly when v points away from the target,
+       Re(v conj(target)) < 0; only then its error is computed */
+    if ((st->finals & FINAL_MINUS) &&
+        creal(v) * creal(st->target) + cimag(v) * cimag(st->target) < 0.0) {
+        double e = rel_err2(st, -v);
+        if (e < err2) { err2 = e; final = FINAL_MINUS; }
+    }
+    if ((st->finals & ~FINAL_MINUS) && err2 > st->final_floor2) {
         const unsigned fl = st->finals;
         const double vr = creal(v), vi = cimag(v);
         double e;

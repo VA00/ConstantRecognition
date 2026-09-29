@@ -311,7 +311,7 @@ typedef struct {
     int num_found;
     int stop_search;
     double cr_threshold;
-    unsigned finals;           /* FINAL_ABS | FINAL_ARG (final_step.h), CONSTANT/BATCH only */
+    unsigned finals;           /* FINAL_MINUS | FINAL_ABS | FINAL_ARG (final_step.h), CONSTANT/BATCH only */
     TargetState* targets;      /* Per-target state for CONSTANT/BATCH */
     double func_best_err;      /* Best error for FUNCTION mode */
     double func_best_value;
@@ -346,6 +346,11 @@ static unsigned real_final_step(const SearchState* st, const TargetState* ts, do
                                 double* err, double* value) {
     unsigned final = FINAL_IDENTITY;
     double e;
+    /* -raw is closer only when raw and the target have opposite signs */
+    if ((st->finals & FINAL_MINUS) && raw * target < 0.0 &&
+        (e = compute_single_error(-raw, target, st->metric)) < *err) {
+        *err = e; *value = -raw; final = FINAL_MINUS;
+    }
     /* |raw| = raw for raw >= 0: never closer, not computed */
     if ((st->finals & FINAL_ABS) && raw < 0.0 && (e = compute_single_error(-raw, target, st->metric)) < *err) {
         *err = e; *value = -raw; final = FINAL_ABS;
@@ -371,7 +376,9 @@ static int process_constant_leaf(SearchState* st, const char* ternary, const int
         double err = compute_single_error(raw, target, st->metric);
         unsigned final = FINAL_IDENTITY;
         computed = raw;
-        if (st->finals && (signbit(raw) || (st->finals & FINAL_ARG))) {
+        if (st->finals && ((st->finals & FINAL_ARG) ||
+                           (signbit(raw) && (st->finals & FINAL_ABS)) ||
+                           ((st->finals & FINAL_MINUS) && raw * target < 0.0))) {
             final = real_final_step(st, &st->targets[t], raw, target, &err, &computed);
         }
         int is_better = (st->compare == COMPARE_STRICT) ? (err < st->targets[t].best_err) : (err <= st->targets[t].best_err);
@@ -641,7 +648,7 @@ static char* vsearch_core_final(
     st.n_total = n_total;
     st.num_to_find = effective_num;
     st.cr_threshold = cr_threshold;
-    st.finals = (mode == MODE_FUNCTION) ? 0 : (finals & (FINAL_ABS | FINAL_ARG));
+    st.finals = (mode == MODE_FUNCTION) ? 0 : (finals & (FINAL_MINUS | FINAL_ABS | FINAL_ARG));
     st.targets = targets;
     st.func_best_err = DBL_MAX; st.func_best_K = 1;
     st.json_ptr = json_output; st.json_remaining = JSON_BUFFER_SIZE;

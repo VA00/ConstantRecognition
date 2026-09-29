@@ -94,13 +94,14 @@ export function parseCustomInteger(text: string): { value: string } | { error: s
 // complexOnly: no effect on real values (Re x = x, Im x = 0), so a real search
 // leaves them out; Abs and Arg act in both searches.
 export const FINAL_STEPS: { token: string; label: string; complexOnly: boolean }[] = [
+  { token: 'MINUS', label: 'Minus', complexOnly: false },   // -f; token of the sign-change button
   { token: 'RE', label: 'Re', complexOnly: true },
   { token: 'IM', label: 'Im', complexOnly: true },
   { token: 'ABS', label: 'Abs', complexOnly: false },
   { token: 'ARG', label: 'Arg', complexOnly: false },
 ];
-// Real search: Abs; complex search: Re, Im, Abs (as Mathematica's default Finalize)
-export const DEFAULT_FINAL_STEPS = ['RE', 'IM', 'ABS'];
+// Real search: Minus; complex search: Minus, Re, Im. Abs and Arg off.
+export const DEFAULT_FINAL_STEPS = ['MINUS', 'RE', 'IM'];
 
 /** Final steps sent to the engine for a search domain, in the engine's tie order */
 export function finalStepList(steps: string[], domain: 'real' | 'complex'): string {

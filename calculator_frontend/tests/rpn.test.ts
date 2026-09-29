@@ -56,6 +56,8 @@ describe('final-step tokens', () => {
     expect(rpnToLatex('I, SQRT, RE')).toBe('\\operatorname{Re}(\\sqrt{i})');
     expect(rpnToLatex('TWO, I, TIMES, ABS')).toBe('\\left|i \\cdot 2\\right|');   // WASM order: op(top, second)
     expect(rpnToInfix('I, LOG, IM')).toBe('Im(ln(i))');
+    expect(rpnToMathematica('EULER, EXP, MINUS')).toBe('(-Exp[E])');   // Minus: token of the sign-change button
+    expect(rpnToLatex('EULER, EXP, MINUS')).toBe('(-e^{e})');
   });
 
   it('evaluate on real values as Re x = x, Im x = 0, |x|, arg x', () => {
@@ -64,5 +66,6 @@ describe('final-step tokens', () => {
     expect(evaluateRPN('TWO, ONE, SUBTRACT, ABS')).toBe(1);   // |1 - 2|, WASM order: op(top, second)
     expect(evaluateRPN('TWO, ONE, SUBTRACT, ARG')).toBe(Math.PI);
     expect(evaluateRPN('ONE, TWO, SUBTRACT, ARG')).toBe(0);   // 2 - 1 > 0
+    expect(evaluateRPN('EULER, EXP, MINUS')).toBe(-Math.exp(Math.E));
   });
 });
