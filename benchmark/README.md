@@ -2,7 +2,7 @@
 
 ## v0: published real constants
 
-`constants_v0.tsv`: 744 real constants from published, hand-made lists. No generated or random
+`constants_v0.tsv`: 1381 real constants from published, hand-made lists. No generated or random
 formulas, no complex constants. A proof of concept for a standard benchmark; recognition runs over it
 are done by hand, not automated.
 
@@ -18,7 +18,7 @@ are done by hand, not automated.
 | `check` | `ok`: every source agrees with `value` within one unit of its last digit |
 | `notes` | how the value was obtained when not from the formula, errata of a source |
 
-Classes: 330 elementary, 276 special, 86 algebraic, 13 rational, 39 without closed form.
+Classes: 402 elementary, 411 special, 133 algebraic, 13 rational, 422 without closed form (in the sources used).
 
 ### Sources
 
@@ -32,6 +32,7 @@ Classes: 330 elementary, 276 special, 86 algebraic, 13 rational, 39 without clos
 | Abramowitz & Stegun, Handbook of Mathematical Functions, Table 1.1, 10th printing (1972), scan https://archive.org/details/AandS-mono600 | 251 | 15-26 |
 | OEIS decimal expansions with keyword `nice` or `core`, https://oeis.org (fetched 2026-09-30) | 52 | 5-210 |
 | Plouffe, Miscellaneous Mathematical Constants, Project Gutenberg #634 (1996), https://www.gutenberg.org/ebooks/634 | 109 | 17-256 (truncated) |
+| OEIS decimal expansions citing Finch, Mathematical Constants (2003) or Mathematical Constants II (2018), from https://github.com/oeis/oeisdata (2026-09-30) | 897 | 5-120 |
 
 The Wolfram constants are imported by `import_wolfram_constants.wls` (needs internet access): the
 DefiningFormula, the NumericalApproximation with the digits its precision claims, and every
@@ -62,6 +63,17 @@ truncated here to 256) were computed in Maple and elsewhere, independently of Ma
 second source for about 80 constants. The last sections are identification requests sent to the ISC
 in 1995-1996; the ones that remain unidentified are left out, and so is one whose proposed answer,
 -Integrate[Sqrt[x]/Log[1 - x], {x, 0, 1}], agrees with the number to 16 of its 24 digits only.
+
+Finch's two books are the most complete hand-made collections of constants; the books themselves are a
+source for the larger benchmark. Here are the about 900 OEIS decimal expansions whose references cite
+either book, imported by `import_oeis_finch.py` from a checkout of the OEIS data repository (a sparse
+clone of the decimal expansions, about 70 MB; see the script). OEIS shows only the first 100 search
+results without an account, so the repository is the way to get all of them. The digits are the terms;
+the formula is the expression inside `RealDigits[...]` of the entry's Mathematica line, taken only when
+it is plain mathematics (a whitelist of functions, no assignments, no code), because the build runs it;
+363 rows have one. For 16 the digits are of minus the value of that expression (`RealDigits` drops the
+sign). Constants that sources give with fewer than 12 digits cannot be merged by value; the build links
+six such pairs by key (Gaussian twin prime, Shanks, Brun, Brun quadruple, de Bruijn, John).
 
 `constants_v0_sources.tsv` holds one row per constant per source: source, key, name, formula, the digits
 exactly as published (copied from the files by a script, never typed), and a note. It is the file to edit;
@@ -100,10 +112,15 @@ into the cancelling zeta(2k) - 1 - 4^-k, so the arguments must be numeric.
 
 Because precision can be claimed wrongly, `check_constants_v0.py` recomputes every value with a second,
 independent tool, mpmath, from the same formulas (translated to mpmath, or hand-written for sums,
-products, integrals and roots with a seed): 558 of 744 values agree to all their digits. The other 186
+products, integrals and roots with a seed): 792 of 1381 values agree to all their digits. The other 589
 (no closed form, sums over primes, functions mpmath lacks, most Wolfram sums) are each confirmed by
 published digits: the value is published digits, or a source publishes 64 digits or more and the build
 checks it against the value. The checker fails when a value rests on Mathematica's N[] alone.
+
+Published digits are not proof either: the Wolfram Knowledgebase digits of two Lueroth constants are
+wrong after 27 digits, like Mathematica's N[] of their sums (see errata). 22 constants rest on Wolfram's
+digits alone, are defined by a sum, product, integral or limit, and are not recomputed by mpmath (most
+are products over primes: Artin, Feller-Tornier, carefree, totient, ...); they need MANUAL entries.
 
 Errata found in the collected lists, kept in the sources with a note:
 
@@ -115,6 +132,9 @@ Errata found in the collected lists, kept in the sources with a note:
   (...297)
 - Plouffe, Artin's constant: digit 27 is 5, correct 4 (`...0543465164...` vs `...0543464164...`)
 - Plouffe, Renyi parking constant: wrong after 26 digits (`...094363652...` vs `...094383017...`)
+- Wolfram Lueroth analog of the Levy constant: wrong after 27 digits (`...176154|02...`, correct
+  `...176153|95...`, OEIS A244109 and mpmath); Lueroth analog of the Khinchin constant: wrong after 26
+  digits (`...578|68...`, correct `...578|66...`, OEIS A245254 and mpmath)
 - Wolfram infinite product constant: the DefiningFormula is prod_{k>=1} (1+1/k)^(1/k) = 3.5174872559...,
   the published digits 1.7587436... are the product from k = 2, half of it. The value comes from the
   series 2 exp(sum_n (-1)^(n+1) (zeta(n+1)-1)/n)
@@ -126,6 +146,7 @@ wolframscript -file import_wolfram_constants.wls   # only to refresh the Wolfram
 python import_aands_table_1_1.py                   # only to refresh the A&S rows (fetches the OCR)
 python import_oeis_nice_core.py                    # only to refresh the OEIS rows
 python import_plouffe_constants.py                 # only to refresh the Plouffe rows
+python import_oeis_finch.py <oeisdata checkout>    # only to refresh the OEIS rows citing Finch
 wolframscript -file build_constants_v0.wls         # writes constants_v0.tsv, prints mismatches
 python check_constants_v0.py                       # mpmath: needs mpmath (pip install mpmath)
 ```
@@ -139,5 +160,5 @@ also needs a hand-written mpmath expression in `MANUAL` of the checker.
 
 ### Candidate sources for later versions
 
-Not used yet: Finch, Mathematical Constants; the other OEIS decimal expansions (a separate benchmark,
-with b-files for many digits); MathWorld.
+For the larger, separate benchmark: Finch's two books themselves; the other OEIS decimal expansions
+(about 14000, with b-files for many digits); MathWorld.

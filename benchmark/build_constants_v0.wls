@@ -127,6 +127,16 @@ sameQ[a_, b_] := Module[{d = Min[bestDigits[a], bestDigits[b], 20]},
    d >= 12 && Abs[best[a] - best[b]] <= 10^(1 - d) Abs[best[b]]];
 sorted = SortBy[rows, N[best[#], 40] &];
 groups = Fold[If[#1 =!= {} && sameQ[Last[Last[#1]], #2], Append[Most[#1], Append[Last[#1], #2]], Append[#1, {#2}]] &, {}, sorted];
+(* one constant, but too few digits (< 12) to be merged by value: linked by key.
+   Rows with the same OEIS A-number are one constant too. *)
+alsoSame = {{"GaussianTwinPrimeConstant", "A337606"}, {"ShanksConstant", "A337607"},
+   {"BrunPrimeQuadrupleConstant", "A213007"}, {"DeBruijnConstant", "A113276"}, {"Brun's constant", "A065421"},
+   {"JohnConstantUpperBound", "A244382"}};
+sameA = Select[Tally[Select[#["key"] & /@ rows, StringMatchQ[#, "A" ~~ Repeated[DigitCharacter, {6}]] &]], Last[#] > 1 &][[All, 1]];
+mergeKeys[gs_, ks_List] := Module[{pos = Select[Range[Length[gs]], Function[i, AnyTrue[gs[[i]], MemberQ[ks, #["key"]] &]]]},
+   If[Length[pos] < 2, gs, Append[Delete[gs, List /@ pos], Join @@ gs[[pos]]]]];
+groups = Fold[mergeKeys, groups, Join[alsoSame, List /@ sameA]];
+
 (* a group with neither a trusted formula nor published digits has no ground truth *)
 {noTruth, groups} = {Select[groups, !AnyTrue[#, NumericQ[#["trusted"]] || (NumericQ[#["pvalue"]] && !erratumQ[#]) &] &],
    Select[groups, AnyTrue[#, NumericQ[#["trusted"]] || (NumericQ[#["pvalue"]] && !erratumQ[#]) &] &]};

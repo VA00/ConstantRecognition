@@ -46,8 +46,12 @@ MMA = {
     'ArcSinh': mp.asinh, 'ArcCosh': mp.acosh, 'ArcTanh': mp.atanh,
     'Gamma': mp.gamma, 'Zeta': mp.zeta, 'PolyGamma': lambda n, x: mp.psi(n, x),
     'BesselI': mp.besseli, 'ArithmeticGeometricMean': mp.agm, 'InverseErf': mp.erfinv,
-    'ExpIntegralEi': mp.ei, 'ProductLog': mp.lambertw,   # principal branch; complex below -1/e
+    'ExpIntegralEi': mp.ei, 'ProductLog': lambda *a: mp.lambertw(a[-1], int(a[0]) if len(a) == 2 else 0),   # ProductLog[z], ProductLog[k, z]
     'Re': mp.re, 'Im': mp.im, 'I': mp.j, 'PrimeZetaP': mp.primezeta,
+    'QPochhammer': lambda a, q: mp.qp(a, q), 'HurwitzZeta': lambda s, a: mp.zeta(s, a), 'ZetaZero': mp.zetazero,
+    'EllipticTheta': mp.jtheta, 'Fibonacci': mp.fib, 'Surd': lambda x, n: mp.sign(x) * abs(x) ** (mp.mpf(1) / n),
+    'Log2': lambda x: mp.log(x, 2), 'Abs': abs, 'Floor': mp.floor, 'Power': lambda a, b: a ** b,
+    'Infinity': mp.inf,
     'Pi': mp.pi, 'E': mp.e, 'GoldenRatio': mp.phi, 'EulerGamma': mp.euler, 'Catalan': mp.catalan,
     'Glaisher': mp.glaisher, 'Khinchin': mp.khinchin, 'Degree': mp.pi / 180,
     # special functions in the Wolfram Knowledgebase formulas (Mathematica conventions)
@@ -104,11 +108,11 @@ def root(formula):
     m = re.match(r'^Root\[(.*?)\s*&\s*,\s*(\d+)(?:\s*,\s*0)?\]$', formula)
     poly, k = m.group(1), int(m.group(2))
     coeffs = {}
-    for term in re.findall(r'[+-]?[^+-]+', poly.replace(' ', '')):
-        tm = re.match(r'^([+-]?\d*)\*?(?:#1(?:\^(\d+))?)?$', term)
+    for term in re.findall(r'[+-]?[^+-]+', poly.replace(' ', '').replace('#1', '#')):
+        tm = re.match(r'^([+-]?\d*)\*?(?:#(?:\^(\d+))?)?$', term)
         c = tm.group(1)
         c = int(c) if c not in ('', '+', '-') else (-1 if c == '-' else 1)
-        d = 0 if '#1' not in term else int(tm.group(2) or 1)
+        d = 0 if '#' not in term else int(tm.group(2) or 1)
         coeffs[d] = coeffs.get(d, 0) + c
     deg = max(coeffs)
     roots = mp.polyroots([coeffs.get(d, 0) for d in range(deg, -1, -1)], maxsteps=500, extraprec=400)
@@ -116,9 +120,28 @@ def root(formula):
     return real[k - 1]
 
 
+TOKEN = re.compile(r'\d+\.\d*|\.\d+|\d+|[A-Za-z][A-Za-z0-9]*|\S')
+
+
 def translate(formula):
-    s = re.sub(r'(?<![\w.#])(\d+\.\d*|\d+)(?![\w.])', r"mpf('\1')", formula)   # exact numbers
-    return s.replace('[', '(').replace(']', ')').replace('^', '**')
+    """Mathematica to Python: exact numbers, f[x] -> f(x), ^ -> **, and the implicit
+    multiplication of Mathematica (2 Pi, 2Catalan, Pi Log[2], (a)(b)) made explicit."""
+    out, prev = [], None      # prev: 'value' after a number, a symbol or a closing bracket
+    toks = TOKEN.findall(formula)
+    for i, t in enumerate(toks):
+        is_num, is_name = t[0].isdigit() or t[0] == '.', t[0].isalpha()
+        if prev == 'value' and (is_num or is_name or t == '('):
+            out.append('*')
+        if is_num:
+            out.append(f"mpf('{t}')")
+            prev = 'value'
+        elif is_name:
+            out.append(t)
+            prev = None if i + 1 < len(toks) and toks[i + 1] == '[' else 'value'
+        else:
+            out.append({'[': '(', ']': ')', '^': '**'}.get(t, t))
+            prev = 'value' if t in ')]' else None
+    return ''.join(out)
 
 
 def mp_value(name, formula):

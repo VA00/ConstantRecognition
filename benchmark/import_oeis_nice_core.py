@@ -15,7 +15,7 @@ the constant has no closed form. Left out (EXCLUDED): sequences that are not
 constants, physical measurements, an integer, a binary expansion, and a
 duplicate with too few digits to be merged.
 
-Replaces the rows of source "OEIS ..." and keeps the others.
+Replaces the rows of source "OEIS keyword:cons with ..." and keeps the others.
 
 Usage (from this directory):  python import_oeis_nice_core.py
 """
@@ -124,7 +124,7 @@ def main():
         offset = OFFSET.get(a, int(e['O'][0].split(',')[0]))
         rows.append([SOURCE, a, NAME.get(a) or name(e['N'][0]), FORMULA.get(a, ''), f'0.{digits}e{offset}', ''])
     old = list(csv.reader(open('constants_v0_sources.tsv', encoding='utf-8'), delimiter='\t'))
-    kept = [r for r in old if not r[0].startswith('OEIS')]
+    kept = [r for r in old if not r[0].startswith('OEIS keyword:cons with')]
     with open('constants_v0_sources.tsv', 'w', encoding='utf-8', newline='') as f:
         for r in kept + rows:
             f.write('\t'.join(r) + '\n')
