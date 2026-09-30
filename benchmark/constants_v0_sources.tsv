@@ -710,3 +710,254 @@ Wolfram Knowledgebase MathematicalConstant (Mathematica 15.0.1, 2026-09-30)	Wyle
 Wolfram Knowledgebase MathematicalConstant (Mathematica 15.0.1, 2026-09-30)	ZetaOf2	Riemann ζ of 2	Pi^2/6	1.644934066848226436472415166646025189218949901206798437735558229370007470403200873833628900619758705304004318962337190679628724687005007787935102946330866276831733309367762605095251006872140054796811558794890360823277761919840756455876963235636709710096948902085932008051636478878338846044445184059825145250683387631422765879392958806320447219790847734091059020837828954927826389037976358334394204515912081809959345444877458796500880889408701111634710693161461842887981548624483590918344875738742839408276028756321434601001357662098204872069040007382663560302402284462963032456609717195142772131595125567998619087193154395352410638044072142133965475058015872316583994762434914224334836290488700966505986226303410959673655281137167032691149878403435716160577667633306725273689423841664088953622759540077279474812710252049837843323001716574481030286043496688479421672843359728199779381000846656078053778288594727862593161866458829216065819385923241532580646178120188464977762598497756060938460605146768e0	
 Wolfram Knowledgebase MathematicalConstant (Mathematica 15.0.1, 2026-09-30)	ZolotarevSchurConstant	Zolotarev-Schur constant	With[{\[FormalX] = Root[{EllipticE[#1^2]^3 - 3*EllipticE[#1^2]^2*EllipticK[#1^2] + EllipticK[#1^2]*(-1 - EllipticK[#1^2]^2 + #1^2) + EllipticE[#1^2]*(1 + 3*EllipticK[#1^2]^2 + #1^2) & , 0.9155020553896763963055240364016622896543129422884607667501`30.102999566398122}]}, (1 - EllipticE[\[FormalX]^2]/EllipticK[\[FormalX]^2])^2/\[FormalX]^2]	3.110788667048192090275469590914218026489571584328586745494949170679575283192027533071205271638495171587035127203247205701428973673700538777642648438802166500724096440012569982653877015407306407405511835089611132164445603307386334660154897148103510598571166770511614301184687881329738790221805540971266328012701925937718691598558150794282964932715464062438855765982833187664094909963169306671526281133956358907234086469539997579450976351393208524485387442305758305718274130893422741217806405273928972152932046572398824633143488032152338045515591015678570850498630567304766119007263974082011792561784401241812160386902027196548055475960094816302158508767290892134859427490797367759615517624939391617646284205341903195663912972562353898815972549154958306433370077481865573761987780064304127968851401941584757824145901395498780228814736742976281949429713709851831381975812484974285731405328843460464458106583417328673443154714794789050875887799929797363993149298330908789822857470013301272955092587841597e-1	
 fast-converging series, computed	InfiniteProductConstant	infinite product constant	2*Exp[Sum[(-1)^(n + 1)*(Zeta[N[n + 1, 128]] - 1)/n, {n, 1, 420}]]		value from prod_{k>=1} (1+1/k)^(1/k) = 2 exp(sum_n (-1)^(n+1) (zeta(n+1)-1)/n), terms ~ 2^-n/n
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(2)	sqrt(2)	Sqrt[2]	1.4142135623730950488e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(3)	sqrt(3)	Sqrt[3]	1.7320508075688772935e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(5)	sqrt(5)	Sqrt[5]	2.2360679774997896964e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(7)	sqrt(7)	Sqrt[7]	2.6457513110645905905e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(11)	sqrt(11)	Sqrt[11]	3.3166247903553998491e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(13)	sqrt(13)	Sqrt[13]	3.6055512754639892931e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(17)	sqrt(17)	Sqrt[17]	4.1231056256176605498e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(19)	sqrt(19)	Sqrt[19]	4.3588989435406735522e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(23)	sqrt(23)	Sqrt[23]	4.7958315233127195416e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(29)	sqrt(29)	Sqrt[29]	5.3851648071345040313e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(31)	sqrt(31)	Sqrt[31]	5.5677643628300219221e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(37)	sqrt(37)	Sqrt[37]	6.0827625302982196890e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(41)	sqrt(41)	Sqrt[41]	6.4031242374328486865e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(43)	sqrt(43)	Sqrt[43]	6.5574385243020006523e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(47)	sqrt(47)	Sqrt[47]	6.8556546004010441249e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(53)	sqrt(53)	Sqrt[53]	7.2801098892805182711e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(59)	sqrt(59)	Sqrt[59]	7.6811457478686081758e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(61)	sqrt(61)	Sqrt[61]	7.8102496759066543941e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(67)	sqrt(67)	Sqrt[67]	8.1853527718724499700e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(71)	sqrt(71)	Sqrt[71]	8.4261497731763586306e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(73)	sqrt(73)	Sqrt[73]	8.5440037453175311679e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(79)	sqrt(79)	Sqrt[79]	8.8881944173155888501e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(83)	sqrt(83)	Sqrt[83]	9.1104335791442988819e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(89)	sqrt(89)	Sqrt[89]	9.4339811320566038113e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	sqrt(97)	sqrt(97)	Sqrt[97]	9.8488578017961047217e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^1	e^1	E^1	2.718281828459045235360287e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^2	e^2	E^2	7.389056098930650227230427e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^3	e^3	E^3	2.008553692318766774092853e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^4	e^4	E^4	5.459815003314423907811026e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^5	e^5	E^5	1.484131591025766034211156e2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^6	e^6	E^6	4.034287934927351226083872e2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^7	e^7	E^7	1.096633158428458599263720e3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^8	e^8	E^8	2.980957987041728274743592e3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^9	e^9	E^9	8.103083927575384007709997e3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^10	e^10	E^10	2.202646579480671651695790e4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(1pi)	e^(1pi)	E^(1*Pi)	2.3140692632779269006e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(2pi)	e^(2pi)	E^(2*Pi)	5.3549165552476473650e2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(3pi)	e^(3pi)	E^(3*Pi)	1.2391647807916697482e4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(4pi)	e^(4pi)	E^(4*Pi)	2.8675131313665329975e5	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(5pi)	e^(5pi)	E^(5*Pi)	6.6356239993411342333e6	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(6pi)	e^(6pi)	E^(6*Pi)	1.5355293539544669392e8	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(7pi)	e^(7pi)	E^(7*Pi)	3.5533212808470443597e9	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(8pi)	e^(8pi)	E^(8*Pi)	8.2226315585594995275e10	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(9pi)	e^(9pi)	E^(9*Pi)	1.9027738952921612917e12	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(10pi)	e^(10pi)	E^(10*Pi)	4.4031505860632029011e13	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^e	e^e	E^E	1.5154262241479264190e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^gamma	e^gamma	E^EulerGamma	1.7810724179901979852e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(2)	ln(2)	Log[2]	0.6931471805599453094172321e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(3)	ln(3)	Log[3]	1.0986122886681096913952452e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(4)	ln(4)	Log[4]	1.3862943611198906188344642e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(5)	ln(5)	Log[5]	1.6094379124341003746007593e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(6)	ln(6)	Log[6]	1.7917594692280550008124774e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(7)	ln(7)	Log[7]	1.9459101490553133051053527e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(8)	ln(8)	Log[8]	2.0794415416798359282516964e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(9)	ln(9)	Log[9]	2.1972245773362193827904905e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(10)	ln(10)	Log[10]	2.3025850929940456840179915e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(11)	ln(11)	Log[11]	2.3978952727983705440619436e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(13)	ln(13)	Log[13]	2.5649493574615367360534874e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(17)	ln(17)	Log[17]	2.8332133440562160802495346e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(19)	ln(19)	Log[19]	2.9444389791664404600090274e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(23)	ln(23)	Log[23]	3.1354942159291496908067528e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(29)	ln(29)	Log[29]	3.3672958299864740271832720e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(31)	ln(31)	Log[31]	3.4339872044851462459291643e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(37)	ln(37)	Log[37]	3.6109179126442244443680957e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(41)	ln(41)	Log[41]	3.7135720667043078038667634e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(43)	ln(43)	Log[43]	3.7612001156935624234728425e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	10^(1/2)	10^(1/2)	10^(1/2)	3.1622776601683793320e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	10^(1/3)	10^(1/3)	10^(1/3)	2.1544346900318837219e0	erratum: last digit, 2.1544346900318837219 should be ...218 (2.15443469003188372176)
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	10^(1/4)	10^(1/4)	10^(1/4)	1.7782794100389228012e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	10^(1/5)	10^(1/5)	10^(1/5)	1.5848931924611134853e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	100^(1/3)	100^(1/3)	100^(1/3)	4.6415888336127788924e0	corrected since the first printing (asterisk)
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	100^(1/5)	100^(1/5)	100^(1/5)	2.5118864315095801112e0	erratum: last digit, 2.5118864315095801112 should be ...111 (2.51188643150958011109)
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1000^(1/4)	1000^(1/4)	1000^(1/4)	5.6234132519034908040e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1000^(1/5)	1000^(1/5)	1000^(1/5)	3.9810717055349725077e0	corrected since the first printing (asterisk)
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	2^(1/3)	2^(1/3)	2^(1/3)	1.2599210498948731648e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	3^(1/3)	3^(1/3)	3^(1/3)	1.4422495703074083823e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	2^(1/4)	2^(1/4)	2^(1/4)	1.1892071150027210667e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	3^(1/4)	3^(1/4)	3^(1/4)	1.3160740129524924608e0	corrected since the first printing (asterisk)
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	2^(-1/2)	2^(-1/2)	2^(-1/2)	7.0710678118654752440e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	3^(-1/2)	3^(-1/2)	3^(-1/2)	5.7735026918962576451e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	5^(-1/2)	5^(-1/2)	5^(-1/2)	4.4721359549995793928e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(pi/2)	e^(pi/2)	E^(Pi/2)	4.8104773809653516555e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(pi/4)	e^(pi/4)	E^(Pi/4)	2.1932800507380154566e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-pi/2)	e^(-pi/2)	E^(-Pi/2)	2.0787957635076190855e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-pi/4)	e^(-pi/4)	E^(-Pi/4)	4.5593812776599623677e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(1/2)	e^(1/2)	E^(1/2)	1.6487212707001281468e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-1/2)	e^(-1/2)	E^(-1/2)	6.0653065971263342360e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(1/3)	e^(1/3)	E^(1/3)	1.3956124250860895286e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-1/3)	e^(-1/3)	E^(-1/3)	7.1653131057378925043e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-1	e^-1	E^(-1)	3.678794411714423215955238e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-2	e^-2	E^(-2)	1.353352832366126918939995e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-3	e^-3	E^(-3)	4.978706836786394297934242e-2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-4	e^-4	E^(-4)	1.831563888873418029371802e-2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-5	e^-5	E^(-5)	6.737946999085467096636048e-3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-6	e^-6	E^(-6)	2.478752176666358423045167e-3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-7	e^-7	E^(-7)	9.118819655545162080031361e-4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-8	e^-8	E^(-8)	3.354626279025118388213891e-4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-9	e^-9	E^(-9)	1.234098040866795494976367e-4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-10	e^-10	E^(-10)	4.539992976248485153559152e-5	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-1pi)	e^(-1pi)	E^(-1*Pi)	4.3213918263772249774e-2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-2pi)	e^(-2pi)	E^(-2*Pi)	1.8674427317079888144e-3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-3pi)	e^(-3pi)	E^(-3*Pi)	8.0699517570304599239e-5	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-4pi)	e^(-4pi)	E^(-4*Pi)	3.4873423562089954918e-6	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-5pi)	e^(-5pi)	E^(-5*Pi)	1.5070172753900646107e-7	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-6pi)	e^(-6pi)	E^(-6*Pi)	6.5124121360799007282e-9	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-7pi)	e^(-7pi)	E^(-7*Pi)	2.8142684574855527211e-10	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-8pi)	e^(-8pi)	E^(-8*Pi)	1.2161556709409308397e-11	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-9pi)	e^(-9pi)	E^(-9*Pi)	5.2554851760064485552e-13	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^(-10pi)	e^(-10pi)	E^(-10*Pi)	2.2711010683240938387e-14	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-e	e^-e	E^(-E)	6.5988035845312537077e-2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	e^-gamma	e^-gamma	E^(-EulerGamma)	5.6145948356688516982e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(2)	log10(2)	Log[10, 2]	3.010299956639811952137389e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(3)	log10(3)	Log[10, 3]	4.771212547196624372950279e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(4)	log10(4)	Log[10, 4]	6.020599913279623904274778e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(5)	log10(5)	Log[10, 5]	6.989700043360188047862611e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(6)	log10(6)	Log[10, 6]	7.781512503836436325087668e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(7)	log10(7)	Log[10, 7]	8.450980400142568307122163e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(8)	log10(8)	Log[10, 8]	9.030899869919435856412167e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(9)	log10(9)	Log[10, 9]	9.542425094393248745900558e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(11)	log10(11)	Log[10, 11]	1.041392685158225040750200e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(13)	log10(13)	Log[10, 13]	1.113943352306836769206505e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(17)	log10(17)	Log[10, 17]	1.230448921378273928540170e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(19)	log10(19)	Log[10, 19]	1.278753600952828961536333e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(23)	log10(23)	Log[10, 23]	1.361727836017592878867777e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(29)	log10(29)	Log[10, 29]	1.462397997898956087332847e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(31)	log10(31)	Log[10, 31]	1.491361693834272679666704e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(37)	log10(37)	Log[10, 37]	1.568201724066994996808451e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(41)	log10(41)	Log[10, 41]	1.612783856719735494509412e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(43)	log10(43)	Log[10, 43]	1.633468455579586526405088e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(47)	ln(47)	Log[47]	3.8501476017100585868209507e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(53)	ln(53)	Log[53]	3.9702919135521218341444691e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(59)	ln(59)	Log[59]	4.0775374439057194506160504e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(61)	ln(61)	Log[61]	4.1108738641733112487513891e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(67)	ln(67)	Log[67]	4.2046926193909660596700720e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(71)	ln(71)	Log[71]	4.2626798770413154213294545e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(73)	ln(73)	Log[73]	4.2904594411483911290921089e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(79)	ln(79)	Log[79]	4.3694478524670214941729455e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(83)	ln(83)	Log[83]	4.4188406077965979234754722e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(89)	ln(89)	Log[89]	4.4886363697321398383178155e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(97)	ln(97)	Log[97]	4.5747109785033828221167216e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(pi)	ln(pi)	Log[Pi]	1.144729885849400174143427e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(sqrt(2pi))	ln(sqrt(2pi))	Log[Sqrt[2*Pi]]	9.189385332046727417803296e-1	erratum: last digit, 0.9189385332046727417803296 should be ...297 (0.91893853320467274178032974)
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1ln(10)	1ln(10)	1*Log[10]	2.302585092994045684017991e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	2ln(10)	2ln(10)	2*Log[10]	4.605170185988091368035983e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	3ln(10)	3ln(10)	3*Log[10]	6.907755278982137052053974e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	4ln(10)	4ln(10)	4*Log[10]	9.210340371976182736071966e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	5ln(10)	5ln(10)	5*Log[10]	1.151292546497022842008996e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	6ln(10)	6ln(10)	6*Log[10]	1.381551055796427410410795e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	7ln(10)	7ln(10)	7*Log[10]	1.611809565095831978812594e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	8ln(10)	8ln(10)	8*Log[10]	1.842068074395236547214393e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	9ln(10)	9ln(10)	9*Log[10]	2.072326583694641115616192e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^1	pi^1	Pi^1	3.141592653589793238462643e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^2	pi^2	Pi^2	9.869604401089358618834491e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^3	pi^3	Pi^3	3.100627668029982017547632e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^4	pi^4	Pi^4	9.740909103400243723644033e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^5	pi^5	Pi^5	3.060196847852814532627413e2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^6	pi^6	Pi^6	9.613891935753044370302194e2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^7	pi^7	Pi^7	3.020293227776792067514206e3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^8	pi^8	Pi^8	9.488531016070574007128576e3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^9	pi^9	Pi^9	2.980909933344621166650940e4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^10	pi^10	Pi^10	9.364804747608302097371669e4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi/2	pi/2	Pi/2	1.570796326794896619231322e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi/3	pi/3	Pi/3	1.047197551196597746154214e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi/4	pi/4	Pi/4	7.853981633974483096156608e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(1/2)	pi^(1/2)	Pi^(1/2)	1.772453850905516027298167e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(1/3)	pi^(1/3)	Pi^(1/3)	1.464591887561523263020143e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(1/4)	pi^(1/4)	Pi^(1/4)	1.331335363800389712797535e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(2/3)	pi^(2/3)	Pi^(2/3)	2.145029397111025600077444e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(3/4)	pi^(3/4)	Pi^(3/4)	2.359730492414696887578474e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(3/2)	pi^(3/2)	Pi^(3/2)	5.568327996831707845284818e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^e	pi^e	Pi^E	2.245915771836104547342715e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	(2pi)^(1/2)	(2pi)^(1/2)	(2*Pi)^(1/2)	2.506628274631000502415765e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	(pi/2)^(1/2)	(pi/2)^(1/2)	(Pi/2)^(1/2)	1.253314137315500251207883e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi(2)^(-1/2)	pi(2)^(-1/2)	Pi*2^(-1/2)	2.221441469079183123507940e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1 radian in degrees	1 radian in degrees	180/Pi	57.295779513082320876798155e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1 degree in radians	1 degree in radians	Pi/180	0.017453292519943295769237e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	gamma	gamma	EulerGamma	0.577215664901532860606512e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(1/2)	Gamma(1/2)	Gamma[1/2]	1.772453850905516e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(1/3)	Gamma(1/3)	Gamma[1/3]	2.678938534707748e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(2/3)	Gamma(2/3)	Gamma[2/3]	1.354117939426400e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(1/4)	Gamma(1/4)	Gamma[1/4]	3.625609908221908e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(3/4)	Gamma(3/4)	Gamma[3/4]	1.225416702465178e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(4/3)	Gamma(4/3)	Gamma[4/3]	0.892979511569249e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(5/3)	Gamma(5/3)	Gamma[5/3]	0.902745292950934e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(5/4)	Gamma(5/4)	Gamma[5/4]	0.906402477055477e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	Gamma(7/4)	Gamma(7/4)	Gamma[7/4]	0.919062526848883e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(Gamma(1/3))	ln(Gamma(1/3))	LogGamma[1/3]	0.985420646927767e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(Gamma(2/3))	ln(Gamma(2/3))	LogGamma[2/3]	0.303150275147523e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(Gamma(1/4))	ln(Gamma(1/4))	LogGamma[1/4]	1.288022524698077e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(Gamma(3/4))	ln(Gamma(3/4))	LogGamma[3/4]	0.203280951431296e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(47)	log10(47)	Log[10, 47]	1.672097857935717464414219e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(53)	log10(53)	Log[10, 53]	1.724275869600789045632992e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(59)	log10(59)	Log[10, 59]	1.770852011642144190260656e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(61)	log10(61)	Log[10, 61]	1.785329835010767033885749e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(67)	log10(67)	Log[10, 67]	1.826074802700826434149132e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(71)	log10(71)	Log[10, 71]	1.851258348719075286092829e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(73)	log10(73)	Log[10, 73]	1.863322860120455901074387e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(79)	log10(79)	Log[10, 79]	1.897627091290441427994821e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(83)	log10(83)	Log[10, 83]	1.919078092376073903832760e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(89)	log10(89)	Log[10, 89]	1.949390006644912784723543e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(97)	log10(97)	Log[10, 97]	1.986771734266244851784362e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(pi)	log10(pi)	Log[10, Pi]	4.971498726941338543512683e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	log10(e)	log10(e)	Log[10, E]	4.342944819032518276511289e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1pi	1pi	1*Pi	3.141592653589793238462643e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	2pi	2pi	2*Pi	6.283185307179586476925287e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	3pi	3pi	3*Pi	9.424777960769379715387930e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	4pi	4pi	4*Pi	1.256637061435917295385057e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	5pi	5pi	5*Pi	1.570796326794896619231322e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	6pi	6pi	6*Pi	1.884955592153875943077586e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	7pi	7pi	7*Pi	2.199114857512855266923850e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	8pi	8pi	8*Pi	2.513274122871834590770115e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	9pi	9pi	9*Pi	2.827433388230813914616379e1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-1	pi^-1	Pi^(-1)	3.183098861837906715377675e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-2	pi^-2	Pi^(-2)	1.013211836423377714438795e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-3	pi^-3	Pi^(-3)	3.225153443319948918442205e-2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-4	pi^-4	Pi^(-4)	1.026598225468433518915278e-2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-5	pi^-5	Pi^(-5)	3.267763643053385472628250e-3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-6	pi^-6	Pi^(-6)	1.040161473295852296089838e-3	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-7	pi^-7	Pi^(-7)	3.310936801775667643259528e-4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-8	pi^-8	Pi^(-8)	1.053903916534936663317287e-4	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-9	pi^-9	Pi^(-9)	3.354680357208869128739854e-5	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-10	pi^-10	Pi^(-10)	1.067827922686153366204078e-5	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	3pi/2	3pi/2	3*Pi/2	4.712388980384689857693965e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	4pi/3	4pi/3	4*Pi/3	4.188790204786390984616858e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi(2)^(1/2)	pi(2)^(1/2)	Pi*2^(1/2)	4.442882938158366247015881e0	corrected since the first printing (asterisk)
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(-1/2)	pi^(-1/2)	Pi^(-1/2)	5.641895835477562869480795e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(-1/3)	pi^(-1/3)	Pi^(-1/3)	6.827840632552956814670208e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(-1/4)	pi^(-1/4)	Pi^(-1/4)	7.511255444649424828587030e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(-2/3)	pi^(-2/3)	Pi^(-2/3)	4.661940770354116143819885e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(-3/4)	pi^(-3/4)	Pi^(-3/4)	4.237772081237575967910077e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^(-3/2)	pi^(-3/2)	Pi^(-3/2)	1.795871221251665616890820e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	pi^-e	pi^-e	Pi^(-E)	4.452526726692290615135273e-2	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	(2pi)^(-1/2)	(2pi)^(-1/2)	(2*Pi)^(-1/2)	3.989422804014326779399461e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	(2/pi)^(1/2)	(2/pi)^(1/2)	(2/Pi)^(1/2)	7.978845608028653558798921e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	2^(1/2)/pi	2^(1/2)/pi	2^(1/2)/Pi	4.501581580785530347775996e-1	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1 arcminute in radians	1 arcminute in radians	Pi/10800	0.000290888208665721596154e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1 arcsecond in radians	1 arcsecond in radians	Pi/648000	0.000004848136811095359936e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(gamma)	ln(gamma)	Log[EulerGamma]	-0.549539312981644822337662e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(1/2)	1/Gamma(1/2)	1/Gamma[1/2]	0.564189583547756e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(1/3)	1/Gamma(1/3)	1/Gamma[1/3]	0.373282173907395e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(2/3)	1/Gamma(2/3)	1/Gamma[2/3]	0.738488111621648e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(1/4)	1/Gamma(1/4)	1/Gamma[1/4]	0.275815662830209e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(3/4)	1/Gamma(3/4)	1/Gamma[3/4]	0.816048939098263e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(4/3)	1/Gamma(4/3)	1/Gamma[4/3]	1.119846521722186e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(5/3)	1/Gamma(5/3)	1/Gamma[5/3]	1.107732167432472e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(5/4)	1/Gamma(5/4)	1/Gamma[5/4]	1.103262651320837e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	1/Gamma(7/4)	1/Gamma(7/4)	1/Gamma[7/4]	1.088065252131017e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(Gamma(4/3))	ln(Gamma(4/3))	LogGamma[4/3]	-0.113191641740343e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(Gamma(5/3))	ln(Gamma(5/3))	LogGamma[5/3]	-0.102314832960640e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(Gamma(5/4))	ln(Gamma(5/4))	LogGamma[5/4]	-0.098271836421813e0	
+Abramowitz & Stegun, Table 1.1 (10th printing 1972, archive.org AandS-mono600 OCR)	ln(Gamma(7/4))	ln(Gamma(7/4))	LogGamma[7/4]	-0.084401121020486e0	
