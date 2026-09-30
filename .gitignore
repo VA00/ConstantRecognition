@@ -131,3 +131,4 @@ synthetic_benchmark/*.csv
 
 # ==== Debug files ====
 found.txt
+benchmark/formula_values_cache.wl

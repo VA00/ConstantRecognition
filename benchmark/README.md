@@ -2,14 +2,14 @@
 
 ## v0: published real constants
 
-`constants_v0.tsv`: 228 real constants from published, hand-made lists. No generated or random
+`constants_v0.tsv`: 490 real constants from published, hand-made lists. No generated or random
 formulas, no complex constants. A proof of concept for a standard benchmark; recognition runs over it
 are done by hand, not automated.
 
 | Column | Meaning |
 |---|---|
 | `id` | row number, constants sorted by value |
-| `name` | name from the first source in the order Wikipedia, GSL, Bronstein, Boost |
+| `name` | name from the first source in the order Wikipedia, Wolfram, GSL, Bronstein, Boost |
 | `value` | the ground truth as a decimal string |
 | `digits` | significant digits of `value` that are reliable: 64, or fewer when only fewer published digits exist |
 | `formula` | Mathematica formula, empty when no closed form is known |
@@ -18,7 +18,7 @@ are done by hand, not automated.
 | `check` | `ok`: every source agrees with `value` within one unit of its last digit |
 | `notes` | how the value was obtained when not from the formula, errata of a source |
 
-Classes: 138 elementary, 44 special, 21 algebraic, 9 rational, 16 without closed form.
+Classes: 181 elementary, 229 special, 47 algebraic, 12 rational, 21 without closed form.
 
 ### Sources
 
@@ -28,6 +28,14 @@ Classes: 138 elementary, 44 special, 21 algebraic, 9 rational, 16 without closed
 | Boost.Math `constants.hpp`, https://github.com/boostorg/math/blob/develop/include/boost/math/constants/constants.hpp (fetched 2026-09-29) | 79 | 100+ |
 | Wikipedia, List of mathematical constants, as collected in `Mathematica/SyntheticBenchmark.nb` | 100 | 20 |
 | Bronstein, Taschenbuch der Mathematik, Table A.1, as collected in `synthetic_benchmark/BronsteinConstants.nb` | 104 | 5-7 |
+| Wolfram Knowledgebase, `EntityList["MathematicalConstant"]` (Mathematica 15.0.1, fetched 2026-09-30) | 352 | 200 for most, 2-12 for some |
+
+The Wolfram constants are imported by `import_wolfram_constants.wls` (needs internet access): the
+DefiningFormula, the NumericalApproximation with the digits its precision claims, and every
+AlternateDefinitions entry as one more row (key `<name>/alt<i>`, no digits), so that the definitions
+are checked against each other. Of the 436 entities, 5 with complex values are skipped, and 79 with
+neither a value nor a formula (among them EulerGamma, Khinchin and Feigenbaum, present from other
+sources). Notes written by hand on Wolfram rows survive a re-import.
 
 `constants_v0_sources.tsv` holds one row per constant per source: source, key, name, formula, the digits
 exactly as published (copied from the files by a script, never typed), and a note. It is the file to edit;
@@ -41,35 +49,55 @@ are written with 64 significant digits (a power of two, to avoid a base-10 bias;
 longer than that are rounded to 64). Every published digit string must agree with the value within one
 unit of its last digit, or as far as the computed value reaches when a source publishes more digits.
 
-Precision is not proof. For two constants Mathematica reports Precision 80 and is wrong:
+Precision is not proof. For numerical sums, products, integrals and limits Mathematica reports
+Precision 80 or more and is often wrong, for example:
 
 - Kepler-Bouwkamp, `Product[Cos[Pi/n], {n, 3, Infinity}]`: wrong after 26.8 digits
 - asymptotic Lebesgue constant, with `Sum[Log[k]/(4k^2 - 1), {k, 1, Infinity}]`: wrong after 29 digits
+- Alladi-Grinstead, spiral of Theodorus, Khinchin-Levy sum, Lueroth: wrong after about 27 digits;
+  Renyi parking after 43; rabbit constant `Sum[2^-Floor[k GoldenRatio], ...]` after 8
+- Brun quadruple, Gaussian twin prime and Shanks constants (products over primes with `Piecewise`):
+  wrong after 1-3 digits
 
-Their defining formulas are marked `N-unreliable` in the sources and kept for their meaning; the values
-come from geometrically converging series, computed in Mathematica with numeric arguments (source rows
+In all of these the published digits are right (checked with mpmath to 90 digits where possible). So a
+formula with `Sum`, `Product`, `Integrate` or `Limit` is never trusted, and its constant takes the
+published digits. Its N[] value only helps to find the constant it belongs to (as if it had 20 digits),
+and the build prints how far each such N[] value agrees with the constant's value, as evidence, not as
+a check. Exceptions are the rows of source "fast-converging series, computed", sums written by hand to
+converge geometrically, with numeric arguments.
+
+The Wikipedia formulas for Kepler-Bouwkamp and the Lebesgue constant are also marked `N-unreliable`;
+their values come from geometrically converging series, computed in Mathematica with numeric arguments (source rows
 "fast-converging series, computed"): log K = -sum_k (4^k-1) zeta(2k) zeta(2k,3)/k, and
 sum_k log(k)/(4k^2-1) = -sum_j 4^-j zeta'(2j). With an exact 3, Mathematica rewrites `HurwitzZeta[2k, 3]`
 into the cancelling zeta(2k) - 1 - 4^-k, so the arguments must be numeric.
 
 Because precision can be claimed wrongly, `check_constants_v0.py` recomputes every value with a second,
 independent tool, mpmath, from the same formulas (translated to mpmath, or hand-written for sums,
-products, integrals and roots with a seed): 207 of 228 values agree to all their digits. Not checked
-independently: 15 constants without closed form and 6 products or sums over primes (Artin, Stephens,
-Feller-Tornier, Taniguchi, Heath-Brown-Moroz, prime constant), whose values are the published digits.
+products, integrals and roots with a seed): 324 of 490 values agree to all their digits. The other 166
+(no closed form, sums over primes, functions mpmath lacks, most Wolfram sums) are each confirmed by
+published digits: the value is published digits, or a source publishes 64 digits or more and the build
+checks it against the value. The checker fails when a value rests on Mathematica's N[] alone.
 
 Errata found in the collected lists, kept in the sources with a note:
 
 - Conway's constant: digits `1.3035771269...` have an extra 1, correct `1.303577269...`
 - universal parabolic constant: digits `2.2955871493392...` are garbled, correct `2.2955871493926...`
 - Lochs constant: the formula was `0`, now `6 Log[2] Log[10]/Pi^2`
+- Wolfram infinite product constant: the DefiningFormula is prod_{k>=1} (1+1/k)^(1/k) = 3.5174872559...,
+  the published digits 1.7587436... are the product from k = 2, half of it. The value comes from the
+  series 2 exp(sum_n (-1)^(n+1) (zeta(n+1)-1)/n)
 
 ### Rebuild and check
 
 ```
-wolframscript -file build_constants_v0.wls   # writes constants_v0.tsv, prints mismatches
-python check_constants_v0.py                 # mpmath: needs mpmath (pip install mpmath)
+wolframscript -file import_wolfram_constants.wls   # only to refresh the Wolfram rows
+wolframscript -file build_constants_v0.wls         # writes constants_v0.tsv, prints mismatches
+python check_constants_v0.py                       # mpmath: needs mpmath (pip install mpmath)
 ```
+
+The build keeps the N[] values of all formulas in `formula_values_cache.wl` (not in the repository),
+per Mathematica version: the first build evaluates them on all kernels (up to 60 s each), later ones take seconds.
 
 Both must report no mismatch and no constant below its stated digits. To add a constant, add a row per
 source to `constants_v0_sources.tsv`, rebuild and check; a new sum, product, integral or root with a seed
@@ -78,5 +106,4 @@ also needs a hand-written mpmath expression in `MANUAL` of the checker.
 ### Candidate sources for later versions
 
 Not used yet: Abramowitz & Stegun Table 1.1; Finch, Mathematical Constants; OEIS decimal expansions
-(with b-files for many digits); the Wolfram Knowledgebase (`EntityList["MathematicalConstant"]`);
-MathWorld; Plouffe's tables.
+(with b-files for many digits); MathWorld; Plouffe's tables.

@@ -18,7 +18,10 @@ recomputed here with a second, independent tool, mpmath:
     hand-written mpmath expression (MANUAL below).
 
 Prints every constant that mpmath does not reproduce to its stated digits,
-and every constant it could not check.
+and every constant it could not check. A constant it could not check is
+still confirmed when its value is published digits (fewer than 64) or when a
+source publishes 64 digits or more (the build checks those against the
+value); one resting on Mathematica's N[] alone is an error.
 
 Usage (from this directory):  python check_constants_v0.py
 """
@@ -46,8 +49,21 @@ MMA = {
     'ExpIntegralEi': mp.ei, 'ProductLog': lambda x: mp.re(mp.lambertw(x)),
     'Pi': mp.pi, 'E': mp.e, 'GoldenRatio': mp.phi, 'EulerGamma': mp.euler, 'Catalan': mp.catalan,
     'Glaisher': mp.glaisher, 'Khinchin': mp.khinchin, 'Degree': mp.pi / 180,
+    # special functions in the Wolfram Knowledgebase formulas (Mathematica conventions)
+    'Sech': mp.sech, 'Csch': mp.csch, 'Coth': mp.coth, 'ArcCoth': mp.acoth, 'ArcSech': mp.asech, 'ArcCsch': mp.acsch,
+    'EllipticK': mp.ellipk, 'EllipticE': lambda *a: mp.ellipe(*a),     # parameter m, as Mathematica
+    'AiryAi': mp.airyai, 'AiryBi': mp.airybi,
+    'AiryAiPrime': lambda x: mp.airyai(x, derivative=1), 'AiryBiPrime': lambda x: mp.airybi(x, derivative=1),
+    'BesselJ': mp.besselj, 'BesselY': mp.bessely, 'BesselK': mp.besselk,
+    'BesselJZero': lambda n, k: mp.besseljzero(n, k),
+    'PolyLog': mp.polylog, 'LogIntegral': mp.li, 'CosIntegral': mp.ci, 'SinIntegral': mp.si,
+    'Erf': mp.erf, 'Erfc': mp.erfc, 'Beta': mp.beta, 'Hypergeometric2F1': mp.hyp2f1,
+    'Gamma2': None, 'LogGamma': mp.loggamma, 'BarnesG': mp.barnesg, 'StieltjesGamma': mp.stieltjes,
+    'LerchPhi': mp.lerchphi, 'Factorial': mp.factorial, 'Binomial': mp.binomial,
     'mpf': mp.mpf,
 }
+MMA['Gamma'] = lambda *a: mp.gamma(a[0]) if len(a) == 1 else mp.gammainc(a[0], a[1])   # Gamma[a, x]: upper incomplete
+del MMA['Gamma2']
 
 
 def fib(n):
@@ -109,7 +125,7 @@ def mp_value(name, formula):
         return mp.mpf(MANUAL[name]()), 'manual'
     if formula.startswith('Root['):
         return root(formula), 'Root'
-    if re.search(r'Sum\[|Product\[|Integrate\[|Derivative|Prime\[|#', formula):
+    if re.search(r'Sum\[|Product\[|Integrate\[|Limit\[|Derivative|Prime\[|#|\\\[Formal|Entity\[', formula):
         raise ValueError('needs a MANUAL entry')
     return mp.mpf(mp.re(eval(translate(formula), {'__builtins__': {}}, MMA))), 'translated'
 
@@ -137,10 +153,19 @@ def main():
     print(f'\nBELOW their stated digits ({len(low)}):')
     for name, stated, agree, how, f in low:
         print(f'  {name}: stated {stated}, mpmath agrees to {agree:.1f} ({how})   {f[:70]}')
-    print(f'\nNot checked by mpmath ({len(unchecked)}):')
+    by_name = {r['name']: r for r in rows}
+
+    def confirmed_by_published(name):
+        r = by_name[name]
+        return int(r['digits']) < 64 or max([int(d) for d in re.findall(r'\((\d+)\)', r['sources'])] or [0]) >= 64
+    alone = [(n, why) for n, why in unchecked if not confirmed_by_published(n)]
+    print(f'\nNot checked by mpmath ({len(unchecked)}), of them {len(unchecked) - len(alone)} confirmed by published digits:')
     for name, why in unchecked:
         print(f'  {name}: {why}')
-    return 1 if low else 0
+    print(f'\nNeither mpmath nor published digits, Mathematica N[] alone ({len(alone)}):')
+    for name, why in alone:
+        print(f'  {name}: {why}')
+    return 1 if low or alone else 0
 
 
 if __name__ == '__main__':
