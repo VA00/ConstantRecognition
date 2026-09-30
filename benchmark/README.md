@@ -177,4 +177,9 @@ also needs a hand-written mpmath expression in `MANUAL` of the checker.
 ### Candidate sources for later versions
 
 For the larger, separate benchmark: Finch's two books themselves; the other OEIS decimal expansions
-(about 14000, with b-files for many digits); MathWorld.
+(about 14000, with b-files for many digits).
+
+Not used: MathWorld. It is not independent of the Wolfram Knowledgebase (same editor; the
+`MathematicalConstant` entities are its constant pages in structured form), its values are given in the
+text to 10-20 digits, mostly computed in Mathematica or taken from OEIS, and it has no machine-readable
+digits.
