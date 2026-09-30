@@ -2,14 +2,14 @@
 
 ## v0: published real constants
 
-`constants_v0.tsv`: 712 real constants from published, hand-made lists. No generated or random
+`constants_v0.tsv`: 744 real constants from published, hand-made lists. No generated or random
 formulas, no complex constants. A proof of concept for a standard benchmark; recognition runs over it
 are done by hand, not automated.
 
 | Column | Meaning |
 |---|---|
 | `id` | row number, constants sorted by value |
-| `name` | name from the first source in the order Wikipedia, Wolfram, GSL, Bronstein, Boost, Abramowitz & Stegun, OEIS |
+| `name` | name from the first source in the order Wikipedia, Wolfram, GSL, Bronstein, Boost, Abramowitz & Stegun, OEIS, Plouffe |
 | `value` | the ground truth as a decimal string |
 | `digits` | significant digits of `value` that are reliable: 64, or fewer when only fewer published digits exist |
 | `formula` | Mathematica formula, empty when no closed form is known |
@@ -18,7 +18,7 @@ are done by hand, not automated.
 | `check` | `ok`: every source agrees with `value` within one unit of its last digit |
 | `notes` | how the value was obtained when not from the formula, errata of a source |
 
-Classes: 315 elementary, 263 special, 84 algebraic, 13 rational, 37 without closed form.
+Classes: 330 elementary, 276 special, 86 algebraic, 13 rational, 39 without closed form.
 
 ### Sources
 
@@ -31,6 +31,7 @@ Classes: 315 elementary, 263 special, 84 algebraic, 13 rational, 37 without clos
 | Wolfram Knowledgebase, `EntityList["MathematicalConstant"]` (Mathematica 15.0.1, fetched 2026-09-30) | 352 | 200 for most, 2-12 for some |
 | Abramowitz & Stegun, Handbook of Mathematical Functions, Table 1.1, 10th printing (1972), scan https://archive.org/details/AandS-mono600 | 251 | 15-26 |
 | OEIS decimal expansions with keyword `nice` or `core`, https://oeis.org (fetched 2026-09-30) | 52 | 5-210 |
+| Plouffe, Miscellaneous Mathematical Constants, Project Gutenberg #634 (1996), https://www.gutenberg.org/ebooks/634 | 109 | 17-256 (truncated) |
 
 The Wolfram constants are imported by `import_wolfram_constants.wls` (needs internet access): the
 DefiningFormula, the NumericalApproximation with the digits its precision claims, and every
@@ -53,6 +54,14 @@ terms of the sequence, the formulas are written in the script from the entry. Le
 are not constants (all 1s, n mod 2, ...), physical measurements (proton mass), the order of the Monster
 group, a binary expansion, and Brun's constant with 9 digits (a duplicate that has too few digits to be
 merged by value).
+
+Plouffe's Miscellaneous Mathematical Constants (1996, not the Inverse Symbolic Calculator tables) is
+imported by `import_plouffe_constants.py`: the text is split into its sections, each checked by its
+title, and the formula of each section is written in the script. Its digits (1000-170000 for most,
+truncated here to 256) were computed in Maple and elsewhere, independently of Mathematica, and are a
+second source for about 80 constants. The last sections are identification requests sent to the ISC
+in 1995-1996; the ones that remain unidentified are left out, and so is one whose proposed answer,
+-Integrate[Sqrt[x]/Log[1 - x], {x, 0, 1}], agrees with the number to 16 of its 24 digits only.
 
 `constants_v0_sources.tsv` holds one row per constant per source: source, key, name, formula, the digits
 exactly as published (copied from the files by a script, never typed), and a note. It is the file to edit;
@@ -91,7 +100,7 @@ into the cancelling zeta(2k) - 1 - 4^-k, so the arguments must be numeric.
 
 Because precision can be claimed wrongly, `check_constants_v0.py` recomputes every value with a second,
 independent tool, mpmath, from the same formulas (translated to mpmath, or hand-written for sums,
-products, integrals and roots with a seed): 531 of 712 values agree to all their digits. The other 181
+products, integrals and roots with a seed): 558 of 744 values agree to all their digits. The other 186
 (no closed form, sums over primes, functions mpmath lacks, most Wolfram sums) are each confirmed by
 published digits: the value is published digits, or a source publishes 64 digits or more and the build
 checks it against the value. The checker fails when a value rests on Mathematica's N[] alone.
@@ -104,6 +113,8 @@ Errata found in the collected lists, kept in the sources with a note:
 - Abramowitz & Stegun Table 1.1, last digit off by more than one unit: 10^(1/3) `2.1544346900318837219`
   (correct ...218), 100^(1/5) `2.5118864315095801112` (...111), ln sqrt(2 pi) `0.9189385332046727417803296`
   (...297)
+- Plouffe, Artin's constant: digit 27 is 5, correct 4 (`...0543465164...` vs `...0543464164...`)
+- Plouffe, Renyi parking constant: wrong after 26 digits (`...094363652...` vs `...094383017...`)
 - Wolfram infinite product constant: the DefiningFormula is prod_{k>=1} (1+1/k)^(1/k) = 3.5174872559...,
   the published digits 1.7587436... are the product from k = 2, half of it. The value comes from the
   series 2 exp(sum_n (-1)^(n+1) (zeta(n+1)-1)/n)
@@ -114,6 +125,7 @@ Errata found in the collected lists, kept in the sources with a note:
 wolframscript -file import_wolfram_constants.wls   # only to refresh the Wolfram rows
 python import_aands_table_1_1.py                   # only to refresh the A&S rows (fetches the OCR)
 python import_oeis_nice_core.py                    # only to refresh the OEIS rows
+python import_plouffe_constants.py                 # only to refresh the Plouffe rows
 wolframscript -file build_constants_v0.wls         # writes constants_v0.tsv, prints mismatches
 python check_constants_v0.py                       # mpmath: needs mpmath (pip install mpmath)
 ```
@@ -128,4 +140,4 @@ also needs a hand-written mpmath expression in `MANUAL` of the checker.
 ### Candidate sources for later versions
 
 Not used yet: Finch, Mathematical Constants; the other OEIS decimal expansions (a separate benchmark,
-with b-files for many digits); MathWorld; Plouffe's tables.
+with b-files for many digits); MathWorld.

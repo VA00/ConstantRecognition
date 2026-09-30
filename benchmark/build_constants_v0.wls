@@ -111,11 +111,12 @@ rows = MapIndexed[Module[{r = #1, p = published[#1[[5]]]},
 (* for grouping only: a numerical N[] value places its row among the
    constants when no 12 published digits do, as if it had 20 digits; it is
    never the value of a constant *)
-(* published digits with an erratum note do not place their row *)
+(* published digits with an erratum note place their row only when nothing else does
+   (the errors are beyond the 20 digits that grouping compares) *)
 pd[r_] := If[StringStartsQ[r["note"], "erratum"], 0, r["pdigits"]];
 best[r_] := Which[NumericQ[r["trusted"]], r["trusted"], pd[r] >= 12, r["pvalue"], NumericQ[r["nvalue"]], r["nvalue"],
-   pd[r] > 0, r["pvalue"], True, Missing["none"]];
-bestDigits[r_] := Which[NumericQ[r["trusted"]], 64, pd[r] >= 12, pd[r], NumericQ[r["nvalue"]], 20, True, pd[r]];
+   pd[r] > 0 || NumericQ[r["pvalue"]], r["pvalue"], True, Missing["none"]];
+bestDigits[r_] := Which[NumericQ[r["trusted"]], 64, pd[r] >= 12, pd[r], NumericQ[r["nvalue"]], 20, True, r["pdigits"]];
 {valueless, rows} = {Select[rows, MissingQ[best[#]] &], Select[rows, !MissingQ[best[#]] &]};
 (* Two rows are one constant when both are known to >= 12 digits and agree to
    all the digits both have, at most 20. Not fewer: a 12-digit key merged
@@ -133,7 +134,7 @@ Print["constants: ", Length[groups], "   rows without any value: ", Length[value
   "   without ground truth (numerical N[] only): ", StringRiffle[#["key"] & /@ Flatten[noTruth], ", "]];
 
 (* names and the displayed formula come from the first source in this order *)
-priority = {"Wikipedia", "Wolfram", "GSL", "Bronstein,", "Boost.Math", "Abramowitz", "OEIS", "fast-converging"};
+priority = {"Wikipedia", "Wolfram", "GSL", "Bronstein,", "Boost.Math", "Abramowitz", "OEIS", "Plouffe,", "fast-converging"};
 rank[r_] := FirstPosition[priority, shortSource[r["source"]], {99}][[1]];
 
 out = Table[Module[{g = SortBy[grp, {rank[#], #["idx"]} &], tr, value, digits, formula, checks, fchecks, notes = {}, ref, tol},
