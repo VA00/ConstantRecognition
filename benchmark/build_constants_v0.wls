@@ -114,6 +114,9 @@ rows = MapIndexed[Module[{r = #1, p = published[#1[[5]]]},
 (* published digits with an erratum note place their row only when nothing else does
    (the errors are beyond the 20 digits that grouping compares) *)
 pd[r_] := If[StringStartsQ[r["note"], "erratum"], 0, r["pdigits"]];
+(* rows noted "excluded" are left out of the benchmark (see README) *)
+{excluded, rows} = {Select[rows, StringStartsQ[#["note"], "excluded"] &], Select[rows, !StringStartsQ[#["note"], "excluded"] &]};
+Print["excluded rows: ", StringRiffle[#["key"] & /@ excluded, ", "]];
 best[r_] := Which[NumericQ[r["trusted"]], r["trusted"], pd[r] >= 12, r["pvalue"], NumericQ[r["nvalue"]], r["nvalue"],
    pd[r] > 0 || NumericQ[r["pvalue"]], r["pvalue"], True, Missing["none"]];
 bestDigits[r_] := Which[NumericQ[r["trusted"]], 64, pd[r] >= 12, pd[r], NumericQ[r["nvalue"]], 20, True, r["pdigits"]];

@@ -43,7 +43,7 @@ plain[Subscript[a_, b_]] := plain[a] <> "_" <> plain[b];
 plain[Row[l_List, ___]] := StringJoin[plain /@ l];
 plain[Style[x_, ___]] := plain[x];
 plain[x_] := ToString[x, InputForm];
-nameText[n_] := StringReplace[plain[n], {"\[ExponentialE]" -> "e", "E" ~~ EndOfString -> "e", "\[Hyphen]" -> "-", "\[NonBreakingHyphen]" -> "-"}];
+nameText[n_] := StringReplace[plain[n], {"\[ExponentialE]" -> "e", "E" ~~ EndOfString -> "e", "\[ImaginaryI]" -> "i", "\[Hyphen]" -> "-", "\[NonBreakingHyphen]" -> "-"}];
 
 (* one line of text: some names are typeset expressions (e^-e, pi^pi), not strings *)
 field[x_String] := StringTrim[StringReplace[x, {"

@@ -26,6 +26,7 @@ value); one resting on Mathematica's N[] alone is an error.
 Usage (from this directory):  python check_constants_v0.py
 """
 import csv
+from fractions import Fraction
 import re
 import sys
 
@@ -71,6 +72,43 @@ MMA['Gamma'] = lambda *a: mp.gamma(a[0]) if len(a) == 1 else mp.gammainc(a[0], a
 del MMA['Gamma2']
 
 
+def primes_up_to(n):
+    sieve = bytearray([1]) * (n + 1)
+    sieve[0] = sieve[1] = 0
+    for i in range(2, int(n ** 0.5) + 1):
+        if sieve[i]:
+            sieve[i * i::i] = bytearray(len(sieve[i * i::i]))
+    return [i for i in range(n + 1) if sieve[i]]
+
+
+def log_series(poly, n):
+    """Exact coefficients a_1..a_n of log(poly(x)), poly a list of integer coefficients with poly[0] = 1."""
+    f = [Fraction(c) for c in poly] + [Fraction(0)] * (n + 1)
+    a = [Fraction(0)] * (n + 1)
+    for m in range(1, n + 1):
+        a[m] = f[m] - sum((k * a[k] * f[m - k] for k in range(1, m)), Fraction(0)) / m
+    return a
+
+
+def euler_product(num, den, first=1, explicit=200, terms=40):
+    """prod over primes p >= prime(first) of num(1/p)/den(1/p), num and den integer polynomials in x = 1/p
+    with constant term 1. The first `explicit` primes are multiplied directly; for the rest,
+    log prod = sum_k a_k (P(k) - sum_{p <= prime(explicit)} p^-k), with P the prime zeta function and a_k the
+    exact coefficients of log(num/den): the tail converges like prime(explicit)^-k. The standard method for
+    Hardy-Littlewood type constants (H. Cohen, P. Moree)."""
+    primes = primes_up_to(10**5)[first - 1:first - 1 + explicit]
+    head = mp.fprod(mp.polyval(num[::-1], mp.mpf(1) / p) / mp.polyval(den[::-1], mp.mpf(1) / p) for p in primes)
+    a = [x - y for x, y in zip(log_series(num, terms), log_series(den, terms))]
+    small = primes_up_to(primes[-1])    # all primes up to the last explicit one
+    tail = mp.fsum(mp.mpf(a[k].numerator) / a[k].denominator * (mp.primezeta(k) - mp.fsum(mp.mpf(p) ** -k for p in small))
+                   for k in range(2, terms + 1) if a[k])
+    return head * mp.exp(tail)
+
+
+def thue_morse(n_bits=300):
+    return mp.fsum(mp.mpf(bin(n).count('1') % 2) / mp.mpf(2) ** (n + 1) for n in range(n_bits))
+
+
 def fib(n):
     a, b = 0, 1
     for _ in range(int(n)):
@@ -100,6 +138,28 @@ MANUAL = {
     'Imaginary part of first non-trivial zero of zeta function': lambda: mp.im(mp.zetazero(1)),
     'Meissel-Mertens constant': lambda: mp.mertens,
     'Twin primes constant': lambda: mp.twinprime,
+    # Euler products over primes with a rational factor in x = 1/p: numerator, denominator coefficients
+    "Artin's constant": lambda: euler_product([1, -1, -1], [1, -1]),                       # 1 - 1/(p(p-1))
+    'Feller-Tornier product constant': lambda: euler_product([1, 0, -2], [1]),             # 1 - 2/p^2
+    'Taniguchi constant': lambda: euler_product([1, 0, 0, -3, 2, 1, -1], [1]),             # 1 - 3/p^3 + 2/p^4 + 1/p^5 - 1/p^6
+    'carefree product constant': lambda: euler_product([1, 1, -1], [1, 1]),                # 1 - 1/(p(p+1))
+    'Sarnak constant': lambda: euler_product([1, 0, -1, -2], [1], first=2),                # 1 - (p+2)/p^3, p >= 3
+    'strongly carefree product constant': lambda: euler_product([1, 2], [1, 2, 1]),        # 1 - 1/(p+1)^2
+    'quadratic class number constant': lambda: euler_product([1, 1, 0, -1], [1, 1]),       # 1 - 1/(p^2(p+1))
+    'totient product constant': lambda: euler_product([1, -1, 0, 1], [1, -1]),             # 1 + 1/((p-1)p^2)
+    'inverse of carefree constant': lambda: euler_product([1, 1], [1, 1, -1]),             # 1 + 1/(p^2+p-1)
+    'Barban constant': lambda: euler_product([1, 1, 2, -1, -1], [1, 1, -1, -1]),           # 1 + (3p^2-1)/(p(p+1)(p^2-1))
+    # fast or closed forms of constants whose formulas are sums, products or limits
+    'Prouhet–Thue–Morse constant': lambda: thue_morse(),
+    'Prouhet-Thue-Morse constant': lambda: 2 * thue_morse(),
+    'Prime constant': lambda: mp.fsum(mp.mpf(2) ** -p for p in primes_up_to(400)),
+    'meander connective constant': lambda: mp.fprod(1 - mp.mpf(2) ** -(2 ** k) for k in range(12)),
+    'totient constant': lambda: euler_product([1, -1, 0, 1], [1, -1, -1, 1]),            # sum 1/(n phi(n)) = prod 1 + p/((p-1)^2 (p+1))
+    'infinite tetration of i absolute value': lambda: abs(-mp.lambertw(-mp.log(mp.j)) / mp.log(mp.j)),
+    # sum_k log(1+1/k)/k = sum_n (-1)^(n+1) (zeta(n+1)-1)/n + log 2, geometric
+    'infinite product constant': lambda: 2 * mp.exp(mp.nsum(lambda n: (-1)**(n + 1) * (mp.zeta(n + 1) - 1) / n, [1, mp.inf])),
+    # sum_k 1/((1+k) sqrt k) = 1/2 + sum_j (-1)^j (zeta(3/2+j) - 1), geometric
+    'spiral of Theodorus constant': lambda: mp.mpf(1) / 2 + mp.nsum(lambda j: (-1)**j * (mp.zeta(mp.mpf(3) / 2 + j) - 1), [0, mp.inf]),
 }
 
 

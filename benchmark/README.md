@@ -2,7 +2,7 @@
 
 ## v0: published real constants
 
-`constants_v0.tsv`: 1381 real constants from published, hand-made lists. No generated or random
+`constants_v0.tsv`: 1377 real constants from published, hand-made lists. No generated or random
 formulas, no complex constants. A proof of concept for a standard benchmark; recognition runs over it
 are done by hand, not automated.
 
@@ -18,7 +18,7 @@ are done by hand, not automated.
 | `check` | `ok`: every source agrees with `value` within one unit of its last digit |
 | `notes` | how the value was obtained when not from the formula, errata of a source |
 
-Classes: 402 elementary, 411 special, 133 algebraic, 13 rational, 422 without closed form (in the sources used).
+Classes: 402 elementary, 407 special, 133 algebraic, 13 rational, 422 without closed form (in the sources used).
 
 ### Sources
 
@@ -112,15 +112,31 @@ into the cancelling zeta(2k) - 1 - 4^-k, so the arguments must be numeric.
 
 Because precision can be claimed wrongly, `check_constants_v0.py` recomputes every value with a second,
 independent tool, mpmath, from the same formulas (translated to mpmath, or hand-written for sums,
-products, integrals and roots with a seed): 792 of 1381 values agree to all their digits. The other 589
+products, integrals and roots with a seed): 810 of 1377 values agree to all their digits. The other 567
 (no closed form, sums over primes, functions mpmath lacks, most Wolfram sums) are each confirmed by
 published digits: the value is published digits, or a source publishes 64 digits or more and the build
 checks it against the value. The checker fails when a value rests on Mathematica's N[] alone.
 
 Published digits are not proof either: the Wolfram Knowledgebase digits of two Lueroth constants are
-wrong after 27 digits, like Mathematica's N[] of their sums (see errata). 22 constants rest on Wolfram's
-digits alone, are defined by a sum, product, integral or limit, and are not recomputed by mpmath (most
-are products over primes: Artin, Feller-Tornier, carefree, totient, ...); they need MANUAL entries.
+wrong after 27 digits, like Mathematica's N[] of their sums (see errata). So every constant whose only
+long source is Wolfram and whose definition is a sum, product, integral or limit is recomputed in the
+checker by a method that converges geometrically:
+
+- Euler products over primes with a rational factor, prod_p F(1/p) (Artin, Feller-Tornier, Taniguchi,
+  carefree, strongly carefree, inverse carefree, Sarnak, quadratic class number, totient product,
+  totient sum_n 1/(n phi(n)), Barban): the first 200 primes directly, the rest as
+  exp(sum_k a_k (P(k) - sum_{p <= 1223} p^-k)), with the exact power series coefficients a_k of
+  log F and the prime zeta function P, the standard method for such constants (H. Cohen, P. Moree).
+  The naive product converges like 1/N and cannot give these digits.
+- double-exponentially converging products and sums (Thue-Morse, prod (1 - 2^-2^k), sum 2^-p), closed
+  forms (the power tower of i), and geometric zeta series (spiral of Theodorus, infinite product).
+
+All 18 agree with Wolfram's digits to 64 digits. Four constants are left out (note `excluded` in the
+sources, dropped by the build): the second Backhouse, Grossman, Rutherford and Landau-Ramanujan
+second-order constants. Their digits come from Wolfram alone, their definitions (an internal
+`Extension` function, a limit of a recurrence, an integral of solutions of an ODE, a sum over primes with
+cases) are ones that neither Mathematica's N[] nor our checker evaluates reliably, and no second source
+publishes them. A benchmark value that cannot be confirmed independently is worse than none.
 
 Errata found in the collected lists, kept in the sources with a note:
 
