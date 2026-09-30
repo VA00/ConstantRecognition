@@ -46,7 +46,8 @@ MMA = {
     'ArcSinh': mp.asinh, 'ArcCosh': mp.acosh, 'ArcTanh': mp.atanh,
     'Gamma': mp.gamma, 'Zeta': mp.zeta, 'PolyGamma': lambda n, x: mp.psi(n, x),
     'BesselI': mp.besseli, 'ArithmeticGeometricMean': mp.agm, 'InverseErf': mp.erfinv,
-    'ExpIntegralEi': mp.ei, 'ProductLog': lambda x: mp.re(mp.lambertw(x)),
+    'ExpIntegralEi': mp.ei, 'ProductLog': mp.lambertw,   # principal branch; complex below -1/e
+    'Re': mp.re, 'Im': mp.im, 'I': mp.j, 'PrimeZetaP': mp.primezeta,
     'Pi': mp.pi, 'E': mp.e, 'GoldenRatio': mp.phi, 'EulerGamma': mp.euler, 'Catalan': mp.catalan,
     'Glaisher': mp.glaisher, 'Khinchin': mp.khinchin, 'Degree': mp.pi / 180,
     # special functions in the Wolfram Knowledgebase formulas (Mathematica conventions)

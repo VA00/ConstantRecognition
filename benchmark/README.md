@@ -2,14 +2,14 @@
 
 ## v0: published real constants
 
-`constants_v0.tsv`: 679 real constants from published, hand-made lists. No generated or random
+`constants_v0.tsv`: 712 real constants from published, hand-made lists. No generated or random
 formulas, no complex constants. A proof of concept for a standard benchmark; recognition runs over it
 are done by hand, not automated.
 
 | Column | Meaning |
 |---|---|
 | `id` | row number, constants sorted by value |
-| `name` | name from the first source in the order Wikipedia, Wolfram, GSL, Bronstein, Boost, Abramowitz & Stegun |
+| `name` | name from the first source in the order Wikipedia, Wolfram, GSL, Bronstein, Boost, Abramowitz & Stegun, OEIS |
 | `value` | the ground truth as a decimal string |
 | `digits` | significant digits of `value` that are reliable: 64, or fewer when only fewer published digits exist |
 | `formula` | Mathematica formula, empty when no closed form is known |
@@ -18,7 +18,7 @@ are done by hand, not automated.
 | `check` | `ok`: every source agrees with `value` within one unit of its last digit |
 | `notes` | how the value was obtained when not from the formula, errata of a source |
 
-Classes: 312 elementary, 254 special, 80 algebraic, 12 rational, 21 without closed form.
+Classes: 315 elementary, 263 special, 84 algebraic, 13 rational, 37 without closed form.
 
 ### Sources
 
@@ -30,6 +30,7 @@ Classes: 312 elementary, 254 special, 80 algebraic, 12 rational, 21 without clos
 | Bronstein, Taschenbuch der Mathematik, Table A.1, as collected in `synthetic_benchmark/BronsteinConstants.nb` | 104 | 5-7 |
 | Wolfram Knowledgebase, `EntityList["MathematicalConstant"]` (Mathematica 15.0.1, fetched 2026-09-30) | 352 | 200 for most, 2-12 for some |
 | Abramowitz & Stegun, Handbook of Mathematical Functions, Table 1.1, 10th printing (1972), scan https://archive.org/details/AandS-mono600 | 251 | 15-26 |
+| OEIS decimal expansions with keyword `nice` or `core`, https://oeis.org (fetched 2026-09-30) | 52 | 5-210 |
 
 The Wolfram constants are imported by `import_wolfram_constants.wls` (needs internet access): the
 DefiningFormula, the NumericalApproximation with the digits its precision claims, and every
@@ -44,6 +45,14 @@ the words of each printed line are joined by their positions on the page, and th
 in the order of the table (read from the page images). All 251 values agree with their formulas within
 1.4 units of their last digit. Values marked with an asterisk in the book (corrected since the first
 printing) have a note.
+
+OEIS has about 15,000 decimal expansions of constants (keyword `cons`, about 4% of its 400,000
+sequences). They are too many for this hand-made set and are left for a separate, larger benchmark.
+`import_oeis_nice_core.py` takes only those the editors marked `nice` or `core`: the digits are the
+terms of the sequence, the formulas are written in the script from the entry. Left out: sequences that
+are not constants (all 1s, n mod 2, ...), physical measurements (proton mass), the order of the Monster
+group, a binary expansion, and Brun's constant with 9 digits (a duplicate that has too few digits to be
+merged by value).
 
 `constants_v0_sources.tsv` holds one row per constant per source: source, key, name, formula, the digits
 exactly as published (copied from the files by a script, never typed), and a note. It is the file to edit;
@@ -82,7 +91,7 @@ into the cancelling zeta(2k) - 1 - 4^-k, so the arguments must be numeric.
 
 Because precision can be claimed wrongly, `check_constants_v0.py` recomputes every value with a second,
 independent tool, mpmath, from the same formulas (translated to mpmath, or hand-written for sums,
-products, integrals and roots with a seed): 513 of 679 values agree to all their digits. The other 166
+products, integrals and roots with a seed): 531 of 712 values agree to all their digits. The other 181
 (no closed form, sums over primes, functions mpmath lacks, most Wolfram sums) are each confirmed by
 published digits: the value is published digits, or a source publishes 64 digits or more and the build
 checks it against the value. The checker fails when a value rests on Mathematica's N[] alone.
@@ -104,6 +113,7 @@ Errata found in the collected lists, kept in the sources with a note:
 ```
 wolframscript -file import_wolfram_constants.wls   # only to refresh the Wolfram rows
 python import_aands_table_1_1.py                   # only to refresh the A&S rows (fetches the OCR)
+python import_oeis_nice_core.py                    # only to refresh the OEIS rows
 wolframscript -file build_constants_v0.wls         # writes constants_v0.tsv, prints mismatches
 python check_constants_v0.py                       # mpmath: needs mpmath (pip install mpmath)
 ```
@@ -117,5 +127,5 @@ also needs a hand-written mpmath expression in `MANUAL` of the checker.
 
 ### Candidate sources for later versions
 
-Not used yet: Finch, Mathematical Constants; OEIS decimal expansions
-(with b-files for many digits); MathWorld; Plouffe's tables.
+Not used yet: Finch, Mathematical Constants; the other OEIS decimal expansions (a separate benchmark,
+with b-files for many digits); MathWorld; Plouffe's tables.
