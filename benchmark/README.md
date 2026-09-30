@@ -2,7 +2,7 @@
 
 ## v0: published real constants
 
-`constants_v0.tsv`: 1377 real constants from published, hand-made lists. No generated or random
+`constants_v0.tsv`: 1383 real constants from published, hand-made lists. No generated or random
 formulas, no complex constants. A proof of concept for a standard benchmark; recognition runs over it
 are done by hand, not automated.
 
@@ -18,7 +18,7 @@ are done by hand, not automated.
 | `check` | `ok`: every source agrees with `value` within one unit of its last digit |
 | `notes` | how the value was obtained when not from the formula, errata of a source |
 
-Classes: 402 elementary, 407 special, 133 algebraic, 13 rational, 422 without closed form (in the sources used).
+Classes: 402 elementary, 408 special, 133 algebraic, 13 rational, 427 without closed form (in the sources used).
 
 ### Sources
 
@@ -33,6 +33,7 @@ Classes: 402 elementary, 407 special, 133 algebraic, 13 rational, 422 without cl
 | OEIS decimal expansions with keyword `nice` or `core`, https://oeis.org (fetched 2026-09-30) | 52 | 5-210 |
 | Plouffe, Miscellaneous Mathematical Constants, Project Gutenberg #634 (1996), https://www.gutenberg.org/ebooks/634 | 109 | 17-256 (truncated) |
 | OEIS decimal expansions citing Finch, Mathematical Constants (2003) or Mathematical Constants II (2018), from https://github.com/oeis/oeisdata (2026-09-30) | 897 | 5-120 |
+| MESearch 2.0 predefined constants (J. Zurutuza Salsamendi, 2013), names only, digits from OEIS | 6 | 22-106 |
 
 The Wolfram constants are imported by `import_wolfram_constants.wls` (needs internet access): the
 DefiningFormula, the NumericalApproximation with the digits its precision claims, and every
@@ -75,6 +76,15 @@ it is plain mathematics (a whitelist of functions, no assignments, no code), bec
 sign). Constants that sources give with fewer than 12 digits cannot be merged by value; the build links
 six such pairs by key (Gaussian twin prime, Shanks, Brun, Brun quadruple, de Bruijn, John).
 
+MESearch 2.0, a constant recognition program by J. Zurutuza Salsamendi (2013, mirrored at
+https://tilde.green/~danny12/MESearch/), has 158 predefined named constants in the order of Finch's
+book, which its User Guide names as its reference. Only their names are used (its values are compiled
+into the program, whose license forbids decompiling): all but six are already in the benchmark, and
+`import_mesearch_names.py` adds those six with the digits of their OEIS entries (Wagon, maximal unitary
+square-free divisor sum, Quinn-Rand-Strogatz c2, series-parallel networks, rumor, Otter's xi). Without an
+OEIS entry, and left out: Smarandache, Fill's logarithmic, quadratic residues, Stolarsky-Harborth,
+Quinn-Rand-Strogatz c1, c3, c4 and C, abelian group enumeration A2 and A3.
+
 `constants_v0_sources.tsv` holds one row per constant per source: source, key, name, formula, the digits
 exactly as published (copied from the files by a script, never typed), and a note. It is the file to edit;
 `constants_v0.tsv` is generated from it.
@@ -112,7 +122,7 @@ into the cancelling zeta(2k) - 1 - 4^-k, so the arguments must be numeric.
 
 Because precision can be claimed wrongly, `check_constants_v0.py` recomputes every value with a second,
 independent tool, mpmath, from the same formulas (translated to mpmath, or hand-written for sums,
-products, integrals and roots with a seed): 810 of 1377 values agree to all their digits. The other 567
+products, integrals and roots with a seed): 811 of 1383 values agree to all their digits. The other 572
 (no closed form, sums over primes, functions mpmath lacks, most Wolfram sums) are each confirmed by
 published digits: the value is published digits, or a source publishes 64 digits or more and the build
 checks it against the value. The checker fails when a value rests on Mathematica's N[] alone.
@@ -163,6 +173,7 @@ python import_aands_table_1_1.py                   # only to refresh the A&S row
 python import_oeis_nice_core.py                    # only to refresh the OEIS rows
 python import_plouffe_constants.py                 # only to refresh the Plouffe rows
 python import_oeis_finch.py <oeisdata checkout>    # only to refresh the OEIS rows citing Finch
+python import_mesearch_names.py <oeisdata checkout> # only to refresh the MESearch rows
 wolframscript -file build_constants_v0.wls         # writes constants_v0.tsv, prints mismatches
 python check_constants_v0.py                       # mpmath: needs mpmath (pip install mpmath)
 ```

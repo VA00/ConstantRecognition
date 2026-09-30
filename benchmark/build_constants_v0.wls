@@ -147,7 +147,7 @@ Print["constants: ", Length[groups], "   rows without any value: ", Length[value
   "   without ground truth (numerical N[] only): ", StringRiffle[#["key"] & /@ Flatten[noTruth], ", "]];
 
 (* names and the displayed formula come from the first source in this order *)
-priority = {"Wikipedia", "Wolfram", "GSL", "Bronstein,", "Boost.Math", "Abramowitz", "OEIS", "Plouffe,", "fast-converging"};
+priority = {"Wikipedia", "Wolfram", "GSL", "Bronstein,", "Boost.Math", "Abramowitz", "OEIS", "Plouffe,", "MESearch", "fast-converging"};
 rank[r_] := FirstPosition[priority, shortSource[r["source"]], {99}][[1]];
 
 out = Table[Module[{g = SortBy[grp, {rank[#], #["idx"]} &], tr, value, digits, formula, checks, fchecks, notes = {}, ref, tol},

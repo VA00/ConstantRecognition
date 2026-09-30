@@ -116,7 +116,7 @@ def main():
     for v in ('exact', 'false positive', 'rational fallback', 'not found'):
         print(f'  {v:18s} {tally[v]:5d}  ({100 * tally[v] / n:.1f}%)')
     print(f'  (timeouts or errors: {sum(1 for x in results if x["kind"] == "ERROR")}; '
-          f'median time {sorted(x["time"] for x in results)[n // 2]:.2f} s)')
+          f'median time {sorted(t for t in (x["time"] for x in results) if t == t)[n // 2]:.2f} s)')
     print('\nby class:           n   exact  false+  rational  not found')
     for c in ('rational', 'algebraic', 'elementary', 'special', 'none'):
         t = collections.Counter(x['verdict'] for x in results if x['class'] == c)

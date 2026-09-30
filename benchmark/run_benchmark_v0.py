@@ -15,7 +15,7 @@ truth, which double precision cannot do:
                   the formula agrees with the value to >= 30 digits (or to
                   all its digits)
   false positive  SUCCESS in double precision, but fewer than 30 digits agree
-  missed          FAILURE, but the best formula agrees to >= 30 digits: the
+  false negative  FAILURE, but the best formula agrees to >= 30 digits: the
                   right formula, rejected by the double-precision test
   not found       FAILURE: best formula up to MaxK is not within 16 eps
 
@@ -109,7 +109,7 @@ def main():
         if o['result'] == 'SUCCESS':
             verdict = 'exact' if d >= min(30, digits - 1) else 'false positive'
         else:
-            verdict = 'missed' if d >= min(30, digits - 1) else 'not found'
+            verdict = 'false negative' if d >= min(30, digits - 1) else 'not found'
         results.append({**r, **o, 'agree': d, 'verdict': verdict})
     os.makedirs('results', exist_ok=True)
     path = f'results/v0_K{a.maxk}.tsv'
@@ -124,13 +124,13 @@ def main():
     print(f'{n} constants with >= 17 digits, MaxK = {a.maxk}, {elapsed:.0f} s on {a.jobs} jobs; written {path}\n')
     print(f'  exact           {tally["exact"]:5d}  ({100 * tally["exact"] / n:.1f}%)')
     print(f'  false positive  {tally["false positive"]:5d}')
-    print(f'  missed          {tally["missed"]:5d}')
+    print(f'  false negative  {tally["false negative"]:5d}')
     print(f'  not found       {tally["not found"]:5d}\n')
-    print('by class:           n   exact  false+  missed  not found')
+    print('by class:           n   exact  false+  false-  not found')
     for c in ('rational', 'algebraic', 'elementary', 'special', 'none'):
         xs = [x for x in results if x['class'] == c]
         t = collections.Counter(x['verdict'] for x in xs)
-        print(f'  {c:12s} {len(xs):6d} {t["exact"]:7d} {t["false positive"]:7d} {t["missed"]:7d} {t["not found"]:10d}')
+        print(f'  {c:12s} {len(xs):6d} {t["exact"]:7d} {t["false positive"]:7d} {t["false negative"]:7d} {t["not found"]:10d}')
     nf = sorted(x['agree'] for x in results if x['verdict'] == 'not found' and x['agree'] == x['agree'])
     if nf:
         print(f'\nnot found, digits of the best formula: median {nf[len(nf) // 2]:.1f}, '
@@ -138,7 +138,7 @@ def main():
         ev = max(x['evaluations'] for x in results)
         print(f'  (chance level: the search evaluates {ev} formulas up to K = {a.maxk}, so the best of them '
               f'is expected to agree to about log10({ev}) = {float(mp.log10(ev)):.1f} digits by chance)')
-    fp = [x for x in results if x['verdict'] in ('false positive', 'missed')]
+    fp = [x for x in results if x['verdict'] in ('false positive', 'false negative')]
     for x in fp:
         print(f'  {x["verdict"]}: {x["name"][:50]}  {x["RPN"]}  double rel. error {x["REL_ERR"]:.2e}, agrees to {x["agree"]:.1f} digits')
     print('\nexact, by K:', dict(sorted(collections.Counter(x['K'] for x in results if x['verdict'] == 'exact').items())))
