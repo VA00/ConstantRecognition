@@ -3,8 +3,19 @@
 ## v0: published real constants
 
 `constants_v0.tsv`: 1383 real constants from published, hand-made lists. No generated or random
-formulas, no complex constants. A proof of concept for a standard benchmark; recognition runs over it
-are done by hand, not automated.
+formulas, no complex constants. A proof of concept for a standard benchmark.
+
+Limitation: v0 is public and consists of known constants, so a tool can score on it by storing them,
+which Wolfram|Alpha partly does (it answers many constants with the named constants of its own
+knowledgebase, one of the sources here). v0 measures the recognition of known constants, not search;
+that needs a separate benchmark of formulas that cannot be stored in advance, such as random ones (to do).
+
+Comparison runs, each writing `results/v0_<tool>.tsv` with the same verdicts (exact to >= 30 digits,
+false positive, not found, ...): `run_benchmark_v0.py` (the C engine, CALC4, up to a given K),
+`run_nsimplify_v0.py` (sympy), `run_maple_identify_v0.py` (Maple), `run_wolframalpha_v0.py` (Wolfram|Alpha
+from Mathematica). On 1349 constants with >= 17 digits: engine K <= 7 417 exact and 6 wrong answers
+claimed exact (65 min on 11 cores), Wolfram|Alpha 399 exact plus 231 agreeing to the 20 digits it shows,
+and 691 wrong (1 h of queries), Maple 332 and 6, nsimplify 212 and 1137.
 
 | Column | Meaning |
 |---|---|
@@ -120,9 +131,16 @@ their values come from geometrically converging series, computed in Mathematica 
 sum_k log(k)/(4k^2-1) = -sum_j 4^-j zeta'(2j). With an exact 3, Mathematica rewrites `HurwitzZeta[2k, 3]`
 into the cancelling zeta(2k) - 1 - 4^-k, so the arguments must be numeric.
 
+A near-identity found by the engine, recorded the same way: the digital tree insertion constant (OEIS
+A086312, Finch) c = 1/12 + pi^2/(6 ln^2 2) - alpha - beta, with alpha + beta = sum sigma(n)/2^n the
+Eisenstein series E2 at q = 1/2. Its quasi-modular transformation gives
+c = 1/ln 4 + 1/24 + (4 pi^2/ln^2 2) sum sigma(n) exp(-4 pi^2 n/ln 2), where the first correction is 1.5e-23:
+1/ln 4 + 1/24 alone agrees with c to 22.7 digits, which the engine at K = 7 reports as exact in double
+precision. The identity is checked to 100 digits with mpmath, and the checker evaluates the defining series.
+
 Because precision can be claimed wrongly, `check_constants_v0.py` recomputes every value with a second,
 independent tool, mpmath, from the same formulas (translated to mpmath, or hand-written for sums,
-products, integrals and roots with a seed): 811 of 1383 values agree to all their digits. The other 572
+products, integrals and roots with a seed): 812 of 1383 values agree to all their digits. The other 571
 (no closed form, sums over primes, functions mpmath lacks, most Wolfram sums) are each confirmed by
 published digits: the value is published digits, or a source publishes 64 digits or more and the build
 checks it against the value. The checker fails when a value rests on Mathematica's N[] alone.

@@ -149,6 +149,10 @@ MANUAL = {
     'totient product constant': lambda: euler_product([1, -1, 0, 1], [1, -1]),             # 1 + 1/((p-1)p^2)
     'inverse of carefree constant': lambda: euler_product([1, 1], [1, 1, -1]),             # 1 + 1/(p^2+p-1)
     'Barban constant': lambda: euler_product([1, 1, 2, -1, -1], [1, 1, -1, -1]),           # 1 + (3p^2-1)/(p(p+1)(p^2-1))
+    # the defining series (Finch), against the Eisenstein near-identity of its source row
+    'constant appearing in the variance for inserting in a digital tree':
+        lambda: mp.mpf(1) / 12 + mp.pi**2 / (6 * mp.log(2)**2) - mp.nsum(lambda k: 1 / (2**k - 1), [1, mp.inf])
+                - mp.nsum(lambda k: 1 / (2**k - 1)**2, [1, mp.inf]),
     # fast or closed forms of constants whose formulas are sums, products or limits
     'Prouhet–Thue–Morse constant': lambda: thue_morse(),
     'Prouhet-Thue-Morse constant': lambda: 2 * thue_morse(),
