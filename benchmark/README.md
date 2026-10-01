@@ -20,8 +20,11 @@ from Mathematica), `run_askconstants_v0.py` (AskConstants 5.0 by D. R. Stoutemye
 with lookup tables of 14.7 million expressions and 5.2 million inverse functions, integer relations, and
 a margin test), `run_cuda_v0.py` (Constant Recognition's search on the GPU: `cuda/constant_gpu_benchmark.cu`,
 the same CALC4 buttons and success test, every formula evaluated in FP32 and the candidates within
-64 FLT_EPSILON verified in FP64 on the CPU; build with `cuda/build_benchmark.bat`). `compare_results_v0.py`
-puts them side by side. On the 1348 constants with >= 17 digits:
+64 FLT_EPSILON verified in FP64 on the CPU; build with `cuda/build_benchmark.bat`), `run_ries_v0.py`
+(RIES by R. Munafo, GPL, 2026 May 06 version: a bidirectional search for equations LHS(x) = RHS with its
+default symbols; its claimed match, an equation marked exact or the best one when it stops early, is
+solved for x with 80 digits). `compare_results_v0.py` puts them side by side; `results/SURVEY_2026-10-01.md` records the first full survey (with versions and the machine). On the 1348 constants
+with >= 17 digits:
 
 | tool | exact | wrong answers presented as exact | not found | time |
 |---|---|---|---|---|
@@ -31,9 +34,12 @@ puts them side by side. On the 1348 constants with >= 17 digits:
 | Maple identify | 332 | 6 | 1010 | 68 s |
 | Wolfram\|Alpha | 411 (and 231 agreeing to the ~20 digits it shows, without an expression) | 691 | 15 | 1 h of queries |
 | AskConstants | 993 | 13 | 342 | 4.8 h of searches, about 1 h on 5-6 kernels |
+| RIES -l2 / -l4 / -l5 | 497 / 535 / 548 | 6 / 9 / 12 | 841 / 801 / 784 | 22 s / 9.5 min / 50 min on 12 cores |
 
-The union of all tools is 996: nearly everything the others recognize, AskConstants does too (3
-exceptions). Most wrong answers of Constant Recognition, Maple and AskConstants are the same traps: Ramanujan's
+The union of all tools is 1007: nearly everything the others recognize, AskConstants does too, except
+mostly what RIES finds as roots of equations no explicit formula reaches (x e^(1/x) = 2e for a binary
+search tree constant, log_(2-x) x = -1/6 for the hexanacci constant, x/(3 + ln x) = 1/e); 341 constants
+are recognized by no tool. Most wrong answers of Constant Recognition, Maple and AskConstants are the same traps: Ramanujan's
 pi approximation, the decimal selvage numbers, nu = 1 + 1.2e-12, a 50000-term partial sum of pi/2.
 Wolfram|Alpha proposes closed forms only for numbers written without an exponent (0.0000807, not
 8.07e-5), so the queries are positional decimals.
@@ -45,6 +51,11 @@ negatives of cancellation: at K <= 8, 4 (pi^2 - 9) - 3 for the quadtree leaf pro
 rejected with 23 eps. On the CPU, ln Gamma(5/4) at K = 5 is rejected with 21 eps; the GPU, which
 verifies all candidates of a length and keeps the best, accepts another formula of the same length,
 ln Gamma(cosh ln 2), with 2 eps.
+
+RIES's wrong answers include, besides the common traps, equations that hold only in floating point,
+more of them at deeper levels: for pi^10, x^(1/5) - pi^2 = 2^-49; for e^(pi sqrt 163),
+(sqrt x)^4 - x^2 = 2^63; and e^(1/x) - e^(1/x) = 7/8^8, an identically zero left side matched to its
+rounding noise. Such equations have no root near the target, and the 80-digit solve exposes them.
 
 | Column | Meaning |
 |---|---|
