@@ -2,20 +2,37 @@
 
 ## v0: published real constants
 
-`constants_v0.tsv`: 1383 real constants from published, hand-made lists. No generated or random
+`constants_v0.tsv`: 1381 real constants from published, hand-made lists. No generated or random
 formulas, no complex constants. A proof of concept for a standard benchmark.
 
-Limitation: v0 is public and consists of known constants, so a tool can score on it by storing them,
-which Wolfram|Alpha partly does (it answers many constants with the named constants of its own
-knowledgebase, one of the sources here). v0 measures the recognition of known constants, not search;
-that needs a separate benchmark of formulas that cannot be stored in advance, such as random ones (to do).
+Limitation: v0 is public and consists of known constants, so a tool can score on it by storing them.
+Wolfram|Alpha partly does (it answers many constants with the named constants of its own knowledgebase,
+one of the sources here), and so does AskConstants (163 of its exact answers are a single named constant
+of its tables, 111 of them an OEIS A-number, and OEIS is a source here). v0 measures the recognition of
+known constants, not search; that needs a separate benchmark of formulas that cannot be stored in advance,
+such as random ones (to do).
 
-Comparison runs, each writing `results/v0_<tool>.tsv` with the same verdicts (exact to >= 30 digits,
-false positive, not found, ...): `run_benchmark_v0.py` (the C engine, CALC4, up to a given K),
+Comparison runs, each writing `results/v0_<tool>.tsv` with the same verdicts (exact: the answer agrees
+with the value to >= 30 digits; wrong: presented as exact but failing beyond double precision; not found),
+all with the same input, the nearest double: `run_benchmark_v0.py` (Constant Recognition, the C engine, CALC4, up to a given K),
 `run_nsimplify_v0.py` (sympy), `run_maple_identify_v0.py` (Maple), `run_wolframalpha_v0.py` (Wolfram|Alpha
-from Mathematica). On 1349 constants with >= 17 digits: engine K <= 7 417 exact and 6 wrong answers
-claimed exact (65 min on 11 cores), Wolfram|Alpha 399 exact plus 231 agreeing to the 20 digits it shows,
-and 691 wrong (1 h of queries), Maple 332 and 6, nsimplify 212 and 1137.
+from Mathematica), `run_askconstants_v0.py` (AskConstants 5.0 by D. R. Stoutemyer, MIT license: Propose
+with lookup tables of 14.7 million expressions and 5.2 million inverse functions, integer relations, and
+a margin test). `compare_results_v0.py` puts them side by side. On the 1348 constants with >= 17 digits:
+
+| tool | exact | wrong answers presented as exact | not found | time |
+|---|---|---|---|---|
+| Constant Recognition K <= 5 / 6 / 7 | 317 / 376 / 417 | 1 / 4 / 6 | 1029 / 968 / 925 | 15 s / 2.5 min / 65 min on 11-12 cores |
+| nsimplify | 212 | 1136 | 0 | 20 s |
+| Maple identify | 332 | 6 | 1010 | 68 s |
+| Wolfram\|Alpha | 411 (and 231 agreeing to the ~20 digits it shows, without an expression) | 691 | 15 | 1 h of queries |
+| AskConstants | 993 | 13 | 342 | 4.8 h of searches, about 1 h on 5-6 kernels |
+
+The union of all tools is 996: nearly everything the others recognize, AskConstants does too (3
+exceptions). Most wrong answers of Constant Recognition, Maple and AskConstants are the same traps: Ramanujan's
+pi approximation, the decimal selvage numbers, nu = 1 + 1.2e-12, a 50000-term partial sum of pi/2.
+Wolfram|Alpha proposes closed forms only for numbers written without an exponent (0.0000807, not
+8.07e-5), so the queries are positional decimals.
 
 | Column | Meaning |
 |---|---|
@@ -29,7 +46,7 @@ and 691 wrong (1 h of queries), Maple 332 and 6, nsimplify 212 and 1137.
 | `check` | `ok`: every source agrees with `value` within one unit of its last digit |
 | `notes` | how the value was obtained when not from the formula, errata of a source |
 
-Classes: 402 elementary, 408 special, 133 algebraic, 13 rational, 427 without closed form (in the sources used).
+Classes: 402 elementary, 409 special, 133 algebraic, 13 rational, 424 without closed form (in the sources used).
 
 ### Sources
 
@@ -131,16 +148,16 @@ their values come from geometrically converging series, computed in Mathematica 
 sum_k log(k)/(4k^2-1) = -sum_j 4^-j zeta'(2j). With an exact 3, Mathematica rewrites `HurwitzZeta[2k, 3]`
 into the cancelling zeta(2k) - 1 - 4^-k, so the arguments must be numeric.
 
-A near-identity found by the engine, recorded the same way: the digital tree insertion constant (OEIS
+A near-identity found by Constant Recognition, recorded the same way: the digital tree insertion constant (OEIS
 A086312, Finch) c = 1/12 + pi^2/(6 ln^2 2) - alpha - beta, with alpha + beta = sum sigma(n)/2^n the
 Eisenstein series E2 at q = 1/2. Its quasi-modular transformation gives
 c = 1/ln 4 + 1/24 + (4 pi^2/ln^2 2) sum sigma(n) exp(-4 pi^2 n/ln 2), where the first correction is 1.5e-23:
-1/ln 4 + 1/24 alone agrees with c to 22.7 digits, which the engine at K = 7 reports as exact in double
+1/ln 4 + 1/24 alone agrees with c to 22.7 digits, which Constant Recognition at K = 7 reports as exact in double
 precision. The identity is checked to 100 digits with mpmath, and the checker evaluates the defining series.
 
 Because precision can be claimed wrongly, `check_constants_v0.py` recomputes every value with a second,
 independent tool, mpmath, from the same formulas (translated to mpmath, or hand-written for sums,
-products, integrals and roots with a seed): 812 of 1383 values agree to all their digits. The other 571
+products, integrals and roots with a seed): 812 of 1381 values agree to all their digits. The other 569
 (no closed form, sums over primes, functions mpmath lacks, most Wolfram sums) are each confirmed by
 published digits: the value is published digits, or a source publishes 64 digits or more and the build
 checks it against the value. The checker fails when a value rests on Mathematica's N[] alone.
@@ -179,6 +196,9 @@ Errata found in the collected lists, kept in the sources with a note:
 - Wolfram Lueroth analog of the Levy constant: wrong after 27 digits (`...176154|02...`, correct
   `...176153|95...`, OEIS A244109 and mpmath); Lueroth analog of the Khinchin constant: wrong after 26
   digits (`...578|68...`, correct `...578|66...`, OEIS A245254 and mpmath)
+- Wikipedia (as collected), Landau-Ramanujan constant: digit 14, `0.76422365358920066299`, correct
+  `0.76422365358922066299`
+- Wolfram Shallit constant: a digit 9 is missing, `1.369451403937`, correct `1.3694514039938` (OEIS A086276)
 - Wolfram infinite product constant: the DefiningFormula is prod_{k>=1} (1+1/k)^(1/k) = 3.5174872559...,
   the published digits 1.7587436... are the product from k = 2, half of it. The value comes from the
   series 2 exp(sum_n (-1)^(n+1) (zeta(n+1)-1)/n)
@@ -198,6 +218,12 @@ python check_constants_v0.py                       # mpmath: needs mpmath (pip i
 
 The build keeps the N[] values of all formulas in `formula_values_cache.wl` (not in the repository),
 per Mathematica version: the first build evaluates them on all kernels (up to 60 s each), later ones take seconds.
+
+The build also lists near duplicates: neighbouring constants that agree to >= 10 digits but not to all
+the digits both have, which is very unlikely by chance, so one digit string may have a typo (it found the
+two last errata above). The remaining ones are genuine: 1 and nu = 1.0000000000012..., pi and Ramanujan's
+approximation, and the square-lattice connective constant and the root of 13x^4 - 7x^2 - 581 (once
+conjectured to be equal, agreeing to 11 digits).
 
 Both must report no mismatch and no constant below its stated digits. To add a constant, add a row per
 source to `constants_v0_sources.tsv`, rebuild and check; a new sum, product, integral or root with a seed

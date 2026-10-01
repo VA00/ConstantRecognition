@@ -1,4 +1,4 @@
-"""run_benchmark_v0.py - run the C search engine over constants_v0.tsv and measure the output
+"""run_benchmark_v0.py - run Constant Recognition (the C search engine) over constants_v0.tsv and measure the output
 
 Author: Andrzej Odrzywolek
 Date: September 30, 2026

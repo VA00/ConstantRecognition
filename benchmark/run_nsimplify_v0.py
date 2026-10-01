@@ -4,9 +4,9 @@ Author: Andrzej Odrzywolek
 Date: September 30, 2026
 Code assist: Claude Opus 5.5
 
-For comparison with the C engine. For every constant with at least 17 known
+For comparison with Constant Recognition (the C engine). For every constant with at least 17 known
 digits, nsimplify(x, [pi, E, GoldenRatio]) gets the nearest double x, the same
-input and the same named constants as the engine's CALC4 (integers, roots and
+input and the same named constants as Constant Recognition's CALC4 (integers, roots and
 rationals are built into nsimplify). Its answer is evaluated with 80 digits
 and compared with the 64-digit ground truth:
 
@@ -20,7 +20,7 @@ relation of x with pi, e and phi (mpmath.identify) or a rational, which are
 right in double precision. Only the 64 digits of the benchmark tell them apart.
 
 Usage (from this directory):  python run_nsimplify_v0.py [--jobs 12]
-Writes results/v0_nsimplify.tsv, and compares with the engine results given by
+Writes results/v0_nsimplify.tsv, and compares with the Constant Recognition results given by
 --compare (default results/v0_K5.tsv).
 """
 import argparse
@@ -110,13 +110,13 @@ def main():
             e = eng[x['id']]['verdict'] == 'exact'
             s = x['verdict'] == 'exact'
             both[(e, s)] += 1
-        print(f'\ncompared with the engine ({a.compare}):')
+        print(f'\ncompared with Constant Recognition ({a.compare}):')
         print(f'  exact in both          {both[(True, True)]:5d}')
-        print(f'  engine only            {both[(True, False)]:5d}')
+        print(f'  Constant Recognition only {both[(True, False)]:5d}')
         print(f'  nsimplify only         {both[(False, True)]:5d}')
         print(f'  neither                {both[(False, False)]:5d}')
         fp_e = sum(1 for r in eng.values() if r['verdict'] == 'false positive')
-        print(f'  wrong answers claimed exact: engine {fp_e}, nsimplify {tally["false positive"] + tally["rational fallback"]}')
+        print(f'  wrong answers claimed exact: Constant Recognition {fp_e}, nsimplify {tally["false positive"] + tally["rational fallback"]}')
 
 
 if __name__ == '__main__':

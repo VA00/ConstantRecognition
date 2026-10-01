@@ -4,7 +4,7 @@ Author: Andrzej Odrzywolek
 Date: September 30, 2026
 Code assist: Claude Opus 5.5
 
-For comparison with the C engine and with sympy's nsimplify. For every
+For comparison with Constant Recognition (the C engine) and with sympy's nsimplify. For every
 constant with at least 17 known digits, identify(x) with Digits := 16 and
 default options gets the nearest double x (written with the digits that
 round-trip), the same input as the others. Maple evaluates each answer with
@@ -122,7 +122,7 @@ def main():
         t = collections.Counter(x['verdict'] for x in results if x['class'] == c)
         print(f'  {c:12s} {sum(t.values()):6d} {t["exact"]:7d} {t["false positive"]:7d} {t["rational fallback"]:9d} {t["not found"]:10d}')
 
-    others = {'engine': a.compare, 'nsimplify': 'results/v0_nsimplify.tsv'}
+    others = {'Constant Recognition': a.compare, 'nsimplify': 'results/v0_nsimplify.tsv'}
     for label, path in others.items():
         if not os.path.exists(path):
             continue

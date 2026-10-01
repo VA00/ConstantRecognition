@@ -4,7 +4,7 @@ Author: Andrzej Odrzywolek
 Date: September 30, 2026
 Code assist: Claude Opus 5.5
 
-For comparison with the C engine, nsimplify and Maple identify. For every
+For comparison with Constant Recognition (the C engine), nsimplify and Maple identify. For every
 constant with at least 17 known digits, Mathematica's WolframAlpha[x, {All,
 "ComputableData"}] gets the nearest double x (the digits that round-trip), the
 same input as the others. The first candidate of the PossibleClosedForm pod
@@ -34,6 +34,7 @@ Writes results/v0_wolframalpha.tsv and prints a summary and the comparisons.
 import argparse
 import collections
 import csv
+import decimal
 import os
 import re
 import subprocess
@@ -88,13 +89,22 @@ Close[str];
 '''
 
 
+def alpha_real(x):
+    """The shortest round-trip digits of a double in positional notation: 6.5e-09 -> 0.0000000065.
+    For 6.5e-09 or 6.5*10^-9, Wolfram|Alpha computes a result and proposes no closed forms."""
+    s = repr(x)
+    if 'e' in s:
+        s = format(decimal.Decimal(s), 'f')
+    return s
+
+
 def run_wls(wolframscript, template, rows, out):
     """Run a query template over rows (id, nearest double), appending to out."""
     if not rows:
         return
     with tempfile.NamedTemporaryFile('w', suffix='.tsv', delete=False, encoding='ascii', newline='') as f:
         for r in rows:
-            f.write(f'{r["id"]}\t{repr(float(r["value"]))}\n')
+            f.write(f'{r["id"]}\t{alpha_real(float(r["value"]))}\n')
         inputs = f.name
     with tempfile.NamedTemporaryFile('w', suffix='.wls', delete=False, encoding='utf-8') as f:
         f.write(template % {'inputs': inputs.replace('\\', '/'), 'out': os.path.abspath(out).replace('\\', '/')})
@@ -190,7 +200,7 @@ def main():
         print(f'  {c:12s} {sum(t.values()):6d} {t["exact"]:7d} {t["likely exact"]:7d} {t["false positive"]:7d} '
               f'{t["rational fallback"]:9d} {t["unverifiable"]:9d} {t["not found"]:10d}')
     ok = ('exact', 'likely exact')
-    for label, path in {'engine': a.compare, 'Maple': 'results/v0_maple_identify.tsv', 'nsimplify': 'results/v0_nsimplify.tsv'}.items():
+    for label, path in {'Constant Recognition': a.compare, 'Maple': 'results/v0_maple_identify.tsv', 'nsimplify': 'results/v0_nsimplify.tsv'}.items():
         if not os.path.exists(path):
             continue
         o = {r['id']: r['verdict'] for r in csv.DictReader(open(path, encoding='utf-8'), delimiter='\t')}

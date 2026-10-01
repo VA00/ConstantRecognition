@@ -134,7 +134,9 @@ groups = Fold[If[#1 =!= {} && sameQ[Last[Last[#1]], #2], Append[Most[#1], Append
    Rows with the same OEIS A-number are one constant too. *)
 alsoSame = {{"GaussianTwinPrimeConstant", "A337606"}, {"ShanksConstant", "A337607"},
    {"BrunPrimeQuadrupleConstant", "A213007"}, {"DeBruijnConstant", "A113276"}, {"Brun's constant", "A065421"},
-   {"JohnConstantUpperBound", "A244382"}};
+   {"JohnConstantUpperBound", "A244382"},
+   (* digit typos (erratum notes), found by the near-duplicate report *)
+   {"Landau-Ramanujan constant", "LandauRamanujanConstant"}, {"ShallitConstant", "A086276"}};
 sameA = Select[Tally[Select[#["key"] & /@ rows, StringMatchQ[#, "A" ~~ Repeated[DigitCharacter, {6}]] &]], Last[#] > 1 &][[All, 1]];
 mergeKeys[gs_, ks_List] := Module[{pos = Select[Range[Length[gs]], Function[i, AnyTrue[gs[[i]], MemberQ[ks, #["key"]] &]]]},
    If[Length[pos] < 2, gs, Append[Delete[gs, List /@ pos], Join @@ gs[[pos]]]]];
@@ -189,6 +191,13 @@ Scan[Print["  ", #["name"], " | ", StringTake[#["check"], UpTo[200]], " | value 
 near = Select[Partition[out, 2, 1], Min[#[[1]]["ndigits"], #[[2]]["ndigits"]] >= 5 && Abs[#[[1]]["sort"] - #[[2]]["sort"]] <= 10^(1 - Min[#[[1]]["ndigits"], #[[2]]["ndigits"]]) Abs[#[[2]]["sort"]] &];
 Print["possible duplicates (", Length[near], "):"];
 Scan[Print["  ", #[[1]]["name"], " (", #[[1]]["ndigits"], ") ~ ", #[[2]]["name"], " (", #[[2]]["ndigits"], ")   ", StringTake[#[[1]]["value"], UpTo[24]]] &, near];
+(* two neighbours that agree to >= 10 digits but not to all digits both have: by chance
+   this is very unlikely, so one of the digit strings may have a typo *)
+agreeDigits[a_, b_] := Which[a["sort"] == b["sort"], 30., b["sort"] == 0, 0., True, -Log10[Abs[a["sort"] - b["sort"]]/Abs[b["sort"]]]];
+typo = Select[Partition[out, 2, 1], With[{d = agreeDigits @@ #}, d >= 10 && d < Min[#[[1]]["ndigits"], #[[2]]["ndigits"]] - 1] &];
+Print["near duplicates, a typo in one of them? (", Length[typo], "):"];
+Scan[Print["  ", #[[1]]["name"], " ", StringTake[#[[1]]["value"], UpTo[26]], " (", #[[1]]["sources"], ")\n    ~ ", #[[2]]["name"], " ",
+    StringTake[#[[2]]["value"], UpTo[26]], " (", #[[2]]["sources"], "): agree to ", Round[agreeDigits @@ #, 0.1], " digits"] &, typo];
 Print["rows without any value: ", Length[valueless], ": ", StringRiffle[#["key"] & /@ valueless, ", "]];
 Print["values with fewer than 64 digits: ", Count[out, a_ /; a["digits"] < 64]];
 (* evidence, not a check: numerical N[] values (sums, products, integrals,
