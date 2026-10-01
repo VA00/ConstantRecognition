@@ -23,8 +23,8 @@ the same CALC4 buttons and success test, every formula evaluated in FP32 and the
 64 FLT_EPSILON verified in FP64 on the CPU; build with `cuda/build_benchmark.bat`), `run_ries_v0.py`
 (RIES by R. Munafo, GPL, 2026 May 06 version: a bidirectional search for equations LHS(x) = RHS with its
 default symbols; its claimed match, an equation marked exact or the best one when it stops early, is
-solved for x with 80 digits). `compare_results_v0.py` puts them side by side; `results/SURVEY_2026-10-01.md` records the first full survey (with versions and the machine). On the 1348 constants
-with >= 17 digits:
+solved for x with 80 digits). `compare_results_v0.py` puts them side by side; `results/SURVEY_2026-10-01.md` records the first full survey (with versions and the machine; the .tex and
+.pdf next to it are made from it with pandoc, see below). On the 1348 constants with >= 17 digits:
 
 | tool | exact | wrong answers presented as exact | not found | time |
 |---|---|---|---|---|
@@ -238,6 +238,15 @@ python import_mesearch_names.py <oeisdata checkout> # only to refresh the MESear
 wolframscript -file build_constants_v0.wls         # writes constants_v0.tsv, prints mismatches
 python check_constants_v0.py                       # mpmath: needs mpmath (pip install mpmath)
 ```
+
+The survey's LaTeX and PDF (pandoc and a LaTeX installation; from `results/`; pandoc takes the column
+widths of the wide tables from the dashes of their `|---|` lines):
+
+```
+pandoc SURVEY_2026-10-01.md -f markdown+lists_without_preceding_blankline --standalone -V geometry:margin=2cm -V fontsize=10pt -V "header-includes=\usepackage{etoolbox}\AtBeginEnvironment{longtable}{\footnotesize}" -o SURVEY_2026-10-01.pdf
+```
+
+(the same with `-o SURVEY_2026-10-01.tex` for the LaTeX source).
 
 The build keeps the N[] values of all formulas in `formula_values_cache.wl` (not in the repository),
 per Mathematica version: the first build evaluates them on all kernels (up to 60 s each), later ones take seconds.

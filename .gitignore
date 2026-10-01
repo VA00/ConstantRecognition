@@ -135,3 +135,7 @@ benchmark/formula_values_cache.wl
 cuda/*.exe
 cuda/*.exp
 cuda/*.lib
+
+# generated from benchmark/results/SURVEY_*.md with pandoc (see benchmark/README.md)
+benchmark/results/SURVEY_*.tex
+benchmark/results/SURVEY_*.pdf
