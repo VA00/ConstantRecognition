@@ -18,11 +18,15 @@ all with the same input, the nearest double: `run_benchmark_v0.py` (Constant Rec
 `run_nsimplify_v0.py` (sympy), `run_maple_identify_v0.py` (Maple), `run_wolframalpha_v0.py` (Wolfram|Alpha
 from Mathematica), `run_askconstants_v0.py` (AskConstants 5.0 by D. R. Stoutemyer, MIT license: Propose
 with lookup tables of 14.7 million expressions and 5.2 million inverse functions, integer relations, and
-a margin test). `compare_results_v0.py` puts them side by side. On the 1348 constants with >= 17 digits:
+a margin test), `run_cuda_v0.py` (Constant Recognition's search on the GPU: `cuda/constant_gpu_benchmark.cu`,
+the same CALC4 buttons and success test, every formula evaluated in FP32 and the candidates within
+64 FLT_EPSILON verified in FP64 on the CPU; build with `cuda/build_benchmark.bat`). `compare_results_v0.py`
+puts them side by side. On the 1348 constants with >= 17 digits:
 
 | tool | exact | wrong answers presented as exact | not found | time |
 |---|---|---|---|---|
 | Constant Recognition K <= 5 / 6 / 7 | 317 / 376 / 417 | 1 / 4 / 6 | 1029 / 968 / 925 | 15 s / 2.5 min / 65 min on 11-12 cores |
+| Constant Recognition on GPU, K <= 7 / 8 | 417 / 447 | 6 / 7 | 925 / 893 | 70 s / 35 min on an RTX 5080 |
 | nsimplify | 212 | 1136 | 0 | 20 s |
 | Maple identify | 332 | 6 | 1010 | 68 s |
 | Wolfram\|Alpha | 411 (and 231 agreeing to the ~20 digits it shows, without an expression) | 691 | 15 | 1 h of queries |
@@ -33,6 +37,14 @@ exceptions). Most wrong answers of Constant Recognition, Maple and AskConstants 
 pi approximation, the decimal selvage numbers, nu = 1 + 1.2e-12, a 50000-term partial sum of pi/2.
 Wolfram|Alpha proposes closed forms only for numbers written without an exponent (0.0000807, not
 8.07e-5), so the queries are positional decimals.
+
+The GPU search finds exactly the same 417 constants at K <= 7 as Constant Recognition on the CPU, 55
+times faster in wall time (600 times in CPU time), which makes K <= 8 (68.6 billion formulas, about 2 s
+per constant) affordable: 447 exact. Its FP64 check is the same 16 eps test, so it shares the false
+negatives of cancellation: at K <= 8, 4 (pi^2 - 9) - 3 for the quadtree leaf proportion constant is
+rejected with 23 eps. On the CPU, ln Gamma(5/4) at K = 5 is rejected with 21 eps; the GPU, which
+verifies all candidates of a length and keeps the best, accepts another formula of the same length,
+ln Gamma(cosh ln 2), with 2 eps.
 
 | Column | Meaning |
 |---|---|

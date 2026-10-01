@@ -22,6 +22,8 @@ TOOLS = [  # label, results file
     ('Constant Recognition K<=5', 'results/v0_K5.tsv'),
     ('Constant Recognition K<=6', 'results/v0_K6.tsv'),
     ('Constant Recognition K<=7', 'results/v0_K7.tsv'),
+    ('CR GPU K<=7', 'results/v0_cuda_K7.tsv'),
+    ('CR GPU K<=8', 'results/v0_cuda_K8.tsv'),
     ('nsimplify', 'results/v0_nsimplify.tsv'),
     ('Maple identify', 'results/v0_maple_identify.tsv'),
     ('Wolfram|Alpha', 'results/v0_wolframalpha.tsv'),
@@ -56,7 +58,11 @@ def main():
     for a in labels:
         cells = ''.join(f'{sum(1 for i in consts if runs[a][i] == "exact" and runs[b][i] != "exact"):16d}' for b in labels)
         print(f'{a:26s} {cells}')
-    best = [l for l in labels if not l.startswith('Constant Recognition') or l == max((x for x in labels if x.startswith('Constant Recognition')), default=l)]
+    # one run per tool for the union: of the Constant Recognition runs (CPU and GPU, several K), the one with most exact
+    family = lambda l: 'CR' if l.startswith(('Constant Recognition', 'CR ')) else l
+    exact_count = {l: sum(1 for i in consts if runs[l][i] == 'exact') for l in labels}
+    best = [l for l in labels if exact_count[l] == max(exact_count[x] for x in labels if family(x) == family(l))
+            and l == next(x for x in labels if family(x) == family(l) and exact_count[x] == exact_count[l])]
     union = {i for i in consts if any(runs[l][i] == 'exact' for l in best)}
     print(f'\nunion of {", ".join(best)}: {len(union)} exact ({100 * len(union) / n:.1f}%); '
           f'recognized by no tool: {n - len(union)}')
