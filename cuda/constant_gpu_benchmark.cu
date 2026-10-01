@@ -5,7 +5,7 @@
 // Code assist: Claude Opus 5.5
 //
 // Derived from constant_gpu_fp32_hybrid.cu (same CALC4 buttons: 13 constants, 18 functions,
-// 5 operators; same FP32 kernel), changed for benchmark/run_cuda_v0.py:
+// 5 operators; same FP32 kernel), changed for benchmark/run/run_cuda_v0.py:
 //
 //   * many targets per process, read from stdin as lines "id value"; the ternary forms are
 //     generated and the GPU set up once

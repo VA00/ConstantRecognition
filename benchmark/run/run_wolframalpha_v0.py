@@ -27,7 +27,7 @@ once, and constants already there are skipped, so an interrupted run resumes.
 Answers without an expression are asked again for the plaintext of the pod
 (results/v0_wolframalpha_plain.tsv, also resumable).
 
-Usage (from this directory):
+Usage:
   python run_wolframalpha_v0.py [--wolframscript <path>] [--compare results/v0_K6.tsv]
 Writes results/v0_wolframalpha.tsv and prints a summary and the comparisons.
 """
@@ -43,9 +43,13 @@ import tempfile
 
 import mpmath as mp
 
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
+RESULTS = os.path.join(BENCH, 'results')
+
 mp.mp.dps = 80
-RAW = 'results/v0_wolframalpha_raw.tsv'
-PLAIN = 'results/v0_wolframalpha_plain.tsv'
+RAW = os.path.join(RESULTS, 'v0_wolframalpha_raw.tsv')
+PLAIN = os.path.join(RESULTS, 'v0_wolframalpha_plain.tsv')
 
 WLS = r'''
 in = Import["%(inputs)s", "TSV", "Numeric" -> False];
@@ -123,14 +127,14 @@ def agree(v, ref, digits):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--wolframscript', default=r'C:\Program Files\Wolfram Research\WolframScript\wolframscript.exe')
-    ap.add_argument('--compare', default='results/v0_K6.tsv', help='engine results of run_benchmark_v0.py')
+    ap.add_argument('--compare', default=os.path.join(RESULTS, 'v0_K6.tsv'), help='engine results of run_benchmark_v0.py')
     ap.add_argument('--limit', type=int, default=0, help='only the first N constants (a test)')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
     if a.limit:
         rows = rows[:a.limit]
-    os.makedirs('results', exist_ok=True)
+    os.makedirs(RESULTS, exist_ok=True)
 
     run_wls(a.wolframscript, WLS, rows, RAW)
     raw = {}
@@ -180,7 +184,7 @@ def main():
         else:
             verdict = 'rational fallback' if o['kind'] == 'RATIONAL' else 'false positive'
         results.append({**r, **o, 'agree': d, 'verdict': verdict})
-    with open('results/v0_wolframalpha.tsv', 'w', encoding='utf-8', newline='') as f:
+    with open(os.path.join(RESULTS, 'v0_wolframalpha.tsv'), 'w', encoding='utf-8', newline='') as f:
         cols = ['id', 'name', 'class', 'digits', 'verdict', 'wolframalpha', 'agree', 'time', 'formula']
         f.write('\t'.join(cols) + '\n')
         for x in results:
@@ -200,7 +204,7 @@ def main():
         print(f'  {c:12s} {sum(t.values()):6d} {t["exact"]:7d} {t["likely exact"]:7d} {t["false positive"]:7d} '
               f'{t["rational fallback"]:9d} {t["unverifiable"]:9d} {t["not found"]:10d}')
     ok = ('exact', 'likely exact')
-    for label, path in {'Constant Recognition': a.compare, 'Maple': 'results/v0_maple_identify.tsv', 'nsimplify': 'results/v0_nsimplify.tsv'}.items():
+    for label, path in {'Constant Recognition': a.compare, 'Maple': os.path.join(RESULTS, 'v0_maple_identify.tsv'), 'nsimplify': os.path.join(RESULTS, 'v0_nsimplify.tsv')}.items():
         if not os.path.exists(path):
             continue
         o = {r['id']: r['verdict'] for r in csv.DictReader(open(path, encoding='utf-8'), delimiter='\t')}

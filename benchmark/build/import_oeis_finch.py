@@ -30,7 +30,7 @@ Mathematica line (RealDigits drops the sign).
 
 Replaces the rows of source "OEIS citing Finch ..." and keeps the others.
 
-Usage (from this directory):  python import_oeis_finch.py <path to oeisdata>
+Usage:  python import_oeis_finch.py <path to oeisdata>
 """
 import collections
 import csv
@@ -39,6 +39,9 @@ import os
 import re
 import subprocess
 import sys
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SOURCES = os.path.join(BENCH, 'data', 'v0', 'constants_v0_sources.tsv')
 
 ALLOWED = set('''Pi E I Infinity Degree EulerGamma Catalan GoldenRatio Glaisher Khinchin
     Sqrt CubeRoot Surd Power Times Plus Log Log10 Log2 Exp Abs Re Im Floor
@@ -125,9 +128,9 @@ def main():
         if a in NEGATED and f_:
             f_ = f'-({f_})'
         rows.append([source, a, name[:120], f_, f'0.{digits}e{offset}', ''])
-    old = list(csv.reader(open('constants_v0_sources.tsv', encoding='utf-8'), delimiter='\t'))
+    old = list(csv.reader(open(SOURCES, encoding='utf-8'), delimiter='\t'))
     kept = [r for r in old if not r[0].startswith('OEIS citing Finch')]
-    with open('constants_v0_sources.tsv', 'w', encoding='utf-8', newline='') as out:
+    with open(SOURCES, 'w', encoding='utf-8', newline='') as out:
         for r in kept + rows:
             out.write('\t'.join(r) + '\n')
     print(f'kept {len(kept) - 1} rows of other sources; added {len(rows)} OEIS rows citing Finch '

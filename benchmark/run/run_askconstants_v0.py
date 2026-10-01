@@ -27,7 +27,7 @@ INSTALL.nb, or the equivalent install.wls). The constants are split over
 --jobs Mathematica processes; each loads the tables (several GB of RAM) and
 appends every answer to its own raw file at once, so an interrupted run resumes.
 
-Usage (from this directory):
+Usage:
   python run_askconstants_v0.py --askconstants <directory AskConstants5.0> [--jobs 4] [--maxsec 120]
 Writes results/v0_askconstants.tsv and prints a summary and the comparisons.
 """
@@ -43,8 +43,12 @@ import tempfile
 
 import mpmath as mp
 
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
+RESULTS = os.path.join(BENCH, 'results')
+
 mp.mp.dps = 80
-RAW = 'results/v0_askconstants_raw_{}.tsv'
+RAW = os.path.join(RESULTS, 'v0_askconstants_raw_{}.tsv')
 
 WLS = r'''
 dir = "%(dir)s";
@@ -116,13 +120,13 @@ def main():
     ap.add_argument('--jobs', type=int, default=4)
     ap.add_argument('--maxsec', type=int, default=120, help='MaxSearchSec of Propose per constant')
     ap.add_argument('--limit', type=int, default=0, help='only the first N constants (a test)')
-    ap.add_argument('--compare', default='results/v0_K7.tsv', help='engine results of run_benchmark_v0.py')
+    ap.add_argument('--compare', default=os.path.join(RESULTS, 'v0_K7.tsv'), help='engine results of run_benchmark_v0.py')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
     if a.limit:
         rows = rows[:a.limit]
-    os.makedirs('results', exist_ok=True)
+    os.makedirs(RESULTS, exist_ok=True)
     with concurrent.futures.ThreadPoolExecutor(a.jobs) as pool:
         list(pool.map(lambda j: run_job(a.wolframscript, a.askconstants, a.maxsec, rows[j::a.jobs], RAW.format(j)), range(a.jobs)))
 
@@ -145,7 +149,7 @@ def main():
         else:
             verdict = 'rational fallback' if o['kind'] == 'RATIONAL' else 'false positive'
         results.append({**r, **o, 'agree': d, 'verdict': verdict})
-    with open('results/v0_askconstants.tsv', 'w', encoding='utf-8', newline='') as f:
+    with open(os.path.join(RESULTS, 'v0_askconstants.tsv'), 'w', encoding='utf-8', newline='') as f:
         cols = ['id', 'name', 'class', 'digits', 'verdict', 'askconstants', 'agree', 'agreement', 'entropy10', 'margin', 'time', 'formula']
         f.write('\t'.join(cols) + '\n')
         for x in results:
@@ -166,8 +170,8 @@ def main():
         t = collections.Counter(x['verdict'] for x in results if x['class'] == c)
         print(f'  {c:12s} {sum(t.values()):6d} {t["exact"]:7d} {t["false positive"]:7d} {t["rational fallback"]:9d} {t["not found"]:10d}')
     ok = ('exact', 'likely exact')
-    for label, path in {'Constant Recognition': a.compare, 'Wolfram|Alpha': 'results/v0_wolframalpha.tsv', 'Maple': 'results/v0_maple_identify.tsv',
-                        'nsimplify': 'results/v0_nsimplify.tsv'}.items():
+    for label, path in {'Constant Recognition': a.compare, 'Wolfram|Alpha': os.path.join(RESULTS, 'v0_wolframalpha.tsv'), 'Maple': os.path.join(RESULTS, 'v0_maple_identify.tsv'),
+                        'nsimplify': os.path.join(RESULTS, 'v0_nsimplify.tsv')}.items():
         if not os.path.exists(path):
             continue
         o = {r['id']: r['verdict'] for r in csv.DictReader(open(path, encoding='utf-8'), delimiter='\t')}

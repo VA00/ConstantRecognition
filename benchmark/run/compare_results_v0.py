@@ -12,33 +12,37 @@ the tool did not claim), and not found; then per constant class, the overlaps be
 tools, and how many constants no tool recognizes. Wolfram|Alpha's "likely exact" (agreeing
 to all ~20 digits it shows, without an expression to check) is listed separately.
 
-Usage (from this directory):  python compare_results_v0.py
+Usage:  python compare_results_v0.py
 """
 import collections
 import csv
 import os
 import sys
 
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
+RESULTS = os.path.join(BENCH, 'results')
+
 TOOLS = [  # label, results file
-    ('Constant Recognition K<=5', 'results/v0_K5.tsv'),
-    ('Constant Recognition K<=6', 'results/v0_K6.tsv'),
-    ('Constant Recognition K<=7', 'results/v0_K7.tsv'),
-    ('CR GPU K<=7', 'results/v0_cuda_K7.tsv'),
-    ('CR GPU K<=8', 'results/v0_cuda_K8.tsv'),
-    ('nsimplify', 'results/v0_nsimplify.tsv'),
-    ('Maple identify', 'results/v0_maple_identify.tsv'),
-    ('Wolfram|Alpha', 'results/v0_wolframalpha.tsv'),
-    ('AskConstants', 'results/v0_askconstants.tsv'),
-    ('RIES -l2', 'results/v0_ries_l2.tsv'),
-    ('RIES -l4', 'results/v0_ries_l4.tsv'),
-    ('RIES -l5', 'results/v0_ries_l5.tsv'),
+    ('Constant Recognition K<=5', os.path.join(RESULTS, 'v0_K5.tsv')),
+    ('Constant Recognition K<=6', os.path.join(RESULTS, 'v0_K6.tsv')),
+    ('Constant Recognition K<=7', os.path.join(RESULTS, 'v0_K7.tsv')),
+    ('CR GPU K<=7', os.path.join(RESULTS, 'v0_cuda_K7.tsv')),
+    ('CR GPU K<=8', os.path.join(RESULTS, 'v0_cuda_K8.tsv')),
+    ('nsimplify', os.path.join(RESULTS, 'v0_nsimplify.tsv')),
+    ('Maple identify', os.path.join(RESULTS, 'v0_maple_identify.tsv')),
+    ('Wolfram|Alpha', os.path.join(RESULTS, 'v0_wolframalpha.tsv')),
+    ('AskConstants', os.path.join(RESULTS, 'v0_askconstants.tsv')),
+    ('RIES -l2', os.path.join(RESULTS, 'v0_ries_l2.tsv')),
+    ('RIES -l4', os.path.join(RESULTS, 'v0_ries_l4.tsv')),
+    ('RIES -l5', os.path.join(RESULTS, 'v0_ries_l5.tsv')),
 ]
 WRONG = ('false positive', 'rational fallback')
 
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
-    consts = {r['id']: r for r in csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17}
+    consts = {r['id']: r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17}
     runs = {}
     for label, path in TOOLS:
         if os.path.exists(path):

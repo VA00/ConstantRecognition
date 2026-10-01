@@ -21,14 +21,18 @@ is in STARRED as read from the image.
 
 Replaces the rows of source "Abramowitz & Stegun ..." and keeps the others.
 
-Usage (from this directory):  python import_aands_table_1_1.py
+Usage:  python import_aands_table_1_1.py
 """
 import csv
 import gzip
 import json
+import os
 import re
 import sys
 import urllib.request
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SOURCES = os.path.join(BENCH, 'data', 'v0', 'constants_v0_sources.tsv')
 
 ITEM = 'https://archive.org/download/AandS-mono600/AandS-mono600'
 LEAVES = {2: 15, 3: 16}   # book page -> scan leaf
@@ -156,9 +160,9 @@ def main():
                 note = '; '.join(n for n in (ERRATA.get(label, ''),
                                              'corrected since the first printing (asterisk)' if star or label in STARRED else '') if n)
                 rows.append([SOURCE, label, label, formula, v, note])
-    old = list(csv.reader(open('constants_v0_sources.tsv', encoding='utf-8'), delimiter='\t'))
+    old = list(csv.reader(open(SOURCES, encoding='utf-8'), delimiter='\t'))
     kept = [r for r in old if not r[0].startswith('Abramowitz & Stegun')]
-    with open('constants_v0_sources.tsv', 'w', encoding='utf-8', newline='') as f:
+    with open(SOURCES, 'w', encoding='utf-8', newline='') as f:
         for r in kept + rows:
             f.write('\t'.join(r) + '\n')
     print(f'kept {len(kept) - 1} rows of other sources; added {len(rows)} A&S rows, '

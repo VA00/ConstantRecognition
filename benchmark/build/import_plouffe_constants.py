@@ -25,12 +25,16 @@ agrees to 16 digits only.
 
 Replaces the rows of source "Plouffe, ..." and keeps the others.
 
-Usage (from this directory):  python import_plouffe_constants.py
+Usage:  python import_plouffe_constants.py
 """
 import csv
+import os
 import re
 import sys
 import urllib.request
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SOURCES = os.path.join(BENCH, 'data', 'v0', 'constants_v0_sources.tsv')
 
 URL = 'https://www.gutenberg.org/files/634/634.txt'
 SOURCE = 'Plouffe, Miscellaneous Mathematical Constants (Project Gutenberg #634, 1996)'
@@ -219,9 +223,9 @@ def main():
         for b, e in zip(bl, entries):
             if e:
                 rows.append([SOURCE, e[0], e[1], e[2], decimal(b, e[0]), ERRATA.get(e[0], '')])
-    old = list(csv.reader(open('constants_v0_sources.tsv', encoding='utf-8'), delimiter='\t'))
+    old = list(csv.reader(open(SOURCES, encoding='utf-8'), delimiter='\t'))
     kept = [r for r in old if not r[0].startswith('Plouffe,')]
-    with open('constants_v0_sources.tsv', 'w', encoding='utf-8', newline='') as f:
+    with open(SOURCES, 'w', encoding='utf-8', newline='') as f:
         for r in kept + rows:
             f.write('\t'.join(r) + '\n')
     print(f'kept {len(kept) - 1} rows of other sources; added {len(rows)} Plouffe rows ({sum(r[3] != "" for r in rows)} with a formula)')

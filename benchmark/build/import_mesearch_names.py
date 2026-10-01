@@ -21,7 +21,7 @@ the abelian group enumeration constants A2 and A3.
 Reads a checkout of the OEIS data repository, see import_oeis_finch.py.
 Replaces the rows of source "MESearch ..." and keeps the others.
 
-Usage (from this directory):  python import_mesearch_names.py <path to oeisdata>
+Usage:  python import_mesearch_names.py <path to oeisdata>
 """
 import collections
 import csv
@@ -31,6 +31,9 @@ import subprocess
 import sys
 
 from import_oeis_finch import formula
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SOURCES = os.path.join(BENCH, 'data', 'v0', 'constants_v0_sources.tsv')
 
 MAP = {   # MESearch name -> OEIS decimal expansion
     "Wagon's constant": 'A122790',
@@ -58,9 +61,9 @@ def main():
         assert digits.isdigit(), a
         offset = int(e['O'][0].split(',')[0])
         rows.append([source, a, name, formula(e['t']), f'0.{digits}e{offset}', ''])
-    old = list(csv.reader(open('constants_v0_sources.tsv', encoding='utf-8'), delimiter='\t'))
+    old = list(csv.reader(open(SOURCES, encoding='utf-8'), delimiter='\t'))
     kept = [r for r in old if not r[0].startswith('MESearch')]
-    with open('constants_v0_sources.tsv', 'w', encoding='utf-8', newline='') as out:
+    with open(SOURCES, 'w', encoding='utf-8', newline='') as out:
         for r in kept + rows:
             out.write('\t'.join(r) + '\n')
     print(f'kept {len(kept) - 1} rows of other sources; added {len(rows)} MESearch rows ({sum(r[3] != "" for r in rows)} with a formula)')

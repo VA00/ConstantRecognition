@@ -17,15 +17,19 @@ duplicate with too few digits to be merged.
 
 Replaces the rows of source "OEIS keyword:cons with ..." and keeps the others.
 
-Usage (from this directory):  python import_oeis_nice_core.py
+Usage:  python import_oeis_nice_core.py
 """
 import collections
 import csv
 import datetime
+import os
 import re
 import sys
 import urllib.parse
 import urllib.request
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SOURCES = os.path.join(BENCH, 'data', 'v0', 'constants_v0_sources.tsv')
 
 SOURCE = f'OEIS keyword:cons with keyword:nice or keyword:core (fetched {datetime.date.today().isoformat()})'
 EXCLUDED = {
@@ -123,9 +127,9 @@ def main():
             sys.exit(f'{a}: terms are not digits')
         offset = OFFSET.get(a, int(e['O'][0].split(',')[0]))
         rows.append([SOURCE, a, NAME.get(a) or name(e['N'][0]), FORMULA.get(a, ''), f'0.{digits}e{offset}', ''])
-    old = list(csv.reader(open('constants_v0_sources.tsv', encoding='utf-8'), delimiter='\t'))
+    old = list(csv.reader(open(SOURCES, encoding='utf-8'), delimiter='\t'))
     kept = [r for r in old if not r[0].startswith('OEIS keyword:cons with')]
-    with open('constants_v0_sources.tsv', 'w', encoding='utf-8', newline='') as f:
+    with open(SOURCES, 'w', encoding='utf-8', newline='') as f:
         for r in kept + rows:
             f.write('\t'.join(r) + '\n')
     print(f'kept {len(kept) - 1} rows of other sources; added {len(rows)} OEIS rows '

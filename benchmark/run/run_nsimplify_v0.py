@@ -19,7 +19,7 @@ nsimplify always answers: when nothing simple fits, it returns an integer
 relation of x with pi, e and phi (mpmath.identify) or a rational, which are
 right in double precision. Only the 64 digits of the benchmark tell them apart.
 
-Usage (from this directory):  python run_nsimplify_v0.py [--jobs 12]
+Usage:  python run_nsimplify_v0.py [--jobs 12]
 Writes results/v0_nsimplify.tsv, and compares with the Constant Recognition results given by
 --compare (default results/v0_K5.tsv).
 """
@@ -30,6 +30,10 @@ import multiprocessing
 import os
 import sys
 import time
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
+RESULTS = os.path.join(BENCH, 'results')
 
 TIMEOUT = 60
 
@@ -48,13 +52,13 @@ def work(args):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--jobs', type=int, default=12)
-    ap.add_argument('--compare', default='results/v0_K5.tsv', help='engine results of run_benchmark_v0.py')
+    ap.add_argument('--compare', default=os.path.join(RESULTS, 'v0_K5.tsv'), help='engine results of run_benchmark_v0.py')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
     import mpmath as mp
     import sympy as sp
     mp.mp.dps = 80
-    rows = [r for r in csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
     t0 = time.time()
     with multiprocessing.Pool(a.jobs) as pool:
         pending = [pool.apply_async(work, (r['value'],)) for r in rows]
@@ -81,8 +85,8 @@ def main():
         else:
             verdict = 'rational fallback' if sp.sympify(expr).is_Rational else 'false positive'
         results.append({**r, 'nsimplify': expr, 'ops': ops, 'time': dt, 'agree': d, 'verdict': verdict, 'error': err or ''})
-    os.makedirs('results', exist_ok=True)
-    with open('results/v0_nsimplify.tsv', 'w', encoding='utf-8', newline='') as f:
+    os.makedirs(RESULTS, exist_ok=True)
+    with open(os.path.join(RESULTS, 'v0_nsimplify.tsv'), 'w', encoding='utf-8', newline='') as f:
         cols = ['id', 'name', 'class', 'digits', 'verdict', 'ops', 'nsimplify', 'agree', 'time', 'error', 'formula']
         f.write('\t'.join(cols) + '\n')
         for x in results:

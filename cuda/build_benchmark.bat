@@ -1,5 +1,5 @@
 @echo off
-REM build_benchmark.bat - build constant_gpu_benchmark.exe on Windows (for benchmark/run_cuda_v0.py)
+REM build_benchmark.bat - build constant_gpu_benchmark.exe on Windows (for benchmark/run/run_cuda_v0.py)
 REM
 REM Needs the CUDA toolkit (nvcc) and Visual Studio with C++ (nvcc uses its cl.exe as host compiler).
 REM Optional argument: the GPU architecture, default sm_120 (RTX 50xx); e.g. sm_89 for RTX 40xx.

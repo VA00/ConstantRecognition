@@ -23,14 +23,18 @@ still confirmed when its value is published digits (fewer than 64) or when a
 source publishes 64 digits or more (the build checks those against the
 value); one resting on Mathematica's N[] alone is an error.
 
-Usage (from this directory):  python check_constants_v0.py
+Usage:  python check_constants_v0.py
 """
 import csv
+import os
 from fractions import Fraction
 import re
 import sys
 
 import mpmath as mp
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
 
 mp.mp.dps = 80
 
@@ -220,7 +224,7 @@ def mp_value(name, formula):
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8')   # names such as Erdős on a Windows console
-    rows = list(csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t'))
+    rows = list(csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t'))
     low, unchecked, n_checked = [], [], 0
     for r in rows:
         stated = int(r['digits'])

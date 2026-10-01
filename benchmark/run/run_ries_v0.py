@@ -24,7 +24,7 @@ of A, sinpi/cospi/tanpi = sin, cos, tan of pi*x, A B atan2 as checked against RI
 
 Build (Windows): cl /O2 ries-for-windows.c (with an empty stdafx.h), or elsewhere
 gcc ries.c -lm -o ries.
-Usage (from this directory):
+Usage:
   python run_ries_v0.py --ries <path to ries> [--level 2] [--jobs 12]
 Writes results/v0_ries_l<level>.tsv (and the raw RIES output, results/v0_ries_l<level>_raw.tsv) and prints a summary.
 """
@@ -41,6 +41,10 @@ import threading
 import time
 
 import mpmath as mp
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
+RESULTS = os.path.join(BENCH, 'results')
 
 mp.mp.dps = 80
 
@@ -123,14 +127,14 @@ def main():
     ap.add_argument('--limit', type=int, default=0)
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
     if a.limit:
         rows = rows[:a.limit]
     t0 = time.time()
     # RIES's output per constant is kept (json-encoded) in a raw file, so that scoring can be redone
     # and an interrupted run resumes
-    os.makedirs('results', exist_ok=True)
-    raw_path = f'results/v0_ries_l{a.level}_raw.tsv'
+    os.makedirs(RESULTS, exist_ok=True)
+    raw_path = f'{RESULTS}/v0_ries_l{a.level}_raw.tsv'
     raw = {}
     if os.path.exists(raw_path):
         for line in open(raw_path, encoding='utf-8'):
@@ -171,8 +175,8 @@ def main():
             verdict = 'false negative' if d >= min(30, digits - 1) else 'not found'
         results.append({**r, 'verdict': verdict, 'equation': eq['text'] if eq else '', 'complexity': eq['complexity'] if eq else '',
                         'agree': d, 'solved': root is not None, 'n_equations': len(eqs)})
-    os.makedirs('results', exist_ok=True)
-    path = f'results/v0_ries_l{a.level}.tsv'
+    os.makedirs(RESULTS, exist_ok=True)
+    path = f'{RESULTS}/v0_ries_l{a.level}.tsv'
     cols = ['id', 'name', 'class', 'digits', 'verdict', 'equation', 'complexity', 'agree', 'solved', 'formula']
     with open(path, 'w', encoding='utf-8', newline='') as f:
         f.write('\t'.join(cols) + '\n')

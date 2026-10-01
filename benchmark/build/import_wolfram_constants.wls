@@ -18,11 +18,11 @@
      its Precision claims (200 for most, only a few for some constants)
    - skipped: complex values, and entities with neither a value nor a formula
 
-   Usage (from this directory):  wolframscript -file import_wolfram_constants.wls
+   Usage:  wolframscript -file import_wolfram_constants.wls
 *)
 
 dir = DirectoryName[$InputFileName];
-file = FileNameJoin[{dir, "constants_v0_sources.tsv"}];
+file = FileNameJoin[{ParentDirectory[dir], "data", "v0", "constants_v0_sources.tsv"}];
 source = "Wolfram Knowledgebase MathematicalConstant (Mathematica " <> First[StringSplit[$Version]] <> ", " <> DateString["ISODate"] <> ")";
 
 (* Inactive[f][args] -> "f[args]" without evaluating anything *)

@@ -18,7 +18,7 @@ when there is none within the threshold.
 
 Build (Windows, from cuda/, in a "x64 Native Tools" prompt or after vcvars64.bat):
   nvcc -O3 -arch=sm_120 constant_gpu_benchmark.cu -o constant_gpu_benchmark
-Usage (from this directory):
+Usage:
   python run_cuda_v0.py --exe <path to constant_gpu_benchmark> [--maxk 7] [--threshold 64]
 Writes results/v0_cuda_K<MaxK>.tsv and prints a summary.
 """
@@ -33,6 +33,10 @@ import time
 import mpmath as mp
 
 from run_benchmark_v0 import CONST, UNARY, agree
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
+RESULTS = os.path.join(BENCH, 'results')
 
 mp.mp.dps = 80
 # this kernel applies f(second, top): "a, b, SUBTRACT" is a - b, "a, b, POWER" is a^b
@@ -63,7 +67,7 @@ def main():
     ap.add_argument('--threshold', type=float, default=64.0, help='FP32 candidate threshold in FLT_EPSILON')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
     targets = ''.join(f'{r["id"]} {repr(float(r["value"]))}\n' for r in rows)
     t0 = time.time()
     p = subprocess.run([a.exe, str(a.maxk), str(a.threshold)], input=targets, capture_output=True, text=True)
@@ -87,8 +91,8 @@ def main():
         else:
             verdict = 'false negative' if d >= min(30, digits - 1) else 'not found'
         results.append({**r, **o, 'agree': d, 'verdict': verdict})
-    os.makedirs('results', exist_ok=True)
-    path = f'results/v0_cuda_K{a.maxk}.tsv'
+    os.makedirs(RESULTS, exist_ok=True)
+    path = f'{RESULTS}/v0_cuda_K{a.maxk}.tsv'
     cols = ['id', 'name', 'class', 'digits', 'verdict', 'K', 'RPN', 'REL_ERR', 'candidates', 'overflow', 'ms', 'agree', 'formula']
     with open(path, 'w', encoding='utf-8', newline='') as f:
         f.write('\t'.join(cols) + '\n')
@@ -111,7 +115,7 @@ def main():
         if x['verdict'] in ('false positive', 'false negative'):
             print(f'  {x["verdict"]}: {x["name"][:50]}  {x["RPN"]}  FP64 error {x["REL_ERR"]:.2e}, agrees to {x["agree"]:.1f} digits')
     print('\nexact, by K:', dict(sorted(collections.Counter(x['K'] for x in results if x['verdict'] == 'exact').items())))
-    cpu = f'results/v0_K{a.maxk}.tsv'
+    cpu = f'{RESULTS}/v0_K{a.maxk}.tsv'
     if os.path.exists(cpu):
         c = {r['id']: r['verdict'] for r in csv.DictReader(open(cpu, encoding='utf-8'), delimiter='\t')}
         both = collections.Counter((c.get(x['id']) == 'exact', x['verdict'] == 'exact') for x in results)

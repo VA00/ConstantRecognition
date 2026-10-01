@@ -23,7 +23,7 @@ Build the engine for Node.js (emsdk, see C/compile.bat), from C/:
   emcc -O2 vsearch_batch.c vsearch_RPN_core.c utils.c -s ALLOW_MEMORY_GROWTH=1 -s NODERAWFS=1 -o vsearch_batch.js
 or natively (Linux, macOS): make vsearch_batch, and pass --engine ./vsearch_batch.
 
-Usage (from this directory):
+Usage:
   python run_benchmark_v0.py --engine <path to vsearch_batch.js or vsearch_batch> [--maxk 5] [--jobs 24]
 Writes results/v0_K<MaxK>.tsv and prints a summary.
 """
@@ -39,6 +39,10 @@ import sys
 import time
 
 import mpmath as mp
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
+RESULTS = os.path.join(BENCH, 'results')
 
 mp.mp.dps = 80
 CONST = {'PI': mp.pi, 'EULER': mp.e, 'NEG': mp.mpf(-1), 'GOLDENRATIO': mp.phi, 'ONE': mp.mpf(1), 'TWO': mp.mpf(2),
@@ -94,7 +98,7 @@ def main():
     ap.add_argument('--jobs', type=int, default=os.cpu_count())
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
     t0 = time.time()
     with concurrent.futures.ThreadPoolExecutor(a.jobs) as pool:
         outs = list(pool.map(lambda r: run(a.engine, float(r['value']), a.maxk), rows))
@@ -111,8 +115,8 @@ def main():
         else:
             verdict = 'false negative' if d >= min(30, digits - 1) else 'not found'
         results.append({**r, **o, 'agree': d, 'verdict': verdict})
-    os.makedirs('results', exist_ok=True)
-    path = f'results/v0_K{a.maxk}.tsv'
+    os.makedirs(RESULTS, exist_ok=True)
+    path = f'{RESULTS}/v0_K{a.maxk}.tsv'
     cols = ['id', 'name', 'class', 'digits', 'verdict', 'K', 'RPN', 'REL_ERR', 'CR', 'agree', 'formula']
     with open(path, 'w', encoding='utf-8', newline='') as f:
         f.write('\t'.join(cols) + '\n')

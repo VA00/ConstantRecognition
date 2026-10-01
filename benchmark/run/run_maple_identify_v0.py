@@ -18,7 +18,7 @@ round-trip), the same input as the others. Maple evaluates each answer with
 
 Needs Maple (cmaple). The constants are split over --jobs Maple processes.
 
-Usage (from this directory):
+Usage:
   python run_maple_identify_v0.py --maple "C:/Program Files/Maple 2026/bin.X86_64_WINDOWS/cmaple.exe" [--jobs 12] [--compare results/v0_K6.tsv]
 Writes results/v0_maple_identify.tsv and prints a summary and the comparison.
 """
@@ -33,6 +33,10 @@ import tempfile
 import time
 
 import mpmath as mp
+
+BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
+RESULTS = os.path.join(BENCH, 'results')
 
 TIMEOUT = 60
 mp.mp.dps = 80
@@ -76,10 +80,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--maple', required=True)
     ap.add_argument('--jobs', type=int, default=12)
-    ap.add_argument('--compare', default='results/v0_K6.tsv', help='engine results of run_benchmark_v0.py')
+    ap.add_argument('--compare', default=os.path.join(RESULTS, 'v0_K6.tsv'), help='engine results of run_benchmark_v0.py')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open('constants_v0.tsv', encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
     chunks = [rows[i::a.jobs] for i in range(a.jobs)]
     t0 = time.time()
     res = {}
@@ -102,8 +106,8 @@ def main():
         else:
             verdict = 'rational fallback' if o['kind'] == 'RATIONAL' else 'false positive'
         results.append({**r, **o, 'agree': d, 'verdict': verdict})
-    os.makedirs('results', exist_ok=True)
-    with open('results/v0_maple_identify.tsv', 'w', encoding='utf-8', newline='') as f:
+    os.makedirs(RESULTS, exist_ok=True)
+    with open(os.path.join(RESULTS, 'v0_maple_identify.tsv'), 'w', encoding='utf-8', newline='') as f:
         cols = ['id', 'name', 'class', 'digits', 'verdict', 'identify', 'agree', 'time', 'formula']
         f.write('\t'.join(cols) + '\n')
         for x in results:
@@ -122,7 +126,7 @@ def main():
         t = collections.Counter(x['verdict'] for x in results if x['class'] == c)
         print(f'  {c:12s} {sum(t.values()):6d} {t["exact"]:7d} {t["false positive"]:7d} {t["rational fallback"]:9d} {t["not found"]:10d}')
 
-    others = {'Constant Recognition': a.compare, 'nsimplify': 'results/v0_nsimplify.tsv'}
+    others = {'Constant Recognition': a.compare, 'nsimplify': os.path.join(RESULTS, 'v0_nsimplify.tsv')}
     for label, path in others.items():
         if not os.path.exists(path):
             continue

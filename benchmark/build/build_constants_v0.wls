@@ -37,11 +37,12 @@
    - A note starting with "erratum" marks published digits known to be wrong:
      kept for the record, not checked.
 
-   Usage (from this directory):  wolframscript -file build_constants_v0.wls
+   Usage:  wolframscript -file build_constants_v0.wls
 *)
 
 dir = DirectoryName[$InputFileName];
-src = Import[FileNameJoin[{dir, "constants_v0_sources.tsv"}], "TSV", "Numeric" -> False, CharacterEncoding -> "UTF-8"];
+data = FileNameJoin[{ParentDirectory[dir], "data", "v0"}];
+src = Import[FileNameJoin[{data, "constants_v0_sources.tsv"}], "TSV", "Numeric" -> False, CharacterEncoding -> "UTF-8"];
 src = Rest[src /. _Missing -> ""];   (* Import turns empty fields into Missing[...]; drop the header *)
 
 (* "1.25e+00", "-0.10491", "262537412640768743.99999999999925007" ->
@@ -182,7 +183,7 @@ out = SortBy[out, #["sort"] &];
 cols = {"id", "name", "value", "digits", "formula", "class", "sources", "check", "notes"};
 table = Prepend[MapIndexed[Prepend[Lookup[#1, Rest[cols]], #2[[1]]] &, out], cols];
 (* plain TSV: no quotes around text, LF line ends *)
-Export[FileNameJoin[{dir, "constants_v0.tsv"}], StringRiffle[Map[ToString, table, {2}], "\n", "\t"] <> "\n", "Text", CharacterEncoding -> "UTF-8"];
+Export[FileNameJoin[{data, "constants_v0.tsv"}], StringRiffle[Map[ToString, table, {2}], "\n", "\t"] <> "\n", "Text", CharacterEncoding -> "UTF-8"];
 
 Print["classes: ", Tally[Lookup[out, "class"]]];
 Print["mismatches (", Count[out, a_ /; a["check"] =!= "ok"], "):"];
