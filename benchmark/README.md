@@ -49,9 +49,19 @@ The GPU search finds exactly the same 417 constants at K <= 7 as Constant Recogn
 times faster in wall time (600 times in CPU time), which makes K <= 8 (68.6 billion formulas, about 2 s
 per constant) affordable: 447 exact. Its FP64 check is the same 16 eps test, so it shares the false
 negatives of cancellation: at K <= 8, 4 (pi^2 - 9) - 3 for the quadtree leaf proportion constant is
-rejected with 23 eps. On the CPU, ln Gamma(5/4) at K = 5 is rejected with 21 eps; the GPU, which
-verifies all candidates of a length and keeps the best, accepts another formula of the same length,
-ln Gamma(cosh ln 2), with 2 eps.
+rejected with 23 eps. The GPU, which verifies all candidates of a length and keeps the best, accepts
+ln Gamma(cosh ln 2) for ln Gamma(5/4) at K = 5 with 2 eps.
+
+On the CPU, ln Gamma(5/4) = `FOUR, FIVE, DIVIDE, GAMMA, LOG` is rejected at K = 5 with 21 eps, and
+the cause is not cancellation but the math library. The WASM build's `tgamma` (musl) is 3.8 ulp off at
+1.25 (and up to 6.4 ulp at arguments in (-6, 6)). The logarithm of Gamma(5/4) = 0.906, a value near 1,
+amplifies that relative error by 1/|ln 0.906| = 10, which gives 21 eps. The same engine built natively with MSVC, icx or gcc, whose `tgamma`
+is within 0.25 ulp at 1.25, accepts the formula at K = 5 with 2 eps. Recognition therefore depends on the accuracy of the
+libm as well as on the search: Intel's libm is within 0.53 ulp for all CALC4 functions, while the Windows UCRT
+(used by MSVC and by MinGW gcc) and musl reach 1-1.5 ulp for the hyperbolic functions, and 3.4 and 6.4 ulp for Gamma. Native builds are not much
+faster, because the search time goes into the libm calls: the full K <= 6 run takes 153 s in WASM,
+177 s with MSVC 17.7 `/O2`, 139 s with icx 2025.3 `/O3` and 130 s with gcc 16.1 (MSYS2 UCRT64) `-O3` (12 jobs,
+2026-10-02), with the same verdicts (376 exact).
 
 RIES's wrong answers include, besides the common traps, equations that hold only in floating point,
 more of them at deeper levels: for pi^10, x^(1/5) - pi^2 = 2^-49; for e^(pi sqrt 163),
