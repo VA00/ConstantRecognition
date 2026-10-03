@@ -1,0 +1,3 @@
+# raw match lists are large; the log and *_best.tsv are kept
+*_matches.tsv
+__pycache__/
