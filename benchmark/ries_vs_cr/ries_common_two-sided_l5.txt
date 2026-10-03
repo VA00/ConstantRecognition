@@ -1,0 +1,234 @@
+First match must be closer than 7.5e-10 times your target value.
+Will not use more than 1.2e+10 bytes of memory.
+
+   Your target value: T = 0.0072973525643                        mrob.com/ries
+
+         x 6 x / ln / = 8 e 6 - **           for x = 0.007297352566058     {135}
+   x recip 6 x / ln * = 8 6 e - **           for x = 0.007297352566058     {141}
+ x 2 * sqrt recip 4 - dup* = pi 1 + dup* pi ln + for x = 0.00729735255969775 {146}
+       x 5 4 ** * 7 * = 2 pi 1 - sqrt + exp  for x = 0.00729735256880591   {148}
+ x 3 * pi dup* ln recip + = e pi 5 - recip + recip for x = 0.00729735256039446 {151}
+ x phi recip ** pi dup* * recip = 1 phi e recip exp / + for x = 0.00729735256264799 {153}
+ x dup* recip ln e sqrt recip - = 2 2 3 ln dup* + ** for x = 0.00729735256376323 {154}
+    x 6 x / ln / sqrt = 8 sqrt e 6 - **      for x = 0.007297352566058     {153}
+ x recip ln ln ln e * = 4 ln dup* pi recip - sqrt for x = 0.00729735256725592 {154}
+ x 1 phi - ** pi dup* / = 1 phi e recip exp / + for x = 0.007297352562648  {155}
+ x sqrt pi 8 + * 2 + = pi 3 sqrt 7 - recip + for x = 0.00729735256816314   {154}
+ x 5 dup* e / dup* * recip = 7 pi 1 - sqrt exp / for x = 0.00729735256880591 {156}
+  x e 5 dup* / dup* / = pi 1 - sqrt exp 7 /  for x = 0.00729735256880591   {150}
+ x sqrt recip exp pi 3 * / = 4 exp phi ln / dup* for x = 0.00729735256640712 {156}
+     x phi 6 ** * 7 * = e 5 / 7 recip **     for x = 0.00729735256939559   {152}
+ x 6 exp * recip 3 recip + = 2 sqrt 2 pi dup* recip + / for x = 0.00729735256607583 {157}
+ x recip pi 1 + dup* + 3 / = 5 6 pi 1 - ** + for x = 0.00729735256486991   {157}
+ x sqrt pi sqrt 7 ** recip - = 5 pi 6 recip - * recip for x = 0.00729735255911947 {155}
+ x sqrt recip 1 + 2 pi ** / = 3 7 recip + pi recip ** for x = 0.00729735256730864 {154}
+       x 9 9 e ** + * = 1 5 5 ln dup* / +    for x = 0.00729735255912628   {158}
+ x sqrt pi dup* recip 5 - * = 6 ln e 7 - /   for x = 0.00729735256234838   {155}
+ x recip 4 ln sqrt exp * = pi dup* 5 sqrt - 3 ** for x = 0.00729735256284124 {152}
+      x 6 x / ln / ln = e 6 - 8 ln *         for x = 0.00729735256605801   {159}
+ x x sqrt + 3 e ** * = 2 pi recip phi ln - + for x = 0.00729735256717361   {158}
+  x 5 * recip 9 2 * - = pi 3 - sqrt 5 dup* * for x = 0.0072973525678627    {157}
+ x recip pi exp * 6 recip ** = 1 e 1 - e sqrt * + for x = 0.00729735255985682 {158}
+  x sqrt 4 * x - e * = 2 pi / sqrt 9 recip + for x = 0.00729735256272015   {155}
+   x ln pi + e * pi + = pi sqrt 5 2 ln * -   for x = 0.00729735256906648   {159}
+ x sqrt sqrt recip pi 2 * recip + = pi 2 pi 2 sqrt + / + for x = 0.007297352567545 {158}
+ x dup* ln e sqrt recip + dup* = 4 2 3 ln dup* + ** for x = 0.00729735256376323 {158}
+     x 7 phi / 4 ** * = 6 2 7 / sqrt + sqrt  for x = 0.00729735256404982   {158}
+ x 9 dup* * 7 * 1 - = 3 2 sqrt 2 recip - sqrt / for x = 0.00729735256713454 {160}
+ x sqrt recip 3 2 / - sqrt = 3 4 ln pi / dup* + for x = 0.0072973525650945 {154}
+ x recip 1 pi dup* + dup* - sqrt = 5 pi ln pi ** recip - for x = 0.00729735256340049 {158}
+ x sqrt e * recip 3 ln - = 7 pi recip exp 3 / * for x = 0.00729735256623316 {160}
+ x e sqrt recip exp sqrt * sqrt = 2 3 ln dup* ** exp recip for x = 0.00729735256376323 {158}
+ x pi sqrt * recip ln pi - = pi 4 ln - 3 recip ** for x = 0.00729735256176721 {157}
+ x 3 pi e ** recip ** ** = e pi sqrt 9 ** + recip for x = 0.00729735256490033 {160}
+  x 2 7 e ** + * dup* = 3 3 recip ** 2 ln +  for x = 0.00729735256094908   {158}
+ x 2 3 ln recip + * 1 + = 7 dup* 2 sqrt - recip exp for x = 0.00729735256585952 {159}
+ x 1 pi sqrt + exp dup* recip + = pi exp recip 6 sqrt * dup* for x = 0.00729735256582467 {159}
+ x 7 2 sqrt + * phi * = phi exp 4 dup* / dup* for x = 0.00729735256689584  {155}
+ x x 7 * sqrt ln recip + = 2 phi pi 5 - * /  for x = 0.0072973525594417    {161}
+ x 2 pi - ** phi / sqrt = 4 e dup* + e sqrt + for x = 0.00729735256588621  {159}
+ x 8 sqrt 9 recip - * recip = 1 pi 8 + phi ** + for x = 0.00729735256221187 {160}
+ x phi / 3 recip ** 3 * = 7 1 pi sqrt + recip ** recip for x = 0.00729735256188889 {160}
+ x recip 5 e / pi ** - = phi 9 dup* 2 recip - * for x = 0.00729735256761355 {160}
+ x recip 2 sqrt - 3 * 2 + = e 2 5 exp + *    for x = 0.00729735255890383   {152}
+  x 5 * 3 * recip 6 - = pi 3 2 9 ** / -      for x = 0.00729735256423308   {162}
+ x sqrt sqrt 2 * sqrt pi + = 4 e pi 1 + * + sqrt for x = 0.00729735256288379 {154}
+ x 2 1 2 pi ** + ** * = e 4 6 sqrt sqrt - *  for x = 0.00729735256369216   {162}
+ x recip ln pi sqrt sqrt recip - = pi 4 e exp sqrt / + for x = 0.00729735256226954 {156}
+ x recip 3 sqrt - 1 + pi / = pi 9 pi exp sqrt + * for x = 0.0072973525658816 {161}
+ x dup* 7 exp * 2 * recip = 5 e pi ln dup* * + for x = 0.00729735255896121 {160}
+ x recip 4 phi sqrt ** / dup* = e pi 3 - e ** / for x = 0.00729735256361876 {162}
+ x 4 * recip pi - 9 / = 3 3 4 / e ** +       for x = 0.00729735256699659   {162}
+ x 6 5 dup* + sqrt sqrt * = 8 pi 3 - pi ** * for x = 0.00729735256452798   {162}
+ x recip pi + 7 exp / recip = 9 pi 3 + recip exp - for x = 0.00729735256714061 {160}
+ x 3 pi 5 + dup* + * = 2 e 4 + dup* recip - recip for x = 0.00729735256329817 {159}
+ x sqrt recip pi 3 * ln - = 8 phi ln dup* ln - for x = 0.00729735256640712 {159}
+ x 8 * sqrt sqrt pi dup* * = pi e sqrt / 6 sqrt ** for x = 0.00729735256116821 {160}
+ x recip e - pi 1 + dup* / = 5 3 sqrt + 3 ln + for x = 0.00729735256339877 {162}
+   x 2 ln 2 - ** pi * = 7 3 * pi exp + dup*  for x = 0.00729735255940082   {160}
+ x sqrt 6 * pi ** 2 * = 2 ln e 9 recip + /   for x = 0.00729735256529129   {160}
+ x 1 pi 3 sqrt + dup* + * = pi dup* 4 3 recip + - recip for x = 0.00729735256180105 {161}
+ x sqrt 6 / sqrt 9 * = 2 ln pi 2 + recip ** recip for x = 0.0072973525656617 {156}
+         x 6 x / ln / = 8 1 e 7 - + **       for x = 0.007297352566058     {149}
+ x 2 e 3 + exp + * = e pi pi recip ** dup* recip - for x = 0.00729735256902583 {162}
+ x dup* 1 4 6 ** - * = 1 5 pi - pi recip ** - for x = 0.00729735256906257  {161}
+ x 1 5 sqrt ln + dup* * = 7 pi 3 * exp / sqrt for x = 0.00729735256213452  {159}
+ x 5 pi ** * ln dup* recip = pi e exp 3 - sqrt ** for x = 0.00729735256133541 {163}
+ x 2 * sqrt recip 8 - recip = 3 6 ln * pi sqrt - for x = 0.00729735256020818 {157}
+ x recip 9 ln sqrt * 2 - = 4 9 ln - 9 **     for x = 0.00729735256788993   {163}
+ x recip 5 3 sqrt + sqrt + = 8 phi dup* * dup* pi / for x = 0.00729735256923059 {158}
+ x 4 exp * dup* 2 * recip = 5 e / pi ln dup* + for x = 0.00729735255896122 {159}
+ x 5 * recip 3 exp sqrt + = 6 dup* 4 9 recip + - for x = 0.00729735256881763 {162}
+ x recip 8 sqrt - pi * sqrt = pi exp 9 recip e - + for x = 0.00729735256711103 {160}
+ x 1 pi 3 sqrt + dup* + * = pi dup* 3 recip - 4 - recip for x = 0.00729735256180105 {162}
+ x e pi 9 ** / + recip = 4 pi phi * 3 ** +   for x = 0.00729735256246743   {163}
+ x 4 pi sqrt sqrt exp ** * = 4 3 pi / - recip exp for x = 0.00729735256246652 {161}
+ x pi phi sqrt sqrt * exp * = 5 3 sqrt 1 - sqrt ** recip for x = 0.00729735256469725 {164}
+ x 6 e dup* * pi ** * = 2 3 ln dup* + 6 **   for x = 0.00729735256603166   {164}
+ x phi 7 * 3 - * recip = 8 recip 7 dup* 3 / + for x = 0.00729735256733689  {163}
+ x 3 e ** * 7 recip - = 7 recip pi dup* recip - dup* for x = 0.0072973525614511 {155}
+ x pi dup* 2 ln recip + * recip = e 3 recip exp + 8 + for x = 0.00729735256286366 {164}
+ x e sqrt 8 dup* - dup* * = 2 pi recip 9 recip - recip ** for x = 0.00729735256305702 {164}
+ x 6 dup* 7 sqrt + dup* * = 2 2 phi / 8 ** * for x = 0.00729735256538355   {164}
+ x 2 sqrt recip - e 2 + * = 2 9 1 + ln dup* - for x = 0.00729735255884409  {159}
+ x 9 * x sqrt + e * = 6 ln 1 - sqrt exp recip for x = 0.00729735256347483  {161}
+ x 9 * x sqrt + recip ln = 1 6 ln 1 - sqrt + for x = 0.00729735256347483   {155}
+ x 7 * recip 3 exp - dup* = pi 7 sqrt - sqrt e / for x = 0.00729735256526568 {162}
+ x 7 * recip 4 * phi + = 7 2 pi pi ** * +    for x = 0.00729735256603998   {159}
+ x sqrt 1 pi recip - ln dup* + = pi 3 ** recip 5 recip + for x = 0.00729735256764425 {156}
+ x recip 4 8 recip - exp + = phi dup* e ** dup* 2 - for x = 0.00729735256330057 {162}
+ x dup* 4 phi sqrt ** dup* * = pi 3 - e ** e / for x = 0.00729735256361876 {163}
+ x recip pi 1 - sqrt exp * sqrt = 5 dup* 7 sqrt e / * for x = 0.00729735256880591 {164}
+ x recip 6 x / ln * sqrt = 8 sqrt 6 e - **   for x = 0.007297352566058     {159}
+ x recip pi phi ** + dup* ln = 8 pi 7 sqrt sqrt / + for x = 0.00729735256605808 {164}
+ x sqrt 3 recip pi dup* + dup* * = 6 phi dup* / exp 1 - for x = 0.00729735255941613 {164}
+ x recip 4 ln sqrt exp * dup* = pi dup* 5 sqrt - 6 ** for x = 0.00729735256284124 {164}
+ x sqrt 4 dup* recip - recip 2 - = 7 4 7 ln + * for x = 0.00729735256162999 {159}
+ x recip 3 sqrt - 2 sqrt * sqrt = 9 1 + phi ** 3 / for x = 0.00729735256283332 {163}
+ x recip phi + e / 4 - = 3 phi e 3 + ** *    for x = 0.00729735256947273   {164}
+ x sqrt 6 / sqrt 9 * recip = 2 ln pi 2 + recip ** for x = 0.0072973525656617 {156}
+ x sqrt recip 6 * sqrt 9 / = 2 ln pi 2 + recip ** for x = 0.00729735256566169 {156}
+ x sqrt recip ln pi sqrt ** exp = 9 1 + pi 1 - ** for x = 0.00729735256813953 {154}
+ x sqrt e pi sqrt - ln / = 3 pi e 2 - recip + - for x = 0.00729735256493064 {165}
+ x ln 5 + dup* recip 2 - = 5 1 2 pi ** + sqrt ** for x = 0.00729735256954704 {162}
+ x 3 * dup* pi dup* exp * = pi e phi 7 / + * for x = 0.00729735256886524   {162}
+ x pi ** phi / sqrt 3 * = pi 7 pi 7 ** + /   for x = 0.00729735256971851   {165}
+ x ln pi + recip 1 pi - * = 2 1 8 ln ln - ** for x = 0.00729735256001036   {165}
+ x dup* pi 7 + exp * dup* = 4 phi pi sqrt ln + / for x = 0.0072973525683876 {165}
+ x e 1 - recip + pi dup* + = 4 pi phi recip exp / ** for x = 0.00729735256945854 {163}
+ x recip 6 + pi phi + / = 1 pi pi ln dup* ** + dup* for x = 0.00729735256511171 {164}
+ x x sqrt + 4 * recip 1 - = 1 pi 3 sqrt + 7 / + for x = 0.00729735256537348 {164}
+   x ln 4 recip 6 - / = 3 6 7 sqrt / - sqrt  for x = 0.00729735256239716   {158}
+     x ln 5 / 1 + 7 * = 2 pi 3 * / 2 sqrt ** for x = 0.00729735256924018   {165}
+   x ln 6 + pi exp ** = 1 pi exp e 2 + / +   for x = 0.0072973525681461    {162}
+ x recip 8 recip + ln 4 + = pi 3 recip 5 dup* + * sqrt for x = 0.00729735256428328 {164}
+ x sqrt recip 8 - exp pi * = 3 phi ln pi / dup* / for x = 0.00729735256640712 {165}
+ x recip 5 3 phi / - + = 2 4 ln 7 ** + dup*  for x = 0.00729735256370483   {165}
+ x 4 * ln dup* 3 sqrt + = 4 pi ln 5 / - dup* for x = 0.00729735256911915   {164}
+ x 2 4 recip + 6 ** * = 1 2 ln 6 / + sqrt recip for x = 0.00729735255916819 {162}
+   x ln pi + 1 pi - / = 2 8 ln ln 1 - **     for x = 0.00729735256001036   {159}
+  x sqrt e exp * 5 ** = pi 9 ln sqrt 3 / +   for x = 0.00729735255957289   {159}
+ x 8 6 sqrt recip + sqrt / = 7 e exp recip pi - ** for x = 0.00729735256854388 {165}
+ x recip 6 dup* - 8 / = pi pi sqrt exp sqrt recip + dup* for x = 0.00729735256412086 {157}
+ x 5 sqrt exp * 5 * recip = 8 4 recip - 7 sqrt / for x = 0.00729735256618915 {165}
+ x ln 5 phi sqrt * + = 3 6 dup* + recip 2 sqrt + for x = 0.00729735256046265 {159}
+ x recip 1 - pi 4 * / dup* = e 3 + 1 3 sqrt + ** for x = 0.00729735256329099 {164}
+ x sqrt 3 - dup* ln x / = pi e * 1 e sqrt + ** for x = 0.00729735256196175 {165}
+ x sqrt recip ln pi sqrt ** = pi 1 - 9 1 + ln * for x = 0.00729735256813953 {152}
+   x 5 sqrt exp * 5 * = 7 sqrt 8 4 recip - / for x = 0.00729735256618915   {158}
+ x sqrt recip 6 9 dup* / * = 2 ln pi 2 + recip ** dup* for x = 0.00729735256566169 {165}
+ x recip 1 - dup* pi * 1 - = pi sqrt phi / ln recip exp for x = 0.00729735256493508 {158}
+ x pi 4 ** e dup* - * = pi recip exp 2 recip - pi ** for x = 0.00729735256276739 {164}
+ x 7 2 phi ** * dup* * = 3 phi 7 + recip exp * for x = 0.00729735256825985 {166}
+ x 1 4 5 ** + recip - recip = 5 e exp 2 / + dup* for x = 0.00729735255891752 {164}
+ x 1 8 sqrt phi / - ** = 6 pi e 8 + * +      for x = 0.00729735256481047   {166}
+ x 2 pi recip exp recip - recip ** = 9 6 2 ln - * recip for x = 0.00729735256270794 {166}
+ x 5 5 recip exp - recip ** = 5 5 recip ** dup* 7 / for x = 0.00729735256193718 {166}
+ x 3 4 dup* + phi ** * = 1 phi pi ** + sqrt ln for x = 0.00729735256857275 {161}
+ x 4 3 sqrt ** 1 - * recip = 1 3 6 sqrt sqrt * - dup* for x = 0.00729735256891075 {166}
+ x pi 8 sqrt + exp dup* * = 5 recip 6 sqrt + dup* exp for x = 0.00729735256044463 {164}
+ x phi 3 / 5 sqrt + * = 3 8 / 7 dup* + recip for x = 0.00729735256733689   {164}
+ x 5 7 ** * pi dup* + = 6 4 e sqrt ** dup* * for x = 0.00729735256263184   {165}
+ x 1 pi - * recip 8 dup* + = 2 6 e recip + ** recip for x = 0.0072973525665524 {158}
+ x e 7 + * recip 8 + = e phi dup* + pi 1 + * for x = 0.00729735256327217   {166}
+ x 2 sqrt 8 dup* + recip + recip = 8 1 phi pi ** + * for x = 0.00729735255930358 {162}
+ x 5 sqrt 3 ** * recip 1 + = e dup* 5 dup* ln sqrt * for x = 0.00729735256660489 {164}
+ x 9 exp 2 - * sqrt sqrt = pi 3 6 recip ** * 1 - for x = 0.00729735256756836 {166}
+ x 5 recip exp 5 - recip ** = 7 5 5 recip ** dup* / for x = 0.00729735256193718 {166}
+ x pi recip exp recip 2 - recip ** = 9 6 2 ln - * for x = 0.00729735256270793 {159}
+ x 3 sqrt exp * 9 recip - = 2 sqrt sqrt recip e exp - recip for x = 0.00729735256617446 {166}
+ x 2 recip + exp x sqrt * recip = 8 3 exp recip exp recip - for x = 0.00729735256888338 {166}
+ x 5 / pi dup* recip ** 1 + = e phi 8 / - 1 - for x = 0.00729735256795673  {165}
+ x 8 * sqrt pi 4 ** * = pi dup* e / 6 sqrt ** for x = 0.00729735256116821  {164}
+  x 9 * recip 7 + x / = pi phi 6 * + pi **   for x = 0.00729735256235582   {165}
+ x recip 2 pi 3 - recip ** - = 4 pi 4 + recip ** exp for x = 0.00729735256525623 {163}
+ x recip 8 pi 1 + dup* * - = phi ln ln recip 4 - recip for x = 0.00729735256833008 {166}
+  x recip 5 e 9 * + - = 2 9 ** pi phi + /    for x = 0.00729735256345536   {166}
+ x sqrt pi 8 5 * - * = e recip exp exp e dup* - for x = 0.00729735256240702 {166}
+ x sqrt pi pi 3 + / + recip = phi 5 recip 7 recip - + for x = 0.00729735256444737 {163}
+ x recip 5 pi sqrt recip - sqrt + = 5 5 dup* 8 sqrt + * for x = 0.00729735256033914 {166}
+ x sqrt 5 pi dup* recip - * recip = 7 e - 6 ln / for x = 0.00729735256234838 {162}
+ x recip 9 9 dup* + - dup* = pi 3 - 5 6 ** * for x = 0.0072973525678627    {166}
+    x ln pi 2 / 6 - * = 5 5 pi sqrt / exp +  for x = 0.00729735256654599   {166}
+ x recip 8 dup* recip exp exp + = e 7 exp 8 / + for x = 0.0072973525597302 {162}
+ x recip 9 exp sqrt - pi / = 3 2 pi ** + pi + for x = 0.00729735256459682  {157}
+ x recip e dup* + pi recip ** dup* = pi e 9 ln dup* + * for x = 0.00729735256396207 {166}
+ x recip pi * 6 - 9 / = 4 phi pi sqrt * + dup* for x = 0.00729735256148781 {161}
+ x ln 4 + dup* 6 recip - = phi dup* 3 sqrt + ln recip for x = 0.00729735256908007 {162}
+ x recip 1 - sqrt sqrt pi ln / = phi 3 9 ln / + for x = 0.00729735256482377 {161}
+ x sqrt recip 2 ln pi recip - + = 1 pi exp sqrt exp sqrt + for x = 0.00729735256314092 {159}
+ x sqrt recip 3 sqrt - pi sqrt * = 3 pi ln + dup* 2 recip + for x = 0.00729735256133929 {166}
+ x pi * recip pi dup* + ln = e 2 3 2 sqrt - / + for x = 0.00729735256864701 {160}
+ x recip pi 6 - dup* + sqrt = 4 1 9 pi recip ** + * for x = 0.00729735256690148 {161}
+ x recip 9 5 sqrt ** - sqrt = 1 8 pi 5 + * recip - for x = 0.00729735256006674 {167}
+    x ln 5 7 sqrt * / = e phi 6 pi / * -     for x = 0.00729735256320171   {161}
+ x 5 / pi dup* recip ** = e 2 phi 8 / + -    for x = 0.00729735256795679   {153}
+ x sqrt 5 recip 6 - recip ** = 1 8 2 ln 1 - ** + for x = 0.00729735256260157 {164}
+ x sqrt 2 + phi ** e ** = e 4 2 sqrt sqrt * dup* + for x = 0.00729735256937677 {167}
+ x recip 3 phi 3 / ** + = 3 pi phi sqrt recip + * dup* for x = 0.00729735256962299 {165}
+ x sqrt pi 1 + * exp dup* = 1 phi 2 ln * sqrt sqrt + for x = 0.00729735255992364 {158}
+ x e sqrt 3 ln + * recip = 2 pi pi recip + exp sqrt ** for x = 0.00729735256345335 {163}
+ x recip ln phi * phi ** = 6 7 5 sqrt - dup* + for x = 0.00729735256868469 {161}
+  x ln 7 + exp 8 - = phi 1 pi dup* + / pi ** for x = 0.00729735256682386   {167}
+ x 7 dup* * dup* recip 6 - = e 9 7 recip ** - dup* for x = 0.00729735256144671 {165}
+ x 2 4 recip + 6 ** * = 6 6 2 ln + / sqrt    for x = 0.00729735255916819   {163}
+ x recip e 9 + dup* - dup* = 9 phi 2 ln ** * recip for x = 0.0072973525689962 {164}
+ x phi ln pi sqrt - recip ** = e pi 7 + phi ** + for x = 0.0072973525640544 {167}
+ x 2 sqrt recip - e 2 + * = 2 9 1 + recip ln dup* - for x = 0.00729735255884465 {166}
+ x pi 3 + * recip 3 sqrt + = 2 e 2 - sqrt recip + exp for x = 0.00729735256665225 {167}
+ x ln phi + dup* pi dup* - = pi 4 7 / dup* - ln for x = 0.00729735256927391 {167}
+      x 7 7 ln / ln / = 4 2 sqrt pi 2 + - ** for x = 0.00729735256840991   {167}
+ x sqrt phi 2 sqrt recip - ** = pi 3 ln 6 dup* ** / for x = 0.00729735256548776 {162}
+ x recip 2 + recip ln 5 + recip = 1 pi sqrt e / + dup* exp for x = 0.00729735256197826 {167}
+ x 5 pi ** * 1 - sqrt recip = 2 3 ln sqrt 7 ** ** for x = 0.00729735256728537 {167}
+ x x sqrt + 3 e ** * = 2 pi recip + phi recip ln + for x = 0.00729735256717361 {164}
+ x 5 dup* 3 sqrt - * recip = phi 7 sqrt ** e sqrt * for x = 0.00729735256075549 {161}
+ x 7 exp * 8 - recip = 1 pi dup* + phi / pi ** for x = 0.00729735256682387 {161}
+ x x phi recip + e / ** = 3 5 dup* - recip e recip + for x = 0.00729735256260504 {166}
+ x e e 1 + recip - * dup* = phi 6 / pi 3 + ** for x = 0.00729735256805445  {166}
+ x 4 pi 6 * dup* + * = pi phi ** e dup* + ln for x = 0.00729735256470659   {164}
+ x ln phi sqrt / 4 + recip = 7 e ** pi dup* * ln for x = 0.00729735255891131 {167}
+ x recip 2 phi / 5 ** - = pi 2 + 3 ** pi sqrt - for x = 0.00729735255890026 {166}
+ x ln 7 sqrt + e + recip = 8 phi ** pi - sqrt sqrt for x = 0.00729735256076321 {166}
+ x recip 8 2 sqrt sqrt - + = phi 7 + sqrt 7 dup* * for x = 0.00729735256054414 {161}
+ x 7 * sqrt recip 4 recip - = 9 5 * ln e recip + for x = 0.00729735256893058 {161}
+ x 7 * sqrt recip e recip - = 9 5 * ln 4 recip + for x = 0.00729735256893059 {161}
+ x 3 recip ** recip exp 1 + sqrt = pi 2 / dup* exp 2 sqrt + for x = 0.00729735256901228 {166}
+ x sqrt ln dup* 6 - recip = pi 7 + sqrt exp 5 - for x = 0.00729735256812855 {156}
+ x dup* ln e sqrt - 4 * = phi exp 2 7 dup* + - for x = 0.00729735256284372 {167}
+ x pi 6 sqrt + exp * dup* = 5 exp pi 7 + / sqrt for x = 0.00729735256132857 {166}
+ x sqrt 4 * x - e * = 9 recip 2 sqrt pi sqrt / + for x = 0.00729735256272015 {164}
+ x 7 2 sqrt / pi ** * = 2 ln pi exp sqrt recip + recip for x = 0.00729735256630457 {164}
+ x sqrt 2 sqrt recip phi - ** = 3 ln 6 dup* ** pi / for x = 0.00729735256548775 {162}
+ x 2 ln ** 3 sqrt / sqrt = 3 sqrt 1 - pi ** e / for x = 0.00729735256952642 {165}
+ x x sqrt recip 1 - recip ** exp = 5 sqrt exp 7 sqrt / sqrt for x = 0.00729735256137038 {167}
+ x 3 pi ** * 2 sqrt recip + = 7 ln ln sqrt pi recip ** for x = 0.00729735255958187 {167}
+                  (for more results, use the option '-l6')
+
+                         --LHS--      --RHS--      -Total-
+     max complexity:          87           80          167
+          dead-ends:   119766458    226510330    346276788  Time: 25.818
+        expressions:    11325941     24866120     36192061
+           distinct:     3476920      4269036      7745956  Memory: 2693269KiB
+
+        Total equations tested:          14843096649120 (1.484e+13)

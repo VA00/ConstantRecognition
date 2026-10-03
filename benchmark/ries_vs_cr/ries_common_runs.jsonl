@@ -1,0 +1,10 @@
+{"mode": "two-sided", "level": 3, "matches": 2, "seconds": 1.0, "peak_gb": 0.05, "probe_max_s": 0.015682299999753013, "killed": null}
+{"mode": "two-sided", "level": 4, "matches": 19, "seconds": 5.0, "peak_gb": 0.16, "probe_max_s": 0.01613080000242917, "killed": null}
+{"mode": "two-sided", "level": 5, "matches": 220, "seconds": 25.9, "peak_gb": 0.52, "probe_max_s": 0.01648659999773372, "killed": null}
+{"mode": "two-sided", "level": 6, "matches": 2077, "seconds": 122.4, "peak_gb": 1.68, "probe_max_s": 0.016814399998111185, "killed": null}
+{"mode": "two-sided", "level": 7, "matches": 28763, "seconds": 673.5, "peak_gb": 6.15, "probe_max_s": 0.01917449999746168, "killed": null}
+{"mode": "one-sided", "level": 3, "matches": 0, "seconds": 0.8, "peak_gb": 0.04, "probe_max_s": 0.015682199998991564, "killed": null}
+{"mode": "one-sided", "level": 4, "matches": 0, "seconds": 4.2, "peak_gb": 0.12, "probe_max_s": 0.016635200001474004, "killed": null}
+{"mode": "one-sided", "level": 5, "matches": 0, "seconds": 26.9, "peak_gb": 0.46, "probe_max_s": 0.01684430000022985, "killed": null}
+{"mode": "one-sided", "level": 6, "matches": 0, "seconds": 130.1, "peak_gb": 1.46, "probe_max_s": 0.01699720000033267, "killed": null}
+{"mode": "one-sided", "level": 7, "matches": 0, "seconds": 629.8, "peak_gb": 4.65, "probe_max_s": 0.019717700000910554, "killed": null}

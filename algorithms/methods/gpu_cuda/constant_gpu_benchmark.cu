@@ -22,7 +22,9 @@
 //     FP32 threshold are candidates).
 //
 // Compile:  nvcc -O3 -arch=sm_120 constant_gpu_benchmark.cu -o constant_gpu_benchmark
-// Usage:    constant_gpu_benchmark <MaxK> [threshold in FLT_EPSILON, default 64] < targets.txt
+// Usage:    constant_gpu_benchmark <MaxK> [threshold in FLT_EPSILON, default 64] [list_delta] < targets.txt
+//           list_delta > 0: also print every FP64-verified candidate with relative error <= list_delta
+//           as "#MATCH id K RPN rel_err" (for targets with error bars; the threshold must cover it)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,18 +37,41 @@
 
 #define STACKSIZE 16
 #define MAX_K 12
-#define N_CONST  13
-#define N_UNARY  18
 #define N_BINARY  5
 #define EPS_MAX 16                      // FP64 "exact": relative error <= 16 DBL_EPSILON, as Constant Recognition
+#ifndef MAX_CANDIDATES
 #define MAX_CANDIDATES (16 * 1024 * 1024)
+#endif
 
 #define CUDA_CHECK(call) { cudaError_t err = call; if (err != cudaSuccess) { fprintf(stderr, "CUDA error: %s\n", cudaGetErrorString(err)); exit(2); } }
 
-__constant__ float d_const_values[N_CONST] = {
-    3.14159265358979323846f, 2.71828182845904523536f, -1.0f, 1.61803398874989484820f,
-    1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f
-};
+// Button set. Default: CALC4 (13 constants, 18 functions). -DCOMMON_GRAMMAR: the symbols CALC4 shares
+// with RIES's default set (constants 1..9, pi, e, phi; ln, exp, 1/x, sqrt, x^2; + * - / ^), for direct
+// comparisons with ries -S. UNARY_OP maps a function button to its case in apply_unary / evaluate_fp64.
+#ifdef COMMON_GRAMMAR
+#define N_CONST  12
+#define N_UNARY   5
+#define CONST_LIST 3.14159265358979323846, 2.71828182845904523536, 1.61803398874989484820, \
+                   1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0
+static const char* CONST_NAMES[N_CONST] = {"PI", "EULER", "GOLDENRATIO", "ONE", "TWO", "THREE", "FOUR",
+                                           "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"};
+static const char* UNARY_NAMES[N_UNARY] = {"LOG", "EXP", "INV", "SQRT", "SQR"};
+#define UNARY_OP_LIST 0, 1, 2, 4, 5
+#else
+#define N_CONST  13
+#define N_UNARY  18
+#define CONST_LIST 3.14159265358979323846, 2.71828182845904523536, -1.0, 1.61803398874989484820, \
+                   1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0
+static const char* CONST_NAMES[N_CONST] = {"PI", "EULER", "NEG", "GOLDENRATIO", "ONE", "TWO", "THREE", "FOUR",
+                                           "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"};
+static const char* UNARY_NAMES[N_UNARY] = {"LOG", "EXP", "INV", "GAMMA", "SQRT", "SQR", "SIN", "ARCSIN", "COS",
+                                           "ARCCOS", "TAN", "ARCTAN", "SINH", "ARCSINH", "COSH", "ARCCOSH", "TANH", "ARCTANH"};
+#define UNARY_OP_LIST 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+#endif
+static const double CONST_VALUES[N_CONST] = {CONST_LIST};
+static const int UNARY_OP[N_UNARY] = {UNARY_OP_LIST};
+__constant__ float d_const_values[N_CONST] = {CONST_LIST};
+__constant__ int d_unary_op[N_UNARY] = {UNARY_OP_LIST};
 
 struct Candidate {
     float fp32_error;
@@ -62,13 +87,7 @@ struct FormDesc {
     unsigned long long total;
 };
 
-static const char* CONST_NAMES[N_CONST] = {"PI", "EULER", "NEG", "GOLDENRATIO", "ONE", "TWO", "THREE", "FOUR",
-                                           "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"};
-static const char* UNARY_NAMES[N_UNARY] = {"LOG", "EXP", "INV", "GAMMA", "SQRT", "SQR", "SIN", "ARCSIN", "COS",
-                                           "ARCCOS", "TAN", "ARCTAN", "SINH", "ARCSINH", "COSH", "ARCCOSH", "TANH", "ARCTANH"};
 static const char* BINARY_NAMES[N_BINARY] = {"PLUS", "TIMES", "SUBTRACT", "DIVIDE", "POWER"};
-static const double CONST_VALUES[N_CONST] = {3.14159265358979323846, 2.71828182845904523536, -1.0, 1.61803398874989484820,
-                                             1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
 
 // ---------------------------------------------------------------------------- device (as the prototype)
 
@@ -119,7 +138,7 @@ __global__ void search_form_kernel(const char* __restrict__ ternary, int K, cons
     for (int i = 0; i < K; i++) {
         char t = s_ternary[i];
         if (t == '0') stack[sp++] = d_const_values[slots[i]];
-        else if (t == '1') stack[sp - 1] = apply_unary(slots[i], stack[sp - 1]);
+        else if (t == '1') stack[sp - 1] = apply_unary(d_unary_op[slots[i]], stack[sp - 1]);
         else { sp--; stack[sp - 1] = apply_binary(slots[i], stack[sp - 1], stack[sp]); }
     }
     float x = stack[0];
@@ -186,7 +205,7 @@ static double evaluate_fp64(const FormDesc* f, const int* slots)
         if (f->ternary[i] == '0') stack[sp++] = CONST_VALUES[s];
         else if (f->ternary[i] == '1') {
             double x = stack[sp - 1], y;
-            switch (s) {
+            switch (UNARY_OP[s]) {
                 case 0: y = log(x); break;   case 1: y = exp(x); break;    case 2: y = 1.0 / x; break;  case 3: y = tgamma(x); break;
                 case 4: y = sqrt(x); break;  case 5: y = x * x; break;     case 6: y = sin(x); break;   case 7: y = asin(x); break;
                 case 8: y = cos(x); break;   case 9: y = acos(x); break;   case 10: y = tan(x); break;  case 11: y = atan(x); break;
@@ -219,9 +238,10 @@ static void rpn_string(const FormDesc* f, const int* slots, char* out, size_t si
 
 int main(int argc, char** argv)
 {
-    if (argc < 2) { fprintf(stderr, "Usage: %s <MaxK> [threshold in FLT_EPSILON] < targets\n", argv[0]); return 2; }
+    if (argc < 2) { fprintf(stderr, "Usage: %s <MaxK> [threshold in FLT_EPSILON] [list_delta] < targets\n", argv[0]); return 2; }
     int MaxK = atoi(argv[1]);
     float threshold = (float)((argc > 2 ? atof(argv[2]) : 64.0) * FLT_EPSILON);
+    double list_delta = argc > 3 ? atof(argv[3]) : 0.0;
     if (MaxK < 1 || MaxK > MAX_K) { fprintf(stderr, "MaxK must be 1..%d\n", MAX_K); return 2; }
 
     cudaDeviceProp prop;
@@ -291,6 +311,10 @@ int main(int argc, char** argv)
                 double v = evaluate_fp64(f, slots);
                 if (isnan(v) || isinf(v)) continue;
                 double err = target == 0.0 ? fabs(v) : fabs(v / target - 1.0);
+                if (list_delta > 0.0 && err <= list_delta) {
+                    rpn_string(f, slots, rpn, sizeof rpn);
+                    printf("#MATCH\t%s\t%d\t%s\t%.5e\n", id, K, rpn, err);
+                }
                 if (err < best_K_err) {
                     best_K_err = err;
                     rpn_string(f, slots, rpn, sizeof rpn);

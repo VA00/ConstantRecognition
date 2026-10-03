@@ -1,0 +1,16 @@
+First match must be closer than 7.5e-10 times your target value.
+Will not use more than 1.2e+10 bytes of memory.
+
+   Your target value: T = 0.0072973525643                        mrob.com/ries
+
+         x 6 x / ln / = 8 e 6 - **           for x = 0.007297352566058     {135}
+   x recip 6 x / ln * = 8 6 e - **           for x = 0.007297352566058     {141}
+                  (for more results, use the option '-l4')
+
+                         --LHS--      --RHS--      -Total-
+     max complexity:          77           69          146
+          dead-ends:     8764720     12741863     21506583  Time: 0.967
+        expressions:      790336      1364378      2154714
+           distinct:      324810       345298       670108  Memory: 2195605KiB
+
+        Total equations tested:            112156243380 (1.122e+11)

@@ -1,0 +1,14 @@
+First match must be closer than 7.5e-10 times your target value.
+Will not use more than 1.2e+10 bytes of memory.
+
+   Your target value: T = 0.0072973525643                        mrob.com/ries
+
+No solution was found (try using -l5 or a larger --max-match-distance).  
+
+                         --LHS--      --RHS--      -Total-
+     max complexity:          15           76           91
+          dead-ends:          77     79162520     79162597  Time: 4.154
+        expressions:           1      8589170      8589171
+           distinct:           1      1693955      1693956  Memory: 2267605KiB
+
+        Total equations tested:                 1693955 (1.694e+06)

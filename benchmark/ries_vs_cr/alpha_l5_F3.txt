@@ -1,0 +1,79 @@
+First match must be closer than 1.5e-10 times your target value.
+
+   Your target value: T = 0.0072973525643                        mrob.com/ries
+
+ x pi 3 recip - root 1 + = pi 2 logN 2 ln atan2 for x = 0.00729735256421312 {148}
+ x 2 2 pi ** + dup* * = 8 5 sqrt - recip cospi for x = 0.00729735256533121 {148}
+ x 3 logN 4 atan2 1 + = pi 6 atan2 1 atan2 cospi for x = 0.00729735256363053 {151}
+    x pi * 6 logN e + = pi 7 recip + 7 logN  for x = 0.00729735256525721   {150}
+ x ln 6 atan2 dup* tanpi = pi pi dup* pi sqrt - + for x = 0.00729735256499144 {149}
+ x sqrt 9 / sqrt tanpi recip = 3 1 neg atan2 phi sqrt + for x = 0.00729735256356237 {152}
+ x dup* ln e sqrt recip + neg = 2 2 3 ln dup* + ** for x = 0.00729735256376323 {153}
+   x 6 logN e + tanpi = 3 pi atan2 1 - e /   for x = 0.00729735256502296   {152}
+ x 4 root 3 / tanpi recip = 3 1 neg atan2 phi sqrt + for x = 0.00729735256356237 {153}
+ x recip 2 pi 3 - root - = 4 pi 4 + root exp for x = 0.00729735256525623   {151}
+ x sinpi 5 2 atan2 dup* - = pi 3 * 5 logN neg for x = 0.00729735256393831  {147}
+ x sqrt 6 * pi ** exp = 2 e 9 recip + root sqrt for x = 0.00729735256529128 {154}
+ x 3 pi e ** root ** = e pi sqrt 9 ** + recip for x = 0.00729735256490033  {154}
+ x pi e 2 atan2 * logN = pi 5 dup* 3 atan2 * neg for x = 0.00729735256329807 {155}
+ x 3 pi 1 + sqrt atan2 / = 4 7 atan2 6 / dup* for x = 0.00729735256458859  {156}
+ x 9 dup* recip atan2 dup* cospi = 3 exp 1 e dup* - root for x = 0.0072973525633579 {156}
+ x 5 3 sqrt + / sqrt neg = phi dup* 7 sqrt / tanpi for x = 0.00729735256349367 {156}
+ x sqrt pi 8 atan2 sqrt ** = pi recip cospi 4 dup* logN neg for x = 0.00729735256391114 {156}
+ x pi 6 3 logN + root = 2 e 1 - logN 2 logN  for x = 0.00729735256506057   {157}
+ x e exp * 7 root dup* = 1 e 8 / sinpi + recip for x = 0.0072973525634383  {156}
+ x 5 exp * recip sinpi sinpi = 2 2 1 atan2 recip exp atan2 for x = 0.00729735256453717 {156}
+ x 2 * sqrt pi dup* logN dup* = 3 sqrt e ** recip tanpi for x = 0.00729735256418977 {151}
+ x sqrt pi 2 / 3 root * = pi 2 * recip sinpi pi ** for x = 0.0072973525639105 {153}
+ x sqrt 7 * tanpi e + = phi 4 ln recip + neg recip for x = 0.00729735256451345 {154}
+ x sqrt ln recip cospi recip 2 - = 1 pi ln pi logN atan2 for x = 0.00729735256480295 {151}
+    x ln 3 + dup* 2 - = 2 4 e 3 * root /     for x = 0.00729735256348189   {150}
+ x dup* ln e sqrt recip + dup* = 4 2 3 ln dup* + ** for x = 0.00729735256376323 {158}
+ x recip e exp / 7 root = 1 e 8 / sinpi + sqrt for x = 0.00729735256343831 {157}
+ x pi / ln 7 + sinpi = phi 9 2 + sqrt ** recip for x = 0.00729735256436641 {158}
+     x 7 phi / 4 ** * = 6 2 7 / sqrt + sqrt  for x = 0.00729735256404982   {158}
+ x 5 dup* 3 atan2 root recip = pi e 2 atan2 * pi ** for x = 0.00729735256329808 {155}
+ x ln 3 + dup* 2 - recip = 4 e 3 * root 2 /  for x = 0.0072973525634819    {157}
+ x sqrt recip 3 2 / - sqrt = 3 4 ln pi / dup* + for x = 0.0072973525650945 {154}
+ x recip 1 pi dup* + dup* - sqrt = 5 pi ln pi ** recip - for x = 0.00729735256340049 {158}
+   x 9 * x sqrt + ln = 1 6 ln 1 - sqrt + neg for x = 0.00729735256347483   {155}
+ x e sqrt recip exp sqrt * sqrt = 2 3 ln dup* ** exp recip for x = 0.00729735256376323 {158}
+ x sqrt tanpi sinpi ln cospi = 1 9 ln + e root recip for x = 0.00729735256339241 {155}
+ x 2 * sqrt recip 7 - dup* = 7 5 sqrt - recip sinpi recip for x = 0.00729735256508857 {156}
+    x pi 3 - 7 / logN = phi e + 4 ln atan2   for x = 0.00729735256418062   {157}
+ x e 8 7 root + * = 2 pi sqrt ** pi dup* * recip for x = 0.00729735256412643 {159}
+ x pi 7 e ** atan2 / = pi 1 - dup* pi neg atan2 recip for x = 0.00729735256513884 {158}
+ x 3 4 exp + * tanpi = e phi sqrt 6 recip + * for x = 0.00729735256324468  {159}
+ x pi dup* 1 atan2 4 ** * = phi ln cospi 3 sqrt / for x = 0.007297352563526 {156}
+ x 7 recip sinpi exp exp * = pi ln phi ln logN dup* for x = 0.00729735256407277 {159}
+ x phi root sinpi recip 6 - = 2 1 pi sqrt recip + dup* atan2 for x = 0.00729735256392004 {158}
+   x 5 / sinpi ln 4 + = 7 3 4 root atan2 neg for x = 0.00729735256445188   {155}
+ x sqrt pi pi ** e - * = 1 e recip pi 1 + - atan2 for x = 0.00729735256521786 {158}
+ x recip pi 1 + dup* + 3 / = 5 6 pi 1 - ** + for x = 0.00729735256486991   {157}
+ x ln 1 7 atan2 recip + recip = pi 7 ln atan2 2 atan2 for x = 0.00729735256394566 {159}
+ x recip x sinpi recip - 4 / = e 1 3 recip + dup* * dup* for x = 0.00729735256432138 {157}
+ x sqrt 7 atan2 tanpi sqrt recip = phi 2 pi e / + * for x = 0.00729735256417252 {157}
+ x ln 4 + sinpi cospi sqrt = 2 sqrt 5 7 root atan2 for x = 0.00729735256349921 {156}
+ x pi e recip + pi ** * = phi pi pi 2 - * logN for x = 0.00729735256375687 {157}
+ x 3 pi 5 + dup* + * = 2 e 4 + dup* recip - recip for x = 0.00729735256329817 {159}
+ x 7 1 atan2 pi ** * recip = 9 pi 2 + * phi - for x = 0.00729735256403337  {160}
+ x pi 8 atan2 sqrt ** recip = 4 pi recip cospi sqrt logN dup* for x = 0.00729735256391113 {156}
+ x 2 7 ** * tanpi dup* = 1 pi recip - pi 5 + ** for x = 0.00729735256393641 {158}
+ x recip 8 exp recip sinpi * = 1 2 atan2 6 ln dup* / for x = 0.00729735256420331 {155}
+ x 4 phi sqrt ** * dup* = pi 3 - e ** e /    for x = 0.00729735256361876   {154}
+ x 1 1 atan2 * e sqrt * = 3 5 logN 7 atan2 dup* for x = 0.00729735256416392 {154}
+ x sinpi 6 * sqrt ln dup* = phi 5 root exp 2 atan2 for x = 0.00729735256428305 {158}
+ x sqrt 6 * pi ** 2 * = 2 ln e 9 recip + /   for x = 0.00729735256529129   {160}
+ x 4 e exp sqrt ** * = phi dup* pi 2 atan2 dup* - for x = 0.00729735256357493 {156}
+ x 8 exp recip sinpi / sqrt = 6 ln 1 2 atan2 sqrt / for x = 0.00729735256420331 {158}
+ x pi 8 atan2 sqrt ** recip = 4 dup* pi recip cospi logN dup* for x = 0.00729735256391114 {156}
+ x pi 8 atan2 sqrt ** = pi recip cospi 4 dup* logN dup* for x = 0.00729735256391113 {149}
+                  (for more results, use the option '-l6')
+
+                         --LHS--      --RHS--      -Total-
+     max complexity:          83           77          160
+          dead-ends:   187326373    356188566    543514939  Time: 28.201
+        expressions:    11560671     24628227     36188898
+           distinct:     4243824      4945061      9188885  Memory: 667756KiB
+
+        Total equations tested:          20985968553264 (2.099e+13)

@@ -1,0 +1,4499 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 15.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[    139590,       4489]
+NotebookOptionsPosition[    137878,       4452]
+NotebookOutlinePosition[    138315,       4469]
+CellTagsIndexPosition[    138272,       4466]
+WindowTitle->RIES alpha level 5
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+RIES matches for the fine-structure constant within its error bar\
+\>", "Title",ExpressionUUID->"cd67284c-e433-db4a-8c16-a9065f27a0c2"],
+
+Cell["\<\
+Target T = 0.0072973525643, CODATA 2022 uncertainty sigma = 1.1e-12 (relative \
+1.5e-10). RIES 2026-05-06, level 5, default symbols. 66 equations.\
+\>", "Text",ExpressionUUID->"ab509436-d467-464a-bbb1-195af4aa5b12"],
+
+Cell["\<\
+ries -F3 -x -l5 --no-refinement --no-slow-messages -n1000000 \
+--max-match-distance -1.5e-10 0.0072973525643\
+\>", "Program",ExpressionUUID->"16ee3fc0-29a6-8b4e-9f38-4e6ec275a930"],
+
+Cell["\<\
+How RIES finds these: it builds left-hand sides that contain x (evaluated at \
+x = T, together with their derivative d/dx) and right-hand sides that are \
+constants only, and matches the two sets; a close pair is solved for x with \
+Newton's method. --max-match-distance -1.5e-10 means: report an equation only \
+if its root x lies within 1.5e-10 * T of the target T (a negative value is \
+relative). It is the distance between the root and the target, not between \
+the values of the two sides. --no-refinement reports every such equation \
+(without it, each new match must be closer than the previous one). The \
+complexity score is RIES's own weighting of the symbols used; many equations \
+are equivalent to each other.\
+\>", "Text",ExpressionUUID->"23adeea2-70e3-8342-bdf0-85420b4ef59a"],
+
+Cell["\<\
+Equations solved for x with FindRoot at 40 digits; (x - T)/sigma is the \
+distance from the target in units of the CODATA uncertainty (|value| <= 1.36 \
+by construction).\
+\>", "Text",ExpressionUUID->"1b2f4628-c57f-4f42-8fac-de20b7a451cc"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"n\"\>", "\<\"complexity\"\>", "\<\"equation\"\>", "\<\"x\"\>", \
+"\<\"(x - T)/sigma\"\>", "\<\"RIES root\"\>"},
+    {"1", "148", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SuperscriptBox["x", 
+           FractionBox["1", 
+            RowBox[{"\[Pi]", "-", 
+             FractionBox["1", "3"]}]]], "+", "1"}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{
+           RowBox[{"log", "(", "2", ")"}], ",", 
+           RowBox[{
+            SubscriptBox["log", "2"], "(", "\[Pi]", ")"}]}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256421311070008112119833136551`20.", 
+     RowBox[{"-", "0.0789902726535261834`3."}], "\<\"0.00729735256421312\"\>"},
+    {"2", "148", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"x", " ", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"2", "+", 
+             SuperscriptBox["2", "\[Pi]"]}], ")"}], "2"]}], "\[LongEqual]", 
+         RowBox[{"cos", "(", 
+          FractionBox["\[Pi]", 
+           RowBox[{"8", "-", 
+            SqrtBox["5"]}]], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256533121076533349934364985693`20.", 
+     "0.9374643321213630397`3.", "\<\"0.00729735256533121\"\>"},
+    {"3", "151", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{"4", ",", 
+            RowBox[{
+             SubscriptBox["log", "3"], "(", "x", ")"}]}], ")"}], "+", "1"}], "\[LongEqual]", 
+         RowBox[{"cos", "(", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{"1", ",", 
+             RowBox[{
+              SuperscriptBox["tan", 
+               RowBox[{"-", "1"}]], "(", 
+              RowBox[{"6", ",", "\[Pi]"}], ")"}]}], ")"}]}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525636305244431284903646546952`20.", 
+     RowBox[{"-", "0.6086141426104633049`3."}], "\<\"0.00729735256363053\"\>"},
+    {"4", "150", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           SubscriptBox["log", "6"], "(", 
+           RowBox[{"x", " ", "\[Pi]"}], ")"}], "+", "\[ExponentialE]"}], "\[LongEqual]", 
+         RowBox[{
+          SubscriptBox["log", "7"], "(", 
+          RowBox[{"\[Pi]", "+", 
+           FractionBox["1", "7"]}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256525720526608527176284505581`20.", 
+     "0.8701866055320652389`3.", "\<\"0.00729735256525721\"\>"},
+    {"5", "149", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"tan", "(", 
+          RowBox[{"\[Pi]", " ", 
+           SuperscriptBox[
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"6", ",", 
+              RowBox[{"log", "(", "x", ")"}]}], ")"}], "2"]}], ")"}], "\[LongEqual]", 
+         RowBox[{"\[Pi]", "+", 
+          RowBox[{"(", 
+           RowBox[{
+            SuperscriptBox["\[Pi]", "2"], "-", 
+            SqrtBox["\[Pi]"]}], ")"}]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256499144565417925742401168344`20.", 
+     "0.6285869583447794764`3.", "\<\"0.00729735256499144\"\>"},
+    {"6", "152", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["1", 
+          RowBox[{"tan", "(", 
+           RowBox[{"\[Pi]", " ", 
+            SqrtBox[
+             FractionBox[
+              SqrtBox["x"], "9"]]}], ")"}]], "\[LongEqual]", 
+         RowBox[{
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{
+            RowBox[{"-", "1"}], ",", "3"}], ")"}], "+", 
+          SqrtBox[
+           TagBox["\[Phi]",
+            Function[{}, GoldenRatio]]]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256356237228995425417102135099`20.", 
+     RowBox[{"-", "0.6705706454961325718`3."}], "\<\"0.00729735256356237\"\>"},
+    {"7", "153", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"-", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"log", "(", 
+             SuperscriptBox["x", "2"], ")"}], "+", 
+            FractionBox["1", 
+             SqrtBox["\[ExponentialE]"]]}], ")"}]}], "\[LongEqual]", 
+         SuperscriptBox["2", 
+          RowBox[{"2", "+", 
+           RowBox[{
+            SuperscriptBox["log", "2"], "(", "3", ")"}]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525637632312196220482994170475`20.", 
+     RowBox[{"-", "0.4879716185254106369`3."}], "\<\"0.00729735256376323\"\>"},
+    {"8", "152", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"tan", "(", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{
+              SubscriptBox["log", "6"], "(", "x", ")"}], "+", 
+             "\[ExponentialE]"}], ")"}]}], ")"}], "\[LongEqual]", 
+         FractionBox[
+          RowBox[{
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{"\[Pi]", ",", "3"}], ")"}], "-", "1"}], 
+          "\[ExponentialE]"]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256502295849450027892105382589`20.", 
+     "0.6572349950002535646`3.", "\<\"0.00729735256502296\"\>"},
+    {"9", "153", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["1", 
+          RowBox[{"tan", "(", 
+           FractionBox[
+            RowBox[{"\[Pi]", " ", 
+             RadicalBox["x", "4"]}], "3"], ")"}]], "\[LongEqual]", 
+         RowBox[{
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{
+            RowBox[{"-", "1"}], ",", "3"}], ")"}], "+", 
+          SqrtBox[
+           TagBox["\[Phi]",
+            Function[{}, GoldenRatio]]]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256356237228995425417102135099`20.", 
+     RowBox[{"-", "0.6705706454961325718`3."}], "\<\"0.00729735256356237\"\>"},
+    {"10", "151", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          FractionBox["1", "x"], "-", 
+          SuperscriptBox["2", 
+           FractionBox["1", 
+            RowBox[{"\[Pi]", "-", "3"}]]]}], "\[LongEqual]", 
+         RowBox[{"exp", "(", 
+          SuperscriptBox["4", 
+           FractionBox["1", 
+            RowBox[{"\[Pi]", "+", "4"}]]], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256525626578586355518133421728`20.", 
+     "0.869332532603231983`3.", "\<\"0.00729735256525623\"\>"},
+    {"11", "147", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          RowBox[{"sin", "(", 
+           RowBox[{"\[Pi]", " ", "x"}], ")"}], "-", 
+          SuperscriptBox[
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{"2", ",", "5"}], ")"}], "2"]}], "\[LongEqual]", 
+         RowBox[{"-", 
+          RowBox[{
+           SubscriptBox["log", "5"], "(", 
+           RowBox[{"\[Pi]", " ", "3"}], ")"}]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256393835257257123261523154808`20.", 
+     RowBox[{"-", "0.3287703885716067134`3."}], "\<\"0.00729735256393831\"\>"},
+    {"12", "154", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"exp", "(", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{
+             SqrtBox["x"], " ", "6"}], ")"}], "\[Pi]"], ")"}], "\[LongEqual]", 
+         SqrtBox[
+          SuperscriptBox["2", 
+           FractionBox["1", 
+            RowBox[{"\[ExponentialE]", "+", 
+             FractionBox["1", "9"]}]]]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256529128762470358779852948365`20.", 
+     "0.9011705679123525441`3.", "\<\"0.00729735256529128\"\>"},
+    {"13", "154", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SuperscriptBox["x", 
+          SuperscriptBox["3", 
+           FractionBox["1", 
+            SuperscriptBox["\[Pi]", "\[ExponentialE]"]]]], "\[LongEqual]", 
+         FractionBox["1", 
+          RowBox[{"\[ExponentialE]", "+", 
+           SuperscriptBox[
+            SqrtBox["\[Pi]"], "9"]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256490032561861400226783464047`20.", 
+     "0.545750562376365698`3.", "\<\"0.00729735256490033\"\>"},
+    {"14", "155", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SubscriptBox["log", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"2", ",", "\[ExponentialE]"}], ")"}]}]], "(", "x", ")"}],
+          "\[LongEqual]", 
+         RowBox[{"-", 
+          RowBox[{"(", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"3", ",", 
+              SuperscriptBox["5", "2"]}], ")"}]}], ")"}]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256329806913893112861767536312`20.", 
+     RowBox[{"-", "0.9108462373353376203`3."}], "\<\"0.00729735256329807\"\>"},
+    {"15", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["x", 
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{
+            SqrtBox[
+             RowBox[{"\[Pi]", "+", "1"}]], ",", "3"}], ")"}]], "\[LongEqual]", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox["1", "6"], " ", 
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"7", ",", "4"}], ")"}]}], ")"}], "2"]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256458859588448935578225328775`20.", 
+     "0.2623598949903234384`3.", "\<\"0.00729735256458859\"\>"},
+    {"16", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"cos", "(", 
+          RowBox[{"\[Pi]", " ", 
+           SuperscriptBox[
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{
+              FractionBox["1", 
+               SuperscriptBox["9", "2"]], ",", "x"}], ")"}], "2"]}], ")"}], "\[LongEqual]", 
+         RadicalBox[
+          RowBox[{"exp", "(", "3", ")"}], 
+          RowBox[{"1", "-", 
+           SuperscriptBox["\[ExponentialE]", "2"]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256335789907533674477645154363`20.", 
+     RowBox[{"-", "0.8564553860575047487`3."}], "\<\"0.0072973525633579\"\>"},
+    {"17", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"-", 
+          SqrtBox[
+           FractionBox["x", 
+            RowBox[{"5", "+", 
+             SqrtBox["3"]}]]]}], "\[LongEqual]", 
+         RowBox[{"tan", "(", 
+          FractionBox[
+           RowBox[{"\[Pi]", " ", 
+            SuperscriptBox[
+             TagBox["\[Phi]",
+              Function[{}, GoldenRatio]], "2"]}], 
+           SqrtBox["7"]], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525634934742022235081552265458`20.", 
+     RowBox[{"-", "0.7332052707059016771`3."}], "\<\"0.00729735256349367\"\>"},
+    {"18", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SuperscriptBox[
+          SqrtBox["x"], 
+          SqrtBox[
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{"8", ",", "\[Pi]"}], ")"}]]], "\[LongEqual]", 
+         RowBox[{"-", 
+          RowBox[{
+           SubscriptBox["log", 
+            SuperscriptBox["4", "2"]], "(", 
+           RowBox[{"cos", "(", 
+            FractionBox["\[Pi]", "\[Pi]"], ")"}], ")"}]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256391114090907922074957611181`20.", 
+     RowBox[{"-", "0.3535082644734356822`3."}], "\<\"0.00729735256391114\"\>"},
+    {"19", "157", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SuperscriptBox["x", 
+          FractionBox["1", 
+           RowBox[{"\[Pi]", "+", 
+            RowBox[{
+             SubscriptBox["log", "3"], "(", "6", ")"}]}]]], "\[LongEqual]", 
+         RowBox[{
+          SubscriptBox["log", "2"], "(", 
+          RowBox[{
+           SubscriptBox["log", 
+            RowBox[{"\[ExponentialE]", "-", "1"}]], "(", "2", ")"}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256506055290395055220792197215`20.", 
+     "0.6914117308641383708`3.", "\<\"0.00729735256506057\"\>"},
+    {"20", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SuperscriptBox[
+          RadicalBox[
+           RowBox[{"x", " ", 
+            RowBox[{"exp", "(", "\[ExponentialE]", ")"}]}], "7"], "2"], "\[LongEqual]", 
+         FractionBox["1", 
+          RowBox[{"1", "+", 
+           RowBox[{"sin", "(", 
+            FractionBox[
+             RowBox[{"\[Pi]", " ", "\[ExponentialE]"}], "8"], ")"}]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256343830435162014428210601155`20.", 
+     RowBox[{"-", "0.7833596803453233799`3."}], "\<\"0.0072973525634383\"\>"},
+    {"21", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"sin", "(", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"sin", "(", 
+            FractionBox["\[Pi]", 
+             RowBox[{"x", " ", 
+              RowBox[{"exp", "(", "5", ")"}]}]], ")"}]}], ")"}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{
+           RowBox[{"exp", "(", 
+            FractionBox["1", 
+             RowBox[{
+              SuperscriptBox["tan", 
+               RowBox[{"-", "1"}]], "(", 
+              RowBox[{"1", ",", "2"}], ")"}]], ")"}], ",", "2"}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525645371691416287237977819628`20.", 
+     "0.2156083105715670889`3.", "\<\"0.00729735256453717\"\>"},
+    {"22", "151", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SubsuperscriptBox["log", 
+           SuperscriptBox["\[Pi]", "2"], "2"], "(", 
+          SqrtBox[
+           RowBox[{"x", " ", "2"}]], ")"}], "\[LongEqual]", 
+         RowBox[{"tan", "(", 
+          FractionBox["\[Pi]", 
+           SuperscriptBox[
+            SqrtBox["3"], "\[ExponentialE]"]], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256418977158298447689769185829`20.", 
+     RowBox[{"-", "0.1002076518322937294`3."}], "\<\"0.00729735256418977\"\>"},
+    {"23", "153", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SqrtBox["x"], " ", 
+          RadicalBox[
+           FractionBox["\[Pi]", "2"], "3"]}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["sin", "\[Pi]"], "(", 
+          FractionBox["\[Pi]", 
+           RowBox[{"\[Pi]", " ", "2"}]], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256391049697719183360261668203`20.", 
+     RowBox[{"-", "0.3540936570983330886`3."}], "\<\"0.0072973525639105\"\>"},
+    {"24", "154", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          RowBox[{"tan", "(", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{"(", 
+             RowBox[{
+              SqrtBox["x"], " ", "7"}], ")"}]}], ")"}], "+", 
+          "\[ExponentialE]"}], "\[LongEqual]", 
+         RowBox[{"-", 
+          FractionBox["1", 
+           RowBox[{
+            TagBox["\[Phi]",
+             Function[{}, GoldenRatio]], "+", 
+            FractionBox["1", 
+             RowBox[{"log", "(", "4", ")"}]]}]]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256451344990760373148880696525`20.", 
+     "0.194045370548846808`3.", "\<\"0.00729735256451345\"\>"},
+    {"25", "151", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          FractionBox["1", 
+           RowBox[{"cos", "(", 
+            FractionBox["\[Pi]", 
+             RowBox[{"log", "(", 
+              SqrtBox["x"], ")"}]], ")"}]], "-", "2"}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{
+           RowBox[{
+            SubscriptBox["log", "\[Pi]"], "(", 
+            RowBox[{"log", "(", "\[Pi]", ")"}], ")"}], ",", "1"}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256480295107378946535998360739`20.", 
+     "0.4572282488995139636`3.", "\<\"0.00729735256480295\"\>"},
+    {"26", "150", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"log", "(", "x", ")"}], "+", "3"}], ")"}], "2"], "-", 
+          "2"}], "\[LongEqual]", 
+         FractionBox["2", 
+          SuperscriptBox["4", 
+           FractionBox["1", 
+            RowBox[{"\[ExponentialE]", " ", "3"}]]]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256348189320243871049011314856`20.", 
+     RowBox[{"-", "0.743733452328445009`3."}], "\<\"0.00729735256348189\"\>"},
+    {"27", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"log", "(", 
+             SuperscriptBox["x", "2"], ")"}], "+", 
+            FractionBox["1", 
+             SqrtBox["\[ExponentialE]"]]}], ")"}], "2"], "\[LongEqual]", 
+         SuperscriptBox["4", 
+          RowBox[{"2", "+", 
+           RowBox[{
+            SuperscriptBox["log", "2"], "(", "3", ")"}]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525637632312196220482994170475`20.", 
+     RowBox[{"-", "0.4879716185254106369`3."}], "\<\"0.00729735256376323\"\>"},
+    {"28", "157", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RadicalBox[
+          FractionBox["1", 
+           RowBox[{"x", " ", 
+            RowBox[{"exp", "(", "\[ExponentialE]", ")"}]}]], "7"], "\[LongEqual]", 
+         SqrtBox[
+          RowBox[{"1", "+", 
+           RowBox[{"sin", "(", 
+            FractionBox[
+             RowBox[{"\[Pi]", " ", "\[ExponentialE]"}], "8"], ")"}]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256343830435162014428210601155`20.", 
+     RowBox[{"-", "0.7833596803453233799`3."}], "\<\"0.00729735256343831\"\>"},
+    {"29", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"sin", "(", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"log", "(", 
+              FractionBox["x", "\[Pi]"], ")"}], "+", "7"}], ")"}]}], ")"}], "\[LongEqual]", 
+         FractionBox["1", 
+          SuperscriptBox[
+           TagBox["\[Phi]",
+            Function[{}, GoldenRatio]], 
+           SqrtBox[
+            RowBox[{"9", "+", "2"}]]]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525643664066000406027612924672`20.", 
+     "0.0603696364005479648`3.", "\<\"0.00729735256436641\"\>"},
+    {"30", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"x", " ", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            FractionBox["7", 
+             TagBox["\[Phi]",
+              Function[{}, GoldenRatio]]], ")"}], "4"]}], "\[LongEqual]", 
+         SqrtBox[
+          RowBox[{"6", "+", 
+           SqrtBox[
+            FractionBox["2", "7"]]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256404981708250049811946264383`20.", 
+     RowBox[{"-", "0.2274390159086380732`3."}], "\<\"0.00729735256404982\"\>"},
+    {"31", "155", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["1", 
+          SuperscriptBox["x", 
+           FractionBox["1", 
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"3", ",", 
+              SuperscriptBox["5", "2"]}], ")"}]]]], "\[LongEqual]", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"2", ",", "\[ExponentialE]"}], ")"}]}], ")"}], "\[Pi]"]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256329806913893112861767536312`20.", 
+     RowBox[{"-", "0.9108462373353376203`3."}], "\<\"0.00729735256329808\"\>"},
+    {"32", "157", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["1", 
+          RowBox[{
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"log", "(", "x", ")"}], "+", "3"}], ")"}], "2"], "-", 
+           "2"}]], "\[LongEqual]", 
+         RowBox[{
+          FractionBox["1", "2"], " ", 
+          SuperscriptBox["4", 
+           FractionBox["1", 
+            RowBox[{"\[ExponentialE]", " ", "3"}]]]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256348189320243871049011314856`20.", 
+     RowBox[{"-", "0.743733452328445009`3."}], "\<\"0.0072973525634819\"\>"},
+    {"33", "154", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SqrtBox[
+          RowBox[{
+           FractionBox["1", 
+            SqrtBox["x"]], "-", 
+           FractionBox["3", "2"]}]], "\[LongEqual]", 
+         RowBox[{"3", "+", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            FractionBox[
+             RowBox[{"log", "(", "4", ")"}], "\[Pi]"], ")"}], "2"]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256509450747706617946062455011`20.", 
+     "0.7222795246056176915`3.", "\<\"0.0072973525650945\"\>"},
+    {"34", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SqrtBox[
+          RowBox[{
+           FractionBox["1", "x"], "-", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{"1", "+", 
+              SuperscriptBox["\[Pi]", "2"]}], ")"}], "2"]}]], "\[LongEqual]", 
+         RowBox[{"5", "-", 
+          FractionBox["1", 
+           RowBox[{
+            SuperscriptBox["log", "\[Pi]"], "(", "\[Pi]", ")"}]]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256340049330282308571687727566`20.", 
+     RowBox[{"-", "0.8177333610699220756`3."}], "\<\"0.00729735256340049\"\>"},
+    {"35", "155", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"log", "(", 
+          RowBox[{
+           RowBox[{"x", " ", "9"}], "+", 
+           SqrtBox["x"]}], ")"}], "\[LongEqual]", 
+         RowBox[{"-", 
+          RowBox[{"(", 
+           RowBox[{"1", "+", 
+            RowBox[{"\[Sqrt]", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"log", "(", "6", ")"}], "-", "1"}], ")"}]}]}], 
+           ")"}]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256347483172747230935035397797`20.", 
+     RowBox[{"-", "0.7501529750251733179`3."}], "\<\"0.00729735256347483\"\>"},
+    {"36", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SqrtBox[
+          RowBox[{"x", " ", 
+           SqrtBox[
+            RowBox[{"exp", "(", 
+             FractionBox["1", 
+              SqrtBox["\[ExponentialE]"]], ")"}]]}]], "\[LongEqual]", 
+         FractionBox["1", 
+          RowBox[{"exp", "(", 
+           SuperscriptBox["2", 
+            RowBox[{
+             SuperscriptBox["log", "2"], "(", "3", ")"}]], ")"}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525637632312196220482994170475`20.", 
+     RowBox[{"-", "0.4879716185254106369`3."}], "\<\"0.00729735256376323\"\>"},
+    {"37", "155", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"cos", "(", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"log", "(", 
+            RowBox[{"sin", "(", 
+             RowBox[{"\[Pi]", " ", 
+              RowBox[{"tan", "(", 
+               RowBox[{"\[Pi]", " ", 
+                SqrtBox["x"]}], ")"}]}], ")"}], ")"}]}], ")"}], "\[LongEqual]", 
+         FractionBox["1", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"1", "+", 
+             RowBox[{"log", "(", "9", ")"}]}], ")"}], 
+           RowBox[{"1", "/", "\[ExponentialE]"}]]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256339240994245622344508760341`20.", 
+     RowBox[{"-", "0.8250818704943423227`3."}], "\<\"0.00729735256339241\"\>"},
+    {"38", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox["1", 
+             SqrtBox[
+              RowBox[{"x", " ", "2"}]]], "-", "7"}], ")"}], "2"], "\[LongEqual]", 
+         FractionBox["1", 
+          RowBox[{"sin", "(", 
+           FractionBox["\[Pi]", 
+            RowBox[{"7", "-", 
+             SqrtBox["5"]}]], ")"}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256508857017657232700548294341`20.", 
+     "0.7168819787021154595`3.", "\<\"0.00729735256508857\"\>"},
+    {"39", "157", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SubscriptBox["log", 
+           FractionBox[
+            RowBox[{"\[Pi]", "-", "3"}], "7"]], "(", "x", ")"}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{
+           RowBox[{"log", "(", "4", ")"}], ",", 
+           RowBox[{
+            TagBox["\[Phi]",
+             Function[{}, GoldenRatio]], "+", "\[ExponentialE]"}]}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525641806383013085663037469234`20.", 
+     RowBox[{"-", "0.108510635174030633`3."}], "\<\"0.00729735256418062\"\>"},
+    {"40", "159", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"x", " ", 
+          RowBox[{"(", 
+           RowBox[{"\[ExponentialE]", "+", 
+            RadicalBox["8", "7"]}], ")"}]}], "\[LongEqual]", 
+         FractionBox["1", 
+          RowBox[{
+           SuperscriptBox["2", 
+            SqrtBox["\[Pi]"]], " ", 
+           SuperscriptBox["\[Pi]", "2"]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256412642927678572228279078918`20.", 
+     RowBox[{"-", "0.1577915665584342884`3."}], "\<\"0.00729735256412643\"\>"},
+    {"41", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["x", 
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{
+            SuperscriptBox["7", "\[ExponentialE]"], ",", "\[Pi]"}], ")"}]], "\[LongEqual]", 
+         FractionBox["1", 
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{
+            RowBox[{"-", "\[Pi]"}], ",", 
+            SuperscriptBox[
+             RowBox[{"(", 
+              RowBox[{"\[Pi]", "-", "1"}], ")"}], "2"]}], ")"}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256513883633300916355677142013`20.", 
+     "0.7625784845537850516`3.", "\<\"0.00729735256513884\"\>"},
+    {"42", "159", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"tan", "(", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"(", 
+            RowBox[{"x", " ", 
+             RowBox[{"(", 
+              RowBox[{"3", "+", 
+               RowBox[{"exp", "(", "4", ")"}]}], ")"}]}], ")"}]}], ")"}], "\[LongEqual]", 
+         RowBox[{"\[ExponentialE]", " ", 
+          RowBox[{"(", 
+           RowBox[{
+            SqrtBox[
+             TagBox["\[Phi]",
+              Function[{}, GoldenRatio]]], "+", 
+            FractionBox["1", "6"]}], ")"}]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256324467507847387629063870761`20.", 
+     RowBox[{"-", "0.9593862922964760994`3."}], "\<\"0.00729735256324468\"\>"},
+    {"43", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"x", " ", 
+          SuperscriptBox[
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{"1", ",", 
+             SuperscriptBox["\[Pi]", "2"]}], ")"}], "4"]}], "\[LongEqual]", 
+         FractionBox[
+          RowBox[{"cos", "(", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{"log", "(", 
+             TagBox["\[Phi]",
+              Function[{}, GoldenRatio]], ")"}]}], ")"}], 
+          SqrtBox["3"]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256352599458938161732990641296`20.", 
+     RowBox[{"-", "0.7036412823803478819`3."}], "\<\"0.007297352563526\"\>"},
+    {"44", "159", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"x", " ", 
+          RowBox[{"exp", "(", 
+           RowBox[{"exp", "(", 
+            RowBox[{"sin", "(", 
+             FractionBox["\[Pi]", "7"], ")"}], ")"}], ")"}]}], "\[LongEqual]", 
+         RowBox[{
+          SubsuperscriptBox["log", 
+           RowBox[{"log", "(", 
+            TagBox["\[Phi]",
+             Function[{}, GoldenRatio]], ")"}], "2"], "(", 
+          RowBox[{"log", "(", "\[Pi]", ")"}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525640727650442510661282234844`20.", 
+     RowBox[{"-", "0.2065772324990307925`3."}], "\<\"0.00729735256407277\"\>"},
+    {"45", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          FractionBox["1", 
+           RowBox[{"sin", "(", 
+            RowBox[{"\[Pi]", " ", 
+             SuperscriptBox["x", 
+              RowBox[{"1", "/", 
+               TagBox["\[Phi]",
+                Function[{}, GoldenRatio]]}]]}], ")"}]], "-", "6"}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{"1", "+", 
+              FractionBox["1", 
+               SqrtBox["\[Pi]"]]}], ")"}], "2"], ",", "2"}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256392004822233047422483660579`20.", 
+     RowBox[{"-", "0.3454107069722961592`3."}], "\<\"0.00729735256392004\"\>"},
+    {"46", "155", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          RowBox[{"log", "(", 
+           RowBox[{"sin", "(", 
+            FractionBox[
+             RowBox[{"\[Pi]", " ", "x"}], "5"], ")"}], ")"}], "+", "4"}], "\[LongEqual]", 
+         RowBox[{"-", 
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{
+            RadicalBox["3", "4"], ",", "7"}], ")"}]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256445188365676170501557399697`20.", 
+     "0.1380760516015500142`3.", "\<\"0.00729735256445188\"\>"},
+    {"47", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SqrtBox["x"], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            SuperscriptBox["\[Pi]", "\[Pi]"], "-", "\[ExponentialE]"}], 
+           ")"}]}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{
+           RowBox[{
+            FractionBox["1", "\[ExponentialE]"], "-", 
+            RowBox[{"(", 
+             RowBox[{"\[Pi]", "+", "1"}], ")"}]}], ",", "1"}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256521785452557956741807201167`20.", 
+     "0.8344132050723340164`3.", "\<\"0.00729735256521786\"\>"},
+    {"48", "157", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          FractionBox["1", "3"], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox["1", "x"], "+", 
+            SuperscriptBox[
+             RowBox[{"(", 
+              RowBox[{"\[Pi]", "+", "1"}], ")"}], "2"]}], ")"}]}], "\[LongEqual]", 
+         RowBox[{"5", "+", 
+          SuperscriptBox["6", 
+           RowBox[{"\[Pi]", "-", "1"}]]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256486990517599994478132436473`20.", 
+     "0.5180956145454043467`3.", "\<\"0.00729735256486991\"\>"},
+    {"49", "159", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["1", 
+          RowBox[{
+           RowBox[{"log", "(", "x", ")"}], "+", 
+           FractionBox["1", 
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"7", ",", "1"}], ")"}]]}]], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{"2", ",", 
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{
+             RowBox[{"log", "(", "7", ")"}], ",", "\[Pi]"}], ")"}]}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525639456520900129966919414327`20.", 
+     RowBox[{"-", "0.3221344636245484619`3."}], "\<\"0.00729735256394566\"\>"},
+    {"50", "157", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          FractionBox["1", "4"], " ", 
+          RowBox[{"(", 
+           RowBox[{
+            FractionBox["1", "x"], "-", 
+            FractionBox["1", 
+             RowBox[{"sin", "(", 
+              RowBox[{"\[Pi]", " ", "x"}], ")"}]]}], ")"}]}], "\[LongEqual]", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"\[ExponentialE]", " ", 
+            SuperscriptBox[
+             RowBox[{"(", 
+              RowBox[{"1", "+", 
+               FractionBox["1", "3"]}], ")"}], "2"]}], ")"}], "2"]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256432138315542468216409486257`20.", 
+     "0.0194392322042565128`3.", "\<\"0.00729735256432138\"\>"},
+    {"51", "157", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"1", "/", 
+          RowBox[{"(", 
+           RowBox[{"\[Sqrt]", 
+            RowBox[{"tan", "(", 
+             RowBox[{"\[Pi]", " ", 
+              RowBox[{
+               SuperscriptBox["tan", 
+                RowBox[{"-", "1"}]], "(", 
+               RowBox[{"7", ",", 
+                SqrtBox["x"]}], ")"}]}], ")"}]}], ")"}]}], "\[LongEqual]", 
+         RowBox[{
+          TagBox["\[Phi]",
+           Function[{}, GoldenRatio]], " ", 
+          RowBox[{"(", 
+           RowBox[{"2", "+", 
+            FractionBox["\[Pi]", "\[ExponentialE]"]}], ")"}]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256417251875371486210446926784`20.", 
+     RowBox[{"-", "0.1158920420773980869`3."}], "\<\"0.00729735256417252\"\>"},
+    {"52", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"\[Sqrt]", 
+          RowBox[{"cos", "(", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{"sin", "(", 
+             RowBox[{"\[Pi]", " ", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"log", "(", "x", ")"}], "+", "4"}], ")"}]}], ")"}]}], 
+           ")"}]}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{
+           RadicalBox["5", "7"], ",", 
+           SqrtBox["2"]}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256349921644851739340867224938`20.", 
+     RowBox[{"-", "0.7279850468023696285`3."}], "\<\"0.00729735256349921\"\>"},
+    {"53", "157", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"x", " ", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"\[Pi]", "+", 
+             FractionBox["1", "\[ExponentialE]"]}], ")"}], "\[Pi]"]}], "\[LongEqual]", 
+         RowBox[{
+          SubscriptBox["log", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{"(", 
+             RowBox[{"\[Pi]", "-", "2"}], ")"}]}]], "(", 
+          TagBox["\[Phi]",
+           Function[{}, GoldenRatio]], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256375686490157087817027746979`20.", 
+     RowBox[{"-", "0.4937591803901107543`3."}], "\<\"0.00729735256375687\"\>"},
+    {"54", "159", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"x", " ", 
+          RowBox[{"(", 
+           RowBox[{"3", "+", 
+            SuperscriptBox[
+             RowBox[{"(", 
+              RowBox[{"\[Pi]", "+", "5"}], ")"}], "2"]}], ")"}]}], "\[LongEqual]", 
+         FractionBox["1", 
+          RowBox[{"2", "-", 
+           FractionBox["1", 
+            SuperscriptBox[
+             RowBox[{"(", 
+              RowBox[{"\[ExponentialE]", "+", "4"}], ")"}], "2"]]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256329816861827859194101936929`20.", 
+     RowBox[{"-", "0.9107558015649164173`3."}], "\<\"0.00729735256329817\"\>"},
+    {"55", "160", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["1", 
+          RowBox[{"x", " ", 
+           SuperscriptBox[
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"1", ",", "7"}], ")"}], "\[Pi]"]}]], "\[LongEqual]", 
+         RowBox[{
+          RowBox[{"9", " ", 
+           RowBox[{"(", 
+            RowBox[{"\[Pi]", "+", "2"}], ")"}]}], "-", 
+          TagBox["\[Phi]",
+           Function[{}, GoldenRatio]]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525640333765337782486956544295`20.", 
+     RowBox[{"-", "0.2423849692925011858`3."}], "\<\"0.00729735256403337\"\>"},
+    {"56", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["1", 
+          SuperscriptBox["x", 
+           SqrtBox[
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"8", ",", "\[Pi]"}], ")"}]]]], "\[LongEqual]", 
+         RowBox[{
+          SubsuperscriptBox["log", 
+           SqrtBox[
+            RowBox[{"cos", "(", 
+             FractionBox["\[Pi]", "\[Pi]"], ")"}]], "2"], "(", "4", ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256391114090907922074957611181`20.", 
+     RowBox[{"-", "0.3535082644734356822`3."}], "\<\"0.00729735256391113\"\>"},
+    {"57", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SuperscriptBox["tan", "2"], "(", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"(", 
+            RowBox[{"x", " ", 
+             SuperscriptBox["2", "7"]}], ")"}]}], ")"}], "\[LongEqual]", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"1", "-", 
+            FractionBox["1", "\[Pi]"]}], ")"}], 
+          RowBox[{"\[Pi]", "+", "5"}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.0072973525639364149251142777664136796`20.", 
+     RowBox[{"-", "0.3305318862597474851`3."}], "\<\"0.00729735256393641\"\>"},
+    {"58", "155", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox[
+          RowBox[{"sin", "(", 
+           FractionBox["\[Pi]", 
+            RowBox[{"exp", "(", "8", ")"}]], ")"}], "x"], "\[LongEqual]", 
+         FractionBox[
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{"2", ",", "1"}], ")"}], 
+          RowBox[{
+           SuperscriptBox["log", "2"], "(", "6", ")"}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256420330710919524212023781611`20.", 
+     RowBox[{"-", "0.0879026280043253452`3."}], "\<\"0.00729735256420331\"\>"},
+    {"59", "154", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"x", " ", 
+            SuperscriptBox["4", 
+             SqrtBox[
+              TagBox["\[Phi]",
+               Function[{}, GoldenRatio]]]]}], ")"}], "2"], "\[LongEqual]", 
+         FractionBox[
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"\[Pi]", "-", "3"}], ")"}], "\[ExponentialE]"], 
+          "\[ExponentialE]"]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256361876419673194612526730823`20.", 
+     RowBox[{"-", "0.6193052756982307952`3."}], "\<\"0.00729735256361876\"\>"},
+    {"60", "154", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"x", " ", 
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"1", ",", "1"}], ")"}]}], ")"}], " ", 
+          SqrtBox["\[ExponentialE]"]}], "\[LongEqual]", 
+         SuperscriptBox[
+          RowBox[{
+           SuperscriptBox["tan", 
+            RowBox[{"-", "1"}]], "(", 
+           RowBox[{"7", ",", 
+            RowBox[{
+             SubscriptBox["log", "5"], "(", "3", ")"}]}], ")"}], "2"]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256416391793111026553318446601`20.", 
+     RowBox[{"-", "0.1237109717179404244`3."}], "\<\"0.00729735256416392\"\>"},
+    {"61", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SuperscriptBox["log", "2"], "(", 
+          SqrtBox[
+           RowBox[{
+            RowBox[{"sin", "(", 
+             RowBox[{"\[Pi]", " ", "x"}], ")"}], " ", "6"}]], ")"}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox["tan", 
+           RowBox[{"-", "1"}]], "(", 
+          RowBox[{"2", ",", 
+           RowBox[{"exp", "(", 
+            RadicalBox[
+             TagBox["\[Phi]",
+              Function[{}, GoldenRatio]], "5"], ")"}]}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256428305068147045642570025286`20.", 
+     RowBox[{"-", "0.0154084713904941585`3."}], "\<\"0.00729735256428305\"\>"},
+    {"62", "160", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{
+             SqrtBox["x"], " ", "6"}], ")"}], "\[Pi]"], " ", "2"}], "\[LongEqual]", 
+         FractionBox[
+          RowBox[{"log", "(", "2", ")"}], 
+          RowBox[{"\[ExponentialE]", "+", 
+           FractionBox["1", "9"]}]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256529128762470358779852948365`20.", 
+     "0.9011705679123525441`3.", "\<\"0.00729735256529129\"\>"},
+    {"63", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         RowBox[{"x", " ", 
+          SuperscriptBox["4", 
+           SqrtBox[
+            RowBox[{"exp", "(", "\[ExponentialE]", ")"}]]]}], "\[LongEqual]", 
+         RowBox[{
+          SuperscriptBox[
+           TagBox["\[Phi]",
+            Function[{}, GoldenRatio]], "2"], "-", 
+          SuperscriptBox[
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{"2", ",", "\[Pi]"}], ")"}], "2"]}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256357492676925995706711205316`20.", 
+     RowBox[{"-", "0.6591574824909481208`3."}], "\<\"0.00729735256357493\"\>"},
+    {"64", "158", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SqrtBox[
+          FractionBox["x", 
+           RowBox[{"sin", "(", 
+            FractionBox["\[Pi]", 
+             RowBox[{"exp", "(", "8", ")"}]], ")"}]]], "\[LongEqual]", 
+         FractionBox[
+          RowBox[{"log", "(", "6", ")"}], 
+          SqrtBox[
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{"2", ",", "1"}], ")"}]]]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256420330710919524212023781611`20.", 
+     RowBox[{"-", "0.0879026280043253452`3."}], "\<\"0.00729735256420331\"\>"},
+    {"65", "156", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         FractionBox["1", 
+          SuperscriptBox["x", 
+           SqrtBox[
+            RowBox[{
+             SuperscriptBox["tan", 
+              RowBox[{"-", "1"}]], "(", 
+             RowBox[{"8", ",", "\[Pi]"}], ")"}]]]], "\[LongEqual]", 
+         RowBox[{
+          SubsuperscriptBox["log", 
+           RowBox[{"cos", "(", 
+            FractionBox["\[Pi]", "\[Pi]"], ")"}], "2"], "(", 
+          SuperscriptBox["4", "2"], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256391114090907922074957611181`20.", 
+     RowBox[{"-", "0.3535082644734356822`3."}], "\<\"0.00729735256391114\"\>"},
+    {"66", "149", 
+     TagBox[
+      FormBox[
+       TagBox[
+        RowBox[{
+         SuperscriptBox["x", 
+          SqrtBox[
+           RowBox[{
+            SuperscriptBox["tan", 
+             RowBox[{"-", "1"}]], "(", 
+            RowBox[{"8", ",", "\[Pi]"}], ")"}]]], "\[LongEqual]", 
+         RowBox[{
+          SubsuperscriptBox["log", 
+           SuperscriptBox["4", "2"], "2"], "(", 
+          RowBox[{"cos", "(", 
+           FractionBox["\[Pi]", "\[Pi]"], ")"}], ")"}]}],
+        HoldForm],
+       TraditionalForm],
+      TraditionalForm,
+      Editable->True], "0.00729735256391114090907922074957611181`20.", 
+     RowBox[{"-", "0.3535082644734356822`3."}], "\<\"0.00729735256391113\"\>"}
+   },
+   AutoDelete->False,
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxBackground->{"Columns" -> {{None}}, "Rows" -> {
+       GrayLevel[0.85]}},
+   GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+   GridBoxItemStyle->{"Columns" -> {{Automatic}}, "Rows" -> {"Text"}}],
+  "Grid"]], "Output",ExpressionUUID->"1da57c89-1b0e-874b-9767-1fc2ea2be979"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Data and code (evaluate to recompute; equations are held so they keep RIES's \
+form)\
+\>", "Section",ExpressionUUID->"1dadefc2-2fc4-da41-a471-5b2c530568d8"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"T", "=", "0.0072973525643`40."}], ";", 
+  RowBox[{
+  "sigma", "=", 
+   "1.09999999999999999999999999999999999999999999999999999999999999999`40.*^-\
+12"}]}]], "Input",
+ CellLabel->"In[13]:=",ExpressionUUID->"f467499e-b9f3-9b4d-80ef-863fecb2c2af"],
+
+Cell[BoxData["1.\
+09999999999999999999999999999999999999999999999999999999999999999`40.*^-12"], \
+"Output",
+ CellChangeTimes->{4.0000277152659893`*^9},
+ CellLabel->"Out[13]=",ExpressionUUID->"a5742078-bc95-884f-909e-fa0988d4089c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ries", "=", 
+  RowBox[{"{", 
+   RowBox[{
+    TagBox[
+     RowBox[{
+      RowBox[{
+       SuperscriptBox["x", 
+        FractionBox["1", 
+         RowBox[{"\[Pi]", "-", 
+          FractionBox["1", "3"]}]]], "+", "1"}], "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"Log", "[", "2", "]"}], ",", 
+        RowBox[{"Log", "[", 
+         RowBox[{"2", ",", "\[Pi]"}], "]"}]}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"x", " ", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"2", "+", 
+          SuperscriptBox["2", "\[Pi]"]}], ")"}], "2"]}], "\[Equal]", 
+      RowBox[{"Cos", "[", 
+       FractionBox["\[Pi]", 
+        RowBox[{"8", "-", 
+         SqrtBox["5"]}]], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"4", ",", 
+         RowBox[{"Log", "[", 
+          RowBox[{"3", ",", "x"}], "]"}]}], "]"}], "+", "1"}], "\[Equal]", 
+      RowBox[{"Cos", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"1", ",", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"6", ",", "\[Pi]"}], "]"}]}], "]"}]}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       RowBox[{"Log", "[", 
+        RowBox[{"6", ",", 
+         RowBox[{"x", " ", "\[Pi]"}]}], "]"}], "+", "\[ExponentialE]"}], "\[Equal]", 
+      RowBox[{"Log", "[", 
+       RowBox[{"7", ",", 
+        RowBox[{"\[Pi]", "+", 
+         FractionBox["1", "7"]}]}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Tan", "[", 
+       RowBox[{"\[Pi]", " ", 
+        SuperscriptBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"6", ",", 
+           RowBox[{"Log", "[", "x", "]"}]}], "]"}], "2"]}], "]"}], "\[Equal]", 
+      RowBox[{"\[Pi]", "+", 
+       RowBox[{"(", 
+        RowBox[{
+         SuperscriptBox["\[Pi]", "2"], "-", 
+         SqrtBox["\[Pi]"]}], ")"}]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       RowBox[{"Tan", "[", 
+        RowBox[{"\[Pi]", " ", 
+         SqrtBox[
+          FractionBox[
+           SqrtBox["x"], "9"]]}], "]"}]], "\[Equal]", 
+      RowBox[{
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", "3"}], "]"}], "+", 
+       SqrtBox["GoldenRatio"]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"-", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Log", "[", 
+          SuperscriptBox["x", "2"], "]"}], "+", 
+         FractionBox["1", 
+          SqrtBox["\[ExponentialE]"]]}], ")"}]}], "\[Equal]", 
+      SuperscriptBox["2", 
+       RowBox[{"2", "+", 
+        SuperscriptBox[
+         RowBox[{"Log", "[", "3", "]"}], "2"]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Tan", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Log", "[", 
+           RowBox[{"6", ",", "x"}], "]"}], "+", "\[ExponentialE]"}], ")"}]}], 
+       "]"}], "\[Equal]", 
+      FractionBox[
+       RowBox[{
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"\[Pi]", ",", "3"}], "]"}], "-", "1"}], "\[ExponentialE]"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       RowBox[{"Tan", "[", 
+        RowBox[{
+         FractionBox["1", "3"], " ", "\[Pi]", " ", 
+         SuperscriptBox["x", 
+          RowBox[{"1", "/", "4"}]]}], "]"}]], "\[Equal]", 
+      RowBox[{
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", "3"}], "]"}], "+", 
+       SqrtBox["GoldenRatio"]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       FractionBox["1", "x"], "-", 
+       SuperscriptBox["2", 
+        FractionBox["1", 
+         RowBox[{"\[Pi]", "-", "3"}]]]}], "\[Equal]", 
+      RowBox[{"Exp", "[", 
+       SuperscriptBox["4", 
+        FractionBox["1", 
+         RowBox[{"\[Pi]", "+", "4"}]]], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       RowBox[{"Sin", "[", 
+        RowBox[{"\[Pi]", " ", "x"}], "]"}], "-", 
+       SuperscriptBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"2", ",", "5"}], "]"}], "2"]}], "\[Equal]", 
+      RowBox[{"-", 
+       RowBox[{"Log", "[", 
+        RowBox[{"5", ",", 
+         RowBox[{"\[Pi]", " ", "3"}]}], "]"}]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Exp", "[", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          SqrtBox["x"], " ", "6"}], ")"}], "\[Pi]"], "]"}], "\[Equal]", 
+      SqrtBox[
+       SuperscriptBox["2", 
+        FractionBox["1", 
+         RowBox[{"\[ExponentialE]", "+", 
+          FractionBox["1", "9"]}]]]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox["x", 
+       SuperscriptBox["3", 
+        FractionBox["1", 
+         SuperscriptBox["\[Pi]", "\[ExponentialE]"]]]], "\[Equal]", 
+      FractionBox["1", 
+       RowBox[{"\[ExponentialE]", "+", 
+        SuperscriptBox[
+         SqrtBox["\[Pi]"], "9"]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Log", "[", 
+       RowBox[{
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"2", ",", "\[ExponentialE]"}], "]"}]}], ",", "x"}], "]"}], "\[Equal]", 
+      RowBox[{"-", 
+       RowBox[{"(", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"3", ",", 
+           SuperscriptBox["5", "2"]}], "]"}]}], ")"}]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["x", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         SqrtBox[
+          RowBox[{"\[Pi]", "+", "1"}]], ",", "3"}], "]"}]], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{
+         FractionBox["1", "6"], " ", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"7", ",", "4"}], "]"}]}], ")"}], "2"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Cos", "[", 
+       RowBox[{"\[Pi]", " ", 
+        SuperscriptBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{
+           FractionBox["1", 
+            SuperscriptBox["9", "2"]], ",", "x"}], "]"}], "2"]}], "]"}], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"Exp", "[", "3", "]"}], 
+       FractionBox["1", 
+        RowBox[{"1", "-", 
+         SuperscriptBox["\[ExponentialE]", "2"]}]]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"-", 
+       SqrtBox[
+        FractionBox["x", 
+         RowBox[{"5", "+", 
+          SqrtBox["3"]}]]]}], "\[Equal]", 
+      RowBox[{"Tan", "[", 
+       FractionBox[
+        RowBox[{"\[Pi]", " ", 
+         SuperscriptBox["GoldenRatio", "2"]}], 
+        SqrtBox["7"]], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       SqrtBox["x"], 
+       SqrtBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"8", ",", "\[Pi]"}], "]"}]]], "\[Equal]", 
+      RowBox[{"-", 
+       RowBox[{"Log", "[", 
+        RowBox[{
+         SuperscriptBox["4", "2"], ",", 
+         RowBox[{"Cos", "[", 
+          FractionBox["\[Pi]", "\[Pi]"], "]"}]}], "]"}]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox["x", 
+       FractionBox["1", 
+        RowBox[{"\[Pi]", "+", 
+         RowBox[{"Log", "[", 
+          RowBox[{"3", ",", "6"}], "]"}]}]]], "\[Equal]", 
+      RowBox[{"Log", "[", 
+       RowBox[{"2", ",", 
+        RowBox[{"Log", "[", 
+         RowBox[{
+          RowBox[{"\[ExponentialE]", "-", "1"}], ",", "2"}], "]"}]}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"(", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"x", " ", 
+           RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]}], ")"}], 
+         RowBox[{"1", "/", "7"}]], ")"}], "2"], "\[Equal]", 
+      FractionBox["1", 
+       RowBox[{"1", "+", 
+        RowBox[{"Sin", "[", 
+         FractionBox[
+          RowBox[{"\[Pi]", " ", "\[ExponentialE]"}], "8"], "]"}]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Sin", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"Sin", "[", 
+         FractionBox["\[Pi]", 
+          RowBox[{"x", " ", 
+           RowBox[{"Exp", "[", "5", "]"}]}]], "]"}]}], "]"}], "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"Exp", "[", 
+         FractionBox["1", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"1", ",", "2"}], "]"}]], "]"}], ",", "2"}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"Log", "[", 
+        RowBox[{
+         SuperscriptBox["\[Pi]", "2"], ",", 
+         SqrtBox[
+          RowBox[{"x", " ", "2"}]]}], "]"}], "2"], "\[Equal]", 
+      RowBox[{"Tan", "[", 
+       FractionBox["\[Pi]", 
+        SuperscriptBox[
+         SqrtBox["3"], "\[ExponentialE]"]], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       SqrtBox["x"], " ", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         FractionBox["\[Pi]", "2"], ")"}], 
+        RowBox[{"1", "/", "3"}]]}], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"Sin", "[", 
+        FractionBox["\[Pi]", 
+         RowBox[{"\[Pi]", " ", "2"}]], "]"}], "\[Pi]"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       RowBox[{"Tan", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox["x"], " ", "7"}], ")"}]}], "]"}], "+", "\[ExponentialE]"}],
+       "\[Equal]", 
+      RowBox[{"-", 
+       FractionBox["1", 
+        RowBox[{"GoldenRatio", "+", 
+         FractionBox["1", 
+          RowBox[{"Log", "[", "4", "]"}]]}]]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{"Cos", "[", 
+         FractionBox["\[Pi]", 
+          RowBox[{"Log", "[", 
+           SqrtBox["x"], "]"}]], "]"}]], "-", "2"}], "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"Log", "[", 
+         RowBox[{"\[Pi]", ",", 
+          RowBox[{"Log", "[", "\[Pi]", "]"}]}], "]"}], ",", "1"}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Log", "[", "x", "]"}], "+", "3"}], ")"}], "2"], "-", "2"}],
+       "\[Equal]", 
+      FractionBox["2", 
+       SuperscriptBox["4", 
+        FractionBox["1", 
+         RowBox[{"\[ExponentialE]", " ", "3"}]]]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Log", "[", 
+          SuperscriptBox["x", "2"], "]"}], "+", 
+         FractionBox["1", 
+          SqrtBox["\[ExponentialE]"]]}], ")"}], "2"], "\[Equal]", 
+      SuperscriptBox["4", 
+       RowBox[{"2", "+", 
+        SuperscriptBox[
+         RowBox[{"Log", "[", "3", "]"}], "2"]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"(", 
+        FractionBox["1", 
+         RowBox[{"x", " ", 
+          RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]}]], ")"}], 
+       RowBox[{"1", "/", "7"}]], "\[Equal]", 
+      SqrtBox[
+       RowBox[{"1", "+", 
+        RowBox[{"Sin", "[", 
+         FractionBox[
+          RowBox[{"\[Pi]", " ", "\[ExponentialE]"}], "8"], "]"}]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Sin", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Log", "[", 
+           FractionBox["x", "\[Pi]"], "]"}], "+", "7"}], ")"}]}], "]"}], "\[Equal]", 
+      FractionBox["1", 
+       SuperscriptBox["GoldenRatio", 
+        SqrtBox[
+         RowBox[{"9", "+", "2"}]]]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"x", " ", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         FractionBox["7", "GoldenRatio"], ")"}], "4"]}], "\[Equal]", 
+      SqrtBox[
+       RowBox[{"6", "+", 
+        SqrtBox[
+         FractionBox["2", "7"]]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       SuperscriptBox["x", 
+        FractionBox["1", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"3", ",", 
+           SuperscriptBox["5", "2"]}], "]"}]]]], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"2", ",", "\[ExponentialE]"}], "]"}]}], ")"}], "\[Pi]"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       RowBox[{
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Log", "[", "x", "]"}], "+", "3"}], ")"}], "2"], "-", 
+        "2"}]], "\[Equal]", 
+      RowBox[{
+       FractionBox["1", "2"], " ", 
+       SuperscriptBox["4", 
+        FractionBox["1", 
+         RowBox[{"\[ExponentialE]", " ", "3"}]]]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SqrtBox[
+       RowBox[{
+        FractionBox["1", 
+         SqrtBox["x"]], "-", 
+        FractionBox["3", "2"]}]], "\[Equal]", 
+      RowBox[{"3", "+", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         FractionBox[
+          RowBox[{"Log", "[", "4", "]"}], "\[Pi]"], ")"}], "2"]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SqrtBox[
+       RowBox[{
+        FractionBox["1", "x"], "-", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"1", "+", 
+           SuperscriptBox["\[Pi]", "2"]}], ")"}], "2"]}]], "\[Equal]", 
+      RowBox[{"5", "-", 
+       FractionBox["1", 
+        SuperscriptBox[
+         RowBox[{"Log", "[", "\[Pi]", "]"}], "\[Pi]"]]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Log", "[", 
+       RowBox[{
+        RowBox[{"x", " ", "9"}], "+", 
+        SqrtBox["x"]}], "]"}], "\[Equal]", 
+      RowBox[{"-", 
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         SqrtBox[
+          RowBox[{
+           RowBox[{"Log", "[", "6", "]"}], "-", "1"}]]}], ")"}]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SqrtBox[
+       RowBox[{"x", " ", 
+        SqrtBox[
+         RowBox[{"Exp", "[", 
+          FractionBox["1", 
+           SqrtBox["\[ExponentialE]"]], "]"}]]}]], "\[Equal]", 
+      FractionBox["1", 
+       RowBox[{"Exp", "[", 
+        SuperscriptBox["2", 
+         SuperscriptBox[
+          RowBox[{"Log", "[", "3", "]"}], "2"]], "]"}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Cos", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"Log", "[", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"Tan", "[", 
+            RowBox[{"\[Pi]", " ", 
+             SqrtBox["x"]}], "]"}]}], "]"}], "]"}]}], "]"}], "\[Equal]", 
+      FractionBox["1", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"1", "+", 
+          RowBox[{"Log", "[", "9", "]"}]}], ")"}], 
+        RowBox[{"1", "/", "\[ExponentialE]"}]]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{
+         FractionBox["1", 
+          SqrtBox[
+           RowBox[{"x", " ", "2"}]]], "-", "7"}], ")"}], "2"], "\[Equal]", 
+      FractionBox["1", 
+       RowBox[{"Sin", "[", 
+        FractionBox["\[Pi]", 
+         RowBox[{"7", "-", 
+          SqrtBox["5"]}]], "]"}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Log", "[", 
+       RowBox[{
+        FractionBox[
+         RowBox[{"\[Pi]", "-", "3"}], "7"], ",", "x"}], "]"}], "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"Log", "[", "4", "]"}], ",", 
+        RowBox[{"GoldenRatio", "+", "\[ExponentialE]"}]}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"x", " ", 
+       RowBox[{"(", 
+        RowBox[{"\[ExponentialE]", "+", 
+         SuperscriptBox["8", 
+          RowBox[{"1", "/", "7"}]]}], ")"}]}], "\[Equal]", 
+      FractionBox["1", 
+       RowBox[{
+        SuperscriptBox["2", 
+         SqrtBox["\[Pi]"]], " ", 
+        SuperscriptBox["\[Pi]", "2"]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["x", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         SuperscriptBox["7", "\[ExponentialE]"], ",", "\[Pi]"}], "]"}]], "\[Equal]", 
+      FractionBox["1", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"-", "\[Pi]"}], ",", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"\[Pi]", "-", "1"}], ")"}], "2"]}], "]"}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"Tan", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"(", 
+         RowBox[{"x", " ", 
+          RowBox[{"(", 
+           RowBox[{"3", "+", 
+            RowBox[{"Exp", "[", "4", "]"}]}], ")"}]}], ")"}]}], "]"}], "\[Equal]", 
+      RowBox[{"\[ExponentialE]", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         SqrtBox["GoldenRatio"], "+", 
+         FractionBox["1", "6"]}], ")"}]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"x", " ", 
+       SuperscriptBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"1", ",", 
+          SuperscriptBox["\[Pi]", "2"]}], "]"}], "4"]}], "\[Equal]", 
+      FractionBox[
+       RowBox[{"Cos", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"Log", "[", "GoldenRatio", "]"}]}], "]"}], 
+       SqrtBox["3"]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"x", " ", 
+       RowBox[{"Exp", "[", 
+        RowBox[{"Exp", "[", 
+         RowBox[{"Sin", "[", 
+          FractionBox["\[Pi]", "7"], "]"}], "]"}], "]"}]}], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"Log", "[", 
+        RowBox[{
+         RowBox[{"Log", "[", "GoldenRatio", "]"}], ",", 
+         RowBox[{"Log", "[", "\[Pi]", "]"}]}], "]"}], "2"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{"Sin", "[", 
+         RowBox[{"\[Pi]", " ", 
+          SuperscriptBox["x", 
+           RowBox[{"1", "/", "GoldenRatio"}]]}], "]"}]], "-", "6"}], "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"1", "+", 
+           FractionBox["1", 
+            SqrtBox["\[Pi]"]]}], ")"}], "2"], ",", "2"}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       RowBox[{"Log", "[", 
+        RowBox[{"Sin", "[", 
+         FractionBox[
+          RowBox[{"\[Pi]", " ", "x"}], "5"], "]"}], "]"}], "+", "4"}], "\[Equal]", 
+      RowBox[{"-", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         SuperscriptBox["3", 
+          RowBox[{"1", "/", "4"}]], ",", "7"}], "]"}]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       SqrtBox["x"], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         SuperscriptBox["\[Pi]", "\[Pi]"], "-", "\[ExponentialE]"}], ")"}]}], 
+      "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{
+         FractionBox["1", "\[ExponentialE]"], "-", 
+         RowBox[{"(", 
+          RowBox[{"\[Pi]", "+", "1"}], ")"}]}], ",", "1"}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       FractionBox["1", "3"], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         FractionBox["1", "x"], "+", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"\[Pi]", "+", "1"}], ")"}], "2"]}], ")"}]}], "\[Equal]", 
+      RowBox[{"5", "+", 
+       SuperscriptBox["6", 
+        RowBox[{"\[Pi]", "-", "1"}]]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       RowBox[{
+        RowBox[{"Log", "[", "x", "]"}], "+", 
+        FractionBox["1", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"7", ",", "1"}], "]"}]]}]], "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{"2", ",", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          RowBox[{"Log", "[", "7", "]"}], ",", "\[Pi]"}], "]"}]}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       FractionBox["1", "4"], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         FractionBox["1", "x"], "-", 
+         FractionBox["1", 
+          RowBox[{"Sin", "[", 
+           RowBox[{"\[Pi]", " ", "x"}], "]"}]]}], ")"}]}], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"\[ExponentialE]", " ", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"1", "+", 
+            FractionBox["1", "3"]}], ")"}], "2"]}], ")"}], "2"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       SqrtBox[
+        RowBox[{"Tan", "[", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"7", ",", 
+            SqrtBox["x"]}], "]"}]}], "]"}]]], "\[Equal]", 
+      RowBox[{"GoldenRatio", " ", 
+       RowBox[{"(", 
+        RowBox[{"2", "+", 
+         FractionBox["\[Pi]", "\[ExponentialE]"]}], ")"}]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SqrtBox[
+       RowBox[{"Cos", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"Log", "[", "x", "]"}], "+", "4"}], ")"}]}], "]"}]}], 
+        "]"}]], "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        SuperscriptBox["5", 
+         RowBox[{"1", "/", "7"}]], ",", 
+        SqrtBox["2"]}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"x", " ", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"\[Pi]", "+", 
+          FractionBox["1", "\[ExponentialE]"]}], ")"}], "\[Pi]"]}], "\[Equal]", 
+      RowBox[{"Log", "[", 
+       RowBox[{
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"(", 
+          RowBox[{"\[Pi]", "-", "2"}], ")"}]}], ",", "GoldenRatio"}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"x", " ", 
+       RowBox[{"(", 
+        RowBox[{"3", "+", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"\[Pi]", "+", "5"}], ")"}], "2"]}], ")"}]}], "\[Equal]", 
+      FractionBox["1", 
+       RowBox[{"2", "-", 
+        FractionBox["1", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"\[ExponentialE]", "+", "4"}], ")"}], "2"]]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       RowBox[{"x", " ", 
+        SuperscriptBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"1", ",", "7"}], "]"}], "\[Pi]"]}]], "\[Equal]", 
+      RowBox[{
+       RowBox[{"9", " ", 
+        RowBox[{"(", 
+         RowBox[{"\[Pi]", "+", "2"}], ")"}]}], "-", "GoldenRatio"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       SuperscriptBox["x", 
+        SqrtBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"8", ",", "\[Pi]"}], "]"}]]]], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"Log", "[", 
+        RowBox[{
+         SqrtBox[
+          RowBox[{"Cos", "[", 
+           FractionBox["\[Pi]", "\[Pi]"], "]"}]], ",", "4"}], "]"}], "2"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"Tan", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"(", 
+          RowBox[{"x", " ", 
+           SuperscriptBox["2", "7"]}], ")"}]}], "]"}], "2"], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"1", "-", 
+         FractionBox["1", "\[Pi]"]}], ")"}], 
+       RowBox[{"\[Pi]", "+", "5"}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox[
+       RowBox[{"Sin", "[", 
+        FractionBox["\[Pi]", 
+         RowBox[{"Exp", "[", "8", "]"}]], "]"}], "x"], "\[Equal]", 
+      FractionBox[
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"2", ",", "1"}], "]"}], 
+       SuperscriptBox[
+        RowBox[{"Log", "[", "6", "]"}], "2"]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"x", " ", 
+         SuperscriptBox["4", 
+          SqrtBox["GoldenRatio"]]}], ")"}], "2"], "\[Equal]", 
+      FractionBox[
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"\[Pi]", "-", "3"}], ")"}], "\[ExponentialE]"], 
+       "\[ExponentialE]"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"x", " ", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"1", ",", "1"}], "]"}]}], ")"}], " ", 
+       SqrtBox["\[ExponentialE]"]}], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"7", ",", 
+         RowBox[{"Log", "[", 
+          RowBox[{"5", ",", "3"}], "]"}]}], "]"}], "2"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"Log", "[", 
+        SqrtBox[
+         RowBox[{
+          RowBox[{"Sin", "[", 
+           RowBox[{"\[Pi]", " ", "x"}], "]"}], " ", "6"}]], "]"}], "2"], "\[Equal]", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{"2", ",", 
+        RowBox[{"Exp", "[", 
+         SuperscriptBox["GoldenRatio", 
+          RowBox[{"1", "/", "5"}]], "]"}]}], "]"}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          SqrtBox["x"], " ", "6"}], ")"}], "\[Pi]"], " ", "2"}], "\[Equal]", 
+      FractionBox[
+       RowBox[{"Log", "[", "2", "]"}], 
+       RowBox[{"\[ExponentialE]", "+", 
+        FractionBox["1", "9"]}]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      RowBox[{"x", " ", 
+       SuperscriptBox["4", 
+        SqrtBox[
+         RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]]]}], "\[Equal]", 
+      RowBox[{
+       SuperscriptBox["GoldenRatio", "2"], "-", 
+       SuperscriptBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"2", ",", "\[Pi]"}], "]"}], "2"]}]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SqrtBox[
+       FractionBox["x", 
+        RowBox[{"Sin", "[", 
+         FractionBox["\[Pi]", 
+          RowBox[{"Exp", "[", "8", "]"}]], "]"}]]], "\[Equal]", 
+      FractionBox[
+       RowBox[{"Log", "[", "6", "]"}], 
+       SqrtBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"2", ",", "1"}], "]"}]]]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      FractionBox["1", 
+       SuperscriptBox["x", 
+        SqrtBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"8", ",", "\[Pi]"}], "]"}]]]], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"Log", "[", 
+        RowBox[{
+         RowBox[{"Cos", "[", 
+          FractionBox["\[Pi]", "\[Pi]"], "]"}], ",", 
+         SuperscriptBox["4", "2"]}], "]"}], "2"]}],
+     HoldForm], ",", 
+    TagBox[
+     RowBox[{
+      SuperscriptBox["x", 
+       SqrtBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"8", ",", "\[Pi]"}], "]"}]]], "\[Equal]", 
+      SuperscriptBox[
+       RowBox[{"Log", "[", 
+        RowBox[{
+         SuperscriptBox["4", "2"], ",", 
+         RowBox[{"Cos", "[", 
+          FractionBox["\[Pi]", "\[Pi]"], "]"}]}], "]"}], "2"]}],
+     HoldForm]}], "}"}]}]], "Input",
+ CellLabel->"In[14]:=",ExpressionUUID->"a49fbba5-fba1-584a-81db-ba77a9ca7aed"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TagBox[
+    RowBox[{
+     RowBox[{
+      SuperscriptBox["x", 
+       FractionBox["1", 
+        RowBox[{"\[Pi]", "-", 
+         FractionBox["1", "3"]}]]], "+", "1"}], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{
+       RowBox[{"Log", "[", "2", "]"}], ",", 
+       RowBox[{"Log", "[", 
+        RowBox[{"2", ",", "\[Pi]"}], "]"}]}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"x", " ", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"2", "+", 
+         SuperscriptBox["2", "\[Pi]"]}], ")"}], "2"]}], "\[Equal]", 
+     RowBox[{"Cos", "[", 
+      FractionBox["\[Pi]", 
+       RowBox[{"8", "-", 
+        SqrtBox["5"]}]], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      RowBox[{"ArcTan", "[", 
+       RowBox[{"4", ",", 
+        RowBox[{"Log", "[", 
+         RowBox[{"3", ",", "x"}], "]"}]}], "]"}], "+", "1"}], "\[Equal]", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"\[Pi]", " ", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"1", ",", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"6", ",", "\[Pi]"}], "]"}]}], "]"}]}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      RowBox[{"Log", "[", 
+       RowBox[{"6", ",", 
+        RowBox[{"x", " ", "\[Pi]"}]}], "]"}], "+", "\[ExponentialE]"}], "\[Equal]", 
+     RowBox[{"Log", "[", 
+      RowBox[{"7", ",", 
+       RowBox[{"\[Pi]", "+", 
+        FractionBox["1", "7"]}]}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Tan", "[", 
+      RowBox[{"\[Pi]", " ", 
+       SuperscriptBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"6", ",", 
+          RowBox[{"Log", "[", "x", "]"}]}], "]"}], "2"]}], "]"}], "\[Equal]", 
+     RowBox[{"\[Pi]", "+", 
+      RowBox[{"(", 
+       RowBox[{
+        SuperscriptBox["\[Pi]", "2"], "-", 
+        SqrtBox["\[Pi]"]}], ")"}]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      RowBox[{"Tan", "[", 
+       RowBox[{"\[Pi]", " ", 
+        SqrtBox[
+         FractionBox[
+          SqrtBox["x"], "9"]]}], "]"}]], "\[Equal]", 
+     RowBox[{
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"-", "1"}], ",", "3"}], "]"}], "+", 
+      SqrtBox["GoldenRatio"]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"-", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Log", "[", 
+         SuperscriptBox["x", "2"], "]"}], "+", 
+        FractionBox["1", 
+         SqrtBox["\[ExponentialE]"]]}], ")"}]}], "\[Equal]", 
+     SuperscriptBox["2", 
+      RowBox[{"2", "+", 
+       SuperscriptBox[
+        RowBox[{"Log", "[", "3", "]"}], "2"]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Tan", "[", 
+      RowBox[{"\[Pi]", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Log", "[", 
+          RowBox[{"6", ",", "x"}], "]"}], "+", "\[ExponentialE]"}], ")"}]}], 
+      "]"}], "\[Equal]", 
+     FractionBox[
+      RowBox[{
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"\[Pi]", ",", "3"}], "]"}], "-", "1"}], "\[ExponentialE]"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      RowBox[{"Tan", "[", 
+       RowBox[{
+        FractionBox["1", "3"], " ", "\[Pi]", " ", 
+        SuperscriptBox["x", 
+         RowBox[{"1", "/", "4"}]]}], "]"}]], "\[Equal]", 
+     RowBox[{
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"-", "1"}], ",", "3"}], "]"}], "+", 
+      SqrtBox["GoldenRatio"]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      FractionBox["1", "x"], "-", 
+      SuperscriptBox["2", 
+       FractionBox["1", 
+        RowBox[{"\[Pi]", "-", "3"}]]]}], "\[Equal]", 
+     RowBox[{"Exp", "[", 
+      SuperscriptBox["4", 
+       FractionBox["1", 
+        RowBox[{"\[Pi]", "+", "4"}]]], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      RowBox[{"Sin", "[", 
+       RowBox[{"\[Pi]", " ", "x"}], "]"}], "-", 
+      SuperscriptBox[
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"2", ",", "5"}], "]"}], "2"]}], "\[Equal]", 
+     RowBox[{"-", 
+      RowBox[{"Log", "[", 
+       RowBox[{"5", ",", 
+        RowBox[{"\[Pi]", " ", "3"}]}], "]"}]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Exp", "[", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{
+         SqrtBox["x"], " ", "6"}], ")"}], "\[Pi]"], "]"}], "\[Equal]", 
+     SqrtBox[
+      SuperscriptBox["2", 
+       FractionBox["1", 
+        RowBox[{"\[ExponentialE]", "+", 
+         FractionBox["1", "9"]}]]]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox["x", 
+      SuperscriptBox["3", 
+       FractionBox["1", 
+        SuperscriptBox["\[Pi]", "\[ExponentialE]"]]]], "\[Equal]", 
+     FractionBox["1", 
+      RowBox[{"\[ExponentialE]", "+", 
+       SuperscriptBox[
+        SqrtBox["\[Pi]"], "9"]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Log", "[", 
+      RowBox[{
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"2", ",", "\[ExponentialE]"}], "]"}]}], ",", "x"}], "]"}], "\[Equal]", 
+     RowBox[{"-", 
+      RowBox[{"(", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"3", ",", 
+          SuperscriptBox["5", "2"]}], "]"}]}], ")"}]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["x", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        SqrtBox[
+         RowBox[{"\[Pi]", "+", "1"}]], ",", "3"}], "]"}]], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox["1", "6"], " ", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"7", ",", "4"}], "]"}]}], ")"}], "2"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Cos", "[", 
+      RowBox[{"\[Pi]", " ", 
+       SuperscriptBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          FractionBox["1", 
+           SuperscriptBox["9", "2"]], ",", "x"}], "]"}], "2"]}], "]"}], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"Exp", "[", "3", "]"}], 
+      FractionBox["1", 
+       RowBox[{"1", "-", 
+        SuperscriptBox["\[ExponentialE]", "2"]}]]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"-", 
+      SqrtBox[
+       FractionBox["x", 
+        RowBox[{"5", "+", 
+         SqrtBox["3"]}]]]}], "\[Equal]", 
+     RowBox[{"Tan", "[", 
+      FractionBox[
+       RowBox[{"\[Pi]", " ", 
+        SuperscriptBox["GoldenRatio", "2"]}], 
+       SqrtBox["7"]], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      SqrtBox["x"], 
+      SqrtBox[
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"8", ",", "\[Pi]"}], "]"}]]], "\[Equal]", 
+     RowBox[{"-", 
+      RowBox[{"Log", "[", 
+       RowBox[{
+        SuperscriptBox["4", "2"], ",", 
+        RowBox[{"Cos", "[", 
+         FractionBox["\[Pi]", "\[Pi]"], "]"}]}], "]"}]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox["x", 
+      FractionBox["1", 
+       RowBox[{"\[Pi]", "+", 
+        RowBox[{"Log", "[", 
+         RowBox[{"3", ",", "6"}], "]"}]}]]], "\[Equal]", 
+     RowBox[{"Log", "[", 
+      RowBox[{"2", ",", 
+       RowBox[{"Log", "[", 
+        RowBox[{
+         RowBox[{"\[ExponentialE]", "-", "1"}], ",", "2"}], "]"}]}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"x", " ", 
+          RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]}], ")"}], 
+        RowBox[{"1", "/", "7"}]], ")"}], "2"], "\[Equal]", 
+     FractionBox["1", 
+      RowBox[{"1", "+", 
+       RowBox[{"Sin", "[", 
+        FractionBox[
+         RowBox[{"\[Pi]", " ", "\[ExponentialE]"}], "8"], "]"}]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Sin", "[", 
+      RowBox[{"\[Pi]", " ", 
+       RowBox[{"Sin", "[", 
+        FractionBox["\[Pi]", 
+         RowBox[{"x", " ", 
+          RowBox[{"Exp", "[", "5", "]"}]}]], "]"}]}], "]"}], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{
+       RowBox[{"Exp", "[", 
+        FractionBox["1", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"1", ",", "2"}], "]"}]], "]"}], ",", "2"}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"Log", "[", 
+       RowBox[{
+        SuperscriptBox["\[Pi]", "2"], ",", 
+        SqrtBox[
+         RowBox[{"x", " ", "2"}]]}], "]"}], "2"], "\[Equal]", 
+     RowBox[{"Tan", "[", 
+      FractionBox["\[Pi]", 
+       SuperscriptBox[
+        SqrtBox["3"], "\[ExponentialE]"]], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      SqrtBox["x"], " ", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        FractionBox["\[Pi]", "2"], ")"}], 
+       RowBox[{"1", "/", "3"}]]}], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"Sin", "[", 
+       FractionBox["\[Pi]", 
+        RowBox[{"\[Pi]", " ", "2"}]], "]"}], "\[Pi]"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      RowBox[{"Tan", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          SqrtBox["x"], " ", "7"}], ")"}]}], "]"}], "+", "\[ExponentialE]"}], 
+     "\[Equal]", 
+     RowBox[{"-", 
+      FractionBox["1", 
+       RowBox[{"GoldenRatio", "+", 
+        FractionBox["1", 
+         RowBox[{"Log", "[", "4", "]"}]]}]]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      FractionBox["1", 
+       RowBox[{"Cos", "[", 
+        FractionBox["\[Pi]", 
+         RowBox[{"Log", "[", 
+          SqrtBox["x"], "]"}]], "]"}]], "-", "2"}], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{
+       RowBox[{"Log", "[", 
+        RowBox[{"\[Pi]", ",", 
+         RowBox[{"Log", "[", "\[Pi]", "]"}]}], "]"}], ",", "1"}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Log", "[", "x", "]"}], "+", "3"}], ")"}], "2"], "-", "2"}], 
+     "\[Equal]", 
+     FractionBox["2", 
+      SuperscriptBox["4", 
+       FractionBox["1", 
+        RowBox[{"\[ExponentialE]", " ", "3"}]]]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Log", "[", 
+         SuperscriptBox["x", "2"], "]"}], "+", 
+        FractionBox["1", 
+         SqrtBox["\[ExponentialE]"]]}], ")"}], "2"], "\[Equal]", 
+     SuperscriptBox["4", 
+      RowBox[{"2", "+", 
+       SuperscriptBox[
+        RowBox[{"Log", "[", "3", "]"}], "2"]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"(", 
+       FractionBox["1", 
+        RowBox[{"x", " ", 
+         RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]}]], ")"}], 
+      RowBox[{"1", "/", "7"}]], "\[Equal]", 
+     SqrtBox[
+      RowBox[{"1", "+", 
+       RowBox[{"Sin", "[", 
+        FractionBox[
+         RowBox[{"\[Pi]", " ", "\[ExponentialE]"}], "8"], "]"}]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Sin", "[", 
+      RowBox[{"\[Pi]", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Log", "[", 
+          FractionBox["x", "\[Pi]"], "]"}], "+", "7"}], ")"}]}], "]"}], "\[Equal]", 
+     FractionBox["1", 
+      SuperscriptBox["GoldenRatio", 
+       SqrtBox[
+        RowBox[{"9", "+", "2"}]]]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"x", " ", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        FractionBox["7", "GoldenRatio"], ")"}], "4"]}], "\[Equal]", 
+     SqrtBox[
+      RowBox[{"6", "+", 
+       SqrtBox[
+        FractionBox["2", "7"]]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      SuperscriptBox["x", 
+       FractionBox["1", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"3", ",", 
+          SuperscriptBox["5", "2"]}], "]"}]]]], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"2", ",", "\[ExponentialE]"}], "]"}]}], ")"}], "\[Pi]"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Log", "[", "x", "]"}], "+", "3"}], ")"}], "2"], "-", 
+       "2"}]], "\[Equal]", 
+     RowBox[{
+      FractionBox["1", "2"], " ", 
+      SuperscriptBox["4", 
+       FractionBox["1", 
+        RowBox[{"\[ExponentialE]", " ", "3"}]]]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SqrtBox[
+      RowBox[{
+       FractionBox["1", 
+        SqrtBox["x"]], "-", 
+       FractionBox["3", "2"]}]], "\[Equal]", 
+     RowBox[{"3", "+", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        FractionBox[
+         RowBox[{"Log", "[", "4", "]"}], "\[Pi]"], ")"}], "2"]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SqrtBox[
+      RowBox[{
+       FractionBox["1", "x"], "-", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"1", "+", 
+          SuperscriptBox["\[Pi]", "2"]}], ")"}], "2"]}]], "\[Equal]", 
+     RowBox[{"5", "-", 
+      FractionBox["1", 
+       SuperscriptBox[
+        RowBox[{"Log", "[", "\[Pi]", "]"}], "\[Pi]"]]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Log", "[", 
+      RowBox[{
+       RowBox[{"x", " ", "9"}], "+", 
+       SqrtBox["x"]}], "]"}], "\[Equal]", 
+     RowBox[{"-", 
+      RowBox[{"(", 
+       RowBox[{"1", "+", 
+        SqrtBox[
+         RowBox[{
+          RowBox[{"Log", "[", "6", "]"}], "-", "1"}]]}], ")"}]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SqrtBox[
+      RowBox[{"x", " ", 
+       SqrtBox[
+        RowBox[{"Exp", "[", 
+         FractionBox["1", 
+          SqrtBox["\[ExponentialE]"]], "]"}]]}]], "\[Equal]", 
+     FractionBox["1", 
+      RowBox[{"Exp", "[", 
+       SuperscriptBox["2", 
+        SuperscriptBox[
+         RowBox[{"Log", "[", "3", "]"}], "2"]], "]"}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Cos", "[", 
+      RowBox[{"\[Pi]", " ", 
+       RowBox[{"Log", "[", 
+        RowBox[{"Sin", "[", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"Tan", "[", 
+           RowBox[{"\[Pi]", " ", 
+            SqrtBox["x"]}], "]"}]}], "]"}], "]"}]}], "]"}], "\[Equal]", 
+     FractionBox["1", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"1", "+", 
+         RowBox[{"Log", "[", "9", "]"}]}], ")"}], 
+       RowBox[{"1", "/", "\[ExponentialE]"}]]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox["1", 
+         SqrtBox[
+          RowBox[{"x", " ", "2"}]]], "-", "7"}], ")"}], "2"], "\[Equal]", 
+     FractionBox["1", 
+      RowBox[{"Sin", "[", 
+       FractionBox["\[Pi]", 
+        RowBox[{"7", "-", 
+         SqrtBox["5"]}]], "]"}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Log", "[", 
+      RowBox[{
+       FractionBox[
+        RowBox[{"\[Pi]", "-", "3"}], "7"], ",", "x"}], "]"}], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{
+       RowBox[{"Log", "[", "4", "]"}], ",", 
+       RowBox[{"GoldenRatio", "+", "\[ExponentialE]"}]}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"x", " ", 
+      RowBox[{"(", 
+       RowBox[{"\[ExponentialE]", "+", 
+        SuperscriptBox["8", 
+         RowBox[{"1", "/", "7"}]]}], ")"}]}], "\[Equal]", 
+     FractionBox["1", 
+      RowBox[{
+       SuperscriptBox["2", 
+        SqrtBox["\[Pi]"]], " ", 
+       SuperscriptBox["\[Pi]", "2"]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["x", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        SuperscriptBox["7", "\[ExponentialE]"], ",", "\[Pi]"}], "]"}]], "\[Equal]", 
+     FractionBox["1", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"-", "\[Pi]"}], ",", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"\[Pi]", "-", "1"}], ")"}], "2"]}], "]"}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"Tan", "[", 
+      RowBox[{"\[Pi]", " ", 
+       RowBox[{"(", 
+        RowBox[{"x", " ", 
+         RowBox[{"(", 
+          RowBox[{"3", "+", 
+           RowBox[{"Exp", "[", "4", "]"}]}], ")"}]}], ")"}]}], "]"}], "\[Equal]", 
+     RowBox[{"\[ExponentialE]", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        SqrtBox["GoldenRatio"], "+", 
+        FractionBox["1", "6"]}], ")"}]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"x", " ", 
+      SuperscriptBox[
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"1", ",", 
+         SuperscriptBox["\[Pi]", "2"]}], "]"}], "4"]}], "\[Equal]", 
+     FractionBox[
+      RowBox[{"Cos", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"Log", "[", "GoldenRatio", "]"}]}], "]"}], 
+      SqrtBox["3"]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"x", " ", 
+      RowBox[{"Exp", "[", 
+       RowBox[{"Exp", "[", 
+        RowBox[{"Sin", "[", 
+         FractionBox["\[Pi]", "7"], "]"}], "]"}], "]"}]}], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"Log", "[", 
+       RowBox[{
+        RowBox[{"Log", "[", "GoldenRatio", "]"}], ",", 
+        RowBox[{"Log", "[", "\[Pi]", "]"}]}], "]"}], "2"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      FractionBox["1", 
+       RowBox[{"Sin", "[", 
+        RowBox[{"\[Pi]", " ", 
+         SuperscriptBox["x", 
+          RowBox[{"1", "/", "GoldenRatio"}]]}], "]"}]], "-", "6"}], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"1", "+", 
+          FractionBox["1", 
+           SqrtBox["\[Pi]"]]}], ")"}], "2"], ",", "2"}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      RowBox[{"Log", "[", 
+       RowBox[{"Sin", "[", 
+        FractionBox[
+         RowBox[{"\[Pi]", " ", "x"}], "5"], "]"}], "]"}], "+", "4"}], "\[Equal]", 
+     RowBox[{"-", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        SuperscriptBox["3", 
+         RowBox[{"1", "/", "4"}]], ",", "7"}], "]"}]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      SqrtBox["x"], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        SuperscriptBox["\[Pi]", "\[Pi]"], "-", "\[ExponentialE]"}], ")"}]}], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{
+       RowBox[{
+        FractionBox["1", "\[ExponentialE]"], "-", 
+        RowBox[{"(", 
+         RowBox[{"\[Pi]", "+", "1"}], ")"}]}], ",", "1"}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      FractionBox["1", "3"], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox["1", "x"], "+", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"\[Pi]", "+", "1"}], ")"}], "2"]}], ")"}]}], "\[Equal]", 
+     RowBox[{"5", "+", 
+      SuperscriptBox["6", 
+       RowBox[{"\[Pi]", "-", "1"}]]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      RowBox[{
+       RowBox[{"Log", "[", "x", "]"}], "+", 
+       FractionBox["1", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"7", ",", "1"}], "]"}]]}]], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{"2", ",", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"Log", "[", "7", "]"}], ",", "\[Pi]"}], "]"}]}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      FractionBox["1", "4"], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        FractionBox["1", "x"], "-", 
+        FractionBox["1", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"\[Pi]", " ", "x"}], "]"}]]}], ")"}]}], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{"\[ExponentialE]", " ", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"1", "+", 
+           FractionBox["1", "3"]}], ")"}], "2"]}], ")"}], "2"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      SqrtBox[
+       RowBox[{"Tan", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"7", ",", 
+           SqrtBox["x"]}], "]"}]}], "]"}]]], "\[Equal]", 
+     RowBox[{"GoldenRatio", " ", 
+      RowBox[{"(", 
+       RowBox[{"2", "+", 
+        FractionBox["\[Pi]", "\[ExponentialE]"]}], ")"}]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SqrtBox[
+      RowBox[{"Cos", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"Sin", "[", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Log", "[", "x", "]"}], "+", "4"}], ")"}]}], "]"}]}], 
+       "]"}]], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{
+       SuperscriptBox["5", 
+        RowBox[{"1", "/", "7"}]], ",", 
+       SqrtBox["2"]}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"x", " ", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"\[Pi]", "+", 
+         FractionBox["1", "\[ExponentialE]"]}], ")"}], "\[Pi]"]}], "\[Equal]", 
+     RowBox[{"Log", "[", 
+      RowBox[{
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"(", 
+         RowBox[{"\[Pi]", "-", "2"}], ")"}]}], ",", "GoldenRatio"}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"x", " ", 
+      RowBox[{"(", 
+       RowBox[{"3", "+", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"\[Pi]", "+", "5"}], ")"}], "2"]}], ")"}]}], "\[Equal]", 
+     FractionBox["1", 
+      RowBox[{"2", "-", 
+       FractionBox["1", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"\[ExponentialE]", "+", "4"}], ")"}], "2"]]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      RowBox[{"x", " ", 
+       SuperscriptBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"1", ",", "7"}], "]"}], "\[Pi]"]}]], "\[Equal]", 
+     RowBox[{
+      RowBox[{"9", " ", 
+       RowBox[{"(", 
+        RowBox[{"\[Pi]", "+", "2"}], ")"}]}], "-", "GoldenRatio"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      SuperscriptBox["x", 
+       SqrtBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"8", ",", "\[Pi]"}], "]"}]]]], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"Log", "[", 
+       RowBox[{
+        SqrtBox[
+         RowBox[{"Cos", "[", 
+          FractionBox["\[Pi]", "\[Pi]"], "]"}]], ",", "4"}], "]"}], "2"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"Tan", "[", 
+       RowBox[{"\[Pi]", " ", 
+        RowBox[{"(", 
+         RowBox[{"x", " ", 
+          SuperscriptBox["2", "7"]}], ")"}]}], "]"}], "2"], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{"1", "-", 
+        FractionBox["1", "\[Pi]"]}], ")"}], 
+      RowBox[{"\[Pi]", "+", "5"}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox[
+      RowBox[{"Sin", "[", 
+       FractionBox["\[Pi]", 
+        RowBox[{"Exp", "[", "8", "]"}]], "]"}], "x"], "\[Equal]", 
+     FractionBox[
+      RowBox[{"ArcTan", "[", 
+       RowBox[{"2", ",", "1"}], "]"}], 
+      SuperscriptBox[
+       RowBox[{"Log", "[", "6", "]"}], "2"]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{"x", " ", 
+        SuperscriptBox["4", 
+         SqrtBox["GoldenRatio"]]}], ")"}], "2"], "\[Equal]", 
+     FractionBox[
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{"\[Pi]", "-", "3"}], ")"}], "\[ExponentialE]"], 
+      "\[ExponentialE]"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"x", " ", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"1", ",", "1"}], "]"}]}], ")"}], " ", 
+      SqrtBox["\[ExponentialE]"]}], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"ArcTan", "[", 
+       RowBox[{"7", ",", 
+        RowBox[{"Log", "[", 
+         RowBox[{"5", ",", "3"}], "]"}]}], "]"}], "2"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"Log", "[", 
+       SqrtBox[
+        RowBox[{
+         RowBox[{"Sin", "[", 
+          RowBox[{"\[Pi]", " ", "x"}], "]"}], " ", "6"}]], "]"}], "2"], "\[Equal]", 
+     RowBox[{"ArcTan", "[", 
+      RowBox[{"2", ",", 
+       RowBox[{"Exp", "[", 
+        SuperscriptBox["GoldenRatio", 
+         RowBox[{"1", "/", "5"}]], "]"}]}], "]"}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{
+         SqrtBox["x"], " ", "6"}], ")"}], "\[Pi]"], " ", "2"}], "\[Equal]", 
+     FractionBox[
+      RowBox[{"Log", "[", "2", "]"}], 
+      RowBox[{"\[ExponentialE]", "+", 
+       FractionBox["1", "9"]}]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     RowBox[{"x", " ", 
+      SuperscriptBox["4", 
+       SqrtBox[
+        RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]]]}], "\[Equal]", 
+     RowBox[{
+      SuperscriptBox["GoldenRatio", "2"], "-", 
+      SuperscriptBox[
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"2", ",", "\[Pi]"}], "]"}], "2"]}]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SqrtBox[
+      FractionBox["x", 
+       RowBox[{"Sin", "[", 
+        FractionBox["\[Pi]", 
+         RowBox[{"Exp", "[", "8", "]"}]], "]"}]]], "\[Equal]", 
+     FractionBox[
+      RowBox[{"Log", "[", "6", "]"}], 
+      SqrtBox[
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"2", ",", "1"}], "]"}]]]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     FractionBox["1", 
+      SuperscriptBox["x", 
+       SqrtBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"8", ",", "\[Pi]"}], "]"}]]]], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"Log", "[", 
+       RowBox[{
+        RowBox[{"Cos", "[", 
+         FractionBox["\[Pi]", "\[Pi]"], "]"}], ",", 
+        SuperscriptBox["4", "2"]}], "]"}], "2"]}],
+    HoldForm], ",", 
+   TagBox[
+    RowBox[{
+     SuperscriptBox["x", 
+      SqrtBox[
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"8", ",", "\[Pi]"}], "]"}]]], "\[Equal]", 
+     SuperscriptBox[
+      RowBox[{"Log", "[", 
+       RowBox[{
+        SuperscriptBox["4", "2"], ",", 
+        RowBox[{"Cos", "[", 
+         FractionBox["\[Pi]", "\[Pi]"], "]"}]}], "]"}], "2"]}],
+    HoldForm]}], "}"}]], "Output",
+ CellChangeTimes->{4.0000277164233913`*^9},
+ CellLabel->"Out[14]=",ExpressionUUID->"2aac12e9-8b4c-9141-a19a-cbff20589ef5"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Grid", "[", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"i", ",", 
+      RowBox[{"ries", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], 
+      ",", 
+      RowBox[{"x", "/.", "\[VeryThinSpace]", 
+       RowBox[{"FindRoot", "[", 
+        RowBox[{
+         RowBox[{"ReleaseHold", "[", 
+          RowBox[{
+           RowBox[{
+           "ries", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], "/.",
+            "\[VeryThinSpace]", 
+           RowBox[{"Equal", "\[Rule]", "Subtract"}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "T"}], "}"}], ",", 
+         RowBox[{"WorkingPrecision", "\[Rule]", "40"}]}], "]"}]}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", 
+      RowBox[{"Length", "[", "ries", "]"}]}], "}"}]}], "]"}], "]"}]], "Input",
+ CellLabel->"In[15]:=",ExpressionUUID->"c49a872b-88a5-e24e-8b4f-543a599f6fbe"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"1", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        SuperscriptBox["x", 
+         FractionBox["1", 
+          RowBox[{"\[Pi]", "-", 
+           FractionBox["1", "3"]}]]], "+", "1"}], "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"Log", "[", "2", "]"}], ",", 
+         RowBox[{"Log", "[", 
+          RowBox[{"2", ",", "\[Pi]"}], "]"}]}], "]"}]}],
+      HoldForm], 
+     "0.0072973525642131107000811211983313655052520039269945644625`40."},
+    {"2", 
+     TagBox[
+      RowBox[{
+       RowBox[{"x", " ", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"2", "+", 
+           SuperscriptBox["2", "\[Pi]"]}], ")"}], "2"]}], "\[Equal]", 
+       RowBox[{"Cos", "[", 
+        FractionBox["\[Pi]", 
+         RowBox[{"8", "-", 
+          SqrtBox["5"]}]], "]"}]}],
+      HoldForm], 
+     "0.0072973525653312107653334993436498569256519534101150771439`40."},
+    {"3", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"4", ",", 
+          RowBox[{"Log", "[", 
+           RowBox[{"3", ",", "x"}], "]"}]}], "]"}], "+", "1"}], "\[Equal]", 
+       RowBox[{"Cos", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"1", ",", 
+           RowBox[{"ArcTan", "[", 
+            RowBox[{"6", ",", "\[Pi]"}], "]"}]}], "]"}]}], "]"}]}],
+      HoldForm], 
+     "0.0072973525636305244431284903646546951970001696781670637404`40."},
+    {"4", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        RowBox[{"Log", "[", 
+         RowBox[{"6", ",", 
+          RowBox[{"x", " ", "\[Pi]"}]}], "]"}], "+", "\[ExponentialE]"}], "\[Equal]", 
+       RowBox[{"Log", "[", 
+        RowBox[{"7", ",", 
+         RowBox[{"\[Pi]", "+", 
+          FractionBox["1", "7"]}]}], "]"}]}],
+      HoldForm], 
+     "0.0072973525652572052660852717628450558138079757236782753938`40."},
+    {"5", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Tan", "[", 
+        RowBox[{"\[Pi]", " ", 
+         SuperscriptBox[
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"6", ",", 
+            RowBox[{"Log", "[", "x", "]"}]}], "]"}], "2"]}], "]"}], "\[Equal]", 
+       RowBox[{"\[Pi]", "+", 
+        RowBox[{"(", 
+         RowBox[{
+          SuperscriptBox["\[Pi]", "2"], "-", 
+          SqrtBox["\[Pi]"]}], ")"}]}]}],
+      HoldForm], 
+     "0.0072973525649914456541792574240116834416835322227752560421`40."},
+    {"6", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{"Tan", "[", 
+         RowBox[{"\[Pi]", " ", 
+          SqrtBox[
+           FractionBox[
+            SqrtBox["x"], "9"]]}], "]"}]], "\[Equal]", 
+       RowBox[{
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          RowBox[{"-", "1"}], ",", "3"}], "]"}], "+", 
+        SqrtBox["GoldenRatio"]}]}],
+      HoldForm], 
+     "0.0072973525635623722899542541710213509897303188133592127492`40."},
+    {"7", 
+     TagBox[
+      RowBox[{
+       RowBox[{"-", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Log", "[", 
+           SuperscriptBox["x", "2"], "]"}], "+", 
+          FractionBox["1", 
+           SqrtBox["\[ExponentialE]"]]}], ")"}]}], "\[Equal]", 
+       SuperscriptBox["2", 
+        RowBox[{"2", "+", 
+         SuperscriptBox[
+          RowBox[{"Log", "[", "3", "]"}], "2"]}]]}],
+      HoldForm], 
+     "0.0072973525637632312196220482994170474972495854492031824151`40."},
+    {"8", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Tan", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Log", "[", 
+            RowBox[{"6", ",", "x"}], "]"}], "+", "\[ExponentialE]"}], ")"}]}],
+         "]"}], "\[Equal]", 
+       FractionBox[
+        RowBox[{
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"\[Pi]", ",", "3"}], "]"}], "-", "1"}], "\[ExponentialE]"]}],
+      HoldForm], 
+     "0.0072973525650229584945002789210538258898326797212680110665`40."},
+    {"9", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{"Tan", "[", 
+         RowBox[{
+          FractionBox["1", "3"], " ", "\[Pi]", " ", 
+          SuperscriptBox["x", 
+           RowBox[{"1", "/", "4"}]]}], "]"}]], "\[Equal]", 
+       RowBox[{
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          RowBox[{"-", "1"}], ",", "3"}], "]"}], "+", 
+        SqrtBox["GoldenRatio"]}]}],
+      HoldForm], 
+     "0.0072973525635623722899542541710213509897303188133592127492`40."},
+    {"10", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        FractionBox["1", "x"], "-", 
+        SuperscriptBox["2", 
+         FractionBox["1", 
+          RowBox[{"\[Pi]", "-", "3"}]]]}], "\[Equal]", 
+       RowBox[{"Exp", "[", 
+        SuperscriptBox["4", 
+         FractionBox["1", 
+          RowBox[{"\[Pi]", "+", "4"}]]], "]"}]}],
+      HoldForm], 
+     "0.0072973525652562657858635551813342172844258983664578041594`40."},
+    {"11", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        RowBox[{"Sin", "[", 
+         RowBox[{"\[Pi]", " ", "x"}], "]"}], "-", 
+        SuperscriptBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"2", ",", "5"}], "]"}], "2"]}], "\[Equal]", 
+       RowBox[{"-", 
+        RowBox[{"Log", "[", 
+         RowBox[{"5", ",", 
+          RowBox[{"\[Pi]", " ", "3"}]}], "]"}]}]}],
+      HoldForm], 
+     "0.0072973525639383525725712326152315480768922272933700235184`40."},
+    {"12", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Exp", "[", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox["x"], " ", "6"}], ")"}], "\[Pi]"], "]"}], "\[Equal]", 
+       SqrtBox[
+        SuperscriptBox["2", 
+         FractionBox["1", 
+          RowBox[{"\[ExponentialE]", "+", 
+           FractionBox["1", "9"]}]]]]}],
+      HoldForm], 
+     "0.0072973525652912876247035877985294836500347688052665708766`40."},
+    {"13", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox["x", 
+        SuperscriptBox["3", 
+         FractionBox["1", 
+          SuperscriptBox["\[Pi]", "\[ExponentialE]"]]]], "\[Equal]", 
+       FractionBox["1", 
+        RowBox[{"\[ExponentialE]", "+", 
+         SuperscriptBox[
+          SqrtBox["\[Pi]"], "9"]}]]}],
+      HoldForm], 
+     "0.0072973525649003256186140022678346404701895066323609916749`40."},
+    {"14", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Log", "[", 
+        RowBox[{
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"2", ",", "\[ExponentialE]"}], "]"}]}], ",", "x"}], "]"}], 
+       "\[Equal]", 
+       RowBox[{"-", 
+        RowBox[{"(", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"3", ",", 
+            SuperscriptBox["5", "2"]}], "]"}]}], ")"}]}]}],
+      HoldForm], 
+     "0.0072973525632980691389311286176753631195200299387575410118`40."},
+    {"15", 
+     TagBox[
+      RowBox[{
+       FractionBox["x", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          SqrtBox[
+           RowBox[{"\[Pi]", "+", "1"}]], ",", "3"}], "]"}]], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          FractionBox["1", "6"], " ", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"7", ",", "4"}], "]"}]}], ")"}], "2"]}],
+      HoldForm], 
+     "0.007297352564588595884489355782253287755114000961608300843`40."},
+    {"16", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Cos", "[", 
+        RowBox[{"\[Pi]", " ", 
+         SuperscriptBox[
+          RowBox[{"ArcTan", "[", 
+           RowBox[{
+            FractionBox["1", 
+             SuperscriptBox["9", "2"]], ",", "x"}], "]"}], "2"]}], "]"}], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"Exp", "[", "3", "]"}], 
+        FractionBox["1", 
+         RowBox[{"1", "-", 
+          SuperscriptBox["\[ExponentialE]", "2"]}]]]}],
+      HoldForm], 
+     "0.0072973525633578990753367447764515436318047860710773858193`40."},
+    {"17", 
+     TagBox[
+      RowBox[{
+       RowBox[{"-", 
+        SqrtBox[
+         FractionBox["x", 
+          RowBox[{"5", "+", 
+           SqrtBox["3"]}]]]}], "\[Equal]", 
+       RowBox[{"Tan", "[", 
+        FractionBox[
+         RowBox[{"\[Pi]", " ", 
+          SuperscriptBox["GoldenRatio", "2"]}], 
+         SqrtBox["7"]], "]"}]}],
+      HoldForm], 
+     "0.0072973525634934742022235081552265458031347257847974123664`40."},
+    {"18", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        SqrtBox["x"], 
+        SqrtBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"8", ",", "\[Pi]"}], "]"}]]], "\[Equal]", 
+       RowBox[{"-", 
+        RowBox[{"Log", "[", 
+         RowBox[{
+          SuperscriptBox["4", "2"], ",", 
+          RowBox[{"Cos", "[", 
+           FractionBox["\[Pi]", "\[Pi]"], "]"}]}], "]"}]}]}],
+      HoldForm], 
+     "0.0072973525639111409090792207495761118093314123771283094612`40."},
+    {"19", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox["x", 
+        FractionBox["1", 
+         RowBox[{"\[Pi]", "+", 
+          RowBox[{"Log", "[", 
+           RowBox[{"3", ",", "6"}], "]"}]}]]], "\[Equal]", 
+       RowBox[{"Log", "[", 
+        RowBox[{"2", ",", 
+         RowBox[{"Log", "[", 
+          RowBox[{
+           RowBox[{"\[ExponentialE]", "-", "1"}], ",", "2"}], "]"}]}], "]"}]}],
+      HoldForm], 
+     "0.0072973525650605529039505522079219721488481555822618400864`40."},
+    {"20", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"x", " ", 
+            RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]}], ")"}], 
+          RowBox[{"1", "/", "7"}]], ")"}], "2"], "\[Equal]", 
+       FractionBox["1", 
+        RowBox[{"1", "+", 
+         RowBox[{"Sin", "[", 
+          FractionBox[
+           RowBox[{"\[Pi]", " ", "\[ExponentialE]"}], "8"], "]"}]}]]}],
+      HoldForm], 
+     "0.0072973525634383043516201442821060115467512313326201261086`40."},
+    {"21", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Sin", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"Sin", "[", 
+          FractionBox["\[Pi]", 
+           RowBox[{"x", " ", 
+            RowBox[{"Exp", "[", "5", "]"}]}]], "]"}]}], "]"}], "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"Exp", "[", 
+          FractionBox["1", 
+           RowBox[{"ArcTan", "[", 
+            RowBox[{"1", ",", "2"}], "]"}]], "]"}], ",", "2"}], "]"}]}],
+      HoldForm], 
+     "0.007297352564537169141628723797781962799105904890427253546`40."},
+    {"22", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"Log", "[", 
+         RowBox[{
+          SuperscriptBox["\[Pi]", "2"], ",", 
+          SqrtBox[
+           RowBox[{"x", " ", "2"}]]}], "]"}], "2"], "\[Equal]", 
+       RowBox[{"Tan", "[", 
+        FractionBox["\[Pi]", 
+         SuperscriptBox[
+          SqrtBox["3"], "\[ExponentialE]"]], "]"}]}],
+      HoldForm], 
+     "0.0072973525641897715829844768976918582898529889686538606241`40."},
+    {"23", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        SqrtBox["x"], " ", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          FractionBox["\[Pi]", "2"], ")"}], 
+         RowBox[{"1", "/", "3"}]]}], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"Sin", "[", 
+         FractionBox["\[Pi]", 
+          RowBox[{"\[Pi]", " ", "2"}]], "]"}], "\[Pi]"]}],
+      HoldForm], 
+     "0.0072973525639104969771918336026166820306657362912084636997`40."},
+    {"24", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        RowBox[{"Tan", "[", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"(", 
+           RowBox[{
+            SqrtBox["x"], " ", "7"}], ")"}]}], "]"}], "+", 
+        "\[ExponentialE]"}], "\[Equal]", 
+       RowBox[{"-", 
+        FractionBox["1", 
+         RowBox[{"GoldenRatio", "+", 
+          FractionBox["1", 
+           RowBox[{"Log", "[", "4", "]"}]]}]]}]}],
+      HoldForm], 
+     "0.0072973525645134499076037314888069652478808537764237701045`40."},
+    {"25", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        FractionBox["1", 
+         RowBox[{"Cos", "[", 
+          FractionBox["\[Pi]", 
+           RowBox[{"Log", "[", 
+            SqrtBox["x"], "]"}]], "]"}]], "-", "2"}], "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"Log", "[", 
+          RowBox[{"\[Pi]", ",", 
+           RowBox[{"Log", "[", "\[Pi]", "]"}]}], "]"}], ",", "1"}], "]"}]}],
+      HoldForm], 
+     "0.0072973525648029510737894653599836073912597269117457860141`40."},
+    {"26", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Log", "[", "x", "]"}], "+", "3"}], ")"}], "2"], "-", 
+        "2"}], "\[Equal]", 
+       FractionBox["2", 
+        SuperscriptBox["4", 
+         FractionBox["1", 
+          RowBox[{"\[ExponentialE]", " ", "3"}]]]]}],
+      HoldForm], 
+     "0.0072973525634818932024387104901131485596708175735204939321`40."},
+    {"27", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Log", "[", 
+           SuperscriptBox["x", "2"], "]"}], "+", 
+          FractionBox["1", 
+           SqrtBox["\[ExponentialE]"]]}], ")"}], "2"], "\[Equal]", 
+       SuperscriptBox["4", 
+        RowBox[{"2", "+", 
+         SuperscriptBox[
+          RowBox[{"Log", "[", "3", "]"}], "2"]}]]}],
+      HoldForm], 
+     "0.007297352563763231219622048299417047497249564068699023493`40."},
+    {"28", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         FractionBox["1", 
+          RowBox[{"x", " ", 
+           RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]}]], ")"}], 
+        RowBox[{"1", "/", "7"}]], "\[Equal]", 
+       SqrtBox[
+        RowBox[{"1", "+", 
+         RowBox[{"Sin", "[", 
+          FractionBox[
+           RowBox[{"\[Pi]", " ", "\[ExponentialE]"}], "8"], "]"}]}]]}],
+      HoldForm], 
+     "0.0072973525634383043516201442821060115467510312329055002903`40."},
+    {"29", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Sin", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Log", "[", 
+            FractionBox["x", "\[Pi]"], "]"}], "+", "7"}], ")"}]}], "]"}], "\[Equal]", 
+       FractionBox["1", 
+        SuperscriptBox["GoldenRatio", 
+         SqrtBox[
+          RowBox[{"9", "+", "2"}]]]]}],
+      HoldForm], 
+     "0.0072973525643664066000406027612924672009882694447873269719`40."},
+    {"30", 
+     TagBox[
+      RowBox[{
+       RowBox[{"x", " ", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          FractionBox["7", "GoldenRatio"], ")"}], "4"]}], "\[Equal]", 
+       SqrtBox[
+        RowBox[{"6", "+", 
+         SqrtBox[
+          FractionBox["2", "7"]]}]]}],
+      HoldForm], 
+     "0.0072973525640498170825004981194626438306645884027987297178`40."},
+    {"31", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        SuperscriptBox["x", 
+         FractionBox["1", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"3", ",", 
+            SuperscriptBox["5", "2"]}], "]"}]]]], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"2", ",", "\[ExponentialE]"}], "]"}]}], ")"}], "\[Pi]"]}],
+      HoldForm], 
+     "0.0072973525632980691389311286176753631195187921851753888805`40."},
+    {"32", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Log", "[", "x", "]"}], "+", "3"}], ")"}], "2"], "-", 
+         "2"}]], "\[Equal]", 
+       RowBox[{
+        FractionBox["1", "2"], " ", 
+        SuperscriptBox["4", 
+         FractionBox["1", 
+          RowBox[{"\[ExponentialE]", " ", "3"}]]]}]}],
+      HoldForm], 
+     "0.0072973525634818932024387104901131485596753382987143826816`40."},
+    {"33", 
+     TagBox[
+      RowBox[{
+       SqrtBox[
+        RowBox[{
+         FractionBox["1", 
+          SqrtBox["x"]], "-", 
+         FractionBox["3", "2"]}]], "\[Equal]", 
+       RowBox[{"3", "+", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          FractionBox[
+           RowBox[{"Log", "[", "4", "]"}], "\[Pi]"], ")"}], "2"]}]}],
+      HoldForm], 
+     "0.0072973525650945074770661794606245501143501209976036128168`40."},
+    {"34", 
+     TagBox[
+      RowBox[{
+       SqrtBox[
+        RowBox[{
+         FractionBox["1", "x"], "-", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"1", "+", 
+            SuperscriptBox["\[Pi]", "2"]}], ")"}], "2"]}]], "\[Equal]", 
+       RowBox[{"5", "-", 
+        FractionBox["1", 
+         SuperscriptBox[
+          RowBox[{"Log", "[", "\[Pi]", "]"}], "\[Pi]"]]}]}],
+      HoldForm], 
+     "0.0072973525634004933028230857168772756649486928233521743991`40."},
+    {"35", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Log", "[", 
+        RowBox[{
+         RowBox[{"x", " ", "9"}], "+", 
+         SqrtBox["x"]}], "]"}], "\[Equal]", 
+       RowBox[{"-", 
+        RowBox[{"(", 
+         RowBox[{"1", "+", 
+          SqrtBox[
+           RowBox[{
+            RowBox[{"Log", "[", "6", "]"}], "-", "1"}]]}], ")"}]}]}],
+      HoldForm], 
+     "0.0072973525634748317274723093503539779734122016905061142172`40."},
+    {"36", 
+     TagBox[
+      RowBox[{
+       SqrtBox[
+        RowBox[{"x", " ", 
+         SqrtBox[
+          RowBox[{"Exp", "[", 
+           FractionBox["1", 
+            SqrtBox["\[ExponentialE]"]], "]"}]]}]], "\[Equal]", 
+       FractionBox["1", 
+        RowBox[{"Exp", "[", 
+         SuperscriptBox["2", 
+          SuperscriptBox[
+           RowBox[{"Log", "[", "3", "]"}], "2"]], "]"}]]}],
+      HoldForm], 
+     "0.0072973525637632312196220482994170474972496088144875998917`40."},
+    {"37", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Cos", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"Log", "[", 
+          RowBox[{"Sin", "[", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{"Tan", "[", 
+             RowBox[{"\[Pi]", " ", 
+              SqrtBox["x"]}], "]"}]}], "]"}], "]"}]}], "]"}], "\[Equal]", 
+       FractionBox["1", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"1", "+", 
+           RowBox[{"Log", "[", "9", "]"}]}], ")"}], 
+         RowBox[{"1", "/", "\[ExponentialE]"}]]]}],
+      HoldForm], 
+     "0.0072973525633924099424562234450876034116065058939036337176`40."},
+    {"38", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          FractionBox["1", 
+           SqrtBox[
+            RowBox[{"x", " ", "2"}]]], "-", "7"}], ")"}], "2"], "\[Equal]", 
+       FractionBox["1", 
+        RowBox[{"Sin", "[", 
+         FractionBox["\[Pi]", 
+          RowBox[{"7", "-", 
+           SqrtBox["5"]}]], "]"}]]}],
+      HoldForm], 
+     "0.0072973525650885701765723270054829434098752557447534887306`40."},
+    {"39", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Log", "[", 
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[Pi]", "-", "3"}], "7"], ",", "x"}], "]"}], "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"Log", "[", "4", "]"}], ",", 
+         RowBox[{"GoldenRatio", "+", "\[ExponentialE]"}]}], "]"}]}],
+      HoldForm], 
+     "0.0072973525641806383013085663037469233990474683625092125162`40."},
+    {"40", 
+     TagBox[
+      RowBox[{
+       RowBox[{"x", " ", 
+        RowBox[{"(", 
+         RowBox[{"\[ExponentialE]", "+", 
+          SuperscriptBox["8", 
+           RowBox[{"1", "/", "7"}]]}], ")"}]}], "\[Equal]", 
+       FractionBox["1", 
+        RowBox[{
+         SuperscriptBox["2", 
+          SqrtBox["\[Pi]"]], " ", 
+         SuperscriptBox["\[Pi]", "2"]}]]}],
+      HoldForm], 
+     "0.0072973525641264292767857222827907891792061123273114070917`40."},
+    {"41", 
+     TagBox[
+      RowBox[{
+       FractionBox["x", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          SuperscriptBox["7", "\[ExponentialE]"], ",", "\[Pi]"}], "]"}]], "\[Equal]", 
+       FractionBox["1", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          RowBox[{"-", "\[Pi]"}], ",", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"\[Pi]", "-", "1"}], ")"}], "2"]}], "]"}]]}],
+      HoldForm], 
+     "0.0072973525651388363330091635567714201311183487230811307089`40."},
+    {"42", 
+     TagBox[
+      RowBox[{
+       RowBox[{"Tan", "[", 
+        RowBox[{"\[Pi]", " ", 
+         RowBox[{"(", 
+          RowBox[{"x", " ", 
+           RowBox[{"(", 
+            RowBox[{"3", "+", 
+             RowBox[{"Exp", "[", "4", "]"}]}], ")"}]}], ")"}]}], "]"}], "\[Equal]", 
+       RowBox[{"\[ExponentialE]", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          SqrtBox["GoldenRatio"], "+", 
+          FractionBox["1", "6"]}], ")"}]}]}],
+      HoldForm], 
+     "0.0072973525632446750784738762906387076065875429109362221034`40."},
+    {"43", 
+     TagBox[
+      RowBox[{
+       RowBox[{"x", " ", 
+        SuperscriptBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"1", ",", 
+           SuperscriptBox["\[Pi]", "2"]}], "]"}], "4"]}], "\[Equal]", 
+       FractionBox[
+        RowBox[{"Cos", "[", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"Log", "[", "GoldenRatio", "]"}]}], "]"}], 
+        SqrtBox["3"]]}],
+      HoldForm], 
+     "0.0072973525635259945893816173299064129641316178382408220318`40."},
+    {"44", 
+     TagBox[
+      RowBox[{
+       RowBox[{"x", " ", 
+        RowBox[{"Exp", "[", 
+         RowBox[{"Exp", "[", 
+          RowBox[{"Sin", "[", 
+           FractionBox["\[Pi]", "7"], "]"}], "]"}], "]"}]}], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"Log", "[", 
+         RowBox[{
+          RowBox[{"Log", "[", "GoldenRatio", "]"}], ",", 
+          RowBox[{"Log", "[", "\[Pi]", "]"}]}], "]"}], "2"]}],
+      HoldForm], 
+     "0.0072973525640727650442510661282234844042770298538679709727`40."},
+    {"45", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        FractionBox["1", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"\[Pi]", " ", 
+           SuperscriptBox["x", 
+            RowBox[{"1", "/", "GoldenRatio"}]]}], "]"}]], "-", "6"}], "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"1", "+", 
+            FractionBox["1", 
+             SqrtBox["\[Pi]"]]}], ")"}], "2"], ",", "2"}], "]"}]}],
+      HoldForm], 
+     "0.0072973525639200482223304742248366057921100028416374866428`40."},
+    {"46", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        RowBox[{"Log", "[", 
+         RowBox[{"Sin", "[", 
+          FractionBox[
+           RowBox[{"\[Pi]", " ", "x"}], "5"], "]"}], "]"}], "+", "4"}], "\[Equal]", 
+       RowBox[{"-", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          SuperscriptBox["3", 
+           RowBox[{"1", "/", "4"}]], ",", "7"}], "]"}]}]}],
+      HoldForm], 
+     "0.0072973525644518836567617050155739969710858756509123451505`40."},
+    {"47", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        SqrtBox["x"], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          SuperscriptBox["\[Pi]", "\[Pi]"], "-", "\[ExponentialE]"}], ")"}]}],
+        "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{
+          FractionBox["1", "\[ExponentialE]"], "-", 
+          RowBox[{"(", 
+           RowBox[{"\[Pi]", "+", "1"}], ")"}]}], ",", "1"}], "]"}]}],
+      HoldForm], 
+     "0.0072973525652178545255795674180720116655707241570708401942`40."},
+    {"48", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        FractionBox["1", "3"], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          FractionBox["1", "x"], "+", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"\[Pi]", "+", "1"}], ")"}], "2"]}], ")"}]}], "\[Equal]", 
+       RowBox[{"5", "+", 
+        SuperscriptBox["6", 
+         RowBox[{"\[Pi]", "-", "1"}]]}]}],
+      HoldForm], 
+     "0.007297352564869905175999944781324364726733576049620946749`40."},
+    {"49", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{
+         RowBox[{"Log", "[", "x", "]"}], "+", 
+         FractionBox["1", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"7", ",", "1"}], "]"}]]}]], "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"2", ",", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{
+           RowBox[{"Log", "[", "7", "]"}], ",", "\[Pi]"}], "]"}]}], "]"}]}],
+      HoldForm], 
+     "0.0072973525639456520900129966919414327008612043114262247654`40."},
+    {"50", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        FractionBox["1", "4"], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          FractionBox["1", "x"], "-", 
+          FractionBox["1", 
+           RowBox[{"Sin", "[", 
+            RowBox[{"\[Pi]", " ", "x"}], "]"}]]}], ")"}]}], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"\[ExponentialE]", " ", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"1", "+", 
+             FractionBox["1", "3"]}], ")"}], "2"]}], ")"}], "2"]}],
+      HoldForm], 
+     "0.0072973525643213831554246821640948625741741500180499734785`40."},
+    {"51", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        SqrtBox[
+         RowBox[{"Tan", "[", 
+          RowBox[{"\[Pi]", " ", 
+           RowBox[{"ArcTan", "[", 
+            RowBox[{"7", ",", 
+             SqrtBox["x"]}], "]"}]}], "]"}]]], "\[Equal]", 
+       RowBox[{"GoldenRatio", " ", 
+        RowBox[{"(", 
+         RowBox[{"2", "+", 
+          FractionBox["\[Pi]", "\[ExponentialE]"]}], ")"}]}]}],
+      HoldForm], 
+     "0.0072973525641725187537148621044692678451020771975360052151`40."},
+    {"52", 
+     TagBox[
+      RowBox[{
+       SqrtBox[
+        RowBox[{"Cos", "[", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"Sin", "[", 
+           RowBox[{"\[Pi]", " ", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"Log", "[", "x", "]"}], "+", "4"}], ")"}]}], "]"}]}], 
+         "]"}]], "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         SuperscriptBox["5", 
+          RowBox[{"1", "/", "7"}]], ",", 
+         SqrtBox["2"]}], "]"}]}],
+      HoldForm], 
+     "0.0072973525634992164485173934086722493762553051943504217996`40."},
+    {"53", 
+     TagBox[
+      RowBox[{
+       RowBox[{"x", " ", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"\[Pi]", "+", 
+           FractionBox["1", "\[ExponentialE]"]}], ")"}], "\[Pi]"]}], "\[Equal]", 
+       RowBox[{"Log", "[", 
+        RowBox[{
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"(", 
+           RowBox[{"\[Pi]", "-", "2"}], ")"}]}], ",", "GoldenRatio"}], "]"}]}],
+      HoldForm], 
+     "0.0072973525637568649015708781702774697860119828487572909031`40."},
+    {"54", 
+     TagBox[
+      RowBox[{
+       RowBox[{"x", " ", 
+        RowBox[{"(", 
+         RowBox[{"3", "+", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"\[Pi]", "+", "5"}], ")"}], "2"]}], ")"}]}], "\[Equal]", 
+       FractionBox["1", 
+        RowBox[{"2", "-", 
+         FractionBox["1", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            RowBox[{"\[ExponentialE]", "+", "4"}], ")"}], "2"]]}]]}],
+      HoldForm], 
+     "0.0072973525632981686182785919410193692948078455680335496884`40."},
+    {"55", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{"x", " ", 
+         SuperscriptBox[
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"1", ",", "7"}], "]"}], "\[Pi]"]}]], "\[Equal]", 
+       RowBox[{
+        RowBox[{"9", " ", 
+         RowBox[{"(", 
+          RowBox[{"\[Pi]", "+", "2"}], ")"}]}], "-", "GoldenRatio"}]}],
+      HoldForm], 
+     "0.0072973525640333765337782486956544294973064392432774174162`40."},
+    {"56", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        SuperscriptBox["x", 
+         SqrtBox[
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"8", ",", "\[Pi]"}], "]"}]]]], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"Log", "[", 
+         RowBox[{
+          SqrtBox[
+           RowBox[{"Cos", "[", 
+            FractionBox["\[Pi]", "\[Pi]"], "]"}]], ",", "4"}], "]"}], "2"]}],
+      HoldForm], 
+     "0.0072973525639111409090792207495761118093313840443180869871`40."},
+    {"57", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"Tan", "[", 
+         RowBox[{"\[Pi]", " ", 
+          RowBox[{"(", 
+           RowBox[{"x", " ", 
+            SuperscriptBox["2", "7"]}], ")"}]}], "]"}], "2"], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          FractionBox["1", "\[Pi]"]}], ")"}], 
+        RowBox[{"\[Pi]", "+", "5"}]]}],
+      HoldForm], 
+     "0.0072973525639364149251142777664136796018833976575404348045`40."},
+    {"58", 
+     TagBox[
+      RowBox[{
+       FractionBox[
+        RowBox[{"Sin", "[", 
+         FractionBox["\[Pi]", 
+          RowBox[{"Exp", "[", "8", "]"}]], "]"}], "x"], "\[Equal]", 
+       FractionBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"2", ",", "1"}], "]"}], 
+        SuperscriptBox[
+         RowBox[{"Log", "[", "6", "]"}], "2"]]}],
+      HoldForm], 
+     "0.0072973525642033071091952421202378161101375989706584334729`40."},
+    {"59", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"x", " ", 
+          SuperscriptBox["4", 
+           SqrtBox["GoldenRatio"]]}], ")"}], "2"], "\[Equal]", 
+       FractionBox[
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"\[Pi]", "-", "3"}], ")"}], "\[ExponentialE]"], 
+        "\[ExponentialE]"]}],
+      HoldForm], 
+     "0.0072973525636187641967319461252673082334568440489920510269`40."},
+    {"60", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"x", " ", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"1", ",", "1"}], "]"}]}], ")"}], " ", 
+        SqrtBox["\[ExponentialE]"]}], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"7", ",", 
+          RowBox[{"Log", "[", 
+           RowBox[{"5", ",", "3"}], "]"}]}], "]"}], "2"]}],
+      HoldForm], 
+     "0.0072973525641639179311102655331844660084535608218751593228`40."},
+    {"61", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"Log", "[", 
+         SqrtBox[
+          RowBox[{
+           RowBox[{"Sin", "[", 
+            RowBox[{"\[Pi]", " ", "x"}], "]"}], " ", "6"}]], "]"}], "2"], "\[Equal]", 
+       RowBox[{"ArcTan", "[", 
+        RowBox[{"2", ",", 
+         RowBox[{"Exp", "[", 
+          SuperscriptBox["GoldenRatio", 
+           RowBox[{"1", "/", "5"}]], "]"}]}], "]"}]}],
+      HoldForm], 
+     "0.0072973525642830506814704564257002528589340593998533390484`40."},
+    {"62", 
+     TagBox[
+      RowBox[{
+       RowBox[{
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox["x"], " ", "6"}], ")"}], "\[Pi]"], " ", "2"}], "\[Equal]", 
+       FractionBox[
+        RowBox[{"Log", "[", "2", "]"}], 
+        RowBox[{"\[ExponentialE]", "+", 
+         FractionBox["1", "9"]}]]}],
+      HoldForm], 
+     "0.0072973525652912876247035877985294836500346884879705765995`40."},
+    {"63", 
+     TagBox[
+      RowBox[{
+       RowBox[{"x", " ", 
+        SuperscriptBox["4", 
+         SqrtBox[
+          RowBox[{"Exp", "[", "\[ExponentialE]", "]"}]]]}], "\[Equal]", 
+       RowBox[{
+        SuperscriptBox["GoldenRatio", "2"], "-", 
+        SuperscriptBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"2", ",", "\[Pi]"}], "]"}], "2"]}]}],
+      HoldForm], 
+     "0.0072973525635749267692599570671120531565352498833786960485`40."},
+    {"64", 
+     TagBox[
+      RowBox[{
+       SqrtBox[
+        FractionBox["x", 
+         RowBox[{"Sin", "[", 
+          FractionBox["\[Pi]", 
+           RowBox[{"Exp", "[", "8", "]"}]], "]"}]]], "\[Equal]", 
+       FractionBox[
+        RowBox[{"Log", "[", "6", "]"}], 
+        SqrtBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"2", ",", "1"}], "]"}]]]}],
+      HoldForm], 
+     "0.0072973525642033071091952421202378161101375991920916483541`40."},
+    {"65", 
+     TagBox[
+      RowBox[{
+       FractionBox["1", 
+        SuperscriptBox["x", 
+         SqrtBox[
+          RowBox[{"ArcTan", "[", 
+           RowBox[{"8", ",", "\[Pi]"}], "]"}]]]], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"Log", "[", 
+         RowBox[{
+          RowBox[{"Cos", "[", 
+           FractionBox["\[Pi]", "\[Pi]"], "]"}], ",", 
+          SuperscriptBox["4", "2"]}], "]"}], "2"]}],
+      HoldForm], 
+     "0.0072973525639111409090792207495761118093313840443180869871`40."},
+    {"66", 
+     TagBox[
+      RowBox[{
+       SuperscriptBox["x", 
+        SqrtBox[
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"8", ",", "\[Pi]"}], "]"}]]], "\[Equal]", 
+       SuperscriptBox[
+        RowBox[{"Log", "[", 
+         RowBox[{
+          SuperscriptBox["4", "2"], ",", 
+          RowBox[{"Cos", "[", 
+           FractionBox["\[Pi]", "\[Pi]"], "]"}]}], "]"}], "2"]}],
+      HoldForm], 
+     "0.0072973525639111409090792207495761118093314144065299391024`40."}
+   },
+   AutoDelete->False,
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]], "Output",
+ CellChangeTimes->{4.0000277177615414`*^9},
+ CellLabel->"Out[15]=",ExpressionUUID->"611383a4-d373-224d-8f98-1bf183c94ece"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1280, 732},
+WindowMargins->{{-5.5, Automatic}, {Automatic, -5.5}},
+WindowTitle->"RIES alpha level 5",
+FrontEndVersion->"15.0 for Microsoft Windows (64-bit) (July 2, 2026)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"c45b4580-df38-7440-81f3-a01d2c0a6fad"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[608, 23, 145, 2, 96, "Title",ExpressionUUID->"cd67284c-e433-db4a-8c16-a9065f27a0c2"],
+Cell[756, 27, 225, 3, 33, "Text",ExpressionUUID->"ab509436-d467-464a-bbb1-195af4aa5b12"],
+Cell[984, 32, 190, 3, 47, "Program",ExpressionUUID->"16ee3fc0-29a6-8b4e-9f38-4e6ec275a930"],
+Cell[1177, 37, 802, 11, 99, "Text",ExpressionUUID->"23adeea2-70e3-8342-bdf0-85420b4ef59a"],
+Cell[1982, 50, 249, 4, 33, "Text",ExpressionUUID->"1b2f4628-c57f-4f42-8fac-de20b7a451cc"],
+Cell[2234, 56, 48539, 1480, 2101, "Output",ExpressionUUID->"1da57c89-1b0e-874b-9767-1fc2ea2be979"],
+Cell[CellGroupData[{
+Cell[50798, 1540, 166, 3, 66, "Section",ExpressionUUID->"1dadefc2-2fc4-da41-a471-5b2c530568d8"],
+Cell[CellGroupData[{
+Cell[50989, 1547, 280, 7, 28, "Input",ExpressionUUID->"f467499e-b9f3-9b4d-80ef-863fecb2c2af"],
+Cell[51272, 1556, 230, 4, 32, "Output",ExpressionUUID->"a5742078-bc95-884f-909e-fa0988d4089c"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[51539, 1565, 26622, 905, 988, "Input",ExpressionUUID->"a49fbba5-fba1-584a-81db-ba77a9ca7aed"],
+Cell[78164, 2472, 25733, 904, 876, "Output",ExpressionUUID->"2aac12e9-8b4c-9141-a19a-cbff20589ef5"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[103934, 3381, 914, 23, 28, "Input",ExpressionUUID->"c49a872b-88a5-e24e-8b4f-543a599f6fbe"],
+Cell[104851, 3406, 32987, 1041, 1945, "Output",ExpressionUUID->"611383a4-d373-224d-8f98-1bf183c94ece"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

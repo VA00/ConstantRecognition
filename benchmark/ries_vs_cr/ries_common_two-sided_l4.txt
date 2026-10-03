@@ -1,0 +1,33 @@
+First match must be closer than 7.5e-10 times your target value.
+Will not use more than 1.2e+10 bytes of memory.
+
+   Your target value: T = 0.0072973525643                        mrob.com/ries
+
+         x 6 x / ln / = 8 e 6 - **           for x = 0.007297352566058     {135}
+   x recip 6 x / ln * = 8 6 e - **           for x = 0.007297352566058     {141}
+ x 2 * sqrt recip 4 - dup* = pi 1 + dup* pi ln + for x = 0.00729735255969775 {146}
+       x 5 4 ** * 7 * = 2 pi 1 - sqrt + exp  for x = 0.00729735256880591   {148}
+ x 3 * pi dup* ln recip + = e pi 5 - recip + recip for x = 0.00729735256039446 {151}
+ x phi recip ** pi dup* * recip = 1 phi e recip exp / + for x = 0.00729735256264799 {153}
+ x dup* recip ln e sqrt recip - = 2 2 3 ln dup* + ** for x = 0.00729735256376323 {154}
+    x 6 x / ln / sqrt = 8 sqrt e 6 - **      for x = 0.007297352566058     {153}
+ x recip ln ln ln e * = 4 ln dup* pi recip - sqrt for x = 0.00729735256725592 {154}
+ x 1 phi - ** pi dup* / = 1 phi e recip exp / + for x = 0.007297352562648  {155}
+ x sqrt pi 8 + * 2 + = pi 3 sqrt 7 - recip + for x = 0.00729735256816314   {154}
+ x 5 dup* e / dup* * recip = 7 pi 1 - sqrt exp / for x = 0.00729735256880591 {156}
+  x e 5 dup* / dup* / = pi 1 - sqrt exp 7 /  for x = 0.00729735256880591   {150}
+ x sqrt recip exp pi 3 * / = 4 exp phi ln / dup* for x = 0.00729735256640712 {156}
+     x phi 6 ** * 7 * = e 5 / 7 recip **     for x = 0.00729735256939559   {152}
+ x 6 exp * recip 3 recip + = 2 sqrt 2 pi dup* recip + / for x = 0.00729735256607583 {157}
+ x recip pi 1 + dup* + 3 / = 5 6 pi 1 - ** + for x = 0.00729735256486991   {157}
+ x sqrt pi sqrt 7 ** recip - = 5 pi 6 recip - * recip for x = 0.00729735255911947 {155}
+ x sqrt recip 1 + 2 pi ** / = 3 7 recip + pi recip ** for x = 0.00729735256730864 {154}
+                  (for more results, use the option '-l5')
+
+                         --LHS--      --RHS--      -Total-
+     max complexity:          83           74          157
+          dead-ends:    41888892     46860273     88749165  Time: 5.019
+        expressions:     3889214      5048880      8938094
+           distinct:     1328709      1068616      2397325  Memory: 2317077KiB
+
+        Total equations tested:           1419879696744 (1.42e+12)

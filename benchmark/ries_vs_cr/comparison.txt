@@ -1,0 +1,49 @@
+CR (GPU, common grammar, K <= 12): 11 distinct values within 5 sigma
+  by K: {12: 11}
+RIES one-sided -l3:      0 equations,      0 distinct roots,     0 equal to a CR value, max complexity 0
+RIES one-sided -l4:      0 equations,      0 distinct roots,     0 equal to a CR value, max complexity 0
+RIES one-sided -l5:      0 equations,      0 distinct roots,     0 equal to a CR value, max complexity 0
+RIES one-sided -l6:      0 equations,      0 distinct roots,     0 equal to a CR value, max complexity 0
+RIES two-sided -l3:      2 equations,      1 distinct roots,     0 equal to a CR value, max complexity 135
+RIES two-sided -l4:     19 equations,     14 distinct roots,     2 equal to a CR value, max complexity 157
+RIES two-sided -l5:    220 equations,    181 distinct roots,     5 equal to a CR value, max complexity 167
+RIES two-sided -l6:   2077 equations,   1506 distinct roots,     8 equal to a CR value, max complexity 177
+RIES two-sided -l7:  28763 equations,   9611 distinct roots,    11 equal to a CR value, max complexity 188
+
+CR formulas found by RIES two-sided -l7 (same value), by RIES complexity of 'x = f':
+  complexity 140-149:     5 of     5
+  complexity 150-159:     6 of     6
+  simplest CR formulas RIES did not report:
+  examples found by both (CR formula | RIES equation):
+    x = 1/(((Log[3/(Log[GoldenRatio])^2 Pi] + 8))^2)   |   x sqrt recip exp pi 3 * / = 4 exp phi ln / dup*
+    x = ((E - (GoldenRatio/8 + 2)))^((Pi)^2) 5   |   x 5 / pi dup* recip ** 1 + = e phi 8 / - 1 -
+    x = Exp[Sqrt[Log[4]]]/(((Pi)^2 - Sqrt[5]))^(3)   |   x recip 4 ln sqrt exp * = pi dup* 5 sqrt - 3 **
+    x = E/(4 7)^((8)^(1/((2 + GoldenRatio))))   |   x 3 sqrt sqrt 5 sqrt - recip ** = pi 5 e 1 + pi ** + *
+    x = (Sqrt[3] - (Exp[(1/(9) - 3)] + GoldenRatio))/8   |   x 7 exp * 8 - sqrt recip = 1 pi 1 + dup* + pi sqrt +
+    x = (Log[((3 - GoldenRatio))^(1/(Pi)) Log[5]])^(9)   |   x 9 recip ** exp 5 ln / = 3 phi - pi recip **
+    x = 4/((Exp[3] - Log[8]))^(Sqrt[(GoldenRatio + Pi)])   |   x 4 / pi phi + sqrt recip ** = 3 exp 8 ln - recip
+    x = (E/5)^(1/(7))/(GoldenRatio)^(6) 7   |   x phi 6 ** * 7 * = e 5 / 7 recip **
+    x = ((Sqrt[E]/4 + Log[9])/Exp[4])^(GoldenRatio)   |   x phi 1 - ** 4 exp * = 9 ln e sqrt 4 / +
+    x = Sqrt[Log[9]]/(((4 - Log[9]))^(9) + 2)   |   x recip 9 ln sqrt * 2 - = 4 9 ln - 9 **
+
+RIES one-sided -l3: 0 explicit formulas with <= 12 symbols, 0 also found by CR, 0 not: []
+
+RIES one-sided -l4: 0 explicit formulas with <= 12 symbols, 0 also found by CR, 0 not: []
+
+RIES one-sided -l5: 0 explicit formulas with <= 12 symbols, 0 also found by CR, 0 not: []
+
+RIES one-sided -l6: 0 explicit formulas with <= 12 symbols, 0 also found by CR, 0 not: []
+
+Identity check at 80 digits against ries_common_two-sided_l7.txt:
+  IDENTITY   40.0 digits  x = 1/(((Log[3/(Log[GoldenRatio])^2 Pi] + 8))^2)   |   x sqrt sqrt 2 * dup* recip 2 - exp = pi 3 * sqrt phi ln / sqrt
+  IDENTITY   39.1 digits  x = ((E - (GoldenRatio/8 + 2)))^((Pi)^2) 5   |   x 5 / sqrt pi dup* recip ** = e phi 8 / - 2 - sqrt
+  IDENTITY   40.0 digits  x = Exp[Sqrt[Log[4]]]/(((Pi)^2 - Sqrt[5]))^(3)   |   x recip ln 4 ln sqrt + 3 * = 9 pi dup* 5 sqrt - ln *
+  not found  13.4 digits  x = E/(4 7)^((8)^(1/((2 + GoldenRatio))))   |   x 3 sqrt sqrt 5 sqrt - recip ** = pi 5 e 1 + pi ** + *
+  IDENTITY   40.0 digits  x = (Sqrt[3] - (Exp[(1/(9) - 3)] + GoldenRatio))/8   |   x 8 * phi 3 sqrt - + recip = 1 1 3 9 recip - exp + -
+  IDENTITY   40.0 digits  x = (Log[((3 - GoldenRatio))^(1/(Pi)) Log[5]])^(9)   |   x 9 recip ** exp exp = 5 3 phi - pi recip ** **
+  IDENTITY   40.0 digits  x = 4/((Exp[3] - Log[8]))^(Sqrt[(GoldenRatio + Pi)])   |   x 4 / pi phi + sqrt recip ** = 3 exp 8 ln - recip
+  IDENTITY   40.0 digits  x = (E/5)^(1/(7))/(GoldenRatio)^(6) 7   |   x recip e 5 / 7 recip ** * = 7 1 2 phi / - dup* /
+  IDENTITY   40.0 digits  x = ((Sqrt[E]/4 + Log[9])/Exp[4])^(GoldenRatio)   |   x x phi ** 4 exp * / = 9 ln e sqrt 4 / + recip
+  IDENTITY   40.0 digits  x = Sqrt[Log[9]]/(((4 - Log[9]))^(9) + 2)   |   x recip 9 ln sqrt * 2 - sqrt = 4 9 ln - sqrt 9 **
+  IDENTITY   40.0 digits  x = 5/((GoldenRatio)^((9 - E)) - 8) Exp[4]   |   x recip ln 4 - exp 5 * = phi 9 e - ** 8 -
+  10 of 11 CR values found by RIES as the same identity

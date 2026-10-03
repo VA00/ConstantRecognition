@@ -9,5 +9,8 @@ memoryless or with stored values, by enumeration or by integer relations.
   `constant_gpu_alpha_search_benchmark.cu` (variant of the hybrid search), `constant_gpu_benchmark.cu`
   (the hybrid search for `benchmark/run/run_cuda_v0.py`, many targets per process, shortest first).
   Build: `build.sh` (Linux, FP64 version) or `build_benchmark.bat` (Windows, benchmark version).
+  `constant_gpu_benchmark` options: a third argument `list_delta` prints every FP64-verified formula
+  within that relative error (for targets with error bars); `-DCOMMON_GRAMMAR` builds it with the
+  symbols shared with RIES (see `benchmark/ries_vs_cr`).
 - `tensor_julia`: CALC4 up to K = 5 as broadcasted tensors in Julia (`tensor_search.jl`).
 - planned: integer relations (PSLQ/LLL), meet-in-the-middle (bidirectional search).
