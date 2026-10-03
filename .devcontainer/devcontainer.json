@@ -11,7 +11,7 @@
         "--gpus", "all"
     ],
     
-    "postCreateCommand": "apt-get update && apt-get install -y build-essential emscripten && chmod +x /workspaces/ConstantRecognition/cuda/*.cu",
+    "postCreateCommand": "apt-get update && apt-get install -y build-essential emscripten && chmod +x /workspaces/ConstantRecognition/algorithms/methods/gpu_cuda/*.cu",
     
     "customizations": {
         "vscode": {

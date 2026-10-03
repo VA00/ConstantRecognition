@@ -1,4 +1,4 @@
-"""run_cuda_v0.py - the hybrid FP32 GPU search (cuda/constant_gpu_benchmark.cu) over constants_v0.tsv
+"""run_cuda_v0.py - the hybrid FP32 GPU search (algorithms/methods/gpu_cuda/constant_gpu_benchmark.cu) over constants_v0.tsv
 
 Author: Andrzej Odrzywolek
 Date: October 1, 2026
@@ -16,7 +16,7 @@ is off by more than the threshold (cancellation, overflow of FP32 beyond 3.4e38)
 candidates; and for a FAILURE only candidates are known, so no best approximation is reported
 when there is none within the threshold.
 
-Build (Windows, from cuda/, in a "x64 Native Tools" prompt or after vcvars64.bat):
+Build (Windows, from algorithms/methods/gpu_cuda/ or with its build_benchmark.bat, in a "x64 Native Tools" prompt or after vcvars64.bat):
   nvcc -O3 -arch=sm_120 constant_gpu_benchmark.cu -o constant_gpu_benchmark
 Usage:
   python run_cuda_v0.py --exe <path to constant_gpu_benchmark> [--maxk 7] [--threshold 64]

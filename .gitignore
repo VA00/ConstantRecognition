@@ -34,11 +34,11 @@ calculator_frontend/public/wasm/*.wasm
 !calculator_frontend/public/wasm/worker.js
 
 # ==== CUDA Build Artifacts ====
-cuda/*.o
-cuda/*.ptx
-cuda/constant_gpu
-cuda/constant_gpu_fp32
-cuda/constant_gpu_fp32_hybrid
+algorithms/methods/gpu_cuda/*.o
+algorithms/methods/gpu_cuda/*.ptx
+algorithms/methods/gpu_cuda/constant_gpu
+algorithms/methods/gpu_cuda/constant_gpu_fp32
+algorithms/methods/gpu_cuda/constant_gpu_fp32_hybrid
 
 # ==== Emscripten SDK (submodule/downloaded) ====
 emsdk/upstream/
@@ -132,9 +132,9 @@ synthetic_benchmark/*.csv
 # ==== Debug files ====
 found.txt
 benchmark/build/formula_values_cache.wl
-cuda/*.exe
-cuda/*.exp
-cuda/*.lib
+algorithms/methods/gpu_cuda/*.exe
+algorithms/methods/gpu_cuda/*.exp
+algorithms/methods/gpu_cuda/*.lib
 
 # generated from benchmark/results/SURVEY_*.md with pandoc (see benchmark/README.md)
 benchmark/results/SURVEY_*.tex

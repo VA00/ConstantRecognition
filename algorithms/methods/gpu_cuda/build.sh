@@ -6,7 +6,7 @@ GPU_ARCH=${1:-sm_75}
 
 echo "Compiling for architecture: $GPU_ARCH"
 
-cd /workspaces/ConstantRecognition/cuda
+cd "$(dirname "$0")"
 
 # Compile
 nvcc -O3 -arch=$GPU_ARCH constant_gpu.cu -o constant_gpu

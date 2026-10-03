@@ -18,9 +18,9 @@ all with the same input, the nearest double: `run/run_benchmark_v0.py` (Constant
 `run/run_nsimplify_v0.py` (sympy), `run/run_maple_identify_v0.py` (Maple), `run/run_wolframalpha_v0.py` (Wolfram|Alpha
 from Mathematica), `run/run_askconstants_v0.py` (AskConstants 5.0 by D. R. Stoutemyer, MIT license: Propose
 with lookup tables of 14.7 million expressions and 5.2 million inverse functions, integer relations, and
-a margin test), `run/run_cuda_v0.py` (Constant Recognition's search on the GPU: `cuda/constant_gpu_benchmark.cu`,
+a margin test), `run/run_cuda_v0.py` (Constant Recognition's search on the GPU: `algorithms/methods/gpu_cuda/constant_gpu_benchmark.cu`,
 the same CALC4 buttons and success test, every formula evaluated in FP32 and the candidates within
-64 FLT_EPSILON verified in FP64 on the CPU; build with `cuda/build_benchmark.bat`), `run/run_ries_v0.py`
+64 FLT_EPSILON verified in FP64 on the CPU; build with `algorithms/methods/gpu_cuda/build_benchmark.bat`), `run/run_ries_v0.py`
 (RIES by R. Munafo, GPL, 2026 May 06 version: a bidirectional search for equations LHS(x) = RHS with its
 default symbols; its claimed match, an equation marked exact or the best one when it stops early, is
 solved for x with 80 digits). `run/compare_results_v0.py` puts them side by side; `results/SURVEY_2026-10-01.md`
