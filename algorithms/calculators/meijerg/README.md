@@ -69,7 +69,7 @@ Leaves are complete up to KLEAF, pairs up to KPAIR <= KLEAF + 5.
 ## Results on benchmark v0
 
 `python meijerg_search.py 14 19` (leaves up to cost 14, pairs up to 19): 82 s on 12 processes
-(AMD Ryzen 9 5900X, the machine of the survey; Python 3.14.0, mpmath 1.3.0, numpy 2.4.0), log in `meijerg_K14_19.log`, best match per constant in `meijerg_K14_19_best.tsv`.
+(AMD Ryzen 9 5900X, the machine of the survey; Python 3.14.0, mpmath 1.3.0, numpy 2.4.0). Best match per constant: `meijerg_K14_19_best.tsv` (the run log and the full match list are written next to the script, not kept in git).
 
 | | count |
 |---|---|
