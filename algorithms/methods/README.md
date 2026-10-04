@@ -20,4 +20,5 @@ memoryless or with stored values, by enumeration or by integer relations.
   Recognition and RIES: `PHASE1_RESULTS.md`. `explicit.py` turns its equations into explicit formulas,
   `mitm_bench.cu` measures the matching step alone (tree vs sort vs GPU). `mitm_wasm.cpp` (build:
   `build_mitm_wasm.bat`) is the same engine for the web page `calculator_frontend/app/mitm` (equation search).
+  `PHASE2_PLAN.md`: instructions for the GPU version (CUDA and Metal, command line), not built yet.
 - planned: integer relations (PSLQ/LLL).
