@@ -429,6 +429,17 @@ Two more guards after the first tests of the page:
   could also overflow (L = sinh(log_tanh(pi)(log_4 x)) = -1.7e307 at 3e8), which made the error 0 and the
   compression ratio large; the quotient is now taken step by step. v0 unchanged (532 exact, 8 false positives at
   |L| <= 5, |R| <= 6).
+- **Duplicates were dropped before the kappa test** (fixed 2026-10-04). Of the left sides with the same double
+  value only the first code was kept, and only then was kappa checked; a flat or steep code thus hid every other
+  code of its value. At the Dottie number cos(T) = T exactly in double, so x / cos x = 1.0 exactly, and so is
+  x (1/x), which comes first (INV before COS) and is flat: x / cos x = 1 was never tried (the user's test
+  "Cos[x] == x"; only the arccos variants, 1 ulp off, survived). Now kappa is tested first and duplicates are
+  dropped among the codes that pass (`nL` counts these). v0, |L| <= 5, |R| <= 6, before / after
+  (`v0_mitm_kl5_kr6_before_kappafix.tsv`, `v0_mitm_kl5_kr6_kappafix.tsv`): 532 exact and 8 false positives both,
+  the same time; two constants get a shorter exact equation (length 7 instead of 8: 10^x = arctan 1 and
+  10^x = arcsin 1, where 10^x had been hidden), one a different exact equation of the same length. `--bench`
+  counts unchanged (2 310 800, icx). The same pattern remains for the error bound (errcap), which is checked per
+  candidate after deduplication; it rejects few candidates and was not changed.
 
 ## Caveats
 

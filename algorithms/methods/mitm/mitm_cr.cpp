@@ -1086,16 +1086,18 @@ struct Worker {
         // pass 1: distinct left values inside the kappa range, in sorted order
         size_t q = 0;
         for (size_t k = 0; k < m; k++) {
-            if (s[k].key == prev) continue;                    // same value: the first (shortest) code is kept
-            prev = s[k].key;
-            res.nL[a]++;
             const size_t li = s[k].idx;
             const double v = lv[li], d = std::fabs(ld[li]);
             // kappa = |L| / (|L'| |T|): above kappa_max the rounding of L(T) alone moves the root by more than tol;
             // below kappa_min L is so steep (or so close to 0) that R is needed only to relative precision
-            // tol / kappa, and chance matches abound
+            // tol / kappa, and chance matches abound. Tested before the duplicates are dropped: a code outside
+            // the range must not hide another code of the same value (at the Dottie number x (1/x) = 1.0, flat,
+            // hid x / cos x = 1.0)
             const double kap = std::fabs(v) / d / absT;
             if (!(kap >= c.o.kappa_min && kap <= c.o.kappa_max)) { nskip_kappa++; continue; }
+            if (s[k].key == prev) continue;                    // same value: the first (shortest) code is kept
+            prev = s[k].key;
+            res.nL[a]++;
             qi[q] = (uint32_t)li; qlo[q] = v; q++;
         }
         // pass 2: per left value, the tables by increasing length; the block of the largest table is located in its
