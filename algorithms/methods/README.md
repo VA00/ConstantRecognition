@@ -18,5 +18,6 @@ memoryless or with stored values, by enumeration or by integer relations.
   batch and shared by all targets, CALC4 or the symbols shared with RIES (`--common`). Build:
   `build_mitm.bat`. Benchmark: `benchmark/run/run_mitm_v0.py`; results and the comparison with Constant
   Recognition and RIES: `PHASE1_RESULTS.md`. `explicit.py` turns its equations into explicit formulas,
-  `mitm_bench.cu` measures the matching step alone (tree vs sort vs GPU).
+  `mitm_bench.cu` measures the matching step alone (tree vs sort vs GPU). `mitm_wasm.cpp` (build:
+  `build_mitm_wasm.bat`) is the same engine for the web page `calculator_frontend/app/mitm` (equation search).
 - planned: integer relations (PSLQ/LLL).

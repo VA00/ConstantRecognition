@@ -4,12 +4,13 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 // Content hash of the hand-referenced WASM files, used as a cache-busting
-// query (?v=...) on worker.js, vsearch.js and vsearch.wasm. Static servers
+// query (?v=...) on worker.js, vsearch.js and vsearch.wasm (formula search)
+// and mitm_worker.js, mitm.js and mitm.wasm (equation search). Static servers
 // (e.g. plain Apache) send no cache-control headers for them, and browsers
 // would otherwise keep running an old engine against a new page.
 const wasmVersion = (() => {
   const hash = createHash("md5");
-  for (const f of ["worker.js", "vsearch.js", "vsearch.wasm"]) {
+  for (const f of ["worker.js", "vsearch.js", "vsearch.wasm", "mitm_worker.js", "mitm.js", "mitm.wasm"]) {
     try {
       hash.update(readFileSync(join(__dirname, "public", "wasm", f)));
     } catch {

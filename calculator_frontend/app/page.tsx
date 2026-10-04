@@ -340,6 +340,11 @@ export default function LandingPage() {
               </span>
             </button>
           </Link>
+          <div className="mt-5">
+            <Link href="/mitm" className="text-sm text-slate-500 hover:text-white transition-colors">
+              Enter RIES →
+            </Link>
+          </div>
         </div>
 
         {/* Bottom info */}
@@ -350,7 +355,7 @@ export default function LandingPage() {
               WebAssembly
             </span>
             <span className="text-slate-700">•</span>
-            <span>36 Operations</span>
+            <span>Flexible Operations</span>
             <span className="text-slate-700">•</span>
             <span>Parallel Processing</span>
           </div>

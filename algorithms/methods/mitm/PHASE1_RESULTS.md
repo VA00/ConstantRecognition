@@ -399,6 +399,37 @@ so in a browser the build should run in a worker that hands the finished table o
 the build buffer should be made smaller). musl's libm rounds a few values differently (0.3 % more distinct right
 values), so WASM answers can differ slightly from the native benchmark.
 
+## Engine changes for the web page (2026-10-04)
+
+For the equation-search page (`calculator_frontend/app/mitm`, library `mitm_wasm.cpp`) the engine was extended:
+buttons by name (any subset of the calculator's, also ZERO, the extra constants, integers, MINUS and LOGARITHM);
+one right-side table per length, searched by increasing length and closest values first, so that targets with an
+uncertainty (many matches) still get their shortest equation directly (`--tolrel`); the closest pair of every
+total length is kept (the page lists them); at most `--maxtry` = 32 right sides are tried per left side and
+length (instead of skipping a left side whose window holds more than 1000). Re-run on v0, |L| <= 5, |R| <= 6: the
+same 532 exact and 9 false positives, the same time; 536 equations identical, 4 the same at the same length with
+a different code of the same value, and one constant (sqrt(9/(4 pi))) gets a shorter correct equation,
+tan((pi x)^2) = 1, that the old window limit had skipped. The pair counts of `--bench` are unchanged. The
+results above were produced with the earlier version.
+
+Two more guards after the first tests of the page:
+
+- **Periodic functions of large arguments.** For 299792458 (c in m/s) the page reported sin(x arctan(ln e)) = 1:
+  true, since sin(pi x / 4) = 1 for every integer x = 2 mod 8, but it identifies nothing. sin, cos and tan on the
+  path of x now take arguments up to 32 (about 10 pi) in magnitude (`--periodic-max`); beyond, the equation fixes x
+  only modulo the period. (The match appeared with musl's libm in WebAssembly, not with icx: sin at the flat
+  maximum rounds to exactly 1.) On v0: |L| <= 5, |R| <= 6 532 exact and 8 false positives (was 9); |L| <= 6,
+  |R| <= 6 557 and 52 (was 556 and 72).
+- **Noise in the closest approximations.** The closest pair of a length is kept only if the rounding errors of
+  its two sides, mapped to x, are below a quarter of its distance from the target: cosh(ln(sin pi)) is rounding
+  noise (sin pi = 1.2e-16 in double), not a value. Exact matches already had the error bound.
+- **True errors of the approximations.** Their error was the one-step Newton estimate |L(T) - R| / (|L'| |T|),
+  right near a root and meaningless far from it (x^2 = 9 at T = 3e8: 0.5, while the root 3 is off by a relative
+  1); Newton now runs to the root (up to 64 steps, rows without convergence are dropped). The product |L'| |T|
+  could also overflow (L = sinh(log_tanh(pi)(log_4 x)) = -1.7e307 at 3e8), which made the error 0 and the
+  compression ratio large; the quotient is now taken step by step. v0 unchanged (532 exact, 8 false positives at
+  |L| <= 5, |R| <= 6).
+
 ## Caveats
 
 - **Grammars differ.** CR and MITM use CALC4 (with Gamma and inverse trigonometric/hyperbolic functions); RIES's

@@ -95,6 +95,31 @@ the site after rebuilding the engine.
 Exports used by `public/wasm/worker.js`: `search_RPN_with_cr` (full CALC4), `search_RPN_custom_cr` (any button
 set, with the CR early-exit threshold), `search_RPN_complex` (complex domain, target `z_re + i z_im`), `evaluate_RPN_complex` (value of a named RPN code).
 
+## Equation search page (`app/mitm`, URL `.../mitm/`)
+
+A second search, reached from the landing page: the meet-in-the-middle engine of
+`../algorithms/methods/mitm` (see `PHASE1_RESULTS.md` there) finds equations L(x) = R that the number satisfies,
+with the same calculator buttons, input and uncertainty rules as the calculator page. The right sides are a table
+that depends only on the enabled buttons and the right-side length |R|; one worker (`public/wasm/mitm_worker.js`)
+builds it at the first search and keeps it until the page closes, so every further number costs only its left
+sides (about a millisecond at |L| <= 4, 20-50 ms at |L| <= 5, 0.5 s at |L| <= 6). The default |L| <= 5, |R| <= 4
+builds its table in milliseconds; |R| <= 5 takes about 0.3 s, |R| <= 6 about 7 s and 0.25 GB (the user's choice).
+The engine always finds an equation; when x occurs once in it (always with "x appears once") the page solves it
+for x. The result card follows the calculator's: Best Match is the formula for x (or the equation, if it cannot be
+solved: with "x any number of times" also implicit equations such as x^x = e are found), Numeric Value its value
+(or the equation's root), Mathematica the bare equation linked to Wolfram|Alpha (which solves it), and the
+Identification line the length (left + right side), accuracy jump, compression ratio and probability. The table
+sorts by length, relative error and CR. Real numbers only.
+
+The engine is built separately from the calculator's (Emscripten as above), from `../algorithms/methods/mitm`:
+
+```
+.\build_mitm_wasm.bat
+```
+
+or the `em++` line in it. It writes `public/wasm/mitm.js` and `public/wasm/mitm.wasm` (build artifacts, not tracked in
+git); the static build includes them in the `?v=<content hash>` cache-busting query as well.
+
 ## Static production build
 - Build the site: `npm run build`
   - The static files are written to `out/`
