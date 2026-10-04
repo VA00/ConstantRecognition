@@ -98,6 +98,13 @@
 #include <sys/resource.h>
 #endif
 
+// MITM_HD: functions shared with the GPU kernels (gpu/mitm_cuda.cu includes this file); empty for other compilers
+#ifdef __CUDACC__
+#define MITM_HD __host__ __device__
+#else
+#define MITM_HD
+#endif
+
 static const int MAXK = 12;
 static bool g_verbose = true;                                    // statistics on stderr (off in the library)
 
@@ -190,7 +197,7 @@ static const char* CALC4_OPS = "PLUS,TIMES,SUBTRACT,DIVIDE,POWER";
 static const char* COMMON_CONSTS = "PI,EULER,GOLDENRATIO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE";
 static const char* COMMON_FUNCS = "LOG,EXP,INV,SQRT,SQR";
 
-static double digamma(double x)
+MITM_HD static double digamma(double x)
 {
     if (x <= 0.0) {
         if (x == std::floor(x)) return NAN;
@@ -202,7 +209,7 @@ static double digamma(double x)
     return r + std::log(x) - 0.5 / x - f * (1.0 / 12 - f * (1.0 / 120 - f * (1.0 / 252 - f * (1.0 / 240 - f / 132))));
 }
 
-static inline double un(int op, double a)
+MITM_HD static inline double un(int op, double a)
 {
     switch (op) {
     case U_LOG: return std::log(a);    case U_EXP: return std::exp(a);     case U_INV: return 1.0 / a;
@@ -216,7 +223,7 @@ static inline double un(int op, double a)
 }
 
 // f'(a), given r = f(a)
-static inline double dun(int op, double a, double r)
+MITM_HD static inline double dun(int op, double a, double r)
 {
     switch (op) {
     case U_LOG: return 1.0 / a;               case U_EXP: return r;                 case U_INV: return -r * r;
@@ -233,7 +240,7 @@ static inline double dun(int op, double a, double r)
 
 // the engine's order: t = top of the stack (pushed last), s = second; "a, b, SUBTRACT" = b - a,
 // "a, b, LOGARITHM" = log_b(a) = ln a / ln b
-static inline double bin(int op, double t, double s)
+MITM_HD static inline double bin(int op, double t, double s)
 {
     switch (op) {
     case B_PLUS: return t + s; case B_TIMES: return t * s; case B_SUBTRACT: return t - s;
@@ -242,7 +249,7 @@ static inline double bin(int op, double t, double s)
     }
 }
 
-static inline double dbin(int op, double t, double s, double r, double dt, double ds)
+MITM_HD static inline double dbin(int op, double t, double s, double r, double dt, double ds)
 {
     switch (op) {
     case B_PLUS: return dt + ds;
@@ -363,7 +370,7 @@ static std::vector<Form> left_forms(const Grammar& g, int KL, bool anyx)
     return out;
 }
 
-static void decode(const Form& f, uint64_t idx, int* dig)
+MITM_HD static void decode(const Form& f, uint64_t idx, int* dig)
 {
     for (int i = f.K - 1; i >= 0; i--) { dig[i] = (int)(idx % f.radix[i]); idx /= f.radix[i]; }
 }
@@ -425,7 +432,7 @@ static void enum_R(const Form& f, const Grammar& g, uint64_t r0, uint64_t r1, Em
 // 1e-14 apart: a pseudo-random number), and so is every completion; the prefix is skipped. pmax > 0: sin, cos, tan
 // of an argument that depends on x and exceeds pmax in magnitude are skipped too: they hold x only modulo their
 // period (sin(pi x / 4) = 1 for every integer x = 2 mod 8, e.g. 299792458).
-static inline bool periodic(int op) { return op == U_SIN || op == U_COS || op == U_TAN; }
+MITM_HD static inline bool periodic(int op) { return op == U_SIN || op == U_COS || op == U_TAN; }
 
 template <class Emit>
 static void enum_L(const Form& f, const Grammar& g, const double* cext, bool xonce, bool want_der, double kminT,
@@ -475,8 +482,9 @@ static void enum_L(const Form& f, const Grammar& g, const double* cext, bool xon
 // Value, derivative d/dx and a first-order running bound of the rounding error of one code at x (only for
 // candidates). Per operation: arithmetic within 0.5 ulp, library functions within 1 ulp (GAMMA 4 ulp, LOGARITHM
 // 2 ulp); constants rounded to double (integers exact); x itself is exact. A contribution with a zero input error
-// is zero.
-static void eval_full(const Form& f, const int* dig, const Grammar& g, double x, double& v, double& dv, double& err)
+// is zero. G: Grammar, or the GPU's copy of the buttons (members cval, uop, bop, nc).
+template <class G>
+MITM_HD static void eval_full(const Form& f, const int* dig, const G& g, double x, double& v, double& dv, double& err)
 {
     const double u = DBL_EPSILON;
     double val[MAXK], der[MAXK], e[MAXK];
@@ -570,13 +578,13 @@ static double cpu_seconds()
 }
 
 // order-preserving map of doubles to unsigned integers (-0 must be normalized to +0 by the caller)
-static inline uint64_t key_of(double v)
+MITM_HD static inline uint64_t key_of(double v)
 {
     uint64_t b;
     memcpy(&b, &v, 8);
     return (b >> 63) ? ~b : (b | 0x8000000000000000ULL);
 }
-static inline double val_of(uint64_t k)
+MITM_HD static inline double val_of(uint64_t k)
 {
     const uint64_t b = (k >> 63) ? (k & 0x7FFFFFFFFFFFFFFFULL) : ~k;
     double v;
