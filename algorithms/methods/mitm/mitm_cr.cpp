@@ -110,13 +110,16 @@ static bool g_verbose = true;                                    // statistics o
 
 // ------------------------------------------------------------------------------------------------ grammar
 
+// SINPI, COSPI, TANPI, ROOT, ATAN2: RIES's symbols S, C, T, v, A (not calculator buttons), with RIES's rules:
+// sin(pi a), cos(pi a), tan(pi a) only for |a| <= 1; "a, b, ROOT" = the b-th root of a (RIES "a b v"), a negative
+// a only for the cube root; "a, b, ATAN2" = atan2(a, b) (RIES "a b A")
 enum { U_LOG, U_EXP, U_INV, U_GAMMA, U_SQRT, U_SQR, U_SIN, U_ASIN, U_COS, U_ACOS, U_TAN, U_ATAN,
-       U_SINH, U_ASINH, U_COSH, U_ACOSH, U_TANH, U_ATANH, U_MINUS, U_COUNT };
+       U_SINH, U_ASINH, U_COSH, U_ACOSH, U_TANH, U_ATANH, U_MINUS, U_SINPI, U_COSPI, U_TANPI, U_COUNT };
 static const char* UNAME[U_COUNT] = {"LOG", "EXP", "INV", "GAMMA", "SQRT", "SQR", "SIN", "ARCSIN", "COS", "ARCCOS",
                                      "TAN", "ARCTAN", "SINH", "ARCSINH", "COSH", "ARCCOSH", "TANH", "ARCTANH",
-                                     "MINUS"};
-enum { B_PLUS, B_TIMES, B_SUBTRACT, B_DIVIDE, B_POWER, B_LOGARITHM, B_COUNT };
-static const char* BNAME[B_COUNT] = {"PLUS", "TIMES", "SUBTRACT", "DIVIDE", "POWER", "LOGARITHM"};
+                                     "MINUS", "SINPI", "COSPI", "TANPI"};
+enum { B_PLUS, B_TIMES, B_SUBTRACT, B_DIVIDE, B_POWER, B_LOGARITHM, B_ROOT, B_ATAN2, B_COUNT };
+static const char* BNAME[B_COUNT] = {"PLUS", "TIMES", "SUBTRACT", "DIVIDE", "POWER", "LOGARITHM", "ROOT", "ATAN2"};
 
 struct Grammar {
     int nc = 0, nu = 0, nb = 0;
@@ -218,6 +221,9 @@ MITM_HD static inline double un(int op, double a)
     case U_ACOS: return std::acos(a);  case U_TAN: return std::tan(a);     case U_ATAN: return std::atan(a);
     case U_SINH: return std::sinh(a);  case U_ASINH: return std::asinh(a); case U_COSH: return std::cosh(a);
     case U_ACOSH: return std::acosh(a); case U_TANH: return std::tanh(a);  case U_ATANH: return std::atanh(a);
+    case U_SINPI: return std::fabs(a) <= 1.0 ? std::sin(M_PI * a) : NAN;  // RIES: arguments |a| <= 1 only
+    case U_COSPI: return std::fabs(a) <= 1.0 ? std::cos(M_PI * a) : NAN;
+    case U_TANPI: return std::fabs(a) <= 1.0 ? std::tan(M_PI * a) : NAN;
     default: return -a;                                                    // U_MINUS
     }
 }
@@ -234,6 +240,9 @@ MITM_HD static inline double dun(int op, double a, double r)
     case U_SINH: return std::cosh(a);         case U_ASINH: return 1.0 / std::sqrt(a * a + 1.0);
     case U_COSH: return std::sinh(a);         case U_ACOSH: return 1.0 / (std::sqrt(a - 1.0) * std::sqrt(a + 1.0));
     case U_TANH: return 1.0 - r * r;          case U_ATANH: return 1.0 / ((1.0 - a) * (1.0 + a));
+    case U_SINPI: return M_PI * std::cos(M_PI * a);
+    case U_COSPI: return -M_PI * std::sin(M_PI * a);
+    case U_TANPI: return M_PI * (1.0 + r * r);
     default: return -1.0;                                                  // U_MINUS
     }
 }
@@ -245,6 +254,11 @@ MITM_HD static inline double bin(int op, double t, double s)
     switch (op) {
     case B_PLUS: return t + s; case B_TIMES: return t * s; case B_SUBTRACT: return t - s;
     case B_DIVIDE: return t / s; case B_POWER: return std::pow(t, s);
+    case B_ROOT:                                                           // the t-th root of s, as RIES's "s t v"
+        if (t == 0.0) return NAN;
+        if (s < 0.0) return t == 3.0 ? -std::pow(-s, 1.0 / 3.0) : NAN;
+        return std::pow(s, 1.0 / t);
+    case B_ATAN2: return std::atan2(s, t);                                 // RIES's "s t A" = atan2(s, t)
     default: return std::log(s) / std::log(t);                             // B_LOGARITHM
     }
 }
@@ -260,6 +274,10 @@ MITM_HD static inline double dbin(int op, double t, double s, double r, double d
         if (ds == 0.0) return dt == 0.0 ? 0.0 : s * std::pow(t, s - 1.0) * dt;
         if (dt == 0.0) return r * std::log(t) * ds;
         return r * (ds * std::log(t) + s * dt / t);
+    case B_ROOT:                                               // r = s^(1/t)
+        return (ds == 0.0 ? 0.0 : r * ds / (s * t)) - (dt == 0.0 ? 0.0 : r * std::log(s) * dt / (t * t));
+    case B_ATAN2:                                              // r = atan2(s, t)
+        return (t * ds - s * dt) / (t * t + s * s);
     default: {                                                 // r = ln s / ln t
         const double lt = std::log(t);
         return ((ds == 0.0 ? 0.0 : ds / s) - (dt == 0.0 ? 0.0 : r * dt / t)) / lt;
@@ -503,6 +521,7 @@ MITM_HD static void eval_full(const Form& f, const int* dig, const G& g, double 
             if (der[i - 1] != 0.0) dr = fa * der[i - 1];
             const double w = op == U_GAMMA ? 4 : op == U_MINUS ? 0 : op == U_INV || op == U_SQR || op == U_SQRT ? 0.5 : 1;
             er = prop(fa, e[i - 1]) + w * u * std::fabs(r);
+            if (op == U_SINPI || op == U_COSPI || op == U_TANPI) er += u * std::fabs(a * fa);   // rounding of pi a
         } else {
             const int op = g.bop[d];
             const double t = val[f.c1[i]], s = val[f.c2[i]], et = e[f.c1[i]], es = e[f.c2[i]];
@@ -515,9 +534,12 @@ MITM_HD static void eval_full(const Form& f, const int* dig, const G& g, double 
             case B_SUBTRACT: pt = 1; ps = -1; break;
             case B_DIVIDE: pt = 1.0 / s; ps = -r / s; break;
             case B_POWER: pt = et == 0.0 ? 0.0 : s * std::pow(t, s - 1.0); ps = es == 0.0 ? 0.0 : r * std::log(t); break;
+            case B_ROOT: pt = et == 0.0 ? 0.0 : -r * std::log(std::fabs(s)) / (t * t); ps = es == 0.0 ? 0.0 : r / (s * t); break;
+            case B_ATAN2: pt = -s / (t * t + s * s); ps = t / (t * t + s * s); break;
             default: pt = et == 0.0 ? 0.0 : -r / (t * std::log(t)); ps = es == 0.0 ? 0.0 : 1.0 / (s * std::log(t)); break;
             }
-            er = prop(pt, et) + prop(ps, es) + (op == B_LOGARITHM ? 2 : op == B_POWER ? 1 : 0.5) * u * std::fabs(r);
+            er = prop(pt, et) + prop(ps, es) +
+                 (op == B_LOGARITHM || op == B_ROOT ? 2 : op == B_POWER || op == B_ATAN2 ? 1 : 0.5) * u * std::fabs(r);
         }
         val[i] = r;
         der[i] = dr;

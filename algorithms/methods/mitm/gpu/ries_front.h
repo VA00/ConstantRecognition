@@ -8,23 +8,25 @@
 //   T       the target value, anywhere among the options (as in RIES)
 //   -lN     search level, as in RIES (default 2; fractional and negative allowed). Level N picks the longest left
 //           side and right side (in symbols) whose number of equations, distinct left values times distinct right
-//           values, is closest to what RIES tests at -lN: log10 = 10.08 + 1.09 (N - 2), from RIES's own counts on
-//           this machine (zeta(3): -l2 1.2e10, -l3 1.5e11, -l4 1.8e12, -l5 2.1e13, -l6 2.7e14). Our lengths grow by
-//           about 20 times per step, RIES's levels by 12, so two levels can give the same search (with the
-//           calculator buttons: -l2 5/4, -l3 5/5, -l4 6/5, -l5 and -l6 6/6, -l7 7/6, -l8 7/7 symbols).
-//   -Ssss   only these symbols, -Nsss  not these symbols, in RIES's letters: 1-9, p (pi), e, f (phi), n (negative),
-//           r (1/x), s (x^2), q (sqrt), l (ln), E (e^x), + - * / ^, L (log_A(B)). RIES's S, C, T (sin, cos, tan of
-//           pi x), A (atan2), v (root) and W do not exist here. Without -S: the 36 calculator buttons (13 constants:
-//           pi, e, -1, phi, 1-9; 18 functions: ln, e^x, 1/x, Gamma, sqrt, x^2, sin, cos, tan, sinh, cosh, tanh and
-//           their inverses; + - * / ^).
+//           values, is closest to what RIES tests at -lN, from RIES's own counts on this machine (zeta(3): -l2
+//           1.2e10, -l3 1.5e11, -l4 1.8e12, -l5 2.1e13, -l6 2.7e14, -l7 9.6e14). With RIES's symbols: -l2 5/5,
+//           -l3 6/5, -l4 6/6, -l5 7/6, -l6 and -l7 7/7, -l8 8/7 symbols (left/right).
+//   -Ssss   only these symbols, -Nsss  not these symbols, in RIES's letters. Default: RIES's default symbol set,
+//           1-9, p (pi), e, f (phi); n (negative), r (1/x), s (x^2), q (sqrt), l (ln), E (e^x), S C T (sinpi,
+//           cospi, tanpi: sin(pi x) etc., arguments |x| <= 1 as in RIES); + - * / ^, v (A"/B = A-th root of B),
+//           L (log_A(B)), A (atan2). RIES's W (Lambert W) does not exist here.
 // Options of this program (not RIES's):
+//   --calc        the calculator's buttons instead of RIES's symbols: pi, e, -1, phi, 1-9; ln, e^x, 1/x, Gamma,
+//                 sqrt, x^2, sin, cos, tan, sinh, cosh, tanh and their inverses; + - * / ^ (-S/-N then pick from
+//                 the letters above where the symbol is a calculator button)
 //   --once        x appears exactly once (explicit formulas); default: any number of times, as in RIES
 //   --kl K --kr K the longest left and right side directly (instead of -l)
 //   --tol E       "exact" means the root within E * 2.2e-16 relative (default 16); --tolrel R: within R relative
 //   --threads N   (ries_cpu) threads for the right-side table, default all; --vram GB (ries_gpu) device memory cap
 //   --consts, --funcs, --ops LIST   the buttons by name, as mitm_cr (e.g. --funcs LOG,EXP,SQRT)
 // Output: as RIES, the equations that come ever closer to T, by increasing size {total number of symbols}, up to the
-// first one that holds within the tolerance ('exact' match). Sizes count symbols: x = 1, 2 x = 3 (x, 2, *).
+// first one that holds within the tolerance ('exact' match), in RIES's notation. Sizes count symbols: x = 1, 2 x = 3
+// (x, 2, *); RIES's {complexity} weighs its symbols instead.
 
 #ifndef RIES_FRONT_H
 #define RIES_FRONT_H
@@ -43,16 +45,23 @@ struct RiesArgs {
     bool once = false;
     std::string S, N;                                          // RIES's -S, -N
     std::string consts, funcs, ops;                            // by name (override)
-    bool common = false;
+    bool calc = false, common = false;
     double tol_eps = 16, tolrel = 0, vram = 0;
     int threads = 0;
 };
 
+// RIES's default symbol set as buttons
+static const char* RIES_CONSTS = "ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,PI,EULER,GOLDENRATIO";
+static const char* RIES_FUNCS = "MINUS,INV,SQR,SQRT,LOG,EXP,SINPI,COSPI,TANPI";
+static const char* RIES_OPS = "PLUS,SUBTRACT,TIMES,DIVIDE,POWER,ROOT,LOGARITHM,ATAN2";
+
 static const char* RIES_HELP =
-    "usage: %s T [-lN] [-Ssss] [-Nsss] [--once] [--kl K --kr K] [--tol E] [--threads N | --vram GB]\n"
+    "usage: %s T [-lN] [-Ssss] [-Nsss] [--once] [--calc] [--kl K --kr K] [--tol E] [--threads N | --vram GB]\n"
     "  T     target value;  -lN  search level as in RIES (default 2, about 11 times more equations per level)\n"
-    "  -S/-N only / not these symbols, RIES's letters: 1-9 p e f n r s q l E + - * / ^ L\n"
+    "  -S/-N only / not these symbols, RIES's letters: 1-9 p e f n r s q l E S C T + - * / ^ v L A\n"
+    "        (default: all of them, RIES's default set)\n"
     "  --once  x exactly once (default: any number of times, as RIES); --kl/--kr: left/right side lengths\n"
+    "  --calc  the calculator's buttons (Gamma, sin, cos, sinh, ... and inverses) instead of RIES's symbols\n"
     "  see the header of ries_front.h for the rest\n";
 
 // returns "" or an error message
@@ -80,6 +89,7 @@ static std::string ries_parse(int argc, char** argv, RiesArgs& A)
             else if (a == "--funcs") A.funcs = next();
             else if (a == "--ops") A.ops = next();
             else if (a == "--common") A.common = true;
+            else if (a == "--calc") A.calc = true;
             else return "unknown option " + a;
             continue;
         }
@@ -121,12 +131,17 @@ static const char* ries_letter(char ch, int& kind)               // kind 0 const
     case 'q': kind = 1; return "SQRT";
     case 'l': kind = 1; return "LOG";
     case 'E': kind = 1; return "EXP";
+    case 'S': kind = 1; return "SINPI";
+    case 'C': kind = 1; return "COSPI";
+    case 'T': kind = 1; return "TANPI";
     case '+': kind = 2; return "PLUS";
     case '-': kind = 2; return "SUBTRACT";
     case '*': kind = 2; return "TIMES";
     case '/': kind = 2; return "DIVIDE";
     case '^': kind = 2; return "POWER";
     case 'L': kind = 2; return "LOGARITHM";
+    case 'v': kind = 2; return "ROOT";
+    case 'A': kind = 2; return "ATAN2";
     default: return "";
     }
 }
@@ -151,14 +166,15 @@ static std::string ries_join(const std::vector<std::string>& v)
     return s;
 }
 
-// the button lists from -S / -N (or the names given directly); returns "" or an error message
+// the button lists: RIES's default set (or the calculator's with --calc, or the common subset with --common), then
+// -S / -N, then the names given directly; returns "" or an error message
 static std::string ries_buttons(const RiesArgs& A, const char* calc_consts, const char* calc_funcs, const char* calc_ops,
                                 const char* common_consts, const char* common_funcs, std::string& consts,
                                 std::string& funcs, std::string& ops)
 {
-    consts = A.common ? common_consts : calc_consts;
-    funcs = A.common ? common_funcs : calc_funcs;
-    ops = calc_ops;
+    consts = A.common ? common_consts : A.calc ? calc_consts : RIES_CONSTS;
+    funcs = A.common ? common_funcs : A.calc ? calc_funcs : RIES_FUNCS;
+    ops = A.common || A.calc ? calc_ops : RIES_OPS;
     if (!A.S.empty()) {
         std::vector<std::string> v[3];
         for (char ch : A.S) {
@@ -186,9 +202,20 @@ static std::string ries_buttons(const RiesArgs& A, const char* calc_consts, cons
     return "";
 }
 
+// log10 of the number of equations RIES tests at level N ("Total equations tested"): -l0 from its manual, -l1 at
+// pi, -l2 to -l7 measured at zeta(3) on the Windows machine; linear in between, 1.09 per level beyond
+static double ries_equations_log10(double level)
+{
+    static const double t[8] = {7.95, 8.96, 10.08, 11.18, 12.26, 13.32, 14.43, 14.98};
+    if (level <= 0) return t[0] + 1.05 * level;
+    if (level >= 7) return t[7] + 1.09 * (level - 7);
+    const int i = (int)level;
+    return t[i] + (t[i + 1] - t[i]) * (level - i);
+}
+
 // The level: (kl, kr) with |kl - kr| <= 1 whose estimated number of equations (distinct left values times distinct
-// right values) is closest to RIES's at that level, log10 = 10.08 + 1.09 (N - 2). Distinct values are estimated from the
-// numbers of codes with the fractions measured on the calculator buttons (benchmark constant zeta(3)).
+// right values) is closest to RIES's at that level (ries_equations_log10). Distinct values are estimated from the
+// numbers of codes with the fractions measured at zeta(3) (for RIES's symbols; for the calculator buttons with calc).
 struct LevelChoice {
     int kl = 0, kr = 0;
     double est = 0, target = 0;
@@ -196,13 +223,18 @@ struct LevelChoice {
 };
 
 template <class CountL, class CountR>
-static LevelChoice ries_level(double level, CountL codesL, CountR codesR, double max_codesL, double max_codesR)
+static LevelChoice ries_level(double level, CountL codesL, CountR codesR, double max_codesL, double max_codesR, bool calc)
 {
-    static const double fL[10] = {1, 1, 0.84, 0.71, 0.55, 0.41, 0.30, 0.25, 0.21, 0.18};
-    static const double fR[10] = {1, 1, 0.76, 0.54, 0.43, 0.33, 0.25, 0.19, 0.15, 0.12};
+    // distinct values / codes per length, measured at zeta(3): RIES's symbol set, or the calculator buttons (calc)
+    static const double rL[10] = {1, 1, 0.70, 0.68, 0.40, 0.29, 0.18, 0.12, 0.08, 0.05};
+    static const double rR[10] = {1, 1, 0.64, 0.42, 0.27, 0.18, 0.12, 0.077, 0.05, 0.033};
+    static const double cL[10] = {1, 1, 0.84, 0.71, 0.55, 0.41, 0.30, 0.25, 0.21, 0.18};
+    static const double cR[10] = {1, 1, 0.76, 0.54, 0.43, 0.33, 0.25, 0.19, 0.15, 0.12};
+    const double* fL = calc ? cL : rL;
+    const double* fR = calc ? cR : rR;
     struct Cand { int kl, kr; double est, cr, d; };
     std::vector<Cand> cs;
-    const double target = 10.08 + 1.09 * (level - 2);
+    const double target = ries_equations_log10(level);
     for (int kl = 1; kl <= 8; kl++)
         for (int kr = std::max(1, kl - 1); kr <= std::min(9, kl + 1); kr++) {
             const double cl = codesL(kl), cr = codesR(kr);
@@ -249,7 +281,7 @@ static std::string ries_const_name(const std::string& n)
 static std::string ries_infix(const Form& f, const int* dig, const Grammar& g)
 {
     static const char* fn[U_COUNT] = {"ln", "", "", "Gamma", "sqrt", "", "sin", "asin", "cos", "acos", "tan", "atan",
-                                      "sinh", "asinh", "cosh", "acosh", "tanh", "atanh", ""};
+                                      "sinh", "asinh", "cosh", "acosh", "tanh", "atanh", "", "sinpi", "cospi", "tanpi"};
     std::vector<InfixPart> E(f.K);
     for (int i = 0; i < f.K; i++) {
         const int d = dig[i];
@@ -273,13 +305,20 @@ static std::string ries_infix(const Form& f, const int* dig, const Grammar& g)
             const InfixPart& t = E[f.c1[i]];
             const InfixPart& s = E[f.c2[i]];
             auto right = [&](int need) { return s.prec == 3 || s.prec < need ? "(" + s.s + ")" : s.s; };
+            // RIES's notation: a b (product), A"/B (A-th root of B), atan2(a,b), log_A(B)
             switch (g.bop[d]) {
-            case B_PLUS: E[i] = {t.s + "+" + right(1), 1}; break;
+            case B_PLUS: E[i] = {s.s + "+" + (t.prec == 3 ? "(" + t.s + ")" : t.s), 1}; break;   // s + t
             case B_SUBTRACT: E[i] = {t.s + "-" + right(2), 1}; break;
-            case B_TIMES: E[i] = {ries_wrap(t, 2) + "*" + right(2), 2}; break;
+            case B_TIMES: E[i] = {ries_wrap(t, 2) + " " + right(2), 2}; break;
             case B_DIVIDE: E[i] = {ries_wrap(t, 2) + "/" + right(4), 2}; break;
             case B_POWER: E[i] = {ries_wrap(t, 5) + "^" + right(5), 4}; break;
-            default: E[i] = {"log_" + ries_wrap(t, 5) + "(" + s.s + ")", 5}; break;   // log_t(s)
+            case B_ROOT: E[i] = {ries_wrap(t, 5) + "\"/" + ries_wrap(s, 5), 4}; break;  // the t-th root of s
+            case B_ATAN2: E[i] = {"atan2(" + s.s + "," + t.s + ")", 5}; break;
+            default: {                                         // log_t(s); the base in parentheses unless a name or number
+                const bool plain = t.s.find_first_of("()+-*/^ \"") == std::string::npos;
+                E[i] = {"log_" + (plain ? t.s : "(" + t.s + ")") + "(" + s.s + ")", 5};
+                break;
+            }
             }
         }
     }
@@ -337,13 +376,17 @@ static void ries_print(const Ctx& c, const RiesArgs& A, const TargetResult& res,
     if (lc.capped)
         printf("\n  NOTE: -l%g is beyond the largest search that fits (left %d, right %d symbols); that one was run.\n",
                A.level, c.o.kl, c.o.kr);
-    printf("\n  {n} = number of symbols (2*x: x, 2, * = 3); x may appear %s\n",
+    printf("\n  {n} = number of symbols (2 x: three); x may appear %s\n",
            c.o.anyx ? "any number of times" : "only once");
-    std::string legend;
-    if (shown.find("phi") != std::string::npos) legend += "  phi = golden ratio (1+sqrt(5))/2";
-    if (shown.find("Gamma") != std::string::npos) legend += "  Gamma = gamma function";
-    if (shown.find("log_") != std::string::npos) legend += "  log_A(B) = ln(B)/ln(A)";
-    if (!legend.empty()) printf("%s\n", legend.c_str());
+    std::vector<std::string> legend;
+    if (shown.find("phi") != std::string::npos) legend.push_back("phi = the golden ratio, (1+sqrt(5))/2");
+    if (shown.find("Gamma") != std::string::npos) legend.push_back("Gamma(x) = the gamma function");
+    if (shown.find("log_") != std::string::npos) legend.push_back("log_A(B) = logarithm to base A of B");
+    if (shown.find("pi(") != std::string::npos) legend.push_back("sinpi(X) = sin(pi X), also cospi, tanpi");
+    if (shown.find("\"/") != std::string::npos) legend.push_back("A\"/B = Ath root of B");
+    if (shown.find("atan2") != std::string::npos) legend.push_back("atan2(s,c) = angle of the point (c,s)");
+    for (size_t i = 0; i < legend.size(); i += 2)              // two per line, as RIES
+        printf("  %-44s%s\n", legend[i].c_str(), i + 1 < legend.size() ? legend[i + 1].c_str() : "");
     const double eq = (double)nL * (double)nR;
     printf("\n                     --left--   --right--\n");
     printf("     max length:   %9d   %9d\n", c.o.kl, c.o.kr);

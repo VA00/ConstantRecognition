@@ -9,37 +9,39 @@ precision, and the df64 library with its tests, which the Metal backend will nee
 
 ### Two programs to use like RIES
 
-`gpu\ries_cpu.exe` and `gpu\ries_gpu.exe` (build: `build_mitm_gpu.bat ries`). Type the number and the level:
+`gpu/ries_cpu.exe` and `gpu/ries_gpu.exe` (build: `build_mitm_gpu.bat ries`, or `make ries_cpu` / `make ries`). Type
+the number and the level, as with RIES:
 
 ```
 ries_gpu 1.2020569031595942 -l6
-ries_cpu 2.5063141592653589 -l4 -S123456789pefrqslE+-*/^
+ries_cpu 2.5063141592653589 -l4 -NSCT
 ```
 
-They print, as RIES does, the equations that come ever closer to the number, from short to long, and stop at the
-first one that holds to double precision ('exact' match). Differences from RIES:
+They use RIES's default symbols (1-9, pi, e, phi; negative, 1/x, x^2, sqrt, ln, e^x, sinpi, cospi, tanpi; + - * / ^,
+root, log_A(B), atan2, with RIES's rules for sinpi and the root) and print, as RIES does and in its notation, the
+equations that come ever closer to the number, from short to long, up to the first one that holds to double
+precision ('exact' match). Differences from RIES:
 
-- The buttons are the calculator's (pi, e, phi, -1, 1-9; ln, e^x, 1/x, Gamma, sqrt, x^2, sin, cos, tan, sinh,
-  cosh, tanh and their inverses; + - * / ^). `-S` and `-N` take RIES's letters where the symbol is the same; RIES's
-  S, C, T (sine etc. of pi x), A, v, W do not exist here.
-- The size in braces is the number of symbols (2*x = 3), not RIES's weighted complexity.
-- `-lN` picks the left and right side lengths whose number of equations is closest to what RIES tests at -lN.
-  Lengths grow in bigger steps than RIES's levels, so -l5 and -l6 run the same search.
-- Supported RIES options: the number, `-l`, `-S`, `-N`. Others give an error. Own options: `--once` (x only once),
-  `--kl/--kr` (lengths directly), `--threads`, `--vram`; see the header of `gpu/ries_front.h`.
-- `ries_cpu` builds the right-side table on all cores; the search for the number then runs on one core.
+- The size in braces is the number of symbols (2 x = 3), not RIES's weighted complexity, so the lists are ordered
+  a little differently.
+- `-lN` picks the left and right side lengths whose number of equations is closest to what RIES tests at -lN
+  (RIES's own counts on this machine). -l6 and -l7 run the same search, 7/7 symbols.
+- Supported RIES options: the number, `-l`, `-S`, `-N` (RIES's letters; W does not exist here). Others give an error.
+  Own options: `--calc` (the calculator's buttons instead), `--once` (x only once), `--kl/--kr`, `--threads`,
+  `--vram`; see the header of `gpu/ries_front.h`.
+- `ries_cpu` builds the right-side table on all cores; the search for the number itself runs on one core.
 
-Time for one number (zeta(3) = 1.2020569031595942, which has no known closed form, so every level runs to the end):
+Time for one number with the same symbols (zeta(3) = 1.2020569031595942, which has no known closed form, so every
+level runs to the end; RIES built with MSVC /O2, one core):
 
-| level | RIES | ries_cpu | ries_gpu | left / right symbols | equations: ours / RIES's |
-|---|---|---|---|---|---|
-| -l2 | 0.18 s | 0.11 s | 0.17 s | 5 / 4 | 8.9e9 / 1.2e10 |
-| -l3 | 0.91 s | 0.16 s | 0.15 s | 5 / 5 | 1.8e11 / 1.5e11 |
-| -l4 | 5.2 s | 0.96 s | 0.16 s | 6 / 5 | 4.0e12 / 1.8e12 |
-| -l5 | 28 s | 1.8 s | 0.22 s | 6 / 6 | 8.1e13 / 2.1e13 |
-| -l6 | 150 s | 1.8 s | 0.22 s | 6 / 6 | 8.1e13 / 2.7e14 |
-| -l7 | 374 s | 30 s | 0.77 s | 7 / 6 | 2.2e15 / 9.6e14 |
-| -l8 | - | 58 s | 2.9 s | 7 / 7 | 4.9e16 / - |
+| level | RIES | ries_cpu, 1 thread | ries_cpu, 24 threads | ries_gpu (RTX 5080) | left/right symbols | equations: ours / RIES's |
+|---|---|---|---|---|---|---|
+| -l2 | 0.18 s | 0.12 s | 0.10 s | 0.19 s | 5/5 | 8.1e9 / 1.2e10 |
+| -l3 | 0.91 s | 0.27 s | 0.26 s | 0.15 s | 6/5 | 1.3e11 / 1.5e11 |
+| -l4 | 5.2 s | 0.90 s | 0.40 s | 0.16 s | 6/6 | 1.8e12 / 1.8e12 |
+| -l5 | 28 s | 5.9 s | 5.5 s | 0.39 s | 7/6 | 3.2e13 / 2.1e13 |
+| -l6 | 150 s | 23 s | 8.8 s | 0.60 s | 7/7 | 4.9e14 / 2.7e14 |
+| -l7 | 374 s | 23 s | 8.8 s | 0.61 s | 7/7 | 4.9e14 / 9.6e14 |
 
 Beyond about 1e14 equations (-l6 and up) double precision cannot tell a true identity from a chance match: an
 'exact' match there has to be checked with more digits. RIES has the same limit.

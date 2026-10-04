@@ -41,7 +41,7 @@ int main(int argc, char** argv)
         const auto fs = right_forms(c.g, k);
         cr[k] = fs.empty() ? 0.0 : (double)(fs.back().offset + fs.back().count);
     }
-    const LevelChoice lc = ries_level(A.level, [&](int k) { return cl[k]; }, [&](int k) { return cr[k]; }, 2e10, 4.29e9);
+    const LevelChoice lc = ries_level(A.level, [&](int k) { return cl[k]; }, [&](int k) { return cr[k]; }, 2e10, 4.29e9, A.calc || A.common);
     o.kl = A.kl > 0 ? A.kl : lc.kl;
     o.kr = A.kr > 0 ? A.kr : lc.kr;
     if (o.kl < 1 || o.kr < 1 || o.kl > MAXK || o.kr > MAXK) { fprintf(stderr, "no search fits these buttons\n"); return 2; }
