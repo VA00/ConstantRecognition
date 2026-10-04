@@ -276,8 +276,10 @@ MITM_HD static inline double dbin(int op, double t, double s, double r, double d
         return r * (ds * std::log(t) + s * dt / t);
     case B_ROOT:                                               // r = s^(1/t)
         return (ds == 0.0 ? 0.0 : r * ds / (s * t)) - (dt == 0.0 ? 0.0 : r * std::log(s) * dt / (t * t));
-    case B_ATAN2:                                              // r = atan2(s, t)
-        return (t * ds - s * dt) / (t * t + s * s);
+    case B_ATAN2: {                                            // r = atan2(s, t); scaled: t^2 + s^2 can overflow
+        const double at = std::fabs(t), as = std::fabs(s), m = at > as ? at : as, tm = t / m, sm = s / m;
+        return (tm * ds - sm * dt) / (m * (tm * tm + sm * sm));
+    }
     default: {                                                 // r = ln s / ln t
         const double lt = std::log(t);
         return ((ds == 0.0 ? 0.0 : ds / s) - (dt == 0.0 ? 0.0 : r * dt / t)) / lt;
@@ -479,7 +481,10 @@ static void enum_L(const Form& f, const Grammar& g, const double* cext, bool xon
                 r = bin(bop[d], t, s);
                 if (want_der && f.dual[i]) dr = dbin(bop[d], t, s, r, der[f.c1[i]], der[f.c2[i]]);
             }
-            if (!usable(r) || !usable(dr) || (xonce && want_der && f.dual[i] && dr == 0.0)) break;
+            // a node depending on x with derivative 0 (x - x, or a derivative lost to overflow, as in
+            // atan2(x, e^(e^6))) is rejected, as RIES does (ERR_EXEC_ZERO_DERIV); with x once only the path of x
+            const bool dep = f.ar[i] == 1 ? der[i - 1] != 0.0 : f.ar[i] == 2 && (der[f.c1[i]] != 0.0 || der[f.c2[i]] != 0.0);
+            if (!usable(r) || !usable(dr) || (want_der && dr == 0.0 && dep)) break;
             if (f.ar[i] != 0 && dr != 0.0 && std::fabs(r) < kminT * std::fabs(dr)) break;
             val[i] = r;
             der[i] = dr;
@@ -535,7 +540,12 @@ MITM_HD static void eval_full(const Form& f, const int* dig, const G& g, double 
             case B_DIVIDE: pt = 1.0 / s; ps = -r / s; break;
             case B_POWER: pt = et == 0.0 ? 0.0 : s * std::pow(t, s - 1.0); ps = es == 0.0 ? 0.0 : r * std::log(t); break;
             case B_ROOT: pt = et == 0.0 ? 0.0 : -r * std::log(std::fabs(s)) / (t * t); ps = es == 0.0 ? 0.0 : r / (s * t); break;
-            case B_ATAN2: pt = -s / (t * t + s * s); ps = t / (t * t + s * s); break;
+            case B_ATAN2: {
+                const double at = std::fabs(t), as = std::fabs(s), m = at > as ? at : as, tm = t / m, sm = s / m;
+                pt = -sm / (m * (tm * tm + sm * sm));
+                ps = tm / (m * (tm * tm + sm * sm));
+                break;
+            }
             default: pt = et == 0.0 ? 0.0 : -r / (t * std::log(t)); ps = es == 0.0 ? 0.0 : 1.0 / (s * std::log(t)); break;
             }
             er = prop(pt, et) + prop(ps, es) +

@@ -246,7 +246,9 @@ struct OdoL {
                 r = bin(g.bop[d], t, s);
                 if (want_der && f.dual[i]) dr = dbin(g.bop[d], t, s, r, der[f.c1[i]], der[f.c2[i]]);
             }
-            if (!d_usable(r, g.subok) || !d_usable(dr, g.subok) || (xonce && want_der && f.dual[i] && dr == 0.0) ||
+            // depending on x with derivative 0: rejected (enum_L, RIES's ERR_EXEC_ZERO_DERIV)
+            const bool dep = f.ar[i] == 1 ? der[i - 1] != 0.0 : f.ar[i] == 2 && (der[f.c1[i]] != 0.0 || der[f.c2[i]] != 0.0);
+            if (!d_usable(r, g.subok) || !d_usable(dr, g.subok) || (want_der && dr == 0.0 && dep) ||
                 (f.ar[i] != 0 && dr != 0.0 && fabs(r) < kminT * fabs(dr))) { bad = i; return false; }
             val[i] = r;
             der[i] = dr;
