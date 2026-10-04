@@ -25,7 +25,8 @@ of A, sinpi/cospi/tanpi = sin, cos, tan of pi*x, A B atan2 as checked against RI
 Build (Windows): cl /O2 ries-for-windows.c (with an empty stdafx.h), or elsewhere
 gcc ries.c -lm -o ries.
 Usage:
-  python run_ries_v0.py --ries <path to ries> [--level 2] [--jobs 12]
+  python run_ries_v0.py --ries <path to ries> [--level 2] [--jobs 12] [--symbols 123456789pefrqslE+-*/^ --tag common_l4]
+  (--symbols: RIES's -S, only these symbols; --tag: name of the result files instead of l<level>)
 Writes results/v0_ries_l<level>.tsv (and the raw RIES output, results/v0_ries_l<level>_raw.tsv) and prints a summary.
 """
 import argparse
@@ -108,8 +109,9 @@ def solve(eq, x0):
     return None
 
 
-def run(ries, target, level):
-    p = subprocess.run([ries, '-F3', '-x', f'-l{level}', repr(target)], capture_output=True, text=True)
+def run(ries, target, level, symbols=''):
+    p = subprocess.run([ries, '-F3', '-x', f'-l{level}'] + ([f'-S{symbols}'] if symbols else []) + [repr(target)],
+                       capture_output=True, text=True)
     return p.stdout
 
 
@@ -125,6 +127,8 @@ def main():
     ap.add_argument('--level', default='2')
     ap.add_argument('--jobs', type=int, default=12)
     ap.add_argument('--limit', type=int, default=0)
+    ap.add_argument('--symbols', default='', help="RIES -S symbol set, e.g. 123456789pefrqslE+-*/^")
+    ap.add_argument('--tag', default='', help='result files v0_ries_<tag>.tsv (default l<level>)')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
     rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
@@ -134,7 +138,8 @@ def main():
     # RIES's output per constant is kept (json-encoded) in a raw file, so that scoring can be redone
     # and an interrupted run resumes
     os.makedirs(RESULTS, exist_ok=True)
-    raw_path = f'{RESULTS}/v0_ries_l{a.level}_raw.tsv'
+    tag = a.tag or f'l{a.level}'
+    raw_path = f'{RESULTS}/v0_ries_{tag}_raw.tsv'
     raw = {}
     if os.path.exists(raw_path):
         for line in open(raw_path, encoding='utf-8'):
@@ -144,7 +149,7 @@ def main():
 
     def job(r):
         if r['id'] not in raw:
-            out = run(a.ries, float(r['value']), a.level)
+            out = run(a.ries, float(r['value']), a.level, a.symbols)
             with lock:
                 raw[r['id']] = out
                 with open(raw_path, 'a', encoding='utf-8') as f:
@@ -176,7 +181,7 @@ def main():
         results.append({**r, 'verdict': verdict, 'equation': eq['text'] if eq else '', 'complexity': eq['complexity'] if eq else '',
                         'agree': d, 'solved': root is not None, 'n_equations': len(eqs)})
     os.makedirs(RESULTS, exist_ok=True)
-    path = f'{RESULTS}/v0_ries_l{a.level}.tsv'
+    path = f'{RESULTS}/v0_ries_{tag}.tsv'
     cols = ['id', 'name', 'class', 'digits', 'verdict', 'equation', 'complexity', 'agree', 'solved', 'formula']
     with open(path, 'w', encoding='utf-8', newline='') as f:
         f.write('\t'.join(cols) + '\n')
@@ -184,7 +189,7 @@ def main():
             f.write('\t'.join(f'{x[c]:.1f}' if c == 'agree' else str(x[c]) for c in cols) + '\n')
     n = len(results)
     tally = collections.Counter(x['verdict'] for x in results)
-    print(f'{n} constants with >= 17 digits, RIES -l{a.level}, {elapsed:.0f} s on {a.jobs} jobs; written {path}\n')
+    print(f'{n} constants with >= 17 digits, RIES -l{a.level}{" -S" + a.symbols if a.symbols else ""}, {elapsed:.0f} s on {a.jobs} jobs; written {path}\n')
     for v in ('exact', 'false positive', 'false negative', 'not found'):
         print(f'  {v:15s} {tally[v]:5d}')
     print(f'  (equations not solved numerically: {sum(1 for x in results if x["equation"] and not x["solved"])}, '

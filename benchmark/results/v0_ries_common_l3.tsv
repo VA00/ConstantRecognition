@@ -1,0 +1,1349 @@
+id	name	class	digits	verdict	equation	complexity	agree	solved	formula
+1	conic constant	elementary	64	exact	x dup* sqrt = e dup*	58	64.0	True	-E^2
+2	log π/648000	elementary	64	not found	x x dup* pi exp - + = phi sqrt 1 7 - /	140	10.0	True	Log10[Pi/648000]
+3	log π/10800	elementary	64	not found	x dup* 7 - sqrt pi ** = 1 2 ln recip + 3 **	144	10.1	True	Log10[Pi/10800]
+4	log e^(-2π)	elementary	64	exact	x recip 2 * pi * = 9 1 + recip ln	110	64.0	True	Log10[E^(-2*Pi)]
+5	(1 + 1/e)/(1/e - 1) = -coth(1/2)	elementary	64	exact	x 1 + 2 / = 1 e - recip	85	63.9	True	(1 + 1/E)/(1/E - 1)
+6	Madelung 6D square lattice constant	special	64	not found	x e recip + e + sqrt = 1 pi phi recip ** - dup*	140	10.8	True	(3*(4*DirichletBeta[5/2]*(-1 + Sqrt[2])*Zeta[1/2] - DirichletBeta[1/2]*(-1 + 4*Sqrt[2])*Zeta[5/2]))/Pi^2
+7	Madelung 4D square lattice constant	special	64	not found	x recip e 5 / + recip = 2 7 dup* * pi **	135	10.7	True	-8*(5 - 3*Sqrt[2])*Zeta[-1/2]*Zeta[1/2]
+8	log π/180	elementary	64	not found	x 2 ln - dup* 3 - = pi pi exp recip exp /	141	11.2	True	Log10[Pi/180]
+9	Madelung 2D square lattice constant	special	64	not found	x e recip + dup* phi - = 2 ln 1 - 5 /	137	10.1	True	4*DirichletBeta[1/2]*(-1 + Sqrt[2])*Zeta[1/2]
+10	Bateman-Grosswald constant	special	64	not found	x 2 recip ln * phi ** = 2 4 pi dup* + recip **	145	10.4	True	Zeta[2/3]/Zeta[2]
+11	log e^(-π)	elementary	64	exact	x recip pi * dup* sqrt = 9 1 + ln	104	64.0	True	Log10[E^(-Pi)]
+12	log 1/4π	elementary	64	exact	x 9 1 + ln * = pi 4 * recip ln	119	63.8	True	Log10[1/(4*Pi)]
+13	generalized Stirling constant	special	64	not found	x 3 + exp 2 recip + = 2 4 dup* recip + exp	133	10.5	True	EulerGamma^2/4 - Pi^2/48 + StieltjesGamma[1]/2 - Log[2*Pi]^2/4
+14	Neg	rational	64	exact	x dup* = 1	34	64.0	True	-1
+15	log 1/π^2	elementary	64	exact	x recip pi dup* ln * = 9 1 + recip ln	115	64.0	True	Log10[1/Pi^2]
+16	log 1/3π	elementary	64	exact	x 9 1 + ln * = pi 3 * recip ln	118	64.0	True	Log10[1/(3*Pi)]
+17	zeta'(2)	special	64	not found	x 5 recip + phi + dup* = 2 3 6 sqrt / -	139	10.4	True	Derivative[1][Zeta][2]
+18	log 1/e^2	elementary	64	exact	x dup* sqrt recip exp = 9 1 + sqrt	95	64.0	True	Log10[1/E^2]
+19	log 1/2π	elementary	64	exact	x 9 1 + ln * = pi 2 * recip ln	116	64.0	True	Log10[1/(2*Pi)]
+20	infinite tetration of reciprocal root 2	special	64	exact	x dup* x recip ** = 2	65	64.0	True	(-2*ProductLog[Log[2]/2])/Log[2]
+21	log e^(-π/2)	elementary	64	exact	x 2 * recip pi * = 9 1 + recip ln	110	64.0	True	Log10[E^(-Pi/2)]
+22	Granville-Soundararajan constant	special	64	not found	x 2 pi ln sqrt / + = 3 e 3 / exp /	142	10.0	True	1 + Pi^2/3 + 4*PolyLog[2, -Sqrt[E]]
+23	ln(gamma)	special	64	not found	x x 3 sqrt ln + * = phi 4 exp * dup* recip	142	10.3	True	Log[EulerGamma]
+24	log 1/π	elementary	64	exact	x recip pi recip ln * = 9 1 + ln	106	64.0	True	Log10[1/Pi]
+25	log 1/e	elementary	64	exact	x recip 2 ln + = 5 recip ln	89	64.0	True	Log10[1/E]
+26	log Sqrt[1/2π]	elementary	64	exact	x 9 1 + ln * = pi 2 * sqrt recip ln	125	64.0	True	Log10[Sqrt[1/(2*Pi)]]
+27	ln ln two	elementary	64	exact	x dup* sqrt exp = 2 ln recip	79	64.0	True	Log[Log[2]]
+28	log M = log e	elementary	64	exact	x 9 1 + recip ln * = 9 1 + ln ln	131	63.9	True	Log10[Log10[E]]
+29	log π/6	elementary	64	exact	x 9 1 + ln * = pi 6 / ln	115	64.0	True	Log10[Pi/6]
+31	Airy function constant	special	64	not found	x recip 6 + dup* 4 - = e sqrt 8 recip + recip	136	9.4	True	-(1/(3^(1/3)*Gamma[1/3]))
+32	log Sqrt[1/π]	elementary	64	exact	x recip pi sqrt ln * = 9 1 + recip ln	115	63.8	True	Log10[Sqrt[1/Pi]]
+33	log γ	special	64	not found	x dup* x recip - pi - = phi 8 recip - sqrt sqrt	137	10.2	True	Log10[EulerGamma]
+34	log Sqrt[1/e]	elementary	64	exact	x dup* sqrt recip exp = 9 1 + dup*	95	64.0	True	Log10[Sqrt[1/E]]
+35	log Cbrt[3/4π]	elementary	64	not found	x 5 * 2 sqrt + ln = pi 6 dup* + recip 1 -	142	9.7	True	Log10[CubeRoot[3/(4*Pi)]]
+36	log 2/π	elementary	64	exact	x 2 pi / ln / = 9 1 + ln recip	118	64.0	True	Log10[2/Pi]
+37	log Cbrt[1/π]	elementary	64	exact	x 9 1 + ln * = pi recip ln 3 /	119	64.0	True	Log10[CubeRoot[1/Pi]]
+38	log Cbrt[1/e]	elementary	64	exact	x 1 4 - * recip = 9 1 + ln	103	63.8	True	Log10[CubeRoot[1/E]]
+39	ln(Gamma(4/3))	special	64	not found	x 9 recip exp * recip = 5 sqrt pi 7 + -	132	10.0	True	LogGamma[4/3]
+40	log π/4	elementary	64	exact	x 9 1 + ln * = pi 4 / ln	113	63.6	True	Log10[Pi/4]
+41	ln(Gamma(5/3))	special	64	not found	x 5 recip + recip x recip + = 1 3 sqrt sqrt + 5 /	145	10.3	True	LogGamma[5/3]
+42	ln(Gamma(5/4))	special	64	not found	x recip 9 + 5 sqrt * = 5 ln pi / pi -	143	9.3	True	LogGamma[5/4]
+43	log Sqrt[2/π]	elementary	64	exact	x 9 1 + ln * = 2 pi / sqrt ln	119	64.0	True	Log10[Sqrt[2/Pi]]
+44	ln(Gamma(7/4))	special	64	not found	x 3 5 recip + * recip = 2 e sqrt * 7 -	134	9.3	True	LogGamma[7/4]
+45	Stieltjes constant	special	64	not found	x pi dup* 5 - sqrt * = pi 2 / dup* ln ln	140	9.1	True	1 + EulerGamma^2 - Pi^2/8 + 2*StieltjesGamma[1]
+46	Gauchman constant	special	64	not found	x 5 * dup* 9 recip ** = 2 ln pi recip - sqrt	138	9.3	True	ConditionalExpression[Extension`GauchmanConstant == \[FormalX], E^(\[FormalU]/2) + 2*E^\[FormalU] + E^((3*\[FormalU])/2) + E^(\[FormalU] + \[FormalV]) == E^\[FormalV] + 2*E^(\[FormalU]/2 + \[FormalV]) && 2*(1 + \[FormalX] + E^(\[FormalU]/2 - \[FormalV])) == 4/E^(\[FormalU]/2) + (-2 + \[FormalU])/E^\[FormalV] && 1 + \[FormalU] + 6*E^(\[FormalU]/2) + 4*E^\[FormalU] + 4*E^(\[FormalU]/2 + \[FormalV]) == \[FormalV] + 9*E^\[FormalV] && -1/40 < \[FormalX] < 0]
+47	log 3/π	elementary	64	exact	x 9 1 + ln * = 3 pi / ln	112	64.0	True	Log10[3/Pi]
+48	Zero	rational	64	not found			nan	False	0
+49	e^(-10pi)	elementary	64	exact	x pi ln 5 / ** = pi pi ** dup* recip	120	64.0	True	E^(-10*Pi)
+50	e^(-9pi)	elementary	64	exact	x 1 4 - recip ** = pi 3 * exp	105	64.0	True	E^(-9*Pi)
+51	'chi', a constant appearing in the asymptotic variance of the number of comparisons required for updating a digital sear	none	64	not found	x 2 sqrt ln * sqrt ln = pi dup* 2 recip ln /	137	12.7	True	
+52	e^(-8pi)	elementary	64	exact	x sqrt sqrt sqrt = pi exp recip	76	63.9	True	E^(-8*Pi)
+53	e^(-7pi)	elementary	64	exact	x 6 ln pi / ** = 6 1 8 - **	129	64.0	True	E^(-7*Pi)
+54	e^(-6pi)	elementary	64	exact	x sqrt recip ln = pi 3 *	77	64.0	True	E^(-6*Pi)
+55	e^(-5pi)	elementary	64	exact	x 5 recip ** = pi exp recip	79	63.6	True	E^(-5*Pi)
+56	e^(-4pi)	elementary	64	exact	x sqrt sqrt recip = pi exp	67	64.0	True	E^(-4*Pi)
+57	1 arcsecond in radians	elementary	64	exact	x 9 8 * dup* * = pi 5 3 ** /	127	64.0	True	Pi/648000
+58	pi^-10	elementary	64	exact	x 5 recip ** = pi dup* recip	75	63.5	True	Pi^(-10)
+59	pi^-9	elementary	64	exact	x 9 recip ** = pi recip	68	63.8	True	Pi^(-9)
+60	e^-10	elementary	64	exact	x sqrt recip = 5 exp	61	64.0	True	E^(-10)
+61	e^(-3pi)	elementary	64	exact	x recip ln = pi 3 *	68	64.0	True	E^(-3*Pi)
+62	pi^-8	elementary	64	exact	x sqrt sqrt recip = pi dup*	63	63.5	True	Pi^(-8)
+63	sum_{r in Z}(1/r^3) where Z is the set of all nontrivial zeros r of the Riemann zeta function	special	64	not found	x sqrt 3 sqrt exp exp * = e pi sqrt + dup* ln	143	8.6	True	-(-7*Zeta[3]/8 + EulerGamma^3 + 3*EulerGamma*StieltjesGamma[1] + 3/2*StieltjesGamma[2] + 1)
+64	e^-9	elementary	64	exact	x recip ln = 9	54	63.4	True	E^(-9)
+65	6th du Bois-Reymond constant	none	64	not found	x recip 2 e recip - sqrt * = 7 1 pi dup* + * dup*	144	9.3	True	
+66	1 arcminute in radians	elementary	64	exact	x 5 4 * dup* * = pi 3 3 ** /	120	64.0	True	Pi/10800
+67	pi^-7	elementary	64	exact	x 7 recip ** = pi recip	67	64.0	True	Pi^(-7)
+68	e^-8	elementary	64	exact	x recip ln = 8	54	64.0	True	E^(-8)
+69	zeta'(-5) (the derivative of Riemann's zeta function at -5) (negated)	special	64	not found	x ln 4 recip + 8 + = 1 5 ln recip + sqrt recip	145	9.1	True	-(Zeta'[-5])
+70	zeta'(-7) (the derivative of Riemann's zeta function at -7) (negated)	special	64	not found	x 4 pi ** dup* * exp = 5 2 sqrt exp + dup*	142	8.9	True	-(Zeta'[-7])
+71	5th Stieltjes constant gamma_5	special	64	not found	x pi 5 / exp / sqrt = 1 pi e exp * + recip	146	8.8	True	-(-StieltjesGamma[5])
+72	e^-7	elementary	64	exact	x recip ln = 7	53	64.0	True	E^(-7)
+73	pi^-6	elementary	64	exact	x sqrt pi * = pi dup* recip	72	63.5	True	Pi^(-6)
+74	5th du Bois-Reymond constant	none	64	not found	x e recip ** 7 * dup* = phi 3 * dup* ln recip	141	9.0	True	
+75	Heath-Brown–Moroz constant	special	64	not found	x phi * recip 4 + ln = 6 9 e - recip +	146	9.7	True	Product[(1 - Prime[n]^(-1))^7*(1 + (1 + 7*Prime[n])/Prime[n]^2), {n, 1, Infinity}]
+76	e^(-2pi)	elementary	64	exact	x sqrt recip = pi exp	58	63.8	True	E^(-2*Pi)
+77	'mu', a Sobolev isoperimetric constant related to the "rod inequality", arising from the elasticity study of a rod that 	none	64	not found	x ln pi 4 / dup* * = e 2 / sqrt 5 -	141	9.2	True	
+78	3rd Stieltjes constant gamma_3	special	64	not found	x ln 5 / dup* pi / = 1 pi 5 / + ln	141	9.6	True	-(-StieltjesGamma[3])
+79	4th Stieltjes constant gamma_4	special	64	not found	x x sqrt ** 3 sqrt / = 6 5 recip ** 1 -	137	10.1	True	-(-StieltjesGamma[4])
+80	e^-6	elementary	64	exact	x recip ln = 6	53	64.0	True	E^(-6)
+82	pi^-5	elementary	64	exact	x pi * sqrt = pi dup* recip	72	64.0	True	Pi^(-5)
+83	16/(9*sqrt(184607))	algebraic	64	not found	x recip 6 5 sqrt / - = 3 5 ** 4 -	135	10.8	True	16/(9Sqrt[184607])
+84	4th du Bois-Reymond constant	elementary	64	not found	x 8 7 recip - * = pi ln pi exp + recip	133	9.0	True	(E^4 - 4E^2 - 25)/8
+85	zeta'(-3) (the derivative of Riemann's zeta function at -3)	special	64	not found	x pi 6 sqrt + * ln = pi 4 7 sqrt + -	143	9.2	True	Zeta'[-3]
+86	zeta'(-6) (the derivative of Riemann's zeta function at -6) (negated)	special	64	not found	x pi 2 + sqrt sqrt * recip = 5 pi exp * pi -	142	10.0	True	-(Zeta'[-6])
+87	zeta''(0)+2, the coefficient of z^2 in the Laurent expansion of zeta(z) at the origin	special	64	not found	x recip pi - 2 * 1 - = pi dup* pi 1 + - exp	142	9.5	True	-(Zeta''[0]+2)
+88	e^-5	elementary	64	exact	x recip ln = 5	52	64.0	True	E^(-5)
+89	Wyler constant	special	64	not found	x sqrt recip 9 - exp sqrt = phi pi 9 / + dup*	146	9.0	True	(9*(5!^(-1))^(1/4))/(16*Pi^(11/4))
+90	zeta'(-4) (the derivative of Riemann's zeta function at -4)	special	64	not found	x 2 * 7 * recip 1 + = 2 pi sqrt sqrt sqrt + dup*	142	9.2	True	Zeta'[-4]
+91	zeta'(-8) (the derivative of Riemann's zeta function at -8)	special	64	not found	x recip phi * sqrt sqrt sqrt = phi pi pi sqrt - **	137	9.3	True	Zeta'[-8]
+92	sum of the alternating series tau(3), with tau(n) = Sum_{k>0} (-1)^k*log(k)^n/k	none	64	not found	x ln 6 + 6 ** = 2 e 1 + recip - exp	142	9.6	True	
+93	'mu', an isoperimetric constant associated with the study of a vibrating, homogeneous plate clamped at the boundary of t	none	64	not found	x sqrt recip 3 + 7 / = e pi ln - recip exp	141	9.8	True	
+94	2nd Stieltjes constant gamma_2 (negated)	special	64	not found	x 7 * recip 6 sqrt + = 8 1 e recip + **	137	8.7	True	-StieltjesGamma[2]
+95	pi^-4	elementary	64	exact	x sqrt sqrt = pi recip	54	63.7	True	Pi^(-4)
+96	p_3 (so named by S. Finch), a probability related to Vallée's constant	none	64	not found	x 4 recip 6 sqrt + / = pi 8 + exp sqrt recip	140	8.6	True	
+97	16/(207*sqrt(53))	algebraic	64	not found	x 8 * dup* recip 6 + = 5 8 phi ** *	140	9.5	True	16/(207Sqrt[53])
+98	cube tetrahedron-picking constant	elementary	64	not found	x 9 dup* * pi dup* ** = e pi 3 - sqrt +	139	9.1	True	3977/216000 - Pi^2/2160
+99	2*zeta(3)/Pi^2 - 11/18 + log(Pi)/3	special	64	not found	x 6 * pi dup* recip + = 2 sqrt phi 6 + /	138	9.4	True	2Zeta[3]/Pi^2-11/18+Log[Pi]/3
+100	b_3, a constant associated with the 3rd Du Bois Reymond constant	none	64	false negative	x 1 - 2 - recip e * = 4 3 e dup* - /	141	64.0	True	
+101	tetrahedron tetrahedron-picking constant	elementary	64	not found	x recip pi + ln 6 * = pi e dup* * 2 sqrt +	144	9.0	True	13/720 - Pi^2/15015
+102	number of radians in one degree	elementary	64	exact	x 6 dup* * = pi 5 /	82	64.0	True	Pi/180
+103	sum of the alternating series tau(4), with tau(n) = Sum_{k>0} (-1)^k*log(k)^n/k	none	64	not found	x 5 sqrt * recip 6 - = 1 5 recip + pi + dup*	140	9.8	True	
+104	e^-4	elementary	64	exact	x recip ln = 4	51	64.0	True	E^(-4)
+105	log π/3	elementary	64	exact	x 3 pi / ln / = 9 1 + recip ln recip	127	64.0	True	Log10[Pi/3]
+106	a Shapiro-Drinfeld constant, known as Gauchman's constant, related to the difference of cyclic sums (negated)	none	64	not found	x recip ln ln dup* 3 * = 4 7 6 recip ** +	145	11.0	True	
+107	lambda(1) in Li's criterion	special	64	not found	x sqrt 1 - recip 4 * dup* = e pi phi exp + *	144	9.5	True	EulerGamma/2 + 1 - Log[4 Pi]/2
+108	triple integral of ({x/y}{y/z}{z/x})^2 over the unit cube	special	64	not found	x recip 2 pi recip - * = 2 6 6 recip + **	131	10.1	True	1 - Zeta[2]/2 - Zeta[3]/2 + 7*Zeta[6]/48 + Zeta[2]*Zeta[3]/18 + Zeta[3]^2/18 + Zeta[3]*Zeta[4]/12
+109	sum of the alternating series tau(5), with tau(n) = Sum_{k>0} (-1)^k*log(k)^n/k	none	64	not found	x 3 3 ** / dup* = pi ln ln 7 **	129	11.1	True	
+110	Matthews' constant C_4, an analog of Artin's constant for primitive roots	none	64	not found	x 9 dup* ln * 1 + = 2 8 phi - recip **	142	9.2	True	
+111	3rd du Bois-Reymond constant	none	64	not found	x ln recip e + = pi pi 1 + ln recip -	122	9.9	True	
+112	sum of reciprocals of squares of perfect numbers	none	64	not found	x 4 dup* * pi * dup* = 7 2 ln recip + ln	139	9.1	True	
+113	pi^-3	elementary	64	exact	x pi * = pi dup* recip	63	63.9	True	Pi^(-3)
+114	1/2 - log(2)/4 - G/Pi, where G = A006752	special	64	not found	x recip ln e - ln = 5 9 / e - recip	138	10.0	True	1/2-Log[2]/4-Catalan/Pi
+115	percolation cluster density constant	algebraic	64	exact	x 4 dup* recip + 1 + = 3 1 3 sqrt + /	123	64.0	True	-41/16 + (3*Sqrt[3])/2
+116	1/4 - 7*zeta(3)/(4*Pi^2)	special	64	not found	x x phi + dup* ** recip = 5 3 sqrt pi ** **	141	9.2	True	1/4-7Zeta[3]/(4Pi^2)
+117	a constant 'v' such that the asymptotic variance of the distribution of the longest cycle given a random n-permutation e	none	64	not found	x recip e + sqrt exp sqrt = 5 pi sqrt ** 2 -	137	9.9	True	
+118	H(1/2,1), a constant appearing in the asymptotic variance of the largest component of random mappings on n symbols, expr	none	64	not found	x e 3 sqrt recip - / = 2 5 pi exp * /	138	9.3	True	
+119	'v', a parking constant associated with the asymptotic variance of the number of cars that can be parked in a given inte	none	30	not found	x 1 x e + - ** = 4 pi 5 ** +	128	9.5	True	
+120	Integral_{0..1/2} log(gamma(x+1)) dx (negated)	special	64	not found	x sqrt pi dup* pi - + = 8 7 recip exp /	132	9.6	True	-(-1/2 - (7/24)*Log[2] + (1/4)*Log[Pi] + (3/2) * Log[Glaisher])
+121	e^(-1pi)	elementary	64	exact	x recip ln = pi	49	64.0	True	E^(-1*Pi)
+122	16/(9*sqrt(1609))	algebraic	64	not found	x 7 pi sqrt + dup* * = 1 pi 8 + ln +	137	10.7	True	16/(9Sqrt[1609])
+123	pi^-e	elementary	64	exact	x recip = pi e **	58	64.0	True	Pi^(-E)
+124	sum_{r in Z}(1/r^2) where Z is the set of all nontrivial zeros r of the Riemann zeta function	special	64	not found	x sqrt sqrt 1 + x ** recip = phi sqrt pi sqrt 1 - *	144	9.8	True	-(-Pi^2/8 + EulerGamma^2 + 2*StieltjesGamma[1] + 1)
+125	Mertens constant M(4,3) arising in the formula for the sum of reciprocals of primes p == 1 (mod 4)	none	64	not found	x x recip ln 3 - / = 2 2 recip 9 recip + **	144	9.0	True	
+126	p_2, a probability associated with continuant polynomials	none	64	not found	x 3 3 ** recip - recip = 3 exp sqrt exp 1 -	135	10.1	True	
+127	a constant related to the variance of the number of vertices of the largest tree associated with a random mapping on n s	none	64	not found	x pi dup* * dup* recip 1 - = pi 2 ln 8 ** +	142	9.3	True	
+128	e^-3	elementary	64	exact	x recip ln = 3	50	64.0	True	E^(-3)
+129	Integral_{x=0..Infinity} x*cos(x)/(1+x^2)	none	64	not found	x ln 3 + 8 * = 6 3 recip phi - **	139	9.0	True	
+130	ball tetrahedron-picking constant	elementary	64	exact	x 9 6 recip + * = pi 6 2 recip + /	128	64.0	True	(12*Pi)/715
+131	(9*sqrt(65) - 55)/320	algebraic	64	not found	x 9 * 3 ** dup* = 6 e pi - recip **	134	9.9	True	(9Sqrt[65]-55)/320
+132	log ln π	elementary	64	exact	x pi ln ln / = 9 1 + ln recip	113	64.0	True	Log10[Log[Pi]]
+133	constant A*B in the asymptotic expression of the summatory function Sum_{n=1..N} (1/phi(n)) as A(log(N)+B) + O(log(N)/N)	none	64	not found	x recip 1 + pi * e + = 6 7 e dup* * +	143	9.8	True	
+134	Matthews' constant C_3, an analog of Artin's constant for primitive roots	none	64	not found	x 2 * ln 5 / = 7 recip pi sqrt recip -	127	9.5	True	
+135	Norton constant	special	64	not found	x 2 sqrt recip exp * recip = 8 9 ln recip -	131	9.2	True	(-Pi^2 + 6*Log[2]*(-3 + 2*EulerGamma + Log[2] + 24*Log[Glaisher] - 2*Log[Pi]))/Pi^2
+136	Sum_{k > 0} (-1)^k*log(k)^2/k	none	64	not found	x ln 3 exp sqrt / = 2 sqrt recip pi - 4 /	139	9.1	True	
+137	analog of the Gibbs-Wilbraham constant for L_1 trigonometric polynomial approximation	none	64	not found	x sqrt recip pi 2 / - = 4 recip phi ln recip +	133	8.9	True	
+138	e^-e	elementary	64	exact	x recip ln = e	51	64.0	True	E^(-E)
+139	Pythagorean triple constant for perimeters	elementary	64	exact	x pi dup* * = 2 ln	68	64.0	True	Log[2]/Pi^2
+140	(sqrt(13) - 1)/36	algebraic	64	exact	x 3 * recip 1 - = 9 4 + sqrt	104	64.0	True	(Sqrt[13]-1)/36
+141	1st Stieltjes constant gamma_1 (negated)	none	64	not found	x pi x exp ** * = pi e sqrt recip ** dup* recip	135	10.0	True	
+142	probability that a random walk on an 8-d lattice returns to the origin	none	64	not found	x sqrt recip pi sqrt - exp = 8 2 7 recip ** -	140	9.7	True	
+143	disk triangle-picking constant	elementary	64	exact	x pi dup* 5 / * = 7 7 recip - recip	119	64.0	True	35/(48*Pi^2)
+144	1/4π	elementary	64	exact	x pi * = 4 recip	56	64.0	True	1/(4*Pi)
+145	-Integral {x=1..2} log Gamma(x) dx	special	64	exact	x exp 2 sqrt * = e pi sqrt /	98	64.0	True	-Integrate[ Log[ Gamma[ x]], {x, 1, 2}]
+146	-Zeta'(-1)/2	special	64	not found	x recip exp 1 - e / = 4 8 ** 2 recip -	137	11.2	True	-(1/24 - Log[Glaisher]/2)
+147	solution to the Heilbronn triangle problem for seven points in a unit square	none	64	not found	x 2 phi sqrt ** recip - = 2 pi ** recip pi - recip	139	10.3	True	
+148	1-Catalan	special	64	not found	x 6 pi dup* / ** recip = 4 e 6 * + sqrt	141	10.8	True	1 - Catalan
+149	probability that a random walk on a 7-d lattice returns to the origin	none	64	not found	x 1 + dup* 5 ** = 3 4 ln recip -	117	10.7	True	
+150	Erdős–Tenenbaum–Ford constant	elementary	64	exact	x 2 ln * 1 + = 2 sqrt ln recip ln	114	64.0	True	1 - (1 + Log[Log[2]])/Log[2]
+151	1/2-G/Pi, the lowest limiting trough of a square wave Fourier series, where G is the Gibbs-Wilbraham constant. [negated]	none	64	not found	x 4 dup* * dup* recip exp = 5 pi 3 * sqrt /	137	9.3	True	
+152	integral_{0..infinity} x*log(x)*(1-eta(x)^2) dx, where the function 'eta' is a solution of the Painlevé III differential	special	64	not found	x 4 7 dup* + * = 6 phi sqrt sqrt -	125	9.5	True	-(1/4 + (7/12)*Log[2] - 3*Log[Glaisher])
+153	lambda(2) in Li's criterion	none	64	not found	x phi sqrt * sqrt sqrt recip = 3 recip pi recip exp +	131	12.4	True	
+154	e^(-Pi^2/(6*log(2)))	elementary	64	exact	x 8 ln ** = pi dup* exp sqrt recip	105	64.0	True	E^(-Pi^2/(6Log[2]))
+155	second non-alternating series of reciprocal primes constant	special	64	not found	x recip 9 - 9 * = 7 pi 7 sqrt - /	138	11.3	True	Sum[(-2 + Mod[Prime[\[FormalK]], 4])/Prime[\[FormalK]]^2, {\[FormalK], 2, Infinity}]
+156	area of the convex hull of a circle of circumference 1 and a line segment of length 1/2 with midpoint at the circle cent	elementary	64	not found	x dup* recip 1 - sqrt x / = 5 dup* pi - sqrt exp	142	10.3	True	(Sqrt[Pi^2-4]+Pi-2ArcCos[2/Pi])/(4Pi^2)
+157	log Sqrt[π/2]	elementary	64	exact	x 9 1 + ln * = pi 2 / sqrt ln	119	64.0	True	Log10[Sqrt[Pi/2]]
+158	Sum_{n>=0} 1/10^(3^n), a transcendental number	none	64	not found	x dup* e * recip 6 - = 6 sqrt exp sqrt exp	136	10.8	True	
+159	pi^-2	elementary	64	exact	x sqrt recip = pi	45	64.0	True	Pi^(-2)
+160	value of the Dickman function at phi + 1 = phi^2 = (3 + sqrt(5))/2 (A104457)	elementary	64	not found	x sqrt pi recip + recip = 1 6 ln recip +	108	10.7	True	1 - 2*Log[GoldenRatio] + Log[GoldenRatio]^2 - Pi^2/60
+161	Quinn-Rand-Strogatz constant c2 (negated)	none	64	not found	x exp dup* 8 sqrt / = e 4 5 sqrt + /	137	10.0	True	
+162	probability that a random walk on a 6-d lattice returns to the origin	none	64	not found	x 3 exp * 1 - ln = 5 pi 1 + sqrt * recip	140	9.8	True	
+163	log 4/π	elementary	64	exact	x 9 1 + ln * = 4 pi / ln	113	63.6	True	Log10[4/Pi]
+164	1/3π	elementary	64	exact	x pi * = 3 recip	55	63.4	True	1/(3*Pi)
+165	one-ninth constant	special	64	not found	x recip pi 5 ln / + = e 4 * e recip +	138	9.5	True	With[{\[FormalX] = Root[{-2*EllipticE[#1^2] + EllipticK[#1^2] & , 0.908908557548541478236118908745`29.9585201924082}]}, Exp[-((Pi*EllipticK[1 - \[FormalX]^2])/EllipticK[\[FormalX]^2])]]
+166	Michael Trott's constant: continued fraction expansion (allowing 0's) begins in same way as decimal expansion	none	53	not found	x ln 1 + dup* phi * = 7 sqrt 3 / exp	133	9.5	True	
+167	Liouville's constant	special	64	not found	x 2 ln ** 6 * = pi 6 / exp sqrt	128	10.1	True	Sum[10^(-n!), {n, 1, Infinity}]
+168	1/sqrt(80) = sqrt(5)/20	algebraic	64	exact	x 4 * = 5 sqrt recip	68	63.6	True	1/Sqrt[80]
+169	mean cluster density for bond percolation on the triangular lattice	algebraic	64	not found	x phi * sqrt 3 / sqrt = pi sqrt 7 recip - dup* recip	144	10.2	True	35/4 - 3/(2*Sin[Pi/18])
+170	Kepler–Bouwkamp constant	special	64	not found	x recip 7 sqrt - pi / = pi 8 + 3 / sqrt	139	9.5	True	Product[Cos[Pi/n], {n, 3, Infinity}]
+171	Given the two curves y = (1 - exp(x/2))/(exp(x) + exp(x/2)) and y = (exp(-x) - 1)/2, draw a line tangent to both. This s	none	64	not found	x recip e 2 - + ln = e 2 recip pi recip + *	138	10.2	True	
+172	C_2 (so named by S. Finch), a constant which is an analog of Niven's constant when mean of exponents is considered inste	none	64	not found	x 2 * recip ln 5 ** = 6 dup* pi e + /	141	10.2	True	
+173	4*Pi/105	elementary	64	exact	x 7 * pi / = 4 4 recip - recip	107	63.9	True	4*Pi/105
+174	2/(5*sqrt(11))	algebraic	64	exact	x 5 * dup* recip = 3 4 recip -	95	63.6	True	2/(5Sqrt[11])
+175	3*zeta(3)/2 + 12*log(2) - 10	special	64	not found	x recip 7 recip - 2 * = 5 pi 9 recip + *	134	10.0	True	3Zeta[3]/2+12Log[2]-10
+176	50*Pi/1296	elementary	64	exact	x 8 pi / * = 5 9 / dup*	107	63.4	True	50Pi/1296
+177	sqrt(Pi^2 - 4)/(2*Pi^2)	elementary	64	exact	x pi dup* * 2 * = pi dup* 4 - sqrt	112	64.0	True	Sqrt[Pi^2-4]/(2Pi^2)
+178	Champernowne constant	special	64	not found	x recip 2 3 / sqrt - = 4 e - 8 **	131	9.8	True	ChampernowneNumber[]
+179	first (of 10) decimal selvage numbers	none	64	not found	x dup* pi sqrt * 7 * = 4 e recip ** exp recip	138	10.3	True	
+180	Product_{k >= 1} (k*(k+1))^(-1/(k*(k+1))), a constant related to the alternating Lüroth representations of real numbers	none	64	not found	x phi * 2 pi - + = 2 pi recip ln 1 - /	140	10.4	True	
+181	3*sqrt(3)/(4*Pi^2)	elementary	64	exact	x 3 sqrt * sqrt = 3 pi 2 * /	103	63.7	True	3Sqrt[3]/(4Pi^2)
+182	harmonic oscillator tunneling constant	special	64	not found	x recip 2 - 2 sqrt * = 7 pi recip exp recip +	129	9.5	True	2/(3^(2/3)*Gamma[1/3]^2)
+183	probability that a random walk on the 5-d simple cubic (hypercubic) lattice returns to the origin	none	64	not found	x recip 2 + sqrt recip pi * = 2 recip e sqrt pi / +	141	9.8	True	
+184	e^-2	elementary	64	exact	x sqrt recip = e	47	63.5	True	E^(-2)
+185	probability that an integer 4-tuple is pairwise unitary coprime	none	64	not found	x 7 x sqrt sqrt - * = 8 pi e * / dup*	142	10.2	True	
+186	Given the two curves y = (1 - exp(x/2))/(exp(x) + exp(x/2)) and y = (exp(-x) - 1)/2, draw a line tangent to both. This s	none	64	not found	x pi dup* 8 - * sqrt = 3 ln pi 1 - /	137	10.4	True	
+187	pi minus three	elementary	64	exact	x 3 + = pi	48	64.0	True	Pi - 3
+188	Pi^4/15 + Pi^2*log(2)^2/4 - log(2)^4/4 - 21*log(2)*zeta(3)/4 - 6*Li_4(1/2)	special	64	not found	x dup* recip 2 - 4 * = 5 pi 1 + recip + exp	138	9.1	True	Pi^4/15+Pi^2Log[2]^2/4-Log[2]^4/4-21Log[2]Zeta[3]/4-6PolyLog[4,1/2]
+189	log Cbrt[e]	elementary	64	exact	x 3 * recip = 9 1 + ln	87	63.8	True	Log10[CubeRoot[E]]
+190	Matthews' constant C_2, an analog of Artin's constant for primitive roots	none	64	not found	x 2 x dup* * ln ** = e 1 5 exp + *	139	10.1	True	
+191	arctan(1/2)/Pi	elementary	64	not found	x ln dup* 6 ln / = 2 pi exp recip +	124	9.5	True	ArcTan[1/2]/Pi
+192	(1-C_2)/e, a constant connected with two-sided generalized Fibonacci sequences, where C_2 is the Euler-Gompertz constant	none	64	not found	x phi * 3 ** 1 + = pi 2 3 ln + /	136	9.5	True	
+193	Given the two curves y = exp(-x) and y = 2/(exp(x) + exp(x/2)), draw a line tangent to both. This sequence is the decima	none	64	not found	x 7 * exp pi - = phi pi / 2 ln -	137	10.2	True	
+194	9*zeta(3)/Pi^2 - 93*zeta(5)/(2*Pi^4) - log(2) + 1/4	special	64	not found	x 9 recip - 4 * recip = 3 e 2 * sqrt +	134	10.3	True	9Zeta[3]/Pi^2-93Zeta[5]/(2Pi^4)-Log[2]+1/4
+195	Sum_{k >= 0} 1/(4*k+3)^2	special	64	not found	x sqrt phi / 1 + exp = 9 e / 6 recip +	143	9.9	True	Pi^2/16 - Catalan/2
+196	Pythagorean triple constant for hypotenuses	elementary	64	exact	x pi * = 2 recip	53	63.6	True	1/(2*Pi)
+197	Sum_{k>=1} (-1)^k*log(k)/k	special	64	not found	x 1 3 ln + sqrt ** = 2 ln pi dup* /	126	9.7	True	EulerGamma*Log[2] - Log[2]^2/2
+198	Euler-Kronecker constant (as named by P. Moree) for hypotenuse numbers	none	64	not found	x 4 8 recip + * sqrt = e 2 - pi ln *	139	9.8	True	
+199	log Cbrt[π]	elementary	64	exact	x 9 1 + ln * = pi ln 3 /	112	64.0	True	Log10[CubeRoot[Pi]]
+200	sixth	rational	64	exact	x recip = 6	40	63.7	True	1/6
+201	Hall-Montgomery constant	special	64	not found	x dup* recip 3 - x / = 4 3 recip - 4 **	136	9.6	True	1 + Pi^2/6 + 2*PolyLog[2, -Sqrt[E]]
+202	(-2*Catalan + Pi*log(2))/2	special	64	not found	x dup* recip phi 2 / + = pi e - 9 dup* *	138	10.2	True	Pi*Log[2]/2 - Catalan
+203	'mu', a Sobolev isoperimetric constant related to the "membrane inequality", arising from the study of a vibrating membr	none	64	not found	x sqrt recip 1 + sqrt 2 - = phi 3 / 7 - recip	140	9.4	True	
+204	log(2)/4	elementary	64	exact	x 4 * = 2 ln	61	63.8	True	Log[2]/4
+205	probability that three positive integers are pairwise not coprime	none	64	not found	x 2 * e recip exp ** = pi 1 - sqrt 4 ** recip	141	9.9	True	
+206	H, an auxiliary constant used to evaluate some Ising-related constants on triangular and hexagonal lattices (negated)	none	64	not found	x exp dup* 1 - x - = pi 3 pi / dup* + recip	140	9.7	True	
+207	Gibbs-Wilbraham constant	special	64	not found	x 1 x sqrt - / sqrt = 6 9 pi sqrt + /	137	9.4	True	-1 + (2*SinIntegral[Pi])/Pi
+208	pi^(-3/2)	elementary	64	exact	x pi * = pi sqrt recip	63	63.8	True	Pi^(-3/2)
+209	Markoff number asymptotic density constant	none	64	not found	x phi dup* / exp exp = pi sqrt 3 sqrt sqrt sqrt +	142	9.9	True	
+210	a1, the first of two constants associated with Djokovic's conjecture on an integral inequality	none	64	exact	x 4 x recip - dup* / = 2 recip 3 sqrt / dup*	130	63.6	True	
+211	G/2 - Pi*log(2)/8, where G = A006752	special	64	not found	x recip x recip 5 - / = 5 e 4 - dup* **	140	9.5	True	Catalan/2-Pi Log[2]/8
+212	Hardy-Littlewood constant C_6 = Product_{p prime > 6} 1/(1-1/p)^6 (1-6/p)	none	64	not found	x 6 5 recip ** / = phi 7 pi sqrt * /	136	10.1	True	
+213	MRB constant	special	64	not found	x 3 recip e / / sqrt = 2 3 4 recip + recip **	140	10.1	True	Sum[(-1)^n*(-1 + n^n^(-1)), {n, 1, Infinity}]
+214	9*zeta(3)/(2*Pi^2) - log(2) + 1/3	special	64	not found	x 2 recip - dup* 6 * = e sqrt 7 recip + ln	138	9.9	True	9Zeta[3]/(2Pi^2)-Log[2]+1/3
+215	entropy of folding of the triangular lattice constant	special	64	not found	x 5 * 6 dup* ** = 4 2 e - recip **	132	10.9	True	Log[(Gamma[1/3]^(3/2)*Sqrt[3])/(2*Pi)]
+216	gamma^3	special	64	not found	x phi / x recip + = pi 3 ** e - sqrt	129	9.9	True	EulerGamma^3
+217	1/sqrt(27)	algebraic	64	exact	x 3 * = 3 sqrt recip	65	63.7	True	1/Sqrt[27]
+218	q of the maximum of the Dedekind eta function	none	64	not found	x phi ** recip pi - dup* = 5 exp 2 sqrt sqrt /	140	9.3	True	
+219	probability that a random walk on a 4-d lattice returns to the origin	none	64	not found	x 1 + sqrt exp pi - = 1 5 5 sqrt + - recip	139	9.5	True	
+220	Second du Bois-Reymond constant	elementary	64	false negative	x 2 * 1 + sqrt = e dup* 6 - sqrt	112	63.7	True	(-7 + E^2)/2
+221	log π/2	elementary	64	exact	x pi 2 / ln / = 9 1 + ln recip	118	64.0	True	Log10[Pi/2]
+222	Pi/16	none	64	exact	x 8 * = pi 2 /	70	64.0	True	
+223	Vallée constant	none	24	not found	x 5 recip + e * dup* = 4 5 pi sqrt / -	138	9.5	True	
+224	Erdős-Lebensold constant	special	24	not found	x x recip + 6 sqrt ** = pi 9 + phi / dup*	143	9.3	True	Sum[1/(Prime[\[FormalK]]^\[FormalS]*Log[Prime[\[FormalK]]^\[FormalS]]), {\[FormalS], 1, Infinity}, {\[FormalK], 1, Infinity}]
+225	(6/Pi^2) Sum_{p prime} 1/(p(p+1)), a Meissel-Mertens constant related to the asymptotic density of certain sequences of 	none	64	not found	x e * sqrt recip x - = 1 2 ln dup* pi / +	139	10.3	True	
+226	Given the two curves y = exp(-x) and y = 2/(exp(x) + exp(x/2)), draw a line tangent to both. This sequence is the decima	none	64	not found	x 5 * 6 ** 1 + = 5 5 e - recip **	142	10.1	True	
+227	White House switchboard constant	elementary	64	exact	x recip ln pi ** 1 - = 8 e 1 - recip **	133	64.0	True	Exp[-(1 + 8^(-1 + E)^(-1))^Pi^(-1)]
+228	Rumor's constant	special	64	exact	x x sqrt ln - = 1	67	63.6	True	-ProductLog[ -2/E^2]/2
+229	ln(Gamma(3/4))	special	64	not found	x x pi + * 3 * = e 2 ln recip + sqrt	133	9.8	True	LogGamma[3/4]
+230	sum of the reciprocals of the perfect numbers	none	64	not found	x e 4 + * 3 * = 3 phi dup* * dup* ln	142	11.7	True	
+231	log Cbrt[4π/3]	elementary	64	not found	x 5 * 5 ** 1 - = 2 pi phi recip - * recip	142	9.8	True	Log10[CubeRoot[4*Pi/3]]
+232	lambda(3) in Li's criterion	none	64	not found	x recip 4 - exp 2 - = 1 pi pi recip - + recip	135	10.8	True	
+233	e^(-pi/2)	elementary	64	exact	x dup* recip = pi exp	58	63.7	True	E^(-Pi/2)
+234	-zeta(-1/2)	special	64	not found	x 1 + 3 ** 1 + dup* = pi 2 / sqrt 9 **	139	9.8	True	-Zeta[-1/2]
+235	a constant related to A000621	none	64	not found	x recip 5 - recip 8 + = e 2 7 recip - *	137	9.9	True	
+236	log Sqrt[e]	elementary	64	exact	x recip exp sqrt = 9 1 +	77	64.0	True	Log10[Sqrt[E]]
+237	Lochs-Porter constant	special	64	not found	x ln dup* phi ** = pi pi 1 - e / +	129	9.5	True	3/4 - (3*Log[2]*(-2 + 4*EulerGamma + 3*Log[2] - (24*Derivative[1][Zeta][2])/Pi^2))/Pi^2 - (6*Log[2]*(-1/2 + (6*Derivative[1][Zeta][2])/Pi^2))/Pi^2
+238	B (negated), a constant related to Glaisher's constant A and the Gaussian unitary ensemble hypothesis	none	64	not found	x x recip 5 - ** dup* = pi 7 ln 3 / +	143	9.9	True	
+239	2*log(2) - 4*Catalan/Pi	special	64	not found	x 3 * 3 sqrt recip - = e 2 sqrt * pi * recip	137	10.6	True	2*Log[2] - 4*Catalan/Pi
+240	gamma^e	special	64	not found	x x pi * recip ** = 6 3 pi - dup* *	126	9.9	True	EulerGamma^E
+241	7*zeta(3)/(2*Pi^2) - log(2) + 1/2	special	64	not found	x 2 3 e ** + * = pi 9 recip + exp sqrt	139	9.6	True	7Zeta[3]/(2Pi^2)-Log[2]+1/2
+242	Conway-Guy constant	special	64	not found	x sqrt sqrt 4 + x / = e 8 * pi sqrt -	140	10.3	True	ConditionalExpression[Extension`ConwayGuyConstant == Limit[\[FormalV][\[FormalN]]/2^\[FormalN], \[FormalN] -> Infinity], \[FormalV][0] == 0 && \[FormalV][1] == 1 && \[FormalV][\[FormalN]] == 2*\[FormalV][-1 + \[FormalN]] - \[FormalV][-1 + \[FormalN] - Floor[1/2 + Sqrt[2*(-1 + \[FormalN])]]]]
+243	Copeland–Erdős constant	special	64	not found	x 6 * dup* 2 - sqrt = 1 9 dup* recip + ln	135	9.6	True	Sum[10^(-\[FormalK] - Sum[Floor[Log[10, Prime[\[FormalJ]]]], {\[FormalJ], 1, \[FormalK]}])*Prime[\[FormalK]], {\[FormalK], 1, Infinity}]
+244	Pi*(3 - gamma)/32, where gamma is Euler's constant A001620	special	64	not found	x dup* 6 recip - e * = 1 6 - recip pi - recip	140	10.2	True	Pi*(3 - EulerGamma)/32
+245	quadtree constant	special	64	not found	x 7 phi sqrt - * = e 4 / 2 ln +	136	9.1	True	228 - 26*Pi^2 + 24*Zeta[3]
+246	1/sqrt(2*Pi*e), one of the Traveling Salesman constants	elementary	64	exact	x dup* e * = pi 2 * recip	82	64.0	True	1/Sqrt[2*Pi*E]
+247	a(F_5), the maximum inradius of all triangles that lie in a regular pentagon of width 1	none	64	not found	x recip pi - e dup* ** = pi phi dup* + 8 /	141	9.6	True	
+248	rayleigh kurtosis excess	elementary	64	false negative	x 1 + recip pi recip - recip = pi 3 - recip 5 -	132	63.9	True	-(6*Pi^2 - 24*Pi + 16)/(4 - Pi)^2
+250	second (of 10) decimal selvage numbers	none	64	not found	x recip 4 - recip pi - = pi 2 sqrt recip exp + dup*	138	10.3	True	
+251	log Sqrt[π]	elementary	64	exact	x pi sqrt ln / = 9 1 + ln recip	109	63.8	True	Log10[Sqrt[Pi]]
+252	logarithm of Glaisher's constant	special	64	not found	x recip pi ln 4 - + = 4 3 pi ln * /	141	10.0	True	Log[Glaisher]
+253	a multiplicative constant related to A006196	none	64	not found	x 1 + pi recip x - * = 2 pi sqrt exp * recip	134	10.8	True	
+254	self number density constant	special	64	not found	x 4 x recip - / = phi pi pi ln ** *	132	10.2	True	Sum[Piecewise[{{1, SatisfiableQ[\[FormalK] == Sum[(1 + 2^\[FormalN])*\[FormalA][\[FormalK], \[FormalN]], {\[FormalN], 1, Infinity}] && ForAll[\[FormalN], Element[\[FormalN], Integers] && \[FormalN] > 0, Element[\[FormalA][\[FormalK], \[FormalN]], Integers]], {\[FormalA]}]}}, 0]/2^\[FormalK], {\[FormalK], 1, Infinity}]^2/8
+255	(1/384)*Pi^4	elementary	64	exact	x 6 * sqrt recip = 8 pi dup* /	100	64.0	True	Pi^4/ 384
+256	Flajolet-Prodinger constant 'K', a constant related to asymptotically enumerating level number sequences for binary tree	none	64	not found	x recip 3 - dup* 3 * = 5 phi / 2 recip -	135	10.1	True	
+257	third (of 10) decimal selvage numbers	none	64	not found	x ln recip 7 sqrt recip + = pi recip 9 recip 1 - /	140	9.5	True	
+258	Meissel-Mertens constant	special	64	not found	x exp 3 recip - pi * = 3 6 5 * recip +	138	10.4	True	EulerGamma + Sum[Log[1 - Prime[n]^(-1)] + Prime[n]^(-1), {n, 1, Infinity}]
+259	Pi/12	none	64	exact	x 6 * = pi 2 /	69	64.0	True	
+260	Mrs. Miniver constant	special	64	not found	x recip exp e + ln = 1 pi 3 * + e /	136	10.0	True	Root[{#1 - Sin[Pi/6 - #1*Sqrt[1 - #1^2]] & , 0.264932084602776862`17.423134556719873}]
+261	Ti_2(2-sqrt(3)), where Ti_2 is the inverse tangent integral function	none	64	not found	x 2 * 3 ln + dup* = 4 dup* 3 sqrt - ln	140	9.6	True	
+262	unforgeable word constant	special	64	not found	x 1 pi recip + recip exp * = 5 sqrt exp sqrt sqrt recip	138	10.0	True	Sum[(2*(-1)^(-1 + \[FormalK])*Product[2^(-1 + 2^\[FormalJ])/(-1 + 2^(-1 + 2^\[FormalJ])), {\[FormalJ], 2, \[FormalK]}])/(-1 + 2^(-1 + 2^(1 + \[FormalK]))), {\[FormalK], 1, Infinity}]
+263	volume of a regular ideal hyperbolic 4-simplex	elementary	64	not found	x 4 recip + x dup* / = 1 2 sqrt + 5 sqrt **	139	9.8	True	10*Pi/3*ArcSin[1/3] - Pi^2/3
+265	one of the Pell-Stevenhagen constants	none	64	not found	x recip e - x recip ** = 3 6 recip - ln recip	136	9.6	True	
+266	1/(8*log(2)*A005597), where A005597 is the twin prime constant C_2	none	64	not found	x recip 3 - 7 sqrt / = phi ln sqrt exp dup* recip	143	9.8	True	
+267	constant appearing in the expected number of comparisons for an unsuccessful digital tree search (negated)	none	64	not found	x sqrt pi * phi - recip = e 1 + exp pi -	134	10.7	True	
+269	(6/Pi^2)*Sum_{n>=1} 1/prime(n)^2	special	64	not found	x phi * recip exp dup* = 7 pi sqrt - e **	134	9.6	True	6*PrimeZetaP[2]/Pi^2
+270	1/Gamma(1/4)	special	64	not found	x dup* 6 dup* recip - sqrt = 1 8 recip exp + dup* recip	141	10.0	True	1/Gamma[1/4]
+271	rho_c = (5-sqrt(5))/10, the asymptotic critical density for the hard hexagon model	algebraic	64	exact	x recip 1 - = phi dup*	64	63.8	True	(5 - Sqrt[5])/10
+272	Bernstein's constant	none	50	not found	x recip 3 sqrt * sqrt exp = e 4 * pi ln +	139	9.8	True	
+273	Series-parallel networks constant	none	22	not found	x dup* recip 3 - sqrt ln = phi 2 sqrt * 1 - sqrt	141	10.2	True	
+274	log 6/π	elementary	64	exact	x 9 1 + ln * = pi 6 / recip ln	122	64.0	True	Log10[6/Pi]
+275	((5 - 2*sqrt(2))*Pi)/24	elementary	64	exact	x 5 8 sqrt - / = pi 6 4 * /	127	64.0	True	((5-2*Sqrt[2])*Pi)/24
+276	Mertens constant M(3,2) arising in the formula for the sum of reciprocals of primes p == 2 (mod 3)	none	64	not found	x sqrt x recip ** pi * = 1 pi recip + dup* 5 /	136	11.2	True	
+277	Mertens constant M(4,1) arising in the formula for the sum of reciprocals of primes p == 1 (mod 4) (negated)	none	64	not found	x x ln x / - = pi 3 + exp sqrt sqrt	132	9.8	True	
+278	strongly carefree constant	special	64	not found	x x dup* + dup* recip 1 - = 2 ln 3 sqrt exp +	141	9.6	True	Product[1 - (-2 + 3*Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 1, Infinity}]
+279	digital search tree Q constant	special	64	not found	x 1 + exp sqrt = e 4 + ln	100	9.8	True	QPochhammer[1/2, 1/2]
+280	Sum_{k>=0} (k!/(k+2)!)^2	elementary	64	exact	x 3 + recip = 3 pi dup* /	84	63.9	True	Pi^2/3 - 3
+281	domino tiling constant	special	64	not found	x sqrt sqrt 1 + dup* 1 - = e 6 * sqrt sqrt	127	11.0	True	Catalan/Pi
+282	d_0, the constant term in the asymptotic expansion of the average number of registers needed to evaluate a binary tree	none	64	not found	x x 6 recip + * recip = 8 3 sqrt pi / -	137	9.8	True	
+283	(1/105)*Pi^3	elementary	64	exact	x 5 * 7 * = pi 3 ** 3 /	113	63.8	True	Pi^3/105
+284	Pythagorean triple second-order constant for areas	special	64	not found	x recip exp x / sqrt = pi 3 3 sqrt ** +	127	10.4	True	-(((1 + 2^(-1/3))*Zeta[1/3])/((1 + 2^(-2/3))*Zeta[4/3]))
+285	a constant that appears in flux/diffusion problems with trapping surfaces	special	64	not found	x 6 recip + dup* recip = pi e ** 1 - sqrt	120	9.8	True	-1/Pi * Integrate[Log[(6/x^2) * (1 - Sin[x]/x)]/x^2, {x, 0, Infinity}]
+286	Wadsworth constant	rational	64	exact	x 5 * = 3 2 /	69	64.0	True	3/10
+287	Sum_{m,n >= 1} (-1)^(m + n)/(m*n*(m + n))	none	64	not found	x x 2 + e ** * = pi 4 e - ln -	142	9.7	True	
+288	log10(2)	elementary	64	exact	x recip 2 ln * = 9 1 + ln	98	64.0	True	Log[10, 2]
+289	ln(Gamma(2/3))	special	64	not found	x e sqrt * exp 1 - = 1 7 recip + e / sqrt	141	9.5	True	LogGamma[2/3]
+290	coefficient c appearing in the asymptotic evaluation of the number of prime additive compositions of n as c*(1/xi)^n, wh	none	64	not found	x 9 * e sqrt - = 4 pi 1 + dup* recip **	134	10.1	True	
+291	Gauss-Kuzmin-Wirsing constant	special	64	not found	x ln 1 + 7 * dup* = 3 e sqrt recip + 2 /	142	9.4	True	Inactive[Limit][Inactive[Part][SortBy[N][Abs[Eigenvalues[Inactive[Table][((-1)^\[FormalJ]*Inactive[Sum][(-2)^\[FormalI]*Binomial[\[FormalK], \[FormalI]]*Pochhammer[2 + \[FormalI], \[FormalJ]]*(-2^(2 + \[FormalI] + \[FormalJ]) + (-1 + 2^(2 + \[FormalI] + \[FormalJ]))*Zeta[2 + \[FormalI] + \[FormalJ]]), {\[FormalI], 0, \[FormalK]}])/((-2)^\[FormalK]*\[FormalJ]!), {\[FormalJ], 0, -1 + \[FormalN]}, {\[FormalK], 0, -1 + \[FormalN]}]]]], -2], \[FormalN] -> Infinity]
+292	3/pi^2	elementary	64	exact	x 3 / = pi dup* recip	65	64.0	True	3/Pi^2
+293	radius of convergence of the generating function of A000625 (alcohol stereoisomers enumeration)	none	64	not found	x exp x / 2 - = 2 2 sqrt + dup* ln	127	10.1	True	
+294	1 - log(2)	elementary	64	exact	x 1 - = 2 recip ln	63	64.0	True	1-Log[2]
+295	Hardy-Littlewood constant Product_{p prime >= 5} (1-(6*p^2-4*p+1)/(p-1)^4)	none	64	not found	x dup* pi e ** / dup* = pi 1 - pi ** exp recip	143	10.2	True	
+296	coefficient c_v in c_v*log(N), the asymptotic variance of the number of factors in a random factorization of n <= N	none	64	not found	x phi + recip x - recip = pi 7 e / sqrt +	137	10.4	True	
+297	Littlewood-Salem-Izumi constant	special	64	not found	x 9 * ln 1 - recip = 2 e ** pi recip + dup*	142	9.8	True	Root[{HypergeometricPFQ[{1/2 - #1/2}, {1/2, 3/2 - #1/2}, (-(1/16))*(9*Pi^2)] & , 0.3084437795619860030341969509860000000000000000000000000001`29.489176016177844}]
+298	sin(Pi/10) (angle of 18 degrees)	algebraic	64	exact	x 2 * = phi recip	57	63.8	True	Sin[18 Degree]
+299	-(8*(EulerGamma - log(2)))/3	special	64	not found	x e + pi - dup* recip = phi 4 + pi + dup*	135	10.2	True	-(8*(EulerGamma - Log[2]))/3
+300	Zolotarev-Schur constant	special	64	not found	x recip e - ln 1 + = 2 ln 7 sqrt + recip	134	9.6	True	With[{\[FormalX] = Root[{EllipticE[#1^2]^3 - 3*EllipticE[#1^2]^2*EllipticK[#1^2] + EllipticK[#1^2]*(-1 - EllipticK[#1^2]^2 + #1^2) + EllipticE[#1^2]*(1 + 3*EllipticK[#1^2]^2 + #1^2) & , 0.9155020553896763963055240364016622896543129422884607667501`30.102999566398122}]}, (1 - EllipticE[\[FormalX]^2]/EllipticK[\[FormalX]^2])^2/\[FormalX]^2]
+301	k_3 = 3/(2*Pi*m_3), a constant associated with the asymptotic expansion of the probability that a three-dimensional rand	none	64	not found	x recip 1 - e dup* ** = 5 4 ** 2 /	125	9.3	True	
+302	(negated) constant in the expansion of the prime zeta function about s = 1	none	64	not found	x recip 2 + dup* ln ln = pi phi + 9 recip **	142	10.3	True	
+303	Atkinson-Negro-Santoro constant	special	64	not found	x dup* recip 6 + e * = 7 6 * 2 sqrt +	139	9.6	True	ConditionalExpression[Extension`AtkinsonNegroSantoroConstant == Limit[\[FormalU][\[FormalN]]/2^\[FormalN], \[FormalN] -> Infinity], \[FormalU][0] == 0 && \[FormalU][1] == 1 && \[FormalU][\[FormalN]] == 2*\[FormalU][-1 + \[FormalN]] - \[FormalU][-1 + \[FormalN] - Floor[1 + (-1 + \[FormalN])/2]]]
+304	real part of the solution of z = log z	special	64	not found	x recip 6 sqrt - pi ** = 1 pi dup* ln recip - dup*	141	10.5	True	Re[-ProductLog[-1]]
+305	Kalmar composition constant	special	64	not found	x recip pi - recip 7 - = pi e sqrt ** exp	129	9.9	True	ConditionalExpression[Extension`KalmarCompositionConstant == -(1/(\[FormalRho]*Derivative[1][Zeta][\[FormalRho]])), \[FormalRho] == Root[{-2 + Zeta[#1] & , 1.7286472389981836181351030103`29.237706376855613}]]
+306	reciprocal of π	elementary	64	exact	x recip = pi	36	64.0	True	Pi^(-1)
+307	a constant related to a certain Sobolev isoperimetric inequality	none	64	not found	x recip x 4 * dup* - = 2 sqrt sqrt exp 1 - sqrt	139	10.7	True	
+308	eta/xi = A086318/A086317, a coefficient associated with the asymptotics of the number of weakly binary trees	none	64	not found	x dup* 2 sqrt pi / + = 3 2 sqrt + 8 /	134	10.1	True	
+309	Feller-Tornier product constant	special	64	not found	x recip 9 ln * 1 - = phi pi 3 - + exp	142	9.7	True	Product[1 - 2/Prime[\[FormalK]]^2, {\[FormalK], 1, Infinity}]
+310	second Kneser-Mahler polynomial constant	special	64	not found	x recip 3 7 sqrt / + = e dup* pi sqrt ln *	138	10.0	True	(9 - PolyGamma[1, 2/3] + PolyGamma[1, 4/3])/(4*Pi*Sqrt[3])
+311	1/(4*K), a constant related to the asymptotic evaluation of the number of positive integers all of whose prime factors a	none	64	not found	x 3 * x pi - ** = 5 ln 9 recip **	136	9.7	True	
+312	infinite product of (j/Pi)*sin(Pi/j), for j >= 2, a constant similar to the Kepler-Bouwkamp constant	none	64	not found	x recip 3 - 8 * recip = pi e e exp / -	141	10.7	True	
+313	constant that appears in the asymptotic formula for average order of an infinitary analog of Euler's phi function (A0917	none	64	not found	x 5 x dup* - recip + = 3 sqrt 7 recip + recip	132	10.6	True	
+314	Given the two curves y = (1 + exp(x))/2 and y = (1 + exp(x))/(1 + exp(x/2)), draw a line tangent to both. This sequence 	none	64	not found	x phi ** 6 recip - = 9 pi - 5 ** recip	137	9.6	True	
+315	9099999999923/27500000000000	rational	64	not found	x 3 7 recip + * = 1 5 dup* recip +	110	11.1	True	9099999999923/27500000000000
+316	euler sqr	special	64	not found	x recip 2 - dup* 1 - recip = 1 9 pi dup* + dup* +	140	10.7	True	EulerGamma^2
+317	log(A085851)	none	64	not found	x recip 3 - recip = phi 8 + pi **	110	10.4	True	
+318	third	rational	64	exact	x recip = 3	37	64.0	True	1/3
+319	Sum_{k>=2} c(k)/prime(k), where c(k) = -1 if p == 1 (mod 4) and c(k) = +1 if p == 3 (mod 4)	none	64	not found	x 1 pi - ** 9 - = 7 3 e - * sqrt	141	10.8	True	
+320	radius of convergence of g.f. for unlabeled trees (A000055)	none	64	not found	x x x recip ** - recip = 2 sqrt pi dup* + sqrt	128	12.3	True	
+321	probability that a random walk on a 3-D lattice returns to the origin	special	64	not found	x 8 7 * sqrt * = e 2 / 2 sqrt sqrt +	138	10.6	True	1 - (16*Sqrt[2/3]*Pi^3) / (Gamma[1/24]*Gamma[5/24]*Gamma[7/24]*Gamma[11/24])
+322	2*sin(Pi/18)	algebraic	64	exact	x recip x dup* + = 3	65	64.0	True	2Sin[Pi/18]
+323	sqrt(5^(1/3)-4^(1/3))	algebraic	64	exact	x dup* 4 3 recip ** + = 5 3 recip **	117	64.0	True	Sqrt[Surd[5, 3] - Surd[4, 3]]
+324	meander connective constant	special	64	not found	x pi 8 / exp ** = 2 sqrt pi ln / ln	139	9.8	True	Product[1 - 2^(-2^\[FormalK]), {\[FormalK], 0, Infinity}]
+325	lim_{N->infinity} (1/N^2 Sum_{n=1..N} K(n)), where K(n) is the squarefree kernel of n	none	64	not found	x 1 + exp 1 + ln = 8 3 sqrt - sqrt sqrt	135	11.1	True	
+326	a coefficient associated with the asymptotics of the variance of the distance between a vertex and the root of a random 	none	64	not found	x 1 + 7 ** 2 / = e 6 5 recip ** +	139	10.3	True	
+327	Hafner–Sarnak–McCurley constant	none	64	not found	x 4 recip - 5 dup* * = 2 1 e recip + **	129	9.7	True	
+328	radius of convergence of the generating function of A000598, the number of rooted ternary trees of n vertices	none	64	not found	x sqrt ln recip pi sqrt + = pi recip 2 e ** - recip	139	10.3	True	
+330	imaginary part of the infinite power tower of i	special	64	not found	x ln dup* pi * exp = 3 8 pi ** + sqrt	135	10.1	True	Im[-ProductLog[-Log[I]]/Log[I]]
+331	log 1/M = ln 10	elementary	64	exact	x 9 1 + ln * = 9 1 + ln ln	124	63.9	True	Log10[Log[10]]
+332	equilateral triangle line-picking constant	elementary	64	exact	x 5 * 1 - exp = 3 3 sqrt * sqrt	116	63.9	True	(4 + 3*Log[3])/20
+333	(3*sqrt(6) - 7)*Pi/3	elementary	64	exact	x recip pi * 6 - = 9 1 6 sqrt + /	128	64.0	True	(3Sqrt[6]-7)Pi/3
+334	standard Gumbel distribution median	elementary	64	exact	x exp recip = 2 ln	61	64.0	True	-Log[Log[2]]
+335	constant that appears in the asymptotic formula for average order of the number of  infinitary divisors function (A03744	none	64	not found	x exp phi 3 ** ** = 7 1 phi ln + /	141	9.9	True	
+336	reciprocal of e	elementary	64	exact	x recip = e	38	64.0	True	E^(-1)
+337	Hardy-Littlewood constant C_7 = Product_{p prime > 7} 1/(1-1/p)^7 (1-7/p)	none	64	not found	x recip 3 - x / dup* = phi 5 recip exp - sqrt	140	10.0	True	
+338	fourth (of 10) decimal selvage number	none	64	not found	x dup* recip 8 - dup* = pi 3 ** 4 exp /	133	10.2	True	
+339	constant c appearing in the expected number of pair of twin vacancies in a digital tree	none	64	not found	x recip 6 * sqrt pi - = 1 2 sqrt 6 / - sqrt	141	10.6	True	
+340	variance of the maximum of a size 8 sample from a normal (0,1) distribution	none	64	not found	x pi * dup* 1 - dup* = 3 7 dup* + sqrt recip	128	10.8	True	
+341	(1/144)*3^(1/2)*Pi^3	elementary	64	exact	x 3 sqrt * 6 * = pi 2 / 3 **	118	64.0	True	Sqrt[3]*Pi^3/144
+342	1/Gamma(1/3)	special	64	not found	x e recip - recip 1 - = pi 4 4 exp + *	132	10.6	True	1/Gamma[1/3]
+343	first positive solution to exp(1-1/x)/x = 1/2, a binary search tree constant	special	64	exact	x x recip exp * = e 2 *	87	64.0	True	-1/ProductLog[-1, -1/(2*E)]
+344	Artin's constant	special	64	not found	x dup* recip pi 9 - + = 9 recip 6 recip exp +	141	10.0	True	Product[1 - 1/((-1 + Prime[n])*Prime[n]), {n, 1, Infinity}]
+345	64/169, the upper bound (as given by S. Finch) of the 2-dimensional simultaneous Diophantine approximation constant	none	64	exact	x sqrt recip 1 - = 5 8 /	87	64.0	True	
+346	upper bound of the 6-dimensional simultaneous Diophantine approximation constant	none	64	not found	x dup* recip 7 - recip = 1 6 e - exp -	128	10.1	True	
+347	expected distance from a randomly selected point in the unit square to its center: (sqrt(2) + log(1 + sqrt(2)))/6	elementary	64	exact	x 6 * 2 sqrt - = 1 2 sqrt + ln	113	64.0	True	(Sqrt[2] + Log[1 + Sqrt[2]])/6
+348	Given the two curves y = (1 + exp(x))/2 and y = (1 + exp(x))/(1 + exp(x/2)), draw a line tangent to both. This sequence 	none	64	not found	x recip exp 7 dup* + = 3 pi phi recip + **	130	9.7	True	
+349	upper bound of the 5-dimensional simultaneous Diophantine approximation constant	elementary	64	not found	x recip 6 x ** - recip = 1 pi e - recip + sqrt	138	9.5	True	3/(208 + 72*Pi - 96*Sqrt[2]*Pi)
+350	variance of the maximum of a size 7 sample from a normal (0,1) distribution	none	64	not found	x recip phi - sqrt sqrt recip = pi 3 recip pi recip - **	138	10.6	True	
+351	1 - 6/pi^2	elementary	64	exact	x 1 - dup* sqrt = 6 pi dup* /	94	64.0	True	1 - 6/Pi^2
+352	Pi/8	none	64	exact	x pi / = 8 recip	60	64.0	True	
+353	A(rectangles), an analog of Moser's worm constant, which is associated with the class of rectangular regions of the plan	none	64	not found	x 2 pi x / * + = pi 5 * phi recip +	134	9.8	True	
+354	radius of convergence of the generating function for the enumeration of rooted identity trees (A004111)	none	50	not found	x sqrt x - 6 * = 8 pi e sqrt ** -	135	9.8	True	
+355	Pi*G - 33*zeta(3)/16, where G = A006752	special	64	not found	x dup* 2 7 sqrt ** * = 4 recip 6 sqrt + ln	141	9.8	True	Pi Catalan-33Zeta[3]/16
+356	one div root two pi	elementary	64	exact	x dup* recip = pi 2 *	62	64.0	True	1/Sqrt[2*Pi]
+357	log Sqrt[2π]	elementary	64	exact	x 9 1 + ln * = pi 2 * sqrt ln	118	64.0	True	Log10[Sqrt[2*Pi]]
+358	'lambda', a Somos quadratic recurrence constant mentioned by Steven Finch	none	64	not found	x dup* 1 pi dup* + * dup* = phi e 2 - recip +	137	10.9	True	
+359	Feigenbaum's constant 0.399535	none	64	not found	x phi ** recip 2 sqrt + = 3 2 pi sqrt + sqrt *	140	10.1	True	
+360	Li_3(2 - phi)	special	64	not found	x 2 ln / sqrt pi * = pi 6 ln sqrt recip -	139	10.2	True	PolyLog[3,2-GoldenRatio]
+361	radius of convergence of Wedderburn-Etherington numbers g.f	none	64	not found	x dup* 8 2 recip + * = 2 9 1 + recip - sqrt	138	10.1	True	
+362	'mu', a percolation constant associated with the asymptotic threshold for 3-dimensional bootstrap percolation	none	64	not found	x sqrt 7 dup* recip - dup* = 1 e sqrt + 7 /	134	10.8	True	
+363	log(A085850)	none	41	not found	x 7 * sqrt pi ** = e recip 7 sqrt - dup*	130	11.4	True	
+364	m_2 = (2-1/e)/4, one of Renyi's parking constants, the mean car density in case "monomer with nearest neighbor exclusion	elementary	64	exact	x 4 * = 2 e recip -	76	64.0	True	(2 - 1/E)/4
+365	upper bound of the 4-dimensional simultaneous Diophantine approximation constant	elementary	64	exact	x recip 4 + pi / dup* = 1 3 recip + 5 **	129	64.0	True	27/(4*(8*Sqrt[3]*Pi - 27))
+366	Euler-Kronecker constant (as named by P. Moree) for non-hypotenuse numbers	none	64	not found	x recip 1 pi dup* recip + - = 2 5 recip exp dup* /	135	9.6	True	
+367	lower bound of the Berry-Esseen constant	elementary	64	exact	x pi 8 * sqrt * = 1 1 9 recip + sqrt +	128	64.0	True	(3 + Sqrt[10])/(6*Sqrt[2*Pi])
+368	Hardy-Littlewood constant C_5 = Product_{p prime > 5} 1/(1-1/p)^5 (1-5/p)	none	64	not found	x 3 sqrt recip - phi + = 3 6 sqrt ln - sqrt	142	9.9	True	
+369	sqrt(2)*(sqrt(6) - 1)/5	algebraic	64	exact	x recip 2 sqrt * = 1 6 sqrt +	89	64.0	True	Sqrt[2](Sqrt[6]-1)/5
+370	Prouhet–Thue–Morse constant	special	64	not found	x pi * 3 ** e + = 5 4 phi ** recip -	143	10.3	True	(2 - Product[(-1 + 2^2^\[FormalK])/2^2^\[FormalK], {\[FormalK], 0, Infinity}])/4
+371	1/(eta*P'(eta)), a constant related to the asymptotic evaluation of the number of prime multiplicative compositions, whe	none	30	not found	x sqrt 3 sqrt exp ** recip = pi 4 + phi sqrt **	141	9.6	True	
+372	sqrt(2) - 1	algebraic	64	exact	x 1 + = 2 sqrt	51	64.0	True	Sqrt[2] - 1
+373	isosceles triangle line-picking constant	elementary	64	not found	x pi recip pi - recip + recip = 3 e 8 sqrt + *	140	9.8	True	(2 + 4*Sqrt[2] + ArcSinh[1]*(4 + Sqrt[2]))/30
+374	Prime constant	special	64	not found	x recip 2 - recip phi - = pi 2 - sqrt pi ** recip	138	10.3	True	Sum[2^(-Prime[n]), {n, 1, Infinity}]
+375	variance of the maximum of a size 6 sample from a normal (0,1) distribution	none	64	not found	x recip pi ln x - + = phi phi pi recip + *	138	11.5	True	
+376	volume of the Meissner Body	elementary	64	not found	x 2 sqrt phi ** * recip = 6 pi phi sqrt + /	140	9.6	True	(2/3 - Sqrt[3]/4 * ArcCos[1/3])* Pi
+377	Minkowski-Bower constant	special	64	not found	x ln 1 + recip e * = 3 4 exp pi / +	136	9.9	True	Inactive[Root][{#1 - MinkowskiQuestionMark[#1] & , 0.420372339423223075640993`23.623634131640042}]
+378	Schlüter ten disk constant	algebraic	64	not found	x 5 * 2 sqrt sqrt ** = phi exp 8 ln /	141	10.1	True	Root[819200 - 14172160*\[FormalX] + 114038784*\[FormalX]^2 - 563649536*\[FormalX]^3 + 1899131648*\[FormalX]^4 - 4564076288*\[FormalX]^5 + 7918461504*\[FormalX]^6 - 9722063488*\[FormalX]^7 + 7803109440*\[FormalX]^8 - 2960321792*\[FormalX]^9 - 1038261808*\[FormalX]^10 + 1526909568*\[FormalX]^11 + 227573920*\[FormalX]^12 - 1398966480*\[FormalX]^13 + 1145811528*\[FormalX]^14 - 462103584*\[FormalX]^15 + 98015844*\[FormalX]^16 - 11436428*\[FormalX]^17 + 1180129*\[FormalX]^18, \[FormalX], 1]
+379	logarithmic capacity of the unit equilateral triangle	none	64	not found	x dup* recip exp 4 recip - = phi recip 4 dup* + dup*	135	9.6	True	
+380	c_1, a constant associated with the computation of the maximal modulus of an algebraic integer	none	64	not found	x 7 recip - 8 * = 1 7 sqrt 2 sqrt - +	136	10.0	True	
+381	Reuleaux tetrahedron volume	elementary	64	not found	x 2 pi - recip + dup* = 2 e 3 * sqrt + recip	135	10.1	True	(8*Pi)/3 - (27*ArcCos[1/3])/4 + Sqrt[2]/4
+382	1 - gamma, where gamma is Euler's constant (or the Euler-Mascheroni constant)	special	64	not found	x 1 x - 5 ** / = pi phi + 4 ln *	142	10.4	True	1 - EulerGamma
+383	pi^(-3/4)	elementary	64	exact	x pi * = pi sqrt sqrt	65	64.0	True	Pi^(-3/4)
+384	Dawson's integral at the inflection point	none	64	not found	x recip exp dup* 7 - = 3 6 sqrt + e **	135	9.4	True	
+385	(2/3)*x where x is the real solution of the equation x^2 + 2*sqrt(1 - x^2) = 2*x*(x + arccos(x))	none	64	not found	x e * pi recip - exp = 2 sqrt 7 sqrt 1 - *	142	9.8	True	
+386	gamma', the analog of Euler's constant when 1/x is replaced by 1/(x*log(x))	none	64	not found	x 2 recip pi recip + sqrt / = 2 pi dup* 1 - recip + recip	143	9.9	True	
+387	carefree constant	special	64	not found	x sqrt exp 1 e - + = pi phi - sqrt 6 /	141	10.2	True	Product[1 - (-1 + 2*Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 1, Infinity}]
+388	'lambda', a Young-Fejér-Jackson constant linked to the positivity of certain sine sums	none	64	not found	x dup* pi recip exp + dup* = pi 3 5 / sqrt *	135	10.2	True	
+389	2*arccsch(2)/sqrt(5)	none	64	exact	x 5 sqrt * = phi dup* ln	85	64.0	True	
+390	m = (1-1/e^2)/2, one of Renyi's parking constants	elementary	64	exact	x 2 * e * = e e recip -	96	64.0	True	(1 - 1/E^2)/2
+391	Bloch constant lower limit	algebraic	64	exact	x 4 * 3 sqrt - = 2 5 4 ** * recip	127	64.0	True	1/5000 + Sqrt[3]/4
+392	common logarithm of e	elementary	64	exact	x recip exp = 9 1 +	68	64.0	True	Log10[E]
+393	asymptotic probability of success in the full-information secretary problem with uniform distribution when the number of	none	64	not found	x 4 ln / phi ** = 7 8 ln recip - recip	142	10.1	True	
+394	a constant related to the [dimensionless] electrical capacitance of the ring torus without hole (with unit circle radius	none	64	not found	x exp 7 x / + = 1 8 phi ln / +	139	10.2	True	
+395	1/(2*(Pi-2)), the upper bound of the 3-dimensional simultaneous Diophantine approximation constant	elementary	64	exact	x 2 * recip = pi 2 -	71	64.0	True	1/(2*(Pi - 2))
+397	real part of the infinite power tower of i	special	64	not found	x recip ln pi ** pi * = 3 4 dup* + ln sqrt	139	9.8	True	Re[-ProductLog[-Log[I]]/Log[I]]
+398	breadth of the "caliper", the broadest worm of unit length	none	64	not found	x 2 * 7 dup* ** recip = 1 8 phi - exp +	141	10.3	True	
+399	Otter's asymptotic constant beta for the number of rooted trees	none	64	not found	x 7 ln * e ** = e 1 - sqrt 2 /	130	9.8	True	
+400	Ising constant	elementary	64	exact	x exp dup* = 1 2 sqrt +	73	64.0	True	Log[1 + Sqrt[2]]/2
+401	1/log(2)-1, the mean value of a random variable following the Gauss-Kuzmin distribution	elementary	64	exact	x 1 + recip = 2 ln	62	64.0	True	1/Log[2] - 1
+403	1D Diophantine approximation constant	algebraic	64	exact	x dup* recip = 5	48	64.0	True	Sqrt[5]^(-1)
+404	variance of the maximum of a size 5 sample from a normal (0,1) distribution	special	64	not found	x 2 ln 7 - ** = pi phi * exp 2 -	137	10.9	True	1 - 25/Pi + 150*ArcCsc[Sqrt[3]]/Pi^2 + 5*Sqrt[3]*ArcSec[2*Sqrt[2/3]]/Pi^2 - 225*ArcCsc[Sqrt[3]]^2/Pi^3
+405	7*sqrt(3)/27	algebraic	64	exact	x 3 sqrt * = 7 9 /	85	64.0	True	7Sqrt[3]/27
+406	asymptotic probability of success in the full information version of the secretary problem	none	64	not found	x 4 * phi exp ** = e 2 recip + 4 dup* +	141	9.8	True	
+407	2^(1/2)/pi	elementary	64	exact	x pi * = 2 sqrt	55	64.0	True	2^(1/2)/Pi
+408	log(Pi/2)	elementary	64	exact	x exp recip = 2 pi /	67	64.0	True	Log[Pi/2]
+409	prime zeta function at 2: Sum_{p prime} 1/p^2	special	64	not found	x dup* 7 * 1 - recip = 7 2 * pi recip **	130	10.0	True	PrimeZetaP[2]
+410	Product_{n>1} (1-1/n)^(1/n)	none	64	not found	x dup* recip exp sqrt 4 / = e phi 9 + recip +	142	11.4	True	
+411	e^(-pi/4)	elementary	64	exact	x 4 ** = pi exp recip	71	64.0	True	E^(-Pi/4)
+412	c^c^c^...  where c is the constant defined in A037077	none	64	not found	x 3 * 2 recip - dup* = pi phi 2 / ln **	137	10.4	True	
+413	Machin Gregory series constant	elementary	64	not found	x 6 x - * exp = pi 3 + 2 sqrt **	131	10.5	True	ArcTan[1/2]
+414	6*K/Pi^2, a constant related to the asymptotic evaluation of the number of positive squarefree integers of the form a^2 	none	64	not found	x phi exp * 7 * = pi 5 * 2 ln +	137	9.8	True	
+415	(1/30)*2^(1/2)*Pi^2	elementary	64	exact	x 3 * 5 * = pi dup* 2 sqrt /	105	64.0	True	(Sqrt[2] Pi^2)/30
+416	'etaHat', a constant used in the asymptotic evaluation of e.g.f. coefficients for the number of labeled mobiles	none	64	not found	x pi / sqrt 5 recip - = e 5 e ** / sqrt	141	10.2	True	
+417	pi^(-2/3)	elementary	64	exact	x 3 ** = pi dup* recip	66	64.0	True	Pi^(-2/3)
+418	Bloch constant upper limit	special	64	not found	x dup* recip phi recip - exp = pi 9 3 sqrt ** +	141	11.3	True	(Sqrt[(-1 + Sqrt[3])/2]*Gamma[1/3]*Gamma[11/12])/Gamma[1/4]
+419	Weierstrass constant	special	64	not found	x e exp * 2 + = 5 sqrt 2 sqrt exp *	130	10.3	True	(2*2^(1/4)*E^(Pi/8)*Sqrt[Pi])/Gamma[1/4]^2
+420	Plouffe's b-constant	none	64	not found	x 1 x ln + sqrt + = 1 8 7 * recip + recip	139	10.3	True	
+421	common logarithm of 3	elementary	64	exact	x recip 3 ln * = 9 1 + ln	100	64.0	True	Log10[3]
+422	quadtree leaf proportion constant	elementary	64	exact	x 3 + 6 dup* / = pi dup* 9 / 1 -	128	64.0	True	-39 + 4*Pi^2
+423	(6*sqrt(3) + 12*log(2+sqrt(3)) - Pi)/48	elementary	64	not found	x recip 2 - e exp * = phi 2 sqrt / phi **	142	10.8	True	(6Sqrt[3]+12Log[2+Sqrt[3]]-Pi)/48
+424	(ln 2)^2	elementary	64	exact	x sqrt = 2 ln	50	64.0	True	Log[2]^2
+425	2*zeta(3)/5	special	64	not found	x x recip 1 - exp + = e 2 3 recip ** *	130	9.8	True	2*Zeta[3]/5
+426	logarithm of golden ratio	elementary	64	exact	x exp = phi	46	64.0	True	Log[GoldenRatio]
+427	Trott's third constant	none	64	not found	x dup* recip 6 sqrt - dup* = phi 1 3 recip + dup* +	139	10.0	True	
+428	a constant related to the expected number of vertices of the largest tree associated with a random mapping on n symbols	none	64	not found	x 4 + x dup* * = 2 e 3 / sqrt -	126	10.9	True	
+429	2*K/Pi, a constant related to the asymptotic evaluation of the number of positive integers all of whose prime factors ar	none	64	not found	x pi sqrt 6 - ** = 3 1 pi sqrt + **	125	10.1	True	
+430	Gaussian twin prime constant	special	64	not found	x 5 ** 4 * exp = e 4 e / - sqrt	138	10.1	True	(Pi^2*Product[Piecewise[{{((1 - 4/Prime[\[FormalK]])*(1 + Prime[\[FormalK]])^2)/(-1 + Prime[\[FormalK]])^2, Mod[Prime[\[FormalK]], 4] == 1}}, 1], {\[FormalK], 1, Infinity}])/8
+431	3/(8*K), a constant related to the asymptotic evaluation of the number of positive integers that can be expressed as the	none	64	not found	x phi 4 - ** exp = phi 4 3 * dup* *	139	9.9	True	
+432	variance of the maximum of a size 4 sample from a normal (0,1) distribution	special	64	not found	x sqrt ln 9 * dup* = 5 e sqrt ** 4 -	138	9.8	True	1 + Sqrt[3]/Pi - 36*ArcSec[Sqrt[3]]^2/Pi^3
+433	Shapiro-Drinfeld cyclic sum constant	special	64	not found	x x 4 recip + exp * = e 1 - ln 2 recip +	142	10.0	True	ConditionalExpression[Extension`ShapiroDrinfeldCyclicSumConstant == \[FormalY]/2, \[FormalY] + \[FormalY]*E^(\[FormalX]/2) == (2 + \[FormalX])/E^(\[FormalX]/2) + \[FormalX]/(1 + E^(\[FormalX]/2)) && \[FormalX] + (1 + 2*E^(\[FormalX]/2))^(-1) == Log[(4*E^\[FormalX]*Cosh[\[FormalX]/4]^2)/(1 + 2*E^(\[FormalX]/2))] && -3/2 < \[FormalX] < -1/2 && 1/2 < \[FormalY] < 1]
+434	fifth (of 10) decimal selvage number	none	64	false positive	x recip 2 - = 7 dup* recip	74	19.6	True	
+435	1-gamma-gamma(1), a constant related to the asymptotic expansion of j(n), the counting function of "jagged" numbers, whe	special	64	not found	x recip 2 - 8 dup* * = 3 ln sqrt e **	131	10.8	True	1 - EulerGamma - StieltjesGamma[1]
+436	common logarithm of π	elementary	64	exact	x recip pi ln * = 9 1 + ln	99	64.0	True	Log10[Pi]
+437	Half	rational	64	exact	x recip = 2	35	64.0	True	1/2
+438	birthday problem constant	rational	64	not found	x 2 x / x ** * = 2 sqrt 3 exp recip **	136	9.3	True	38093904702297390785243708291056390518886454060947061/75091883268515350125426207425223147563269805908203125
+439	A245781*Pi/2	none	64	not found	x 4 recip - recip 2 * = 3 pi sqrt ** 2 recip +	135	9.8	True	
+440	sqrt(2 - sqrt(3)), edge length of a regular dodecagon with circumradius 1	none	64	exact	x x recip + = 6 sqrt	68	64.0	True	
+441	a constant related to the asymptotic expansion of the smallest Lebesgue constant corresponding to an optimal interpolati	special	64	not found	x 4 dup* recip 2 - ** = 2 e pi sqrt / +	132	11.5	True	2/Pi*(2*Log[2] - Log[Pi] + EulerGamma)
+442	square line-picking constant	elementary	64	not found	x dup* 7 3 ** * = phi 6 * dup* 1 -	131	9.8	True	(2 + 5*Log[1 + Sqrt[2]] + Sqrt[2])/15
+443	sixth pi	elementary	64	exact	x pi / = 6 recip	59	64.0	True	Pi/6
+444	Upper limit of backward value of 5^n	none	64	not found	x recip e 3 + recip + = 2 5 phi ** recip +	133	10.4	True	
+445	Mrs. Miniver's constant	none	64	not found	x x recip ** 5 * dup* = pi phi pi / sqrt **	139	11.4	True	
+446	Pythagorean triple constant for areas	special	64	not found	x pi recip - recip pi - recip = 2 phi ** recip pi recip +	143	10.9	True	Gamma[1/4]^2/Sqrt[2*Pi^5]
+447	Otter's asymptotic constant beta for the number of unrooted trees	none	64	not found	x exp 6 sqrt sqrt - = 3 1 3 exp + /	131	10.0	True	
+448	Product_{p odd prime} 1-2/(p*(p-1)), a constant related to Artin's conjecture in the context of quadratic fields	none	64	not found	x 4 6 recip - * dup* = pi phi 9 * + sqrt	142	10.2	True	
+449	2*(2 - sqrt(3))	algebraic	64	exact	x sqrt 1 + = 3 sqrt	62	64.0	True	2(2-Sqrt[3])
+450	Li_3(1/2)	special	64	not found	x phi 8 sqrt ** ** = 7 9 dup* 2 - /	142	10.0	True	PolyLog[3, 1/2]
+451	'c', one of Polya's Random Walk constants, related to the asymptotics of the number of 3-D random walks starting from an	none	64	not found	x 3 sqrt ** dup* recip exp = 3 6 3 sqrt + **	141	9.8	True	
+452	Ioachimescu constant	special	64	not found	x 6 sqrt sqrt * ln = 8 ln 8 - recip	131	10.0	True	2 + Zeta[1/2]
+453	cos one	elementary	64	not found	x recip 5 recip 7 * - = 2 e pi recip - sqrt -	142	9.5	True	Cos[1]
+454	value of the maximum of Dawson's integral D_+(x)	none	64	not found	x pi * 4 ln recip - = 1 2 pi exp * recip -	140	10.4	True	
+455	Landau constant upper limit	special	64	not found	x sqrt phi * 9 ** = 5 3 5 dup* / -	139	11.5	True	(Gamma[1/3]*Gamma[5/6])/Gamma[1/6]
+456	Pi^2/18	elementary	64	exact	x 2 * sqrt = pi 3 /	75	64.0	True	Pi^2/18
+457	-ln gamma	special	64	not found	x dup* e e recip + * = 4 6 sqrt + sqrt ln	140	10.1	True	-Log[EulerGamma]
+458	coefficient c_m in c_m*log(N), the asymptotic mean number of factors in a random factorization of n <= N	none	64	not found	x dup* 4 pi dup* + * = 4 e phi - sqrt *	139	9.4	True	
+459	probability that an integer triple is pairwise unitary coprime	none	64	not found	x recip exp e dup* - dup* = 1 e 4 - dup* + sqrt	143	10.0	True	
+460	Kuijlaars-Saff constant	special	64	not found	x sqrt ln dup* recip 4 + = 1 3 sqrt recip + 6 **	142	9.9	True	-1/2*(3^(3/4)*Zeta[1/2]*(Zeta[1/2, 1/3] - Zeta[1/2, 2/3]))/Sqrt[2*Pi]
+461	smallest disk radius for which six equal disks can cover the unit disk	none	64	not found	x 6 ** exp dup* recip = phi e sqrt / pi **	136	10.3	True	
+462	1-9/(4*Pi)+sqrt(3)/(2*Pi), an extreme value constant	elementary	64	exact	x 1 - pi * 4 * = 2 3 sqrt * 9 -	133	64.0	True	1 - 9/(4*Pi) + Sqrt[3]/(2*Pi)
+463	value of the Buchstab function at phi + 2 = (5 + sqrt(5))/2 (A296184)	elementary	64	not found	x exp pi - dup* pi * = 2 sqrt e sqrt exp **	140	11.1	True	(1 + 2*Log[GoldenRatio] + Log[GoldenRatio]^2 - Pi^2/60)/(GoldenRatio + 2)
+464	reciprocal exponential of Euler γ	special	64	not found	x dup* 4 * dup* pi + = 9 phi 2 + sqrt /	139	9.6	True	E^(-EulerGamma)
+465	one div root pi	elementary	64	exact	x dup* recip = pi	45	64.0	True	1/Sqrt[Pi]
+466	Omega constant	special	64	exact	x x recip ** = e recip	66	64.0	True	ProductLog[1]
+467	infinite tetration of i absolute value	special	64	not found	x ln pi * dup* 2 - = phi 2 pi / ln +	140	10.3	True	Limit[Abs[Nest[I^#1 & , I, \[FormalN]]], \[FormalN] -> Infinity]
+468	B, a constant appearing in an asymptotic formula related to the exponential divisor function sigma^(e)	none	64	not found	x 3 x - dup* - dup* = pi e ** phi sqrt *	140	10.2	True	
+469	(PolyGamma(1,(1+sqrt(5))/4)-PolyGamma(1,(3+sqrt(5))/4))/2	special	64	not found	x ln 9 - dup* = 3 pi 1 + ** pi -	129	10.4	True	(PolyGamma[1,(1+Sqrt[5])/4]-PolyGamma[1,(3+Sqrt[5])/4])/2
+470	weakly carefree constant	special	64	not found	x sqrt exp 3 sqrt - recip = phi 5 sqrt recip exp *	141	11.5	True	2*Product[1 - (-1 + 2*Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 1, Infinity}] - Product[1 - (-2 + 3*Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 1, Infinity}]
+471	Product_{p prime > 2} 1-1/(p^2-3p+3), a constant related to I. M. Vinogradov's proof of the "ternary" Goldbach conjectur	none	64	not found	x 2 6 sqrt * / sqrt = 5 phi ln recip - recip	140	9.8	True	
+472	eta_A, a constant associated with the asymptotics of the enumeration of labeled acyclic digraphs	none	64	not found	x 2 e - ** 2 + = 3 7 sqrt + phi /	141	10.1	True	
+473	Stephens' constant	special	64	not found	x recip 3 sqrt e / + = 6 ln sqrt sqrt recip exp	140	9.6	True	Product[1 - Prime[n]/(-1 + Prime[n]^3), {n, 1, Infinity}]
+474	a constant related to the asymptotics of A005169	none	64	not found	x pi * 5 * e + = 2 6 phi sqrt ** +	142	9.7	True	
+475	Euler gamma	special	64	not found	x dup* 9 4 + recip + = 4 7 ln + sqrt recip	141	9.8	True	EulerGamma
+476	3^(-1/2)	algebraic	64	exact	x dup* recip = 3	46	64.0	True	3^(-1/2)
+477	Pi/(2e)	none	64	exact	x e * = pi 2 /	67	64.0	True	
+478	k3, a Diophantine approximation constant such that the conjectured volume of the "critical parallelepiped" is 2^3*k3 (th	algebraic	64	not found	x dup* e recip + 2 * = 3 pi 1 - recip exp -	137	9.8	True	8/7*Cos[2*Pi/7]*Cos[Pi/7]^2
+479	asymptotic probability of success in one of the Secretary problems	none	64	not found	x x 2 * 1 - / = e 8 sqrt pi / +	134	11.1	True	
+480	Pell constant	special	64	not found	x 8 e / * dup* = 8 pi 6 / + sqrt	137	10.9	True	1 - QPochhammer[1/2, 1/4]
+481	gamma_3, a lattice sum constant, analog of Euler's constant for 3-dimensional lattices	none	64	not found	x recip x - ln pi / = phi exp dup* 1 - recip	136	10.5	True	
+482	-zeta(1/2)/sqrt(2*Pi)	special	64	not found	x phi ** recip pi sqrt + = pi 7 sqrt phi - +	141	11.3	True	-Zeta[1/2]/Sqrt[2*Pi]
+483	first Kneser-Mahler polynomial constant	special	64	not found	x sqrt 2 pi dup* - ** = phi 3 sqrt + 5 +	138	9.7	True	(2*Catalan)/Pi
+484	Logarithmic capacity of the unit disk	special	64	not found	x phi 5 * / ln = pi 6 / pi -	128	13.3	True	Gamma[1/4]^2/(4*Pi^(3/2))
+485	Lehmer constant	special	64	not found	x 9 e ** * 1 + = 3 4 pi ** *	129	9.7	True	ConditionalExpression[Extension`LehmerConstant == Cot[Sum[(-1)^\[FormalK]*ArcCot[Subscript[\[FormalC], \[FormalK]]], {\[FormalK], 0, Infinity}]], Subscript[\[FormalC], 0] == 0 && Subscript[\[FormalC], \[FormalK]] == 1 + Subscript[\[FormalC], -1 + \[FormalK]] + Subscript[\[FormalC], -1 + \[FormalK]]^2]
+487	Gompertz constant	special	64	not found	x recip exp 5 / = 2 pi phi sqrt - /	121	10.3	True	-(E*ExpIntegralEi[-1])
+489	Champernowne base-3 constant	special	64	not found	x phi exp recip - recip = 4 6 sqrt recip exp -	133	9.8	True	ChampernowneNumber[3]
+490	second lemniscate constant	special	64	not found	x 3 * x exp recip + = pi 1 e recip - sqrt -	139	11.0	True	Gamma[3/4]^2/Sqrt[2*Pi]
+491	sqrt(13)/6	algebraic	64	exact	x 6 * dup* = 9 4 +	85	64.0	True	Sqrt[13] / 6
+492	log10(4)	elementary	64	exact	x recip 4 ln * = 9 1 + ln	101	64.0	True	Log[10, 4]
+493	G(1/2) where G is the Barnes G-function	special	64	not found	x x recip ln / 1 - = 4 pi 7 sqrt ** /	138	9.8	True	BarnesG[1/2]
+494	sum_{n>=1} 1/(n binomial(2n, n))	elementary	64	exact	x 3 sqrt * = pi 3 /	77	64.0	True	Pi/(3*Sqrt[3])
+495	QRS constant	special	64	not found	x pi x exp - / = 2 5 sqrt exp / sqrt	133	10.1	True	Root[{Zeta[1/2, #1/2] & , 0.605443657196732749478922842447`29.782073733759695}]
+496	exp minus half	elementary	64	exact	x dup* recip = e	47	64.0	True	Exp[-1/2]
+497	6/Pi^2	elementary	64	exact	x 6 / = pi dup* recip	68	64.0	True	6/Pi^2
+498	Sum{p prime>=2} log(p)/(p^2-p+1)	none	64	not found	x 3 pi sqrt / ** = pi 5 sqrt + sqrt recip	124	9.7	True	
+499	Neville five disk constant	algebraic	64	not found	x 8 * 5 ln - = 2 1 8 recip + dup* +	139	10.4	True	Root[625 - 800*\[FormalX] + 22*\[FormalX]^2 - 1776*\[FormalX]^3 + 1665*\[FormalX]^4 + 1360*\[FormalX]^5 - 3480*\[FormalX]^6 + 2112*\[FormalX]^7 + 1296*\[FormalX]^8, \[FormalX], 3]
+500	strongly triple-free set constant	none	28	not found	x 2 * 6 * pi ** = 8 pi 3 ** - dup*	142	9.8	True	
+501	best lower bound for the Steiner ratio rho_3, the least upper bound on the ratio of the length of the Steiner minimal tr	none	64	not found	x dup* recip 1 - ln recip = 6 5 ln + ln	131	9.5	True	
+502	(1/16)*Pi^2	special	64	exact	x sqrt 2 * = pi 2 /	73	64.0	True	Gamma[3/2]^4
+503	-1/(e^2 Ei(-1)), an increasing rooted tree enumeration constant associated with the Euler-Gompertz constant, where Ei is	special	64	not found	x e * exp 5 / = 2 pi phi sqrt - /	134	10.3	True	-1/(E^2*ExpIntegralEi[-1])
+504	Lenz-Ising constant	elementary	64	not found	x x phi * sqrt + dup* = 8 4 recip + pi /	139	12.3	True	1 + Pi/4 + Log[(Log[1 + Sqrt[2]]*Sqrt[2])/4]
+505	Cbrt[3/4π]	elementary	64	exact	x 2 * 3 ** = 6 pi /	90	64.0	True	CubeRoot[3/(4*Pi)]
+506	1/(theta*P'(theta)), a constant appearing in the asymptotic evaluation of the coefficients q_n in 1/(1+P(x)), where P(x)	none	64	not found	x phi dup* * e ** = 4 2 ln 3 / -	135	11.1	True	
+507	'kappa', an asymptotic enumeration constant related to unit interval graphs	none	64	not found	x exp 1 x - dup* / = 2 6 pi sqrt recip + *	141	10.8	True	
+508	Golomb–Dickman constant	special	64	not found	x e 6 sqrt - + = 1 5 sqrt exp recip -	128	9.7	True	Integrate[E^LogIntegral[\[FormalX]], {\[FormalX], 0, 1}]
+509	constant in Kac's formula	none	64	not found	x x 1 - ** dup* exp = 3 2 2 sqrt recip - **	141	10.2	True	
+510	'lambda', a constant such that exp(lambda*Pi) is the best-known upper bound (as given by Julian Gevirtz) of the John con	none	64	not found	x x dup* + 2 + exp = 2 phi ** exp 1 -	138	10.1	True	
+511	Davison-Shallit constant	special	64	not found	x 2 * 1 - pi * recip = 7 pi 3 * recip **	136	9.7	True	ConditionalExpression[Extension`DavisonShallitConstant == Sum[(-1)^\[FormalK]/(Subscript[\[FormalQ], \[FormalK]]*Subscript[\[FormalQ], 1 + \[FormalK]]), {\[FormalK], 0, Infinity}], Subscript[\[FormalQ], 0] == 1 && Subscript[\[FormalQ], 1] == 1 && Subscript[\[FormalQ], \[FormalK]] == Subscript[\[FormalQ], -2 + \[FormalK]]*(1 + Subscript[\[FormalQ], -1 + \[FormalK]])]
+512	rayleigh skewness	elementary	64	exact	x pi 3 - / x - = pi recip 4 recip - sqrt recip	139	64.0	True	2*Sqrt[Pi]*(Pi - 3)/(4 - Pi)^(3/2)
+513	1 - 1/e	elementary	64	exact	x e * = e 1 -	66	64.0	True	1 - 1/E
+514	Hardy-Littlewood constant Product_{p prime >= 5} (1-(3*p-1)/(p-1)^3)	none	64	not found	x x 6 sqrt / - recip = 2 phi 6 sqrt / +	141	10.9	True	
+515	Buffon constant	elementary	64	exact	x pi * = 2	46	64.0	True	2/Pi
+516	(2^(1/3)-1)^(1/3)	algebraic	64	exact	x 3 ** 1 + = 2 3 recip **	91	64.0	True	Power[Power[2, (3)^-1] - 1, (3)^-1]
+517	an analog of the Landau-Ramanujan constant for Loeschian numbers	none	64	not found	x e recip + x dup* + = 2 phi sqrt ** 1 -	131	11.8	True	
+518	first non-alternating series of reciprocal primes constant	special	64	not found	x 5 * exp sqrt 1 + = e 1 2 ln - recip +	140	9.4	True	Sum[Piecewise[{{-1, Mod[Prime[\[FormalK]], 3] == 1}, {1, Mod[Prime[\[FormalK]], 3] == 2}}, 0]/Prime[\[FormalK]], {\[FormalK], 1, Infinity}]
+519	Cahen's constant	special	64	not found	x sqrt recip 1 - recip pi - = 8 recip 2 sqrt recip + sqrt	140	10.8	True	ConditionalExpression[Extension`CahenConstant == Sum[(-1)^\[FormalK]/(-1 + \[FormalS][\[FormalK]]), {\[FormalK], 0, Infinity}], \[FormalS][0] == 2 && \[FormalS][\[FormalN]] == 1 - \[FormalS][-1 + \[FormalN]] + \[FormalS][-1 + \[FormalN]]^2 && \[FormalS][\[FormalN]] == 1 + Product[\[FormalS][\[FormalK]], {\[FormalK], 0, -1 + \[FormalN]}]]
+520	a constant related to a conjectured value of the Masser-Gramain constant	special	64	not found	x 1 pi sqrt - ** dup* = 5 ln 8 sqrt recip +	137	10.3	True	Pi/4*(2*EulerGamma + 2*Log[2] + 3*Log[Pi] - 4*Log[Gamma[1/4]])
+521	Integral_{x=0..Infinity} sin(x)/(x^2+1) dx	none	64	not found	x 1 - recip e dup* + = 4 6 ln recip +	124	10.1	True	
+522	unit-diameter hexagon area	algebraic	64	exact	x 3 sqrt / = 3 8 /	83	64.0	True	(3*Sqrt[3])/8
+523	Maximal unitary square-free divisor sum constant	none	64	not found	x recip 4 recip + dup* exp = phi recip 3 sqrt recip - recip	139	10.2	True	
+524	delta = (1+alpha)/4, a constant appearing in Koecher's formula for Euler's gamma constant, where alpha is A065442, the E	none	64	not found	x dup* e 8 / + = 1 pi 5 dup* / - dup*	137	9.9	True	
+525	negative of Granville-Soundararajan constant	special	64	not found	x 3 ** 1 - dup* = 6 recip 2 sqrt ln +	124	9.5	True	-(4*PolyLog[2, -Sqrt[E]] + Pi^2/3 + 1)
+526	harmonic power tower even term limit	special	64	not found	x recip x sqrt - 6 * = 1 8 recip + dup* ln recip	142	10.7	True	Limit[Fold[(1/#2)^#1 & , 1, Table[\[FormalI], {\[FormalI], 2*\[FormalN], 2, -1}]], \[FormalN] -> Infinity]
+527	escape probability for a random walk on the 3-D cubic lattice (a Polya random walk constant)	none	64	not found	x dup* 2 * recip ln recip = 1 6 4 ** + ln	135	9.6	True	
+528	Twin primes constant	special	64	not found	x e dup* recip - 2 * = phi e sqrt 1 - *	131	11.7	True	Product[1 - (-1 + Prime[\[FormalK]])^(-2), {\[FormalK], 2, Infinity}]
+529	Feller–Tornier constant	special	64	not found	x recip 1 + exp dup* 1 - = 5 exp 7 sqrt +	134	11.7	True	1/2 + Product[1 - 2/Prime[n]^2, {n, 1, Infinity}]/2
+530	Robbins constant	elementary	64	not found	x e 2 * sqrt ** = 3 8 7 recip - /	132	9.9	True	(4 + 17*Sqrt[2] - 6*Sqrt[3] - 7*Pi)/105 + Log[1 + Sqrt[2]]/5 + (2*Log[2 + Sqrt[3]])/5
+531	Laplace limit	special	64	not found	x dup* recip exp 9 - = 1 pi sqrt + 5 / sqrt	136	10.1	True	Root[{-1 + E^Sqrt[1 + #1^2]*#1 - Sqrt[1 + #1^2] & , 0.6627434193491815809747420971092529070562335491150224175204`30.}]
+532	twothirds	rational	64	exact	x 2 / = 3 recip	55	64.0	True	2/3
+533	3/2 - gamma / log(2), a coin tossing constant related to the asymptotic evaluation of the expected length of the longest	special	64	not found	x 3 ln ln / dup* = 6 pi sqrt - e **	138	10.1	True	3/2 - EulerGamma/Log[2]
+534	Shanks constant	special	64	not found	x dup* 6 + e ** = 6 pi 2 + dup* *	130	9.7	True	(Pi^2*Product[Piecewise[{{((1 - 4/Prime[\[FormalK]])*(1 + Prime[\[FormalK]])^2)/(-1 + Prime[\[FormalK]])^2, Mod[Prime[\[FormalK]], 8] == 1}}, 1], {\[FormalK], 1, Infinity}])/(16*Log[1 + Sqrt[2]])
+535	sqrt(3)/(4 - sqrt(2))	algebraic	64	exact	x recip 3 sqrt * = 4 2 sqrt -	93	64.0	True	Sqrt[3]/(4-Sqrt[2])
+536	gamma_2, a lattice sum constant, analog of Euler's constant for two-dimensional lattices	none	64	not found	x dup* 5 sqrt recip - recip = 2 7 7 sqrt ** *	137	10.9	True	
+537	probable error constant	special	64	not found	x dup* x dup* exp + = 4 8 recip + sqrt	120	11.5	True	InverseErf[1/2]*Sqrt[2]
+538	Graham biggest little hexagon area	algebraic	64	not found	x sqrt 4 * 6 recip - = 8 3 sqrt + sqrt	130	10.8	True	Root[11993 - 78488*#1 + 144464*#1^2 + 1232*#1^3 - 221360*#1^4 + 146496*#1^5 + 21056*#1^6 - 30848*#1^7 - 3008*#1^8 + 8192*#1^9 + 4096*#1^10 & , 5]
+539	generalized Euler constant gamma(1,3)	special	64	not found	x exp dup* 3 sqrt sqrt + = phi dup* ln recip 5 *	142	9.9	True	EulerGamma/3 + Pi*Sqrt[3]/18 + Log[3]/6
+540	Taniguchi constant	special	64	not found	x dup* 6 * 3 - recip = e recip phi pi ** -	139	10.7	True	Product[1 - Prime[n]^(-6) + Prime[n]^(-5) + 2/Prime[n]^4 - 3/Prime[n]^3, {n, 1, Infinity}]
+541	1 - 1/Pi	elementary	64	exact	x pi * = pi 1 -	62	64.0	True	1 - 1/Pi
+542	positive solution to the equation x/(1-x) = 1+log(1/(1-x)), an auxiliary constant associated with the problem of enumera	none	64	not found	x 3 recip + 4 dup* ** = 2 recip e sqrt sqrt recip +	137	9.9	True	
+543	log e^(π/2)	elementary	64	exact	x recip pi * exp = 9 1 + dup*	95	64.0	True	Log10[E^(Pi/2)]
+544	one div cbrt pi	elementary	64	exact	x 3 ** = pi recip	57	64.0	True	Pi^(-1/3)
+545	least x>0 having sin(4x) = (sin x)^2	none	64	not found	x dup* 3 * 5 recip - = 9 2 + recip exp dup*	137	11.1	True	
+546	Integral_{x=0..1} log(floor(1/x))/(1+x) dx	special	64	not found	x 5 ** x sqrt recip + = 1 phi sqrt sqrt pi / +	142	9.6	True	Log[2]*Log[Khinchin]
+547	-x, the real root of the equation 0 = 1 + Sum_{k>=1} prime(k) x^k. The inverse of Backhouse's constant (A072508)	none	64	not found	x 1 e recip + recip - dup* = 2 9 ** 2 - recip	136	9.8	True	
+548	harmonic power tower odd term limit	special	64	not found	x 7 ** 9 * = 1 2 sqrt + ln pi **	131	9.8	True	Limit[Fold[(1/#2)^#1 & , 1, Table[\[FormalI], {\[FormalI], 1 + 2*\[FormalN], 2, -1}]], \[FormalN] -> Infinity]
+549	reciprocal of Steiner number	elementary	64	exact	x recip ln = e recip	58	64.0	True	E^(-E^(-1))
+550	Sum_{k=1..50000} (-1)^(k+1) / k	special	64	false positive	x exp 1 - sqrt recip 1 - = 9 1 + 5 ** recip	137	14.9	True	Sum[(-1)^(k + 1)/k, {k, 1, 50000}]
+551	Natural logarithm of 2	elementary	64	exact	x exp = 2	41	64.0	True	Log[2]
+552	rank-2 Artin constant	special	64	not found	x phi 7 sqrt / - = pi 5 5 sqrt ** /	138	10.2	True	Product[1 - 1/((-1 + Prime[\[FormalK]])*Prime[\[FormalK]]^2), {\[FormalK], 1, Infinity}]
+553	First continued fraction constant	special	64	not found	x phi ** dup* recip pi - = 2 sqrt exp dup* 1 - recip	140	10.5	True	BesselI[1, 2]/BesselI[0, 2]
+554	log10(5)	elementary	64	exact	x recip 5 ln * = 9 1 + ln	102	64.0	True	Log[10, 5]
+555	probability that a point of an infinite (rooted) tree is fixed by every automorphism of the tree	none	64	not found	x pi ln + x ** = 3 recip 2 ln sqrt recip +	135	10.3	True	
+558	Integral_{x = 1..infinity} 1/x^x dx	none	64	not found	x dup* x exp recip - dup* = 3 6 8 ** /	136	10.5	True	
+559	carefree product constant	special	64	not found	x phi pi - recip + recip = 3 4 recip - 3 **	134	10.8	True	Product[1 - 1/(Prime[\[FormalK]]*(1 + Prime[\[FormalK]])), {\[FormalK], 1, Infinity}]
+560	rectilinear crossing constant	elementary	64	exact	x 1 - pi dup* * = 4 3 * recip 3 -	119	64.0	True	1 - 35/(12*Pi^2)
+561	'C' (as designated by D. Shanks), a constant appearing in the second order term of the asymptotic expansion of the numbe	none	64	not found	x 2 2 sqrt recip - / = e sqrt 2 / pi **	130	10.4	True	
+562	K, a constant arising in the analysis of the binary Euclidean algorithm	none	40	not found	x phi recip - sqrt sqrt recip = pi 2 pi recip + / dup*	136	10.2	True	
+563	sqrt(1/2)	algebraic	64	exact	x dup* recip = 2	44	64.0	True	1/Sqrt[2]
+564	rabbit constant	special	64	not found	x e recip 7 - ** = e 6 sqrt + sqrt exp	136	11.0	True	Sum[2^(-Floor[\[FormalK]*GoldenRatio]), {\[FormalK], 1, Infinity}]
+565	generalized Euler constant gamma(1,4)	special	64	not found	x 2 sqrt + x ** dup* = phi pi ** phi -	132	9.5	True	EulerGamma/4 + Pi/8 + Log[2]/4
+566	Hopf constant	special	64	not found	x 7 ** phi recip - = pi dup* recip 2 - recip	124	10.7	True	6/Pi^2 + Integrate[3/\[FormalTheta]^2 - (1 - \[FormalTheta]*Cot[\[FormalTheta]])^(-1), {\[FormalTheta], 0, Pi/2}]/Pi
+567	1/(phi*log(4 - phi))	elementary	64	exact	x phi * recip exp = 4 phi -	96	64.0	True	(GoldenRatio Log[4-GoldenRatio])^(-1)
+568	Traveling Salesman constant	algebraic	64	not found	x e - dup* phi recip + = pi pi 2 sqrt / sqrt +	142	10.0	True	4/153*(1 + 2*Sqrt[2])*Sqrt[51]
+569	e^(-1/3)	elementary	64	exact	x recip ln = 3 recip	57	64.0	True	E^(-1/3)
+570	constant appearing in the expected number of comparisons for a successful digital tree search (negated)	none	64	not found	x exp dup* pi - ln = 5 e exp + recip	126	10.2	True	
+571	1/(2 log 2)	elementary	64	exact	x recip exp = 4	51	64.0	True	1/(2Log[2])
+572	k2, a Diophantine approximation constant such that the area of the "critical parallelogram" (in this case a square) is 4	algebraic	64	exact	x phi / = 5 sqrt recip	71	64.0	True	(1+1/Sqrt[5])/2
+573	Sarnak constant	special	64	not found	x dup* pi pi ** * = 5 7 sqrt exp +	123	10.3	True	Product[1 - (2 + Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 2, Infinity}]
+574	Langford constant	elementary	64	not found	x 4 * 7 sqrt - = 7 sqrt sqrt sqrt 5 /	134	9.8	True	97/150 + Pi/40
+575	constant that appears in the asymptotic formula for average order of the infinitary divisors sum function (A049417)	none	64	not found	x 2 * pi ** x - = 1 phi e recip - dup* +	141	11.4	True	
+576	a constant related to the asymptotic evaluation of Product_{p prime congruent to 1 modulo 4} (1 + 1/p)	none	64	not found	x exp 2 - 4 * = 4 e - sqrt exp recip	132	11.3	True	
+577	sum_{n>=1} 1/binomial(2n, n)	elementary	64	exact	x 9 * 3 - = 2 pi 3 sqrt / *	118	64.0	True	1/3 + 2*Sqrt[3]*Pi/27
+579	1/Gamma(2/3)	special	64	not found	x e exp sqrt sqrt ** = 1 2 sqrt pi / -	124	10.9	True	1/Gamma[2/3]
+580	Dottie number	special	64	not found	x dup* recip 7 sqrt sqrt - = pi pi sqrt recip exp + recip	140	10.2	True	Root[{Cos[#1] - #1 & , 0.7390851332151606416553120876738734040134117589007574649656`30.}]
+581	densest spatial packing of spheres constant	elementary	64	exact	x 2 sqrt * = pi 3 /	75	64.0	True	Pi/(3*Sqrt[2])
+582	Rosser constant	special	64	not found	x recip phi dup* recip exp + = phi 1 pi recip + dup* *	139	11.0	True	(8*Catalan)/Pi^2
+583	Sarnak product constant	special	64	not found	x x dup* recip phi - / = phi 2 * 2 sqrt recip +	142	9.9	True	(5*Pi^2*Product[1 - (2 + Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 2, Infinity}])/48
+584	s_4, a 4-dimensional Steiner ratio analog	none	64	not found	x e * dup* pi - sqrt = pi 3 + dup* recip exp recip	141	10.3	True	
+585	B, the coefficient of n*log(n)^2 in the asymptotic formula of Ramanujan for Sum_{k=1..n} (d(k)^2), where d(k) is the num	none	64	not found	x x sqrt * phi recip + = 1 7 recip + 3 sqrt **	141	9.8	True	
+586	Rényi parking constant	special	64	not found	x dup* pi 2 + dup* * = pi sqrt 5 ** e -	135	10.2	True	Integrate[Exp[-2*(EulerGamma + Gamma[0, \[FormalT]] + Log[\[FormalT]])], {\[FormalT], 0, Infinity}]
+587	exp(-gamma/2)	special	64	not found	x sqrt ln dup* x ** recip = 6 phi 2 sqrt + *	140	10.0	True	Exp[-EulerGamma/2]
+588	three quarters	rational	64	exact	x 3 / = 4 recip	58	64.0	True	3/4
+589	pi^(-1/4)	elementary	64	exact	x dup* recip = pi sqrt	54	64.0	True	Pi^(-1/4)
+590	Sum_{n>=1} (-1)^(n-1)*H(n)/n^2, where H(n) is the n-th harmonic number	special	64	not found	x 1 - recip e 2 * + = 1 8 ln 5 / +	142	10.1	True	5*Zeta[3]/8
+591	linear asymptotic constant B in Sum_{k=1..n} 1/A000688(k) = ~B*n + 	none	64	not found	x x exp * 2 - dup* = e 1 - sqrt 8 /	138	10.2	True	
+592	Flajolet-Odlyzko constant	special	64	not found	x dup* 5 * dup* 3 / = phi 2 sqrt ln sqrt /	141	9.8	True	2*Integrate[1 - E^(ExpIntegralEi[-\[FormalT]]/2), {\[FormalT], 0, Infinity}]
+593	constant appearing in the variance for inserting in a digital tree	special	64	false positive	x 4 ln recip - = 6 4 * recip	101	22.7	True	1/Log[4] + 1/24 + (4*Pi^2/Log[2]^2)*Sum[DivisorSigma[1, n]*Exp[-4*Pi^2*n/Log[2]], {n, 1, 6}]
+594	Landau-Ramanujan constant	special	64	not found	x x ** x ln + = phi ln phi / sqrt	131	10.2	True	Product[((4^2^\[FormalK]*(1 - 2^(-2^\[FormalK]))*Zeta[2^\[FormalK]])/(Zeta[2^\[FormalK], 1/4] - Zeta[2^\[FormalK], 3/4]))^2^(-1 - \[FormalK]), {\[FormalK], 1, Infinity}]/Sqrt[2]
+595	analog of the Mertens constant B_2 in the asymptotic series for the variance of the number of prime factors Omega	none	64	not found	x recip phi - dup* recip = 4 pi phi ** +	119	10.3	True	
+596	binary Liouville number	special	64	exact	x 1 8 recip - dup* - = 8 8 ** recip	121	36.0	True	Sum[1/2^(n!), {n, Infinity}]
+597	-x, where x is the negative solution to the equation 2^x = x^2	none	64	exact	x x recip ** = 2 sqrt recip	72	64.0	True	
+598	Sum_{k>1} 1/(k*(k-1)*zeta(k)), a constant related to Niven's constant	none	64	not found	x recip 8 ln * 1 - = phi e 8 + recip +	141	10.5	True	
+599	C = 2^(1/3)*e^(1/4)/A^3, a constant associated with the Gaudin-Mehta probability distribution and the Glaisher-Kinkelin 	special	64	not found	x ln 4 9 / + = e 2 * 7 recip + recip	141	10.5	True	2^(1/3)*E^(1/4)/Glaisher^3
+600	trace of the Ruelle-Mayer linear operator G_2	none	64	not found	x 2 sqrt 5 - ** dup* = 2 pi exp + dup* ln	140	10.4	True	
+601	Sum_{p prime} 1/(p*(p-1))	none	64	not found	x 6 sqrt ** 1 + dup* = 4 5 recip - phi /	139	10.4	True	
+602	Flajolet-Martin constant	special	64	not found	x 4 ** 3 * ln = 2 sqrt 3 e ** /	133	9.7	True	(E^EulerGamma*Product[(1 + 1/(2*\[FormalK]))^(-1)^Mod[DigitCount[\[FormalK], 2, 1], 2], {\[FormalK], 1, Infinity}])/Sqrt[2]
+603	Pi*G - 7*zeta(3)/4, where G = A006752	special	64	not found	x pi exp sqrt sqrt * sqrt = pi phi 7 / **	134	9.5	True	Pi Catalan-7Zeta[3]/4
+604	lambda_3, an analog of the Stolarsky-Harborth constant for the number of elements not divisible by 3 in Pascal's triangl	none	64	exact	x 2 * 3 ln ** = 2 2 ln **	111	64.0	True	
+605	strongly carefree product constant	special	64	not found	x phi exp ** 6 * = phi 2 pi dup* * recip +	143	11.2	True	Product[1 - (1 + Prime[\[FormalK]])^(-2), {\[FormalK], 1, Infinity}]
+606	Bender r constant	none	51	not found	x 9 pi sqrt + recip + = pi 3 recip + 4 /	133	10.4	True	
+607	hypercube line-picking constant	special	64	not found	x e 2 + ** e * = 2 pi pi sqrt - sqrt -	143	10.8	True	(-644 + 1344*Catalan + 3744*ArcCsch[Sqrt[2]] + 270*ArcSinh[1] - 3024*Im[PolyLog[2, I*(3 - 2*Sqrt[2])]] + 1773*Log[3] + 84*(PolyGamma[1, 1/12] + PolyGamma[1, 5/12]) + (6048*I)*(PolyLog[2, (1/2 - I/2)*(-2 + Sqrt[2])] - PolyLog[2, (1/2 + I/2)*(-2 + Sqrt[2])]) + (6048*I)*(PolyLog[2, I*(1 - Sqrt[2])] - PolyLog[2, I*(-1 + Sqrt[2])]) + 438*Sqrt[2] - 2448*ArcCot[2*Sqrt[2]]*Sqrt[2] - 189*(PolyGamma[1, 1/8] + PolyGamma[1, 3/8])*Sqrt[2] + 12*Pi*(-16 + 7*Pi*(-8 + 9*Sqrt[2])) + 288*Sqrt[3])/3780
+608	6/(Pi^2 A086724)	none	64	not found	x 2 e ** recip - recip = pi 4 / pi ** exp	137	10.0	True	
+609	log10(6)	elementary	64	exact	x recip 6 ln * = 9 1 + ln	103	64.0	True	Log[10, 6]
+610	Purdom-Williams constant, a constant related to the Golomb-Dickman constant and to the asymptotic evaluation of the expe	none	64	not found	x recip 2 ln pi / - = 5 3 2 sqrt ** /	137	9.9	True	
+611	first Bernoulli sophomore dream constant	special	64	not found	x 3 x ** pi - + = phi dup* 5 exp + recip	142	10.2	True	-Sum[(-\[FormalK])^(-\[FormalK]), {\[FormalK], 1, Infinity}]
+612	(sqrt(3) + sqrt(5) + 2*sqrt(6))/(8*sqrt(2))	algebraic	64	not found	x ln dup* recip e sqrt + = 7 pi 2 recip - *	134	9.9	True	(Sqrt[3]+Sqrt[5]+2Sqrt[6])/(8Sqrt[2])
+613	(3*sqrt(3)+sqrt(7))/10	algebraic	64	exact	x 5 * x recip + = 3 3 sqrt *	105	64.0	True	(3*Sqrt[3]+Sqrt[7])/10
+614	Integral_{x = 0 to oo} Product_{m=1..oo} cos(x/m) dx	none	39	not found	x sqrt recip 3 / x ** = 9 4 + sqrt pi -	139	9.7	True	
+615	pi/4	elementary	64	exact	x pi / = 4 recip	57	64.0	True	Pi/4
+616	Lüroth constant	special	64	not found	x dup* 6 pi / * dup* = phi 5 7 / **	138	10.2	True	Sum[Log[\[FormalK]/(-1 + \[FormalK])]/\[FormalK], {\[FormalK], 2, Infinity}]
+617	asymptotic constant eta for counts of weakly binary trees	none	64	not found	x 3 x / 2 - / = pi 4 2 sqrt ** /	136	9.8	True	
+618	Lal's constant: the Hardy-Littlewood constant for A217795	none	64	not found	x 9 * 8 - dup* = 2 pi 2 recip - /	128	9.9	True	
+619	Kolakoski constant	none	64	not found	x pi 2 + 9 / * = pi 1 - e 2 + /	141	9.9	True	
+620	root two div pi	elementary	64	exact	x dup* = 2 pi /	56	64.0	True	Sqrt[2/Pi]
+621	log 2π	elementary	64	exact	x pi 2 * ln / = 9 1 + ln recip	117	64.0	True	Log10[2*Pi]
+622	Product_{n>1} (1 - 1/n^2)^(1/n)	none	64	not found	x 1 + pi ** 1 + dup* = 8 e 4 + *	131	11.0	True	
+624	unique real solution of the equation Ei(x)-gamma-log(x) = 1, where Ei is the exponential integral function and gamma the	none	64	not found	x dup* recip 5 * pi - = phi pi 6 / + dup*	139	10.1	True	
+625	disk half-area offset constant	special	64	not found	x 2 * dup* 1 - dup* = e e 3 * recip -	128	10.0	True	Root[{Pi - 4*ArcCos[#1/2] + #1*Sqrt[4 - #1^2] & , 0.8079455065990344186379234801330000000000000000000000000001`29.907382069955993}]
+626	Solomon parking constant	special	64	not found	x 4 ** 1 + pi / = 3 pi e sqrt ** /	135	10.1	True	Integrate[(1 + 2*\[FormalX])*Exp[-2*(-1 + \[FormalX] + Exp[-\[FormalX]])]*Exp[-2*(EulerGamma - ExpIntegralEi[-\[FormalX]] + Log[\[FormalX]])], {\[FormalX], 0, Infinity}]
+627	Alladi-Grinstead constant	special	64	not found	x 5 * recip x dup* + = phi 3 / 6 recip **	140	9.6	True	Exp[-1 - Sum[Log[1 - \[FormalK]^(-1)]/\[FormalK], {\[FormalK], 2, Infinity}]]
+628	product_{n>=1} (n/(n+1))^((-1)^t(n-1)), a probabilistic counting constant, where t(n) = A010060(n) is the Thue-Morse seq	none	64	not found	x 2 * 2 ln recip ** = pi 5 + 3 recip **	134	9.7	True	
+629	'mu', a Young-Fejér-Jackson constant linked to the positivity of certain sine sums	none	64	not found	x recip 4 7 recip ** * = 4 2 ln dup* + ln	141	9.5	True	
+630	(1 + sqrt(6))/(3*sqrt(2))	algebraic	64	exact	x 3 sqrt recip - = 2 sqrt 6 /	96	64.0	True	(1+Sqrt[6])/(3Sqrt[2])
+631	1/Gamma(3/4)	special	64	not found	x dup* 2 + ln dup* recip = pi pi sqrt - sqrt sqrt sqrt	139	10.8	True	1/Gamma[3/4]
+632	sum_{n>=0} 1/2^(2^n)	special	64	not found	x e + 3 / dup* = pi pi 6 ln / -	133	10.9	True	Sum[1/2^(2^n), {n, 0, Infinity}]
+633	a2, the second of two constants associated with Djokovic's conjecture on an integral inequality	none	64	not found	x phi * exp 6 * = pi exp phi recip -	129	10.1	True	
+634	First Nielsen-Ramanujan constant	elementary	64	exact	x 3 * sqrt = pi 2 /	75	64.0	True	Pi^2/12
+635	Sierpiński constant	special	64	not found	x 7 sqrt * exp sqrt = 3 7 exp sqrt recip -	135	10.8	True	2*EulerGamma + 2*Log[2] + 3*Log[Pi] - 4*Log[Gamma[1/4]]
+636	sigma_3, a Turán's Power Sum Constant	none	64	not found	x 5 ln ln sqrt - = 2 pi ** 2 sqrt - recip	139	11.0	True	
+637	Prouhet-Thue-Morse constant	special	64	not found	x recip 1 pi recip + sqrt * = 1 phi 9 / + dup*	135	9.7	True	1 - Product[(-1 + 2^2^\[FormalK])/2^2^\[FormalK], {\[FormalK], 0, Infinity}]/2
+638	Pi/8 + sqrt(3)/4	elementary	64	exact	x 8 * pi - = 2 3 sqrt *	98	64.0	True	Pi/8+Sqrt[3]/4
+639	asymptotic efficiency constant	elementary	64	exact	x 2 * pi * = 3 3 sqrt *	93	64.0	True	(3*Sqrt[3])/(2*Pi)
+640	1/zeta(3)	special	64	not found	x 5 sqrt recip exp sqrt * = 1 pi 9 + recip + sqrt	141	10.3	True	1/Zeta[3]
+641	Rosser's constant	none	64	not found	x pi 9 + ln * = 6 pi sqrt - ln dup*	137	10.7	True	
+642	Gauss's constant	special	64	not found	x recip 1 - recip 3 - = pi 2 phi recip ** /	127	10.9	True	ArithmeticGeometricMean[1, Sqrt[2]]^(-1)
+643	Baker constant	elementary	64	exact	x 3 * 2 ln - = pi 3 sqrt /	108	64.0	True	(Log[2] + Pi/Sqrt[3])/3
+645	Shepp's constant 'alpha', an optimal stopping constant associated with the case of a zero mean and unit variance distrib	none	64	not found	x pi 8 / + exp = 2 pi 5 recip - sqrt *	139	10.3	True	
+646	2*G/(Pi*log(2)), a constant appearing in the average root bifurcation ratio of binary trees, where G is Catalan's consta	special	64	not found	x phi ** 6 / sqrt = 1 6 3 recip ** + recip	138	10.4	True	2 Catalan/(Pi*Log[2])
+647	sin one	elementary	64	not found	x dup* exp pi 2 * + = 7 e 1 + ln +	137	10.0	True	Sin[1]
+648	reciprocal of the Khinchin-Lévy constant	elementary	64	exact	x 8 ln / = 4 pi dup* /	96	64.0	True	(12*Log[2])/Pi^2
+650	log10(7)	elementary	64	exact	x recip 7 ln * = 9 1 + ln	103	64.0	True	Log[10, 7]
+651	3/(2*sqrt(Pi))	elementary	64	exact	x pi sqrt * = 3 2 /	75	64.0	True	3/(2*Sqrt[Pi])
+652	ubiquitous constant	special	64	not found	x phi * 9 1 + * = pi pi 6 / - exp	143	13.3	True	(2*Pi^(3/2))/Gamma[1/4]^2
+653	Regular paperfolding sequence	special	64	not found	x 9 e / * dup* = 7 2 pi 1 - / +	137	11.0	True	Sum[8^2^n/(-1 + 2^2^(2 + n)), {n, 0, Infinity}]
+654	maximal quantum success probability of the CHSH game	algebraic	64	exact	x 2 recip - = 8 sqrt recip	75	64.0	True	Cos[Pi/8]^2
+655	1/(2*K^2) = Product_(p prime congruent to 3 modulo 4) (1 - 1/p^2), where K is the Landau-Ramanujan constant	none	64	not found	x x pi / exp + = phi 3 sqrt pi / +	131	10.0	True	
+656	rank-3 Artin constant	special	64	not found	x ln recip 6 + recip = 1 pi pi exp recip + -	131	10.1	True	Product[1 - 1/((-1 + Prime[\[FormalK]])*Prime[\[FormalK]]^3), {\[FormalK], 1, Infinity}]
+657	four minus pi	elementary	64	exact	x pi + = 4	49	64.0	True	4 - Pi
+658	Champernowne base-2 constant	special	64	not found	x x dup* recip exp ** recip = e e 3 / sqrt -	138	10.6	True	ChampernowneNumber[2]
+659	Steiner ratio of the Euclidean plane	algebraic	64	exact	x 2 * = 3 sqrt	56	64.0	True	Sqrt[3]/2
+660	log(4 - phi), where phi = A001622	elementary	64	exact	x exp 1 - = 3 phi -	81	64.0	True	Log[4-GoldenRatio]
+661	log e^2	elementary	64	exact	x recip exp dup* = 9 1 +	77	64.0	True	Log10[E^2]
+662	sqrt(Pi)/(2K)*exp(-gamma/2) where K is the Landau-Ramanujan constant and gamma the Euler-Mascheroni constant	none	64	not found	x 2 pi recip + ln - = 3 exp pi sqrt * recip	133	11.2	True	
+663	square edge line-picking constant	elementary	64	not found	x dup* 2 * pi ** dup* = phi dup* exp e recip -	138	10.1	True	(2 + 5*Log[1 + Sqrt[2]] + Sqrt[2])/9
+664	integral_{0..infinity} exp(-x^2)*log(x) dx	special	64	not found	x pi pi sqrt + dup* ** = 3 pi ** e - recip	134	11.4	True	-(-(1/4)*Sqrt[Pi]*( EulerGamma + 2*Log[2]))
+666	product_{n>=1} (2n/(2n+1))^((-1)^t(n-1)), a probabilistic counting constant, where t(n) = A010060(n) is the Thue-Morse s	none	64	not found	x pi pi ** ** pi * = 5 dup* 7 ln * recip	141	10.0	True	
+667	total area of Ford circles	special	64	not found	x x e - recip + recip = 5 phi 2 sqrt ** -	137	10.1	True	(45*Zeta[3])/(2*Pi^3)
+668	(5/18)*Pi	elementary	64	exact	x 2 pi / * = 5 9 /	92	64.0	True	5Pi/18
+669	a constant related to the asymptotic counting function of numbers of the form x^2 + 2*y^2 (A002479)	none	64	not found	x 3 recip + pi * 1 - = 4 phi e - dup* -	143	11.3	True	
+670	Integral_{x=0..Pi/2} sin(x)^(3/2) dx	special	64	not found	x pi dup* ** exp exp = e phi dup* ln +	130	10.8	True	1/3*Sqrt[2]*EllipticK[1/2]
+671	sqrt(2)/phi, where phi = (1+sqrt(5))/2	algebraic	64	exact	x phi * = 2 sqrt	59	64.0	True	Sqrt[2]/GoldenRatio
+672	sum of reciprocal perfect powers (excluding 1)	none	64	not found	x recip pi recip - recip 2 - = 2 sqrt recip 5 sqrt sqrt -	142	9.6	True	
+673	average length of a line segment picked at random in a unit 5-cube	none	64	not found	x e ** 7 * 1 + = pi 5 recip + pi sqrt *	142	9.7	True	
+674	an Ising constant related to the triangular lattice	none	64	not found	x 7 ** 2 - dup* recip = 2 5 recip + sqrt ln	136	10.8	True	
+675	quadratic class number constant	special	64	not found	x 1 - recip 9 + recip = pi 1 + sqrt 4 recip -	132	10.7	True	Product[1 - 1/(Prime[\[FormalK]]^2*(1 + Prime[\[FormalK]])), {\[FormalK], 1, Infinity}]
+676	positive minimum of the gamma function	special	64	not found	x ln pi + 5 / = 2 phi dup* * ln recip	132	9.9	True	Gamma[Root[{PolyGamma[0, #1] & , 1.46163214496836234126265954233`29.164838085677864}]]
+677	sqrt(Pi)/2	elementary	64	exact	x 2 * = pi sqrt	55	64.0	True	Sqrt[Pi]/2
+678	exp(gamma)/2	special	64	not found	x 3 * 1 pi - + recip = 3 sqrt pi e / **	139	11.9	True	E^EulerGamma/2
+679	reciprocal sum of integer powers constant	special	64	not found	x dup* exp recip 2 recip - = 1 1 pi dup* recip + sqrt -	137	10.6	True	Sum[-1 + Zeta[Prime[\[FormalK]]], {\[FormalK], 1, Infinity}]
+680	Gamma(4/3)	special	64	not found	x ln x e / - = pi 1 + dup* recip 2 recip -	138	10.4	True	Gamma[4/3]
+681	Product_{p prime, p == 1 (mod 4)} (1 - 2/p^2)	none	64	not found	x exp 4 ln ln + = 2 sqrt 4 ln / exp	143	11.0	True	
+682	'delta', a constant arising in the asymptotics of the regularized product of the Fibonacci numbers	none	64	not found	x 3 2 / sqrt ln + = 3 e recip + ln sqrt	138	9.9	True	
+683	Gamma(5/3)	special	64	not found	x 2 sqrt x dup* + * = e pi sqrt sqrt + sqrt	130	11.2	True	Gamma[5/3]
+684	log10(8)	elementary	64	exact	x recip 8 ln * = 9 1 + ln	104	64.0	True	Log[10, 8]
+685	disk line-picking constant	elementary	64	exact	x 9 * 5 * = 2 7 ** pi /	115	64.0	True	128/(45*Pi)
+686	Gamma(5/4)	special	64	not found	x exp dup* x - ln = pi 1 + 8 sqrt recip **	139	11.3	True	Gamma[5/4]
+687	densest planar packing of circles constant	elementary	64	exact	x 3 sqrt * = pi 2 /	75	64.0	True	Pi/(2*Sqrt[3])
+688	value of x such that K(x) = 2E(x)	none	64	not found	x 3 + x ln * = pi 8 / sqrt 1 -	128	10.3	True	
+689	(sqrt(Pi)/(2^(1/4)*Gamma(5/8)*Gamma(7/8)))^2	special	64	not found	x x e sqrt - ** = 5 dup* ln 3 /	125	10.1	True	(Pi/Sqrt[2])*(1/(Gamma[5/8]*Gamma[7/8]))^2
+690	(1 + sqrt(3))/3	algebraic	64	exact	x 3 recip - = 3 sqrt recip	73	64.0	True	(1+Sqrt[3])/3
+691	Catalan's constant	special	64	not found	x 2 pi ln + ** recip = 8 pi 1 - / ln	138	10.3	True	Catalan
+692	log root two pi	elementary	64	exact	x exp dup* = pi 2 *	68	64.0	True	Log[Sqrt[2*Pi]]
+693	Gamma(7/4)	special	64	not found	x 2 * dup* exp 3 - = pi 9 phi recip - *	141	10.2	True	Gamma[7/4]
+694	position of the positive real maximum of Dawson's integral D_+(x)	none	64	not found	x 2 - dup* exp 2 - = 9 2 / 9 recip **	142	11.0	True	
+695	cube face line-picking constant	elementary	64	not found	x ln 3 pi - / = 6 ln sqrt ln sqrt	129	11.1	True	(4 - 7*Pi + 21*Log[1 + Sqrt[2]] + 42*Log[2 + Sqrt[3]] + 17*Sqrt[2] - 6*Sqrt[3])/75
+696	Product_{n>=1} (1 - 1/(4n+1)^2)	special	64	not found	x 3 2 pi ** - * = pi recip e 3 + -	133	10.4	True	Product[1 - 1/(4 n + 1)^2, {n, 1, Infinity}]
+697	an Ising constant related to the random coloring problem	special	64	not found	x pi dup* 6 recip + ** = 3 e recip + 7 /	138	10.0	True	Log[2]/2 + 2*Catalan/Pi
+698	rank-4 Artin constant	special	64	not found	x 9 2 / dup* ** = 8 ln sqrt exp recip	128	11.2	True	Product[1 - 1/((-1 + Prime[\[FormalK]])*Prime[\[FormalK]]^4), {\[FormalK], 1, Infinity}]
+699	-zeta'(2) (the first derivative of the zeta function at 2)	none	64	not found	x dup* exp pi 1 + * = 8 2 pi recip ** *	132	10.1	True	
+700	(4K/Pi)^2 where K is the Landau-Ramanujan constant	none	64	not found	x dup* recip x - 2 * = 6 2 e ** - dup*	135	10.2	True	
+701	Pi*(1+sqrt(2))/8	elementary	64	exact	x 1 2 sqrt + / = pi 8 /	94	64.0	True	Pi*(1+Sqrt[2])/8
+702	log10(9)	elementary	64	exact	x recip 9 ln * = 9 1 + ln	104	64.0	True	Log[10, 9]
+703	3/π	elementary	64	exact	x pi * = 3	48	64.0	True	3/Pi
+704	Magic angle	elementary	64	not found	x exp 7 sqrt recip + = 8 e pi / + sqrt	133	9.9	True	ArcCos[1/Sqrt[3]]
+705	(log(2) + Pi)/4	elementary	64	exact	x 4 * exp = 2 pi exp *	92	64.0	True	(Log[2]+Pi)/4
+706	a limit associated with the asymptotic number of ways of writing a number as a sum of powers of 2, with each power used 	elementary	64	not found	x x phi ** - ln = 7 9 recip 2 - /	139	10.3	True	3^(Log[GoldenRatio]/Log[2]) / Sqrt[5]
+707	a constant related to the asymptotic expansion of the Lebesgue constant corresponding to the n-th Chebyshev polynomial	special	64	not found	x phi 7 * ln * = pi e sqrt 1 - sqrt -	140	12.1	True	2/Pi*(3*Log[2] - Log[Pi] + EulerGamma)
+708	L(3, chi4), where L(s, chi4) is the Dirichlet L-function for the non-principal character modulo 4	elementary	64	exact	x 2 pi / * = pi 4 / dup*	95	64.0	True	Pi^3/32
+709	Lochs constant	elementary	64	exact	x pi dup* 2 ln / * = 6 9 1 + ln *	141	64.0	True	6*Log[2]*Log[10]/Pi^2
+710	4*K/Pi, a constant appearing in the asymptotic evaluation of the number of non-hypotenuse numbers not exceeding a given 	none	64	not found	x 7 + 2 * pi * = 9 3 sqrt recip exp **	141	10.0	True	
+711	log 3π	elementary	64	exact	x 9 1 + ln * = pi 3 * ln	111	64.0	True	Log10[3*Pi]
+712	Elbert constant	special	64	not found	x 7 ** 1 x - + = 3 e exp sqrt / sqrt	140	10.5	True	ConditionalExpression[Extension`ElbertConstant == 1 + E^\[FormalU] - (\[FormalV]*E^\[FormalU])/2 + E^(\[FormalU] + \[FormalV]/2) - E^\[FormalV], E^\[FormalU] + 2*E^(\[FormalU] + \[FormalV]/2) + E^(\[FormalV]/2) + E^(\[FormalU] + \[FormalV]) == 2*E^\[FormalV] + E^((3*\[FormalV])/2) && 1 + (1 + \[FormalU] - \[FormalV])*E^\[FormalU] + 2*E^(\[FormalU] + \[FormalV]/2) == 2*E^\[FormalV] && -1/3 < \[FormalU] < 0 && 1/3 < \[FormalV] < 1]
+713	4*sqrt(2) - 6*sqrt(6)/Pi	elementary	64	exact	x 2 sqrt / 4 - dup* = 3 pi 6 / dup* /	138	64.0	True	4Sqrt[2]-6Sqrt[6]/Pi
+714	generalized Glaisher-Kinkelin constant A(3)	special	64	not found	x 4 ln ** 3 * = 1 pi sqrt + 7 recip +	135	10.1	True	Exp[-11/720 - Zeta'[-3]]
+715	a parking constant related to the asymptotic expected number of cars, assuming random car lengths	none	64	not found	x x dup* ** dup* pi + = 8 sqrt e sqrt sqrt +	138	11.2	True	
+716	a constant related to the asymptotic evaluation of Product_{p prime congruent to 3 modulo 4} (1 + 1/p)	none	64	not found	x 1 + 4 ** e + = pi 1 + dup* 3 ln +	140	10.4	True	
+717	ln(Gamma(1/3))	special	64	not found	x 1 e 5 * + ** = 2 sqrt 5 recip + 2 /	140	10.0	True	LogGamma[1/3]
+718	Reuleaux triangle square cutting fraction	elementary	64	exact	x 2 3 sqrt * - = pi 6 / 3 -	118	64.0	True	-3 + Pi/6 + 2*Sqrt[3]
+719	logarithm of Khinchin constant	special	64	not found	x sqrt exp sqrt 1 - dup* = 5 ln sqrt sqrt e /	139	10.3	True	Log[Khinchin]
+720	phi(0), an auxiliary constant associated with Shapiro's cyclic sum constant lambda	none	64	not found	x 7 sqrt ** pi recip + = 4 e recip - ln	130	11.2	True	
+721	Asymptotic behavior of Lebesgue constants	special	64	not found	x 2 - dup* 4 recip + = 6 5 dup* / exp	131	11.3	True	(-4*PolyGamma[0, 1/2])/Pi^2 + (8*Sum[Log[k]/(-1 + 4*k^2), {k, 1, Infinity}])/Pi^2
+722	generalized Glaisher-Kinkelin constant A(4)	special	64	not found	x 4 ** 1 - dup* ln = 2 9 recip ** 8 -	143	10.3	True	Exp[-3*Zeta[5]/(4*Pi^4)]
+723	log π^2	elementary	64	exact	x pi dup* ln / = 9 1 + ln recip	109	64.0	True	Log10[Pi^2]
+724	Ramanujan's first continued fraction constant	elementary	64	not found	x recip 1 - dup* recip 1 - = 1 pi 4 * exp +	129	13.9	True	Exp[(2*Pi)/5]*(-GoldenRatio + Sqrt[GoldenRatio*Sqrt[5]])
+725	One	rational	64	exact	x = 1	25	64.0	True	1
+726	'nu', a coefficient related to the variance for searching corresponding to patricia tries	none	64	false positive	x 1 - sqrt recip = phi dup* exp exp	99	15.2	True	
+727	zeta(9)	special	64	not found	x 5 6 exp + ** = 1 e pi 1 - / +	137	11.0	True	Zeta[9]
+728	side of the equilateral triangle that can cover every triangle of perimeter 2	none	64	not found	x 2 6 exp + ** = 3 3 ** pi - ln	137	11.2	True	
+729	generalized Stirling constant	none	64	not found	x 6 exp ** 3 / = 6 pi dup* recip **	126	9.9	True	
+730	Pi^3/(36*sqrt(3)) + 91*zeta(3)/216	special	64	not found	x dup* e + 2 ln * = 6 sqrt exp 9 -	138	10.2	True	Pi^3/(36*Sqrt[3])+91*Zeta[3]/216
+731	DeVicci's tesseract constant	algebraic	64	not found	x e 5 exp - ** = e 2 2 sqrt sqrt * -	141	11.3	True	Root[16 + 16*#1^2 - 7*#1^4 - 28*#1^6 + 4*#1^8 & , 3, 0]
+732	zeta(7)	special	64	not found	x recip 2 7 / + = 3 pi dup* + sqrt ln	126	10.7	True	Zeta[7]
+733	generalized Glaisher-Kinkelin constant A(5)	special	64	not found	x 7 * 1 + pi / = 2 sqrt pi sqrt sqrt sqrt +	137	10.5	True	Exp[137/15120-Zeta'[-5]]
+734	Pi^3/64 + 7*zeta(3)/16	special	64	not found	x 1 - sqrt 5 * ln = pi 4 - phi sqrt /	140	10.9	True	Pi^3/64+7Zeta[3]/16
+735	Gieseking constant	special	64	not found	x ln e pi - + recip = pi 4 * 1 - recip ln	143	10.4	True	(3*Sqrt[3]*(1 - PolyGamma[1, 2/3]/9 + PolyGamma[1, 4/3]/9))/4
+736	h_3, a constant related to certain evaluations of the gamma function from elliptic integrals	special	64	not found	x ln recip 2 * 1 - = e 8 + dup*	115	10.4	True	4*EllipticK[4*Sqrt[3]-7]/(Sqrt[2+Sqrt[3]]*Pi)
+737	2*Pi^3/(81*sqrt(3)) + 13*zeta(3)/27	special	64	not found	x ln 1 + dup* ln recip = 8 pi 3 * sqrt *	136	10.6	True	2Pi^3/(81Sqrt[3])+13Zeta[3]/27
+738	an Ising constant related to the hexagonal lattice	none	64	not found	x 2 recip 7 dup* + ** = 5 2 pi recip + * sqrt	140	11.0	True	
+739	6*arcsec(sqrt(3))/Pi^(3/2), an extreme value constant	special	64	not found	x e ** x dup* + dup* = 2 ln e exp sqrt +	142	10.8	True	6*ArcSec[Sqrt[3]]/Pi^(3/2)
+740	e^pi/pi^e	elementary	64	exact	x pi exp / = pi e ** recip	90	64.0	True	E^Pi/Pi^E
+741	continued fraction constant (base 10)	elementary	64	exact	x 9 1 + dup* ln * = pi dup* 8 ln /	134	63.6	True	Pi^2/(6Log[2]Log[10])
+742	generalized Glaisher-Kinkelin constant A(2)	special	64	not found	x phi pi ln - ** = pi 5 e ** recip **	137	10.5	True	Exp[Zeta[3]/(4*Pi^2)]
+743	generalized hypergeometric function 3F2(1/2,1/2,1/2; 3/2,3/2; x) at x=1/2	special	64	not found	x ln recip pi exp + = 5 2 recip + pi dup* *	134	11.4	True	(Pi*Log[2]/4 + Catalan)/Sqrt[2]
+744	Hadamard-de la Vallee-Poussin constant	special	64	not found	x x pi exp ** - = 1 pi sqrt 1 - exp -	134	10.3	True	EulerGamma + Sum[(-1 + Prime[\[FormalK]])^(-1) + Log[1 - Prime[\[FormalK]]^(-1)], {\[FormalK], 1, Infinity}]
+745	secant of 15 degrees (cosecant of 75 degrees)	algebraic	64	exact	x 2 sqrt + = 6 sqrt	68	63.6	True	Sec[15 Degree]
+746	zeta(5)	special	64	not found	x 4 x dup* + sqrt + = phi 5 recip - sqrt exp	141	10.4	True	Zeta[5]
+747	Landau-Kolmogorov constant C(3,1) for derivatives in the case L_infinity(-infinity, infinity)	none	64	exact	x 3 ** = 1 8 recip +	76	64.0	True	
+748	log10(11)	elementary	64	exact	x 9 1 + ln * = 9 2 + ln	114	63.5	True	Log[10, 11]
+749	sec(phi), a constant related to the "broadworm" (or "caliper") problem	none	64	not found	x 9 ** dup* 1 - dup* = 2 3 e recip ** /	135	10.3	True	
+750	Landau-Kolmogorov constant C(5,1) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	x 5 ** 6 * = 1 4 recip + 9 **	122	63.7	True	
+751	li(2) = gamma + log(log(2)) + Sum_{k>=1} log(2)^k / ( k*k! )	special	64	not found	x 9 dup* ** phi - = 4 3 recip - e **	137	10.5	True	LogIntegral[2]
+752	third pi	elementary	64	exact	x 3 * = pi	48	64.0	True	Pi/3
+753	asymptotic constant in Goebel's sequence A003504	none	64	not found	x sqrt sqrt ln sqrt recip = pi pi recip + dup* e -	131	10.3	True	
+754	Sum_{i>=0} 1/(2*i+1)^3	special	64	not found	x 2 x recip exp - + = 5 9 pi sqrt + /	140	10.5	True	7 Zeta[3]/8
+755	192*K^2*G/Pi^4 = Product_{p prime congruent to 1 modulo 4} (1 + 1/p^2), where K is the Landau-Ramanujan constant and G C	none	64	not found	x 1 - 3 * 5 * = e recip exp 1 - sqrt sqrt	139	10.9	True	
+756	1/2+2/sqrt(13), a constant related to the asymptotic evaluation of the number of self-avoiding rook paths joining opposi	algebraic	64	exact	x 2 recip - dup* = 3 4 recip + recip	98	63.5	True	1/2 + 2/Sqrt[13]
+757	an infinite product involving the ratio of n! to its Stirling approximation	special	64	not found	x dup* phi exp ** dup* = pi 1 7 dup* recip + /	137	10.4	True	Glaisher^3/(2^(7/12)*Pi^(1/4))
+758	Twelfth root of 2	algebraic	64	exact	x 3 ** = 2 sqrt sqrt	67	63.4	True	2^(1/12)
+759	(3/4)*sqrt(2)	algebraic	64	exact	x dup* 1 - = 8 recip	65	63.3	True	3 Sqrt[2]/4
+760	I, a constant appearing (as I^2) in the asymptotic variance of the area of the convex hull of random points in the unit 	special	64	not found	x pi recip ** phi recip - = 3 sqrt 3 ln - dup*	138	11.1	True	Sqrt[2]*Pi^2/Gamma[1/4]^2
+761	(8*G - Pi*log(2 + sqrt(3)))/3, where G = A006752	special	64	not found	x e ** exp pi / = 1 2 4 exp / - recip	138	10.2	True	(8Catalan-Pi Log[2+Sqrt[3]])/3
+762	(gamma + log(16))/Pi	special	64	not found	x pi exp 7 - ** = 9 2 sqrt 3 / **	138	11.0	True	(EulerGamma + Log[16])/Pi
+763	m_3, the expected number of returns to the origin in a three-dimensional random walk restricted to the region x >= y >= 	none	64	not found	x recip 3 sqrt * sqrt 1 - = pi 6 dup* + ln recip	139	10.6	True	
+764	Sum_{k >= 0} 1/(4*k+1)^2	special	64	not found	x 7 ** dup* e * = pi 8 ln dup* +	127	10.8	True	Catalan/2 + Pi^2/16
+765	expected number of returns to the origin of a random walk on an 8-d lattice	none	64	not found	x 2 7 / - dup* = 2 pi sqrt + 6 /	128	10.6	True	
+766	beta = 1.07869..., the best constant in Friedrichs' inequality in one dimension	none	64	not found	x 2 * pi recip - exp = e 4 pi / exp +	139	9.8	True	
+767	Landau-Kolmogorov constant C(4,1) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	x x 4 / + dup* = 3 3 recip + sqrt	114	63.4	True	
+768	c = twice the maximum of Dawson's integral, a constant used in the asymptotic evaluation of the ideal hyperbolic n-cube 	none	64	not found	x e ** x exp * = pi phi pi / +	124	11.2	True	
+769	zeta(4) = pi^4/90	elementary	64	exact	x 9 1 + * = pi dup* 3 / dup*	104	63.4	True	Pi^4/90
+770	6*exp(gamma)/Pi^2	special	64	not found	x dup* 3 sqrt sqrt * exp = e 7 5 / dup* +	143	10.2	True	6*Exp[EulerGamma]/Pi^2
+771	Feller α coin-tossing constant	algebraic	64	exact	x x 1 - sqrt sqrt / = 2	81	63.5	True	(2*(-1 - 2/(17 + 3*Sqrt[33])^(1/3) + (17 + 3*Sqrt[33])^(1/3)))/3
+772	1/Gamma(7/4)	special	64	not found	x pi dup* ** dup* 1 - = 2 2 pi dup* recip + **	134	9.5	True	1/Gamma[7/4]
+773	Pi*log(2)/2	elementary	64	exact	x exp dup* = 2 pi **	70	63.4	True	Pi*Log[2]/2
+775	1/2+G/Pi, the highest limiting crest of a square wave Fourier series, where G is the Gibbs-Wilbraham constant	none	64	not found	x 4 e / dup* - recip = 8 pi sqrt * recip 1 -	141	10.5	True	
+776	expected number of returns to the origin of a random walk on a 7-d lattice	none	64	not found	x recip 2 - dup* 5 ** = 3 4 ln recip -	128	11.7	True	
+777	Gamma(1/4)^4/(16*Pi^2)	special	64	not found	x recip 4 5 / - sqrt = 2 5 sqrt sqrt / 1 -	142	11.2	True	Gamma[1/4]^4/(16Pi^2)
+778	square root of 6/5	none	64	exact	x dup* 1 - = 5 recip	63	63.4	True	
+779	a 5-dimensional analog of DeVicci's tesseract constant	algebraic	64	exact	x 3 sqrt + = 8 sqrt	71	63.4	True	Sqrt[11-4*Sqrt[6]]
+781	ln(3)	elementary	64	exact	x exp = 3	43	63.5	True	Log[3]
+782	Paris constant	special	64	not found	x 7 dup* recip + x + = 5 pi phi * sqrt /	139	10.6	True	ConditionalExpression[Extension`ParisConstant == Limit[(2*GoldenRatio)^\[FormalN]*(GoldenRatio - Subscript[\[FormalCapitalF], \[FormalN]]), \[FormalN] -> Infinity]/2, Subscript[\[FormalCapitalF], 1] == 1 && Subscript[\[FormalCapitalF], \[FormalN]] == Sqrt[1 + Subscript[\[FormalCapitalF], -1 + \[FormalN]]]]
+783	Lengyel constant	special	64	not found	x exp 3 - 3 * recip = 2 e dup* * e **	138	10.0	True	ConditionalExpression[Extension`LengyelConstant == Limit[(2^\[FormalN]*\[FormalN]^(1 + Log[2]/3)*Subscript[\[FormalC], \[FormalN]]*Log[2]^\[FormalN])/\[FormalN]!^2, \[FormalN] -> Infinity], Subscript[\[FormalC], 1] == 1 && Subscript[\[FormalC], \[FormalN]] == Sum[StirlingS2[\[FormalN], \[FormalK]]*Subscript[\[FormalC], \[FormalK]], {\[FormalK], 1, -1 + \[FormalN]}]]
+784	log 4π	elementary	64	exact	x 9 1 + ln * = pi 4 * ln	112	63.8	True	Log10[4*Pi]
+785	9*Sum_{k>=1} 1/(10^k-1)	none	64	not found	x 2 recip 3 exp - ** = pi pi sqrt - 9 /	140	10.2	True	
+786	1/Gamma(5/4)	special	64	not found	x pi x ** + 2 + = e dup* 3 4 / -	137	10.8	True	1/Gamma[5/4]
+788	sqrt(8/Pi)*log(2), a constant related to the asymptotic evaluation of the minimum number of one-dimensional random walks	elementary	64	exact	x 4 ln / = 2 pi / sqrt	90	64.0	True	Sqrt[8/Pi]*Log[2]
+790	1/Gamma(5/3)	special	64	not found	x pi / 5 recip + recip = pi 2 + dup* ln sqrt	131	10.3	True	1/Gamma[5/3]
+791	Pi/(2*sqrt(2))	none	64	exact	x recip pi * = 8 sqrt	68	63.6	True	
+792	4*L/(3*Pi), a constant related to the asymptotic evaluation of the number of primes of the form a^2+b^4, where L is Gaus	none	64	not found	x 1 - 3 * recip 1 - = 2 phi dup* ** pi /	136	10.9	True	
+793	log10(13)	elementary	64	exact	x 9 1 + ln * = 9 4 + ln	117	64.0	True	Log[10, 13]
+794	positive real root of 3*x^4 - x^3 - x^2 - 2, a constant related to quasi-isometric mappings	none	64	not found	x 8 ln dup* * = 7 pi phi + sqrt -	128	10.6	True	
+795	Landau-Kolmogorov constant C(5,2) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	x 5 ** 9 * = 5 2 / 3 **	117	63.5	True	
+796	expected number of returns to the origin of a random walk on a 6-d lattice	none	64	not found	x pi pi ** ** pi * = phi 4 + 3 **	132	11.1	True	
+797	Goh-Schmutz constant	special	64	not found	x 2 pi - recip + dup* recip = 9 phi 5 * +	136	10.5	True	-Sum[(E^\[FormalK]*ExpIntegralEi[-\[FormalK]])/\[FormalK], {\[FormalK], 1, Infinity}]
+798	Steinitz constant of the Euclidean plane	algebraic	64	exact	x 2 * = 5 sqrt	58	63.6	True	Sqrt[5]/2
+799	Landau-Kolmogorov constant C(5,3) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	x 2 * 5 ** = 7 2 recip + dup*	106	63.9	True	
+800	1/Gamma(4/3)	special	64	not found	x pi x ** ** 2 / = 3 e phi sqrt + /	141	10.4	True	1/Gamma[4/3]
+801	2*exp(-gamma)	special	64	not found	x e + pi 1 + / = 1 7 sqrt e - +	130	11.4	True	2*Exp[-EulerGamma]
+802	zeta(7/2)	special	64	not found	x e exp pi - ** = pi 2 sqrt * 4 recip -	137	10.8	True	Zeta[7/2]
+803	2/sqrt(pi)	elementary	64	exact	x 2 / = pi sqrt recip	63	63.4	True	2/Sqrt[Pi]
+805	a coefficient associated with the asymptotics of the average distance between a vertex and the root of a random rooted t	none	64	not found	x 1 - ln dup* 3 - = 5 sqrt phi sqrt -	130	10.8	True	
+806	digital search tree β constant	special	64	not found	x 7 ** 4 ln * = 5 phi dup* recip exp /	141	10.3	True	-1 + (Log[2]*QPolyGamma[0, 1, 1/2] + QPolyGamma[1, 1, 1/2])/Log[2]^2
+807	extreme value skewness	special	64	not found	x e - dup* pi sqrt - = pi dup* phi dup* exp /	141	10.5	True	12*Sqrt[6]*Zeta[3]/Pi^3
+808	a function approximation constant which is the analog of Gibbs's constant 2*G/Pi (A036793) for de la Vallée-Poussin sums	none	64	not found	x recip ln recip 8 + recip = 1 phi dup* ln sqrt +	135	10.0	True	
+809	ln(pi)	elementary	64	exact	x exp = pi	42	63.4	True	Log[Pi]
+810	1/sqrt(tanh(1))	elementary	64	exact	x dup* 1 - 2 / = e dup* 1 - recip	104	63.5	True	1/Sqrt[Tanh[1]]
+811	Goldbach-Vinogradov constant	special	64	not found	x e 1 - sqrt recip + = 3 1 2 ln + recip **	134	10.2	True	Product[1 + (-1 + Prime[\[FormalK]])^(-3), {\[FormalK], 1, Infinity}]/2
+812	Pi^2/(16*K^2*G) = Product_{p prime congruent to 3 modulo 4} (1 + 1/p^2), where K is the Landau-Ramanujan constant and G 	none	64	not found	x 3 4 exp + ** = 9 e 4 + * dup*	137	10.6	True	
+813	Second Hermite constant	algebraic	64	exact	x 2 / = 3 sqrt recip	64	64.0	True	2/Sqrt[3]
+814	expected number of returns to the origin of a random walk on a 5-d lattice	none	64	not found	x dup* phi 3 recip - + = 6 pi ln recip + sqrt	138	11.9	True	
+815	cubic recurrence constant	special	64	not found	x sqrt 4 * x dup* ** = e e exp recip - dup*	140	10.2	True	Product[\[FormalK]^3^(-\[FormalK]), {\[FormalK], 1, Infinity}]
+816	'xiHat', a constant used in the asymptotic evaluation of e.g.f. coefficients for the number of labeled mobiles	none	64	exact	x 3 x ln + / = e recip	90	63.4	True	
+817	grazing goat constant	special	64	not found	x ln phi * 8 * = 3 2 pi / + sqrt	133	10.1	True	Root[{Pi - 2*ArcCos[1 - #1^2/2] - 2*ArcCos[#1/2]*#1^2 + #1*Sqrt[4 - #1^2] & , 1.158728473018121517828233509934`30.063981678858028}]
+818	Given the two curves y = exp(-x) and y = 2/(exp(x) + exp(x/2)), draw a line tangent to both. This sequence is the decima	none	64	not found	x 8 9 recip + * = 4 3 sqrt ** phi -	137	11.3	True	
+819	expectation of the maximum of a size 5 sample from a normal (0,1) distribution	special	64	not found	x x 6 / sqrt + = e dup* 7 - sqrt recip	130	10.1	True	5/Sqrt[Pi] - 15*ArcCsc[Sqrt[3]]/Pi^(3/2)
+820	'c', an optimal stopping constant associated with the two choice case	none	64	not found	x dup* pi 5 - + dup* = phi dup* 4 ln + recip	140	11.0	True	
+821	spanning tree constant of the square lattice	special	64	not found	x 5 x ln - ** = 3 8 / 3 sqrt +	138	10.1	True	4*Catalan/Pi
+822	(5 + 3*sqrt(5))/10	algebraic	64	exact	x dup* x - = 5 recip	68	63.5	True	(5 + 3 Sqrt[5])/10
+823	sinh one	elementary	64	exact	x 2 * = e e recip -	76	64.0	True	Sinh[1]
+824	Salem constant	algebraic	64	not found	x 7 sqrt sqrt * 2 - = 9 e 4 - * recip	140	9.9	True	Root[1 + #1 - #1^3 - #1^4 - #1^5 - #1^6 - #1^7 + #1^9 + #1^10 & , 2, 0]
+825	root ln four	elementary	64	exact	x dup* exp = 4	53	63.4	True	Sqrt[Log[4]]
+826	Gibbs constant	special	64	not found	x x x dup* - ** dup* = 2 phi dup* e - **	141	10.1	True	(2*SinIntegral[Pi])/Pi
+827	Lévy's constant	elementary	64	exact	x 8 ln * = pi 2 / dup*	92	63.5	True	Pi^2/(12*Log[2])
+828	Foias constant	none	64	not found	x 2 sqrt * x ln * = 1 pi 3 ** + ln recip	142	9.7	True	
+829	2^(1/4)	algebraic	64	exact	x dup* = 2 sqrt	46	63.6	True	2^(1/4)
+830	theta_2, one of the angles associated with the bow-and-arrow configuration used in the 2-arc smallest length problem	none	64	not found	x dup* 9 ln recip - = e 1 + sqrt 1 - sqrt	131	10.3	True	
+831	arithmetic-geometric mean constant	special	64	not found	x 1 - recip 3 - = pi 2 phi recip ** /	120	10.9	True	(2*Pi^(3/2)*Sqrt[2])/Gamma[1/4]^2
+832	real fixed point of coth(z)	special	64	not found	x ln ln 1 + dup* recip = pi sqrt e ** e -	137	11.1	True	Root[{-Coth[#1] + #1 & , 1.199678640257733833916369848641`30.079064926502777}]
+833	lim_{n->infinity} ((1/log(n)^2)*Product_{2 < p < n, p prime} p/(p-2))	none	64	not found	x 1 - recip x sqrt + = 6 pi 5 * recip +	129	10.4	True	
+834	sqrt(e^(1/e)) = 1.20194336847031	elementary	64	exact	x e ** = e sqrt	62	63.9	True	E^(E^-1/2)
+835	Apéry's constant	special	64	not found	x dup* 4 ln sqrt recip + = pi phi - exp 2 /	141	9.9	True	Zeta[3]
+836	growth constant in random Fibonacci sequence	algebraic	64	exact	x 1 x dup* - recip + = 1 2 -	93	63.4	True	Root[#1^3 + #1^2 - #1 - 2 &, 1]
+837	sqrt(A224273)	special	64	not found	x ln 5 * 9 ** = 2 sqrt 2 e - recip **	143	11.7	True	Sqrt[3] Gamma[1/3]^(3/2)/(2 Pi)
+838	2/sqrt(e), a constant appearing in the expression of the asymptotic expected volume V(d) of the convex hull of randomly 	elementary	64	exact	x 2 / = e sqrt recip	65	63.4	True	2/Sqrt[E]
+839	12/Pi^2	elementary	64	exact	x pi dup* * = 4 3 *	77	63.7	True	12/Pi^2
+840	positive real root of x^4 - x - 1	algebraic	64	exact	x x 4 ** - = 1 2 -	85	64.0	True	Root[#1^4 - #1 - 1 &, 2]
+841	Mertens constant C(5,1)	none	64	not found	x 7 ** 6 - dup* = e 1 8 recip + dup* *	140	10.4	True	
+842	Gamma(3/4)	special	64	not found	x pi sqrt sqrt ** 3 ** = e sqrt 3 sqrt 1 - /	143	10.6	True	Gamma[3/4]
+843	Fibonacci factorial constant	special	64	not found	x x dup* 5 ** ** = 2 phi e - * dup*	133	12.8	True	QPochhammer[-GoldenRatio^(-2)]
+844	log10(17)	elementary	64	exact	x 9 1 + ln * = 1 4 dup* + ln	117	63.6	True	Log[10, 17]
+845	Second Favard constant	elementary	64	exact	x 8 * = pi dup*	61	64.0	True	Pi^2/8
+846	Feller β coin-tossing constant	algebraic	64	not found	x dup* 9 ln * = pi pi ln sqrt *	114	11.8	True	(2 + 4*(17 + 3*Sqrt[33])^(1/3) - (17 + 3*Sqrt[33])^(2/3))/(6 + 9*(17 + 3*Sqrt[33])^(1/3) - 3*(17 + 3*Sqrt[33])^(2/3))
+847	expected number of returns to the origin of a random walk on a 4-d lattice	none	64	not found	x phi ** 2 sqrt - recip = 6 1 5 exp + *	139	10.3	True	
+848	Bertrand's constant	none	46	not found	x dup* 1 - recip 5 recip + = 3 7 sqrt sqrt recip **	138	11.3	True	
+849	root half pi	elementary	64	exact	x dup* recip = 2 pi /	63	63.9	True	Sqrt[Pi/2]
+850	Khinchin-Lévy sum constant	special	64	not found	x x x sqrt ** dup* + = 2 phi dup* recip exp *	137	10.6	True	Sum[Log[1 + \[FormalK]]/(\[FormalK]*(1 + \[FormalK])), {\[FormalK], 1, Infinity}]
+851	Cube root of 2	algebraic	64	exact	x 3 ** = 2	49	63.9	True	2^(1/3)
+852	limiting length appearing in the asymptotic probability involved in the "stick breaking" problem	none	64	exact	x x ln / = e 2 *	81	64.0	True	
+853	c*sqrt(e/2), a constant associated with Dawson's integral and the asymptotic evaluation of the ideal hyperbolic n-cube v	none	64	not found	x 2 1 pi - recip + ** = e 3 * sqrt 2 /	136	12.0	True	
+854	fractal dimension of Koch snowflake	elementary	64	exact	x 3 ln * = 4 ln	76	63.6	True	Log[4]/Log[3]
+855	Vardi constant	special	64	not found	x x pi dup* ** ** = pi dup* 5 sqrt ln +	131	10.3	True	ConditionalExpression[Extension`VardiConstant == (Exp[Sum[2^(-1 - \[FormalK])*Log[1 + (-1 + 2*Subscript[\[FormalA], \[FormalK]])^(-2)], {\[FormalK], 1, Infinity}]]*Sqrt[6])/2, Subscript[\[FormalA], 0] == 2 && Subscript[\[FormalA], \[FormalN]] == 1 - Subscript[\[FormalA], -1 + \[FormalN]] + Subscript[\[FormalA], -1 + \[FormalN]]^2]
+856	expectation of the maximum of a size 6 sample from a normal (0,1) distribution	none	64	not found	x 9 x dup* ** / = phi ln sqrt 9 **	134	10.2	True	
+857	constant c_0 appearing in the asymptotic evaluation of the n-th Lebesgue constant (related to Fourier series) as L_n ~ (	none	64	not found	x 2 x / sqrt - recip = 3 pi sqrt sqrt exp **	135	10.0	True	
+858	Ramanujan-Forsyth series constant	elementary	64	exact	x pi * = 4	49	63.4	True	4/Pi
+859	log10(19)	elementary	64	exact	x 9 1 + ln * = 3 4 dup* + ln	122	63.6	True	Log[10, 19]
+860	Glaisher-Kinkelin constant	special	64	not found	x e recip - pi ** dup* = 4 ln 1 e - **	138	10.0	True	Glaisher
+861	theta_1, one of the angles associated with the bow-and-arrow configuration used in the 2-arc smallest length problem	none	64	not found	x pi * pi sqrt - sqrt = phi 1 pi recip + / dup*	137	10.2	True	
+862	ln(Gamma(1/4))	special	64	not found	x 8 ** 5 recip - = e recip exp recip exp exp	138	10.6	True	LogGamma[1/4]
+863	integral of the q-Pochhammer symbol over -1..1	elementary	64	not found	x 7 2 * recip - dup* = 1 phi 7 / sqrt +	135	11.6	True	4*Sqrt[3/23]*Pi*(2*Sinh[Sqrt[23]*Pi/6] + Sqrt[2]*Sinh[Sqrt[23]*Pi/4])/(2*Cosh[Sqrt[23]*Pi/3] - 1)
+864	second Bernoulli sophomore dream constant	special	64	not found	x e 6 / sqrt ** = pi 5 ln + 4 /	138	10.5	True	Sum[\[FormalK]^(-\[FormalK]), {\[FormalK], 1, Infinity}]
+865	(4/sqrt(Pi))*exp(-gamma/2)*K where K is the Landau-Ramanujan constant and gamma the Euler-Mascheroni constant	none	64	not found	x x 8 * recip + sqrt = 8 4 recip + 7 /	142	10.5	True	
+866	Salem number of degree 38 (Mossinghoff)	algebraic	64	not found	x dup* phi sqrt sqrt recip - = 9 recip pi 4 + *	136	10.5	True	Root[#1^38 - #1^36 - #1^34 - #1^29 + #1^28 - #1^24 - #1^14 + #1^10 - #1^9 - #1^4 - #1^2 + 1 &, 4]
+868	Mertens constant C(5,4)	none	64	not found	x 3 3 ** pi / + = pi 6 pi / exp +	142	10.6	True	
+871	Conway's constant	algebraic	64	not found	x 2 x / - 4 * = 3 sqrt recip 3 2 / -	142	9.9	True	Root[-6 + 3*#1 - 6*#1^2 + 12*#1^3 - 4*#1^4 + 7*#1^5 - 7*#1^6 + #1^7 + 5*#1^9 - 2*#1^10 - 4*#1^11 - 12*#1^12 + 2*#1^13 + 7*#1^14 + 12*#1^15 - 7*#1^16 - 10*#1^17 - 4*#1^18 + 3*#1^19 + 9*#1^20 - 7*#1^21 - 8*#1^23 + 14*#1^24 - 3*#1^25 + 9*#1^26 + 2*#1^27 - 3*#1^28 - 10*#1^29 - 2*#1^30 - 6*#1^31 + #1^32 + 10*#1^33 - 3*#1^34 + #1^35 + 7*#1^36 - 7*#1^37 + 7*#1^38 - 12*#1^39 - 5*#1^40 + 8*#1^41 + 6*#1^42 + 10*#1^43 - 8*#1^44 - 8*#1^45 - 7*#1^46 - 3*#1^47 + 9*#1^48 + #1^49 + 6*#1^50 + 6*#1^51 - 2*#1^52 - 3*#1^53 - 10*#1^54 - 2*#1^55 + 3*#1^56 + 5*#1^57 + 2*#1^58 - #1^59 - #1^60 - #1^61 - #1^62 - #1^63 + #1^64 + 2*#1^65 + 2*#1^66 - #1^67 - 2*#1^68 - #1^69 + #1^71 & , 3, 0]
+872	Mills' constant	special	64	not found	x 2 * dup* 7 sqrt - = 3 pi sqrt / e **	138	10.2	True	ConditionalExpression[Extension`MillsConstant == \[FormalX], ForAll[\[FormalN], Element[\[FormalN], Integers] && \[FormalN] > 0, Element[Floor[\[FormalX]^3^\[FormalN]], Primes]] && ForAll[Subscript[\[FormalX], 1], Subscript[\[FormalX], 1] < \[FormalX], Exists[\[FormalN], Element[\[FormalN], Integers] && \[FormalN] > 0, NotElement[Floor[Subscript[\[FormalX], 1]^3^\[FormalN]], Primes]]]]
+873	first lemniscate constant	special	64	not found	x 9 x exp + ** = 5 3 ** 4 /	131	10.3	True	Gamma[1/4]^2/(4*Sqrt[2*Pi])
+874	Khinchin mean K_{-3}	none	64	not found	x exp 8 sqrt - dup* = 2 ln pi ln *	127	10.1	True	
+875	3^(1/4)	algebraic	64	exact	x dup* = 3 sqrt	48	63.5	True	3^(1/4)
+876	extended twin prime conjecture constant	special	64	not found	x 2 e dup* / - = phi e sqrt 1 - *	125	11.7	True	2*Product[1 - (-1 + Prime[\[FormalK]])^(-2), {\[FormalK], 2, Infinity}]
+877	Plastic ratio	algebraic	64	exact	x recip x dup* - = 1 2 -	79	63.6	True	(27/2 - (3*Sqrt[69])/2)^(1/3)/3 + ((9 + Sqrt[69])/2)^(1/3)/3^(2/3)
+878	pi^(1/4)	elementary	64	exact	x dup* = pi sqrt	47	64.0	True	Pi^(1/4)
+879	constant B3 (or B_3) related to the Mertens constant	none	64	not found	x 6 ** 3 sqrt * = pi dup* pi e + recip -	136	10.7	True	
+880	imaginary part of the solution of z = log z	special	64	not found	x 3 - dup* pi sqrt / = 2 1 phi sqrt + recip -	138	10.1	True	Im[ProductLog[-1]]
+881	monomer-dimer constant	special	64	not found	x e 3 / ** 2 * = 1 7 e / sqrt +	136	10.4	True	E^(Catalan/Pi)
+882	totient product constant	special	64	not found	x dup* 2 sqrt - recip 1 - = 2 phi dup* 7 / -	141	10.3	True	Product[1 + 1/((-1 + Prime[\[FormalK]])*Prime[\[FormalK]]^2), {\[FormalK], 1, Infinity}]
+883	zeta(5/2)	special	64	not found	x 1 - ln dup* 3 * = 8 2 sqrt + e /	137	11.5	True	Zeta[5/2]
+884	entropy constant related to A063443	none	18	not found	x sqrt 1 - recip 3 + sqrt = pi e 4 * recip -	136	11.0	True	
+885	'b', an auxiliary constant associated with the asymptotic probability of success in the full information version of the 	none	64	not found	x x 7 / exp * = 4 3 e / + ln	139	10.1	True	
+886	Davis constant	special	64	not found	x phi dup* recip exp + = phi 1 pi recip + dup* *	132	11.0	True	Pi^2/(8*Catalan)
+887	'xi', a constant related to the second order quadratic recurrence q(0)=q(1)=1, q(n)=q(n-2)*(q(n-1)+1)	none	64	not found	x x pi ** ** 1 - = 1 2 pi 9 + / +	140	10.1	True	
+888	mean number of iterations in comparing two numbers via their continued fractions	none	64	not found	x dup* recip 1 + dup* ln = 1 pi recip exp + e /	136	11.2	True	
+889	expectation of the maximum of a size 7 sample from a normal (0,1) distribution	none	64	not found	x 2 - dup* 8 * dup* = 1 phi sqrt + 9 +	138	10.2	True	
+890	'c', an asymptotic constant related to a variation of the "Secretary problem" with a uniform distribution	none	64	not found	x e * exp 9 / = e 5 ln recip - dup*	139	10.2	True	
+891	Gamma(2/3)	special	64	not found	x e exp sqrt sqrt ** = pi pi 2 sqrt - /	128	10.9	True	Gamma[2/3]
+892	golden spiral constant	elementary	64	exact	x pi ** = phi dup*	62	63.7	True	GoldenRatio^(2/Pi)
+893	Pippenger product constant	elementary	64	exact	x 2 * = e	48	64.0	True	E/2
+894	log10(23)	elementary	64	exact	x 9 1 + ln * = 5 dup* 2 - ln	122	63.5	True	Log[10, 23]
+895	log e^π	elementary	64	exact	x recip pi * = 9 1 + ln	86	64.0	True	Log10[E^Pi]
+896	Shallit constant	special	64	not found	x 2 x dup* - recip ** = 4 e 7 + sqrt *	137	11.9	True	ConditionalExpression[Extension`ShallitConstant == Limit[3*\[FormalN] - Min[Sum[Subscript[\[FormalX], \[FormalK]], {\[FormalK], 1, \[FormalN]}] + Sum[Product[Subscript[\[FormalX], \[FormalJ]]^(-1), {\[FormalJ], \[FormalI], \[FormalK]}], {\[FormalK], 1, \[FormalN]}, {\[FormalI], 1, \[FormalK]}]], \[FormalN] -> Infinity], Element[Subscript[\[FormalX], \[FormalJ]], Reals] && Subscript[\[FormalX], \[FormalJ]] > 0]
+897	Hardy-Littlewood conjecture constant	special	64	not found	x dup* 1 - dup* recip pi * = 6 sqrt 6 sqrt sqrt +	140	9.7	True	Inactive[Product][1 - (-1)^((-1 + Prime[\[FormalK]])/2)/(-1 + Prime[\[FormalK]]), {\[FormalK], 2, Infinity}]
+898	sum of 1/(p-1)^2 over all primes p	none	64	not found	x e 5 / sqrt - recip = 2 e sqrt sqrt * 1 -	140	10.0	True	
+899	Kneser-Mahler β constant	special	64	not found	x 3 x ln + ** = 3 3 pi / sqrt **	132	10.2	True	Exp[(9 - PolyGamma[1, 2/3] + PolyGamma[1, 4/3])/(4*Pi*Sqrt[3])]
+900	arccosh(8)/2 = ln((3 + sqrt 7)/sqrt 2)	elementary	64	exact	x exp 2 sqrt * = 3 7 sqrt +	100	63.7	True	ArcCosh[8]/2
+901	ln(4)	elementary	64	exact	x exp = 4	44	64.0	True	Log[4]
+903	Gamma(1/4)^4/(4*Pi^3)	special	64	not found	x dup* phi - 8 ** = phi pi dup* / 5 **	141	11.2	True	Gamma[1/4]^4/(4*Pi^3)
+904	hard hexagon entropy constant	algebraic	64	not found	x ln recip 3 - recip = phi 8 + pi **	123	10.9	True	Root[-32751691810479015985152 + 97143135277377575190528*#1^4 - 73347491183630103871488*#1^6 - 71220809441400405884928*#1^8 + 107155448150443388043264*#1^10 - 72405670285649161617408*#1^12 + 2958015038376958230528*#1^14 + 7449488310131083100160*#1^16 + 797726698866658379776*#1^18 + 2505062311720673792*#1^20 + 2013290651222784*#1^22 + 25937424601*#1^24 &, 2]
+905	e^(1/3)	elementary	64	exact	x ln = 3 recip	50	64.0	True	E^(1/3)
+906	unique solution of the equation sum_(p prime)(1/p^x) = 1, a constant related to the asymptotic evaluation of the number 	none	64	not found	x recip 6 sqrt * ln recip = pi 1 + 6 sqrt recip **	141	9.8	True	
+907	Myrberg point	none	64	not found	x recip x - recip phi + = 6 e - sqrt exp recip	139	10.4	True	
+908	L = Integral_{t=0..1} 1/(1-2t^2/3) dt, an auxiliary constant associated with one of the integral inequalities studied by	elementary	64	exact	x 6 sqrt / exp = 2 sqrt 3 sqrt + sqrt	119	63.7	True	Sqrt[3/2]*ArcTanh[Sqrt[2/3]]
+909	complex Grothendieck constant upper bound	special	64	not found	x 2 ln / 2 - sqrt = 5 7 / dup* pi /	141	10.5	True	(-EllipticE[-1] + 2*EllipticK[-1])^(-1)
+910	1 + 1/(1*3) + 1/(1*3*5) + 1/(1*3*5*7) + 	special	64	not found	x 6 sqrt ln + 1 + = 7 3 exp sqrt sqrt /	142	10.3	True	Sqrt[E*Pi/2] * Erf[1/Sqrt[2]]
+911	Pythagoras constant	algebraic	64	exact	x dup* = 2	37	64.0	True	Sqrt[2]
+912	inverse of carefree constant	special	64	not found	x pi 3 pi ** / - = pi 3 pi recip + sqrt -	142	11.0	True	Product[1 + (-1 + Prime[\[FormalK]] + Prime[\[FormalK]]^2)^(-1), {\[FormalK], 1, Infinity}]
+913	Sum_{m >= 0, m not a binary self number} 2^(-m)	none	64	not found	x 1 - dup* 5 / sqrt = phi sqrt 5 ** pi -	139	10.2	True	
+914	expectation of the maximum of a size 8 sample from a normal (0,1) distribution	none	64	not found	x x 1 - recip 2 - * = 5 pi recip + ln ln	142	10.9	True	
+915	'eta', a constant related to the second order quadratic recurrence q(0)=q(1)=1, q(n)=q(n-2)*(q(n-1)+1)	none	64	not found	x 4 ** pi - dup* = phi dup* pi recip + ln	130	10.8	True	
+916	exp(sqrt(Pi/24))	elementary	64	exact	x dup* ln dup* = pi 6 /	83	63.7	True	Exp[Sqrt[Pi/24]]
+917	first Lebesgue constant	elementary	64	exact	x 3 recip - 2 / = 3 sqrt pi /	103	64.0	True	1/3 + (2*Sqrt[3])/Pi
+918	Cube root of 3	algebraic	64	exact	x 3 ** = 3	51	63.5	True	3^(1/3)
+919	log2(e)	elementary	64	exact	x recip exp = 2	48	64.0	True	1/Log[2]
+920	Steiner number	elementary	64	exact	x ln = e recip	51	63.7	True	E^E^(-1)
+921	Khinchin mean K_{-2}	none	64	not found	x 2 recip - phi ** recip = 1 e pi - dup* + sqrt	138	10.4	True	
+922	Soldner constant	special	64	not found	x 4 + pi / pi ** = phi e recip ** ln recip	141	12.0	True	Root[{LogIntegral[#1] & , 1.4513692348833810502839684858920274494930322836480158630931`30.}]
+923	Backhouse's constant	special	64	not found	x 1 3 ln + ** dup* = phi exp dup* 2 - sqrt	139	11.7	True	ConditionalExpression[Extension`BackhouseConstant == Limit[Abs[Subscript[\[FormalQ], 1 + \[FormalN]]/Subscript[\[FormalQ], \[FormalN]]], \[FormalN] -> Infinity], Sum[\[FormalZ]^\[FormalK]*Subscript[\[FormalQ], \[FormalK]], {\[FormalK], 0, Infinity}] == (1 + Sum[\[FormalZ]^\[FormalK]*Prime[\[FormalK]], {\[FormalK], 1, Infinity}])^(-1)]
+924	AGM(1, 2)	special	64	not found	x 1 - recip 2 - exp = pi 1 - pi sqrt /	125	10.2	True	ArithmeticGeometricMean[1, 2]
+926	1 - ln(1 - 1/e) (random mappings)	elementary	64	exact	x 1 - exp recip = 1 e recip -	88	63.8	True	1 - Log[1 - 1/E]
+927	zeta(1/2) (negated)	special	64	not found	x 2 - pi * dup* 1 + = 2 3 pi ** recip - dup*	143	10.1	True	-(Zeta[1/2])
+928	Baxter's four-coloring constant	special	64	not found	x 5 dup* recip exp * sqrt = e pi / e recip +	136	10.8	True	3 Gamma[1/3]^3/(4 Pi^2)
+929	position of the positive minimum of the gamma function	special	64	not found	x exp 3 - phi ** = phi sqrt 5 recip exp *	140	10.1	True	Root[{PolyGamma[0, #1] & , 1.46163214496836234126265954233`29.164838085677864}]
+930	log10(29)	elementary	64	exact	x 9 1 + ln * = 4 5 dup* + ln	124	63.6	True	Log[10, 29]
+931	cbrt pi	elementary	64	exact	x 3 ** = pi	50	64.0	True	Pi^(1/3)
+932	Supergolden ratio	algebraic	64	exact	x x dup* recip - = 1	61	63.8	True	(1 + (29/2 - (3*Sqrt[93])/2)^(1/3) + ((29 + 3*Sqrt[93])/2)^(1/3))/3
+933	Porter's constant	special	64	not found	x 7 2 * sqrt ** recip = pi 2 7 / ln **	141	10.6	True	-1/2 + (6*Log[2]*(-2 + 4*EulerGamma + 3*Log[2] - (24*Derivative[1][Zeta][2])/Pi^2))/Pi^2
+934	Product_{p prime} (1+1/p)^(1/p), an infinite product considered and computed by Marc Deléglise	none	64	not found	x dup* x ln dup* recip - = 3 8 / 5 -	134	10.2	True	
+935	variance of the degree (valency) of the root of a random rooted tree with n vertices	none	64	not found	x sqrt 4 pi sqrt - ** = 9 pi phi * recip **	142	9.6	True	
+936	constant C such that Sum_{k>=1} 1/C^p(k) = 1 where p(k) is the k-th prime	none	64	not found	x pi ** pi * 3 ** = 3 ln 6 dup* - dup*	143	9.6	True	
+937	Landau-Kolmogorov constant C(4,3) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	x dup* 2 / dup* = 1 5 recip +	89	63.9	True	
+938	coefficient c_md in c_md*log(N)^(1/rho), the asymptotic mean number of distinct factors in a random factorization of n <	none	64	not found	x 4 dup* phi - ** = 6 6 recip + pi **	136	10.9	True	
+939	Bateman-Grosswald constant zeta(2/3)/zeta(2), a constant (negated) arising in the asymptotic evaluation of the number of	special	64	not found	x 2 ln * phi ** = 2 4 pi dup* + recip **	138	10.4	True	-(Zeta[2/3] / Zeta[2])
+940	smallest positive root of the function lambda(x) = Sum_{n>=0} (-1)^n*x^n/(2^(n*(n-1)/2)*n!)	none	64	not found	x ln pi ln * 1 + = pi pi sqrt ln dup* **	138	10.1	True	
+941	log10(31)	elementary	64	exact	x 9 1 + ln * = 6 5 dup* + ln	126	64.0	True	Log[10, 31]
+942	Landau-Kolmogorov constant C(5,4) for derivatives in the case L_infinity(-infinity, infinity)	none	64	exact	x 5 ** = 7 2 recip +	80	63.5	True	
+943	lim_{n -> infinity} A001699(n)^(1/2^n)	none	64	not found	x phi * 1 - e / = 3 sqrt 6 recip + recip	133	11.1	True	
+944	hard square entropy constant	none	44	not found	x 9 1 + sqrt sqrt - = e dup* recip 1 - pi /	137	11.0	True	
+945	Greenfield-Nussbaum constant	none	64	not found	x pi 1 + ** 1 - dup* = pi 5 4 ln + *	141	10.0	True	
+946	Selberg-Delange constant Product_{prime p > 2} (1 + 1/(p(p-2)))	none	64	not found	x 1 - recip 3 * ln = 3 2 e - dup* **	133	10.3	True	
+947	value of Watson's integral	special	64	not found	x pi sqrt 3 recip - + = phi exp 3 sqrt * sqrt	137	10.6	True	Sqrt[6]/32/Pi^3*Gamma[1/24]*Gamma[5/24]*Gamma[7/24]*Gamma[11/24]
+948	(Glaisher^12/(2^(4/3) * Pi * e^EulerGamma))^(Pi^2/8)	special	64	not found	x dup* recip e exp * dup* = 5 2 pi ** * 1 -	142	11.0	True	(Glaisher^12/(2^(4/3)Pi E^EulerGamma))^(Pi^2/8)
+949	Bateman-Stemmler constant	special	64	not found	x ln dup* recip 6 - = 4 3 * recip pi - recip	135	10.8	True	Product[(1 - (2 + KroneckerSymbol[-3, Prime[\[FormalK]]])/Prime[\[FormalK]])/(1 - Prime[\[FormalK]]^(-1))^2, {\[FormalK], 1, Infinity}]
+950	equianharmonic Weierstrass elliptic ω_2 constant	special	64	not found	x 7 phi - ln * = pi 2 recip + 2 sqrt /	138	10.3	True	Gamma[1/3]^3/(4*Pi)
+951	exp(7*zeta(3)/(2*Pi^2))	special	64	not found	x exp 4 pi - ** = 3 pi 6 / sqrt +	134	11.1	True	Exp[7*Zeta[3]/(2*Pi^2)]
+952	Sum_{n>=1} 1/Fibonacci(2*n)	none	64	not found	x pi 9 + * 2 - = 2 8 ln + dup*	132	10.1	True	
+953	Lieb's square ice constant	algebraic	64	exact	x 3 sqrt * = 8 3 /	82	63.7	True	8/(3*Sqrt[3])
+954	Madelung 2D hexagonal lattice constant	special	64	not found	x 1 + 2 / ln sqrt = pi 5 2 sqrt + /	131	11.6	True	(-3 + Sqrt[3])*Zeta[1/2]*(Zeta[1/2, 1/6] + (1 - Sqrt[2])*Zeta[1/2, 1/3])
+955	cosh one	elementary	64	exact	x 2 * = e e recip +	75	63.7	True	Cosh[1]
+956	maximal width of a Reuleaux triangle avoiding all vertices of the integer square lattice	none	64	not found	x exp 5 - dup* = pi ln pi 3 / -	125	10.2	True	
+957	Integral_{x=0..Pi/2} (x^2/sin(x)) dx	special	64	not found	x 1 2 sqrt + sqrt - dup* = 4 pi 9 ** + recip	140	9.9	True	2*Pi*Catalan - 7*Zeta[3]/2
+958	D(1/2), where D(x) is the infinite product function defined in the formula section (or in the Finch reference)	none	64	not found	x dup* 8 recip x - + = pi phi + 5 / sqrt	141	11.2	True	
+959	Calabi ratio	algebraic	64	exact	x x recip x dup* + - = 2 recip 2 -	108	64.0	True	1/3 + 11/(3*2^(1/3)*(-23 + (3*I)*Sqrt[237])^(1/3)) + (-23 + (3*I)*Sqrt[237])^(1/3)/(3*2^(2/3))
+960	sqrt(sqrt(2) + 1)	algebraic	64	exact	x dup* 1 - = 2 sqrt	61	63.7	True	Sqrt[Sqrt[2] + 1]
+961	c, a constant appearing in the asymptotic lower bound of the size of a restricted difference set	none	64	not found	x 5 sqrt ** 2 - sqrt = 3 ln dup* e recip -	139	10.8	True	
+962	triangular root of two	algebraic	64	exact	x x dup* + = 4	59	63.5	True	(-1 + Sqrt[17])/2
+963	log10(37)	elementary	64	exact	x 9 1 + ln * = 1 6 dup* + ln	119	63.9	True	Log[10, 37]
+964	2*Sum_{k=1..50000} (-1)^(k-1)/(2k-1)	special	64	false positive	x pi 2 / - dup* sqrt = 9 1 + 5 ** recip	133	15.2	True	2*Sum[(-1)^(k - 1)/(2*k - 1), {k, 1, 50000}]
+965	Favard constant	elementary	64	exact	x 2 * = pi	46	64.0	True	Pi/2
+966	10^(1/5)	algebraic	64	exact	x 5 ** = 9 1 +	71	63.7	True	10^(1/5)
+967	Sierpiński triangle fractal dimension	elementary	64	exact	x 2 ln * = 3 ln	73	63.5	True	Log[3]/Log[2]
+968	Erdős–Borwein constant	special	64	not found	x e sqrt sqrt - 2 / = 6 phi exp recip + recip	139	10.6	True	(Log[2] - QPolyGamma[0, 1, 1/2])/Log[2]
+969	ln(5)	elementary	64	exact	x exp = 5	45	63.5	True	Log[5]
+970	exponential primorial constant	none	64	not found	x 3 ** 7 sqrt - = e 1 + 3 / dup*	127	10.3	True	
+971	Cbrt[4π/3]	elementary	64	exact	x 2 / 3 ** = pi 6 /	91	63.6	True	CubeRoot[4*Pi/3]
+972	log10(41)	elementary	64	exact	x 9 1 + ln * = 5 6 dup* + ln	126	64.0	True	Log[10, 41]
+973	z_tri, a constant related to the enumeration of spanning trees on the triangular lattice (this is different from A242968	none	64	not found	x recip 2 recip - ln dup* = 5 2 7 recip ** /	135	10.1	True	
+974	Madelung's constant M2	none	64	not found	x x ** 4 + = phi 6 recip + pi **	123	9.5	True	
+975	Golden ratio	algebraic	64	exact	x = phi	33	63.7	True	GoldenRatio
+976	Odlyzko-Wilf constant	special	64	not found	x 3 x dup* - recip + = 1 pi 8 + sqrt +	130	10.2	True	ConditionalExpression[Extension`OdlyzkoWilfConstant == Limit[(2/3)^\[FormalN]*\[FormalS][\[FormalN]], \[FormalN] -> Infinity], \[FormalS][0] == 0 && \[FormalS][\[FormalN]] == 1 + Floor[(3*\[FormalS][-1 + \[FormalN]])/2]]
+977	Product_{n>=1} (2n/(2n+1))^((-1)^t(n)), where t(n) = A010060(n) is the Thue-Morse sequence	none	64	not found	x 1 - recip 1 - sqrt exp = 8 sqrt pi ln dup* /	143	10.4	True	
+978	log10(43)	elementary	64	exact	x 9 1 + ln * = 7 6 dup* + ln	127	64.0	True	Log[10, 43]
+979	Erdős-Cohen constant	special	64	not found	x 2 sqrt pi ** ** dup* = pi 7 sqrt ** 2 -	137	11.0	True	Sum[1/(Prime[\[FormalK]]*Log[Prime[\[FormalK]]]), {\[FormalK], 1, Infinity}]
+980	2nd Lebesgue constant L2	elementary	64	not found	x phi - recip 2 + sqrt = e pi dup* 6 - +	137	10.8	True	1/5 + Sqrt[25 - 2*Sqrt[5]]/Pi
+981	Riemann ζ of 2	elementary	64	exact	x 6 * = pi dup*	60	63.6	True	Pi^2/6
+982	Product_{k>=0} (1+1/2^(2k))^(1/2)	special	64	not found	x e x recip - sqrt / = pi pi 6 + recip **	135	10.5	True	Sqrt[Product[1 + 1/2^(2*k), {k, 0, Infinity}]]
+983	square root of e	elementary	64	exact	x dup* = e	40	63.7	True	Sqrt[E]
+984	minimum value of the function s(t) = (Pi + 2*sqrt(1 + t^2))/(1 + Pi/2 + t) for t > 0	elementary	64	exact	x recip 2 recip - recip 1 + = 1 pi 2 + sqrt + dup*	131	63.8	True	2(Pi+Pi^2+Sqrt[8+Pi^3+4Pi(3+Sqrt[2+Pi])+Pi^2(7+2Sqrt[2+Pi])])/(4+Pi^2+Pi(4+Sqrt[2+Pi]))
+985	Somos' quadratic recurrence constant	special	64	not found	x sqrt e ** pi - dup* = 9 2 + sqrt 2 -	137	10.5	True	E^(-Derivative[1, 0][PolyLog][0, 1/2])
+986	Hermite's constant gamma_6 = 2/3^(1/6)	algebraic	64	exact	x recip 2 * dup* = 3 3 recip **	91	63.6	True	2/3^(1/6)
+987	log10(47)	elementary	64	exact	x 9 1 + ln * = 7 dup* 2 - ln	123	63.8	True	Log[10, 47]
+988	a constant related to A000621 and A000624	none	64	not found	x 3 x recip - recip + = 7 pi 8 + sqrt /	137	10.5	True	
+989	zeta(3/5) * zeta(4/5) * Product_{p prime} (1 - 1/p^(8/5) - 1/p^(9/5) - 1/p^2 + 1/p^(13/5) + 1/p^(14/5))	none	64	not found	x 2 pi / 1 - + = e sqrt sqrt exp recip exp	133	10.6	True	
+990	1 + log(2*Pi) - 2*gamma, where gamma is Euler's constant (A001620)	special	64	not found	x dup* phi recip x - + = e pi e - sqrt *	137	10.0	True	1 + Log[2*Pi] - 2*EulerGamma
+991	maximal circumradius of a planar convex set containing no lattice point except for the origin where it has its circumcen	none	64	not found	x pi 2 ln dup* * / = 6 sqrt 1 3 recip + -	141	10.2	True	
+992	Sum_{k>=0} 1/A007018(k)	none	64	not found	x x pi 3 / + ** = pi 2 pi dup* recip ** +	141	10.1	True	
+993	Niven's constant	special	64	not found	x 4 ** 7 sqrt / = 2 pi 7 ln - +	136	10.0	True	1 + Sum[1 - Zeta[n]^(-1), {n, 2, Infinity}]
+994	Pi^2/(12*log(phi))	elementary	64	exact	x phi dup* ln * = pi dup* 6 /	105	63.6	True	Pi^2/(12*Log[GoldenRatio])
+995	log10(53)	elementary	64	exact	x 9 1 + ln * = 4 7 dup* + ln	125	63.9	True	Log[10, 53]
+996	Kalmar ρ composition constant	special	64	not found	x pi sqrt - 8 * recip = pi ln recip ln e -	141	11.2	True	Root[{-2 + Zeta[#1] & , 1.7286472389981836181351030103`29.237706376855613}]
+997	Theodorus constant	algebraic	64	exact	x dup* = 3	39	63.6	True	Sqrt[3]
+998	reciprocal of Euler γ	special	64	not found	x dup* 2 - dup* 1 - recip = 1 9 pi dup* + dup* +	142	11.0	True	EulerGamma^(-1)
+999	1/A347901	none	64	not found	x 1 + 3 sqrt ** exp = 6 pi ** 5 dup* +	140	10.1	True	
+1000	sqrt(2*Pi)*log(2), a constant associated with asymptotic evaluation of random mapping statistics	elementary	64	exact	x 2 ln / = pi 2 * sqrt	86	64.0	True	Sqrt[2*Pi]*Log[2]
+1001	value of a nonregular continued fraction giving tau/(3*tau-1), where tau is the Prouhet-Thue-Morse constant	none	64	not found	x 7 sqrt - dup* = pi dup* 5 / ln sqrt	123	10.9	True	
+1002	'tau' (named sigma_2 by C. Pomerance), a constant associated with the expected number of random elements to generate a f	none	64	not found	x dup* 2 recip - phi * = pi 2 2 sqrt - sqrt /	139	9.5	True	
+1003	Khinchin harmonic mean	special	64	not found	x recip e sqrt - dup* ln = 8 ln sqrt pi dup* /	143	10.7	True	ConditionalExpression[Extension`KhinchinHarmonicMeanConstant == Limit[\[FormalN]/Sum[Subscript[\[FormalA], \[FormalK]]^(-1), {\[FormalK], 1, \[FormalN]}], \[FormalN] -> Infinity], Element[Subscript[\[FormalA], \[FormalK]], Integers] && Subscript[\[FormalA], \[FormalK]] > 0]
+1004	Madelung constant (negated) for NaCl structure	special	64	not found	x dup* x recip - 3 / = 2 e / phi recip **	136	11.4	True	12Pi*Sum[ Sech[Pi/2*Sqrt[(2j + 1)^2 + (2k + 1)^2]]^2, {j, 0, 40}, {k, 0, 40}]
+1005	continued fraction expansion [1; 1/2, 1/3, 1/4, 1/5, 1/6, ...]	elementary	64	exact	x recip 1 + = pi 2 /	68	64.0	True	2/(Pi - 2)
+1006	Feller coin-tossing constant	algebraic	64	exact	x x sqrt recip - = 1	61	63.7	True	(2 + (25 - 3*Sqrt[69])^(1/3)/2^(1/3) + (25 + 3*Sqrt[69])^(1/3)/2^(1/3))/3
+1007	nested radical constant	special	64	not found	x dup* 3 - 2 * recip = 7 pi 3 recip ** -	133	10.4	True	Limit[Fold[Sqrt[#1 + #2] & , Sqrt[1 + \[FormalN]], Table[\[FormalI], {\[FormalI], \[FormalN], 1, -1}]], \[FormalN] -> Infinity]
+1008	log 180/π	elementary	64	not found	x 2 ln + dup* 3 - = pi pi exp recip exp /	140	11.2	True	Log10[180/Pi]
+1009	Product_{n>1} (1+1/n)^(1/n)	none	64	not found	x dup* 1 - sqrt 1 - recip = 1 1 6 sqrt + ln +	138	10.4	True	
+1010	constant x such that x^x = e. Inverse of W(1), where W is Lambert's function	special	64	exact	x x ** = e	52	63.6	True	1/ProductLog[1]
+1011	'b', an optimal stopping constant associated with the secretary problem when the objective is to maximize the hiree's ex	none	64	not found	x 5 ** 6 ln - = 1 pi dup* 2 / - dup*	139	10.3	True	
+1012	log10(59)	elementary	64	exact	x 9 1 + ln * = 8 dup* 5 - ln	128	63.8	True	Log[10, 59]
+1013	Sierpiński's S^ (Ŝ or "S hat" as named by S. Finch), a constant appearing in the asymptotics of the number of representa	none	64	not found	x 7 ** 4 exp - = pi 5 dup* recip ** 1 -	141	10.2	True	
+1014	Carlson-Levin constant	elementary	64	exact	x dup* = pi	38	64.0	True	Sqrt[Pi]
+1015	angle in radians at the apex of the Calabi triangle	none	64	not found	x e x - sqrt recip ** = 9 e sqrt + sqrt sqrt	139	10.2	True	
+1016	10^(1/4)	algebraic	64	exact	x 4 ** = 9 1 +	70	63.9	True	10^(1/4)
+1017	3rd Lebesgue constant L3	elementary	64	not found	x exp 4 - recip pi * = 1 phi sqrt pi / sqrt +	143	10.6	True	(3*Pi-14*Cos[Pi/14]+70*Cos[3*Pi/14]+154*Sin[Pi/7])/(21*Pi)
+1018	exponential of Euler γ	special	64	not found	x e recip 5 sqrt + / = phi sqrt recip pi recip - sqrt	142	10.0	True	E^EulerGamma
+1019	conjectured upper bound on Grothendieck's constant	elementary	64	exact	x recip pi * exp = 1 2 sqrt + dup*	98	64.0	True	Pi/(2*Log[1 + Sqrt[2]])
+1020	log10(61)	elementary	64	exact	x 9 1 + ln * = 8 dup* 3 - ln	126	63.7	True	Log[10, 61]
+1021	Silverman constant	special	64	not found	x e 7 recip + sqrt - = 6 pi 3 exp * /	143	10.7	True	Sum[1/(DivisorSigma[1, \[FormalK]]*EulerPhi[\[FormalK]]), {\[FormalK], 1, Infinity}]
+1022	Komornik–Loreti constant	special	64	not found	x 3 - dup* recip ln dup* = 2 e 1 - ** pi -	142	10.9	True	Root[{Product[1 - 1/#1^2^\[FormalK], {\[FormalK], 0, Infinity}] - (2 - #1)/(#1 - 1) & , 1.7872316501829659330132`22.252180846784352}]
+1023	2D dimer constant	special	64	not found	x 6 ** 1 + 3 / = 1 2 7 ** + sqrt	133	10.2	True	E^((2*Catalan)/Pi)
+1024	ln(6)	elementary	64	exact	x exp = 6	46	64.0	True	Log[6]
+1026	Hermite's constant gamma_7 = 2^(6/7)	algebraic	64	exact	x 7 ** = 8 dup*	67	63.9	True	2^(6/7)
+1027	limit of a recursive sequence connected to the Plastic constant (A060006)	none	64	not found	x exp 1 - ln pi * = 6 4 ln sqrt recip -	142	10.1	True	
+1028	sqrt((3+sqrt(13))/2), a constant related to the asymptotic evaluation of the number of self-avoiding rook paths joining 	algebraic	64	exact	x dup* x dup* recip + = 9 4 + sqrt	107	64.0	True	Sqrt[(3 + Sqrt[13])/2]
+1029	Masser-Gramain constant conjectured value	special	64	not found	x phi ** 1 + 3 * = e 9 pi / dup* +	139	9.8	True	1 + 2*EulerGamma + 2*Log[2] + 3*Log[Pi] - 4*Log[Gamma[1/4]]
+1030	log10(67)	elementary	64	exact	x 9 1 + ln * = 3 8 dup* + ln	125	63.6	True	Log[10, 67]
+1031	two times the Catalan constant	special	64	not found	x 8 7 recip ** + = 9 3 ln + sqrt	129	9.6	True	2 Catalan
+1032	ln(2 pi)	elementary	64	exact	x exp = pi 2 *	59	64.0	True	Log[2*Pi]
+1033	Tribonacci constant	algebraic	64	exact	x x 3 ** recip + = 2	75	63.7	True	(1 + (19 - 3*Sqrt[33])^(1/3) + (19 + 3*Sqrt[33])^(1/3))/3
+1034	4th Madelung constant (negated)	special	64	not found	x e * 5 - recip = 8 pi e + **	123	10.2	True	8*(5 - 3*Sqrt[2])*Zeta[1/2]*Zeta[-1/2]
+1035	Landau-Kolmogorov constant	algebraic	64	exact	x 3 sqrt / 3 ** = 2 recip 2 sqrt recip +	118	64.0	True	Sqrt[3]/(2^(1/3)*(-1 + Sqrt[2])^(1/3))
+1036	Connective constant	algebraic	64	exact	x dup* 2 - = 2 sqrt	64	63.6	True	Sqrt[2 + Sqrt[2]]
+1037	log10(71)	elementary	64	exact	x 9 1 + ln * = 7 8 dup* + ln	128	64.0	True	Log[10, 71]
+1038	Integral_{x=0..Pi} (sin(x)/x) dx	special	64	not found	x recip pi sqrt * 9 ** = 2 recip pi sqrt + ln dup*	143	9.9	True	SinIntegral[Pi]
+1039	Gauss lemniscate constant	special	64	not found	x phi sqrt sqrt pi - + = 1 pi 3 sqrt ** - recip	140	9.8	True	Gamma[1/4]^2/(4*Sqrt[Pi])
+1040	spiral of Theodorus constant	special	64	not found	x dup* 3 * 2 - exp = 2 8 dup* + dup* 1 -	143	9.8	True	Sum[1/((1 + \[FormalK])*Sqrt[\[FormalK]]), {\[FormalK], 1, Infinity}]
+1041	log10(73)	elementary	64	exact	x 9 1 + ln * = 9 8 dup* + ln	129	63.6	True	Log[10, 73]
+1042	expected reciprocal Euclidean distance between two random points in the unit cube	none	64	not found	x dup* exp 6 - dup* = 3 3 sqrt ** exp	127	12.0	True	
+1043	log10(79)	elementary	64	exact	x 9 1 + ln * = 9 dup* 2 - ln	124	63.8	True	Log[10, 79]
+1045	Boyd constant	special	64	not found	x 4 dup* ln sqrt - recip = 7 2 2 ln / -	141	10.3	True	Exp[(9 - PolyGamma[1, 2/3] + PolyGamma[1, 4/3])/(2*Pi*Sqrt[3])]
+1046	M_5, the 5-dimensional analog of Madelung's constant (negated)	none	32	not found	x recip 3 6 recip ** + = 2 e recip 4 - recip +	140	10.6	True	
+1047	6/π	elementary	64	exact	x pi * = 6	51	63.8	True	6/Pi
+1048	tetrahedral bond angle	elementary	64	not found	x dup* pi x sqrt / - = 1 e 4 / - exp	137	11.1	True	ArcCos[-1/3]
+1049	log10(83)	elementary	64	exact	x 9 1 + ln * = 2 9 dup* + ln	123	63.6	True	Log[10, 83]
+1050	tetranacci constant	algebraic	64	exact	x x 4 ** recip + = 2	76	64.0	True	Root[-1 - #1 - #1^2 - #1^3 + #1^4 & , 2]
+1052	Omega prime-generating constant	none	64	not found	x phi - e * exp = phi 7 pi dup* / +	139	11.1	True	
+1053	first moment of the reciprocal gamma distribution	none	64	not found	x 8 sqrt phi / - = 3 3 exp 4 - /	140	10.1	True	
+1054	Euler totient A constant	special	64	not found	x 3 sqrt - recip pi - = 1 7 pi - recip + dup*	137	10.5	True	(315*Zeta[3])/(2*Pi^4)
+1055	ln(7)	elementary	64	exact	x exp = 7	46	64.0	True	Log[7]
+1056	C_4, a constant related to sharp inequalities for the product of 4 polynomials, which was introduced by David Boyd	none	64	not found	x exp 3 recip + pi ** = pi 3 e ** + dup*	138	10.1	True	
+1057	log10(89)	elementary	64	exact	x 9 1 + ln * = 8 9 dup* + ln	129	64.0	True	Log[10, 89]
+1058	Z score	special	64	not found	x dup* x exp sqrt - = e 3 sqrt 4 / *	131	10.7	True	Sqrt[2]*InverseErf[19/20]
+1059	reciprocal Lucas constant	special	64	not found	x dup* x ln + ln = e sqrt exp sqrt sqrt	125	11.3	True	(-1 + EllipticTheta[3, 0, GoldenRatio^(-2)]^2)/4 + (7*Log[GoldenRatio] - Log[1 + GoldenRatio^2] - QPolyGamma[0, 1, GoldenRatio^(-4)] + 4*QPolyGamma[0, 1, GoldenRatio^(-2)] - 4*QPolyGamma[0, 1, GoldenRatio^(-1)])/(4*Log[GoldenRatio])
+1060	M_6, the 6th Madelung constant	none	64	not found	x 4 ** 1 + e * = 7 phi pi recip + **	138	9.8	True	
+1061	pentanacci constant	algebraic	64	exact	x x 5 ** recip + = 2	77	63.6	True	Root[-1 - #1 - #1^2 - #1^3 - #1^4 + #1^5 & , 1]
+1062	C_5, a constant related to sharp inequalities for the product of 5 polynomials, which was introduced by David Boyd	none	64	not found	x 3 2 x - / + = 9 1 + dup* 7 -	137	9.7	True	
+1063	C_6, a constant related to sharp inequalities for the product of 6 polynomials, which was introduced by David Boyd	none	64	not found	x x 2 sqrt recip - * = pi 2 sqrt 3 - recip +	135	10.3	True	
+1064	Gamma''(1)	none	64	not found	x exp dup* pi sqrt sqrt * = phi e 5 dup* * +	141	10.4	True	
+1065	hexanacci constant	algebraic	64	exact	x 2 x - ln recip ** = 6 recip exp recip	119	63.8	True	Root[-1 - #1 - #1^2 - #1^3 - #1^4 - #1^5 + #1^6 & , 2]
+1066	log10(97)	elementary	64	not found	x pi recip 1 - + pi / = 2 phi ** e dup* /	141	10.8	True	Log[10, 97]
+1067	heptanacci constant	algebraic	64	exact	x 2 x - ln recip ** = 7 recip exp recip	119	63.7	True	Root[-1 - #1 - #1^2 - #1^3 - #1^4 - #1^5 - #1^6 + #1^7 & , 1]
+1068	integral_{x=0..Infinity} 1/x^x dx	none	64	not found	x dup* phi pi / * dup* = 1 4 pi - recip exp +	143	10.6	True	
+1069	Two	rational	64	exact	x = 2	28	64.0	True	2
+1070	M_7, the 7-dimensional analog of Madelung's constant (negated)	none	64	not found	x 2 pi ln ** - recip = phi recip 3 sqrt exp -	140	9.9	True	
+1071	Sierpiński's S~ (S "tilde" as named by S. Finch), a constant appearing in the asymptotics of the number of representatio	none	64	not found	x 1 - dup* recip 4 + recip = 1 3 sqrt pi / - dup*	140	10.5	True	
+1072	solution to the Lane-Emden equation for a sphere of polytropic index n = 3	none	32	not found	x 2 - ln x dup* + = 6 e sqrt pi - **	142	9.9	True	
+1073	least x > 0 satisfying x + tan(x) = 0	none	64	not found	x pi ** x exp * = 3 pi dup* 6 - **	134	10.4	True	
+1074	figure-eight knot hyperbolic volume	special	64	not found	x dup* 5 e recip ** * = 8 3 sqrt pi / -	141	10.3	True	((-2*Pi^2 + 3*PolyGamma[1, 1/3])*Sqrt[3])/9
+1075	QRS associated constant	special	64	not found	x x recip - x ln * = 2 pi 4 + recip **	134	10.3	True	Zeta[3/2, Root[{Zeta[1/2, #1/2] & , 0.605443657196732749478922842447`29.782073733759695}]/2]/4
+1076	'beta', a constant appearing in the random links Traveling Salesman Problem	none	64	not found	x 8 x exp / * = e exp sqrt pi sqrt -	137	10.0	True	
+1077	Lüroth analog of Lévy constant	special	64	not found	x 2 6 sqrt * sqrt * = 5 e - sqrt exp	132	10.7	True	Sum[Log[\[FormalK]*(1 + \[FormalK])]/(\[FormalK]*(1 + \[FormalK])), {\[FormalK], 1, Infinity}]
+1078	M_8, the 8th Madelung constant (negated)	none	64	not found	x exp pi 4 + - recip = 2 2 recip e - recip +	139	10.5	True	
+1079	semi-meander critical exponent	algebraic	64	not found	x sqrt recip 7 * 4 - = 3 e dup* 4 - /	140	10.9	True	1 + (Sqrt[11]*(Sqrt[5] + Sqrt[29]))/24
+1080	one div ln phi	elementary	64	exact	x recip exp = phi	53	64.0	True	1/Log[GoldenRatio]
+1081	ln(8)	elementary	64	exact	x exp = 8	47	63.6	True	Log[8]
+1082	two thirds pi	elementary	64	exact	x 3 * = pi 2 *	65	64.0	True	2*Pi/3
+1083	Wallis's constant	algebraic	64	exact	x 2 x dup* - * = 1 6 -	94	64.0	True	(135/2 - (3*Sqrt[1929])/2)^(1/3)/3 + ((45 + Sqrt[1929])/2)^(1/3)/3^(2/3)
+1084	Brown-Wang constant	special	64	not found	x pi * 7 - 2 / = 5 pi / dup* e -	140	10.7	True	With[{\[FormalLambda] = Root[{(1 + #1)*Pi - Tan[#1*Pi] & , 0.43029665312420275777`20.}]}, Root[{(1 + \[FormalLambda])*Pi*((#1 - 1)*PolyGamma[1 + (#1 - 1)/2] - 2*#1*PolyGamma[1 + #1/2] + (#1 + 1)*PolyGamma[1 + (#1 + 1)/2]) - 2*Sin[\[FormalLambda]*Pi] & , 2.11023396612157219646682815666`30.}]]
+1085	'sigma', a constant associated with the expected number of random elements to generate a finite abelian group	none	64	not found	x exp 2 / sqrt 2 - = 3 3 ** phi - recip	139	10.9	True	
+1086	'a', an auxiliary constant associated with the asymptotic probability of success in the secretary problem when the numbe	none	64	not found	x dup* 1 x sqrt recip + - = 2 3 e 1 + / +	141	10.1	True	
+1087	Jacobi theta function theta_2(0, 1/2) where theta_2 is the 2nd Jacobi theta function	special	64	not found	x recip 1 + exp sqrt 1 - = 3 5 dup* recip - ln	139	9.9	True	EllipticTheta[2,0,1/2]
+1088	Jacobi theta function theta_3(0, 1/2) where theta_3 is the 3rd Jacobi theta function	special	64	not found	x pi + 2 x ** / = pi e 9 recip - /	138	10.4	True	EllipticTheta[3,0,1/2]
+1089	pi^(2/3)	elementary	64	exact	x 3 ** = pi dup*	59	63.7	True	Pi^(2/3)
+1090	10^(1/3)	algebraic	64	exact	x 3 ** = 9 1 +	69	63.8	True	10^(1/3)
+1092	Erdős-Szekeres constant	special	64	not found	x x x dup* * sqrt ** = 4 7 recip exp / dup*	141	10.9	True	Zeta[3/2]/Zeta[3]
+1093	K = exp(8*G/(3*Pi)), a Kneser-Mahler constant related to an asymptotic inequality involving Bombieri's supremum norm, wh	special	64	not found	x 2 x dup* - dup* / = phi recip 3 * dup* recip	131	10.6	True	Exp[8*Catalan/(3*Pi)]
+1094	normalized asymptotic mean of omega(m) when m is one of the values <= n taken by Euler's phi totient function	none	64	not found	x dup* phi sqrt sqrt + = 5 3 e / **	123	10.4	True	
+1095	a constant related to series-reduced trees	none	64	not found	x 1 - e * 8 * = 4 phi pi sqrt ** **	142	10.2	True	
+1096	'theta', the expected degree (valency) of the root of a random rooted tree with n vertices	none	64	not found	x 2 + exp pi sqrt * = 3 4 dup* + phi **	140	10.9	True	
+1097	e^(pi/4)	elementary	64	exact	x 4 ** = pi exp	64	63.8	True	E^(Pi/4)
+1098	ln(9)	elementary	64	exact	x exp = 9	47	63.9	True	Log[9]
+1099	Lüroth analog of Khinchin constant	special	64	not found	x dup* exp sqrt 4 / = e phi 9 + recip +	135	11.4	True	Product[\[FormalK]^(1/(\[FormalK]*(1 + \[FormalK]))), {\[FormalK], 1, Infinity}]
+1100	totient constant	special	64	not found	x 2 - 3 exp * dup* = 2 5 sqrt sqrt ** exp	141	11.3	True	Sum[1/(\[FormalK]*EulerPhi[\[FormalK]]), {\[FormalK], 1, Infinity}]
+1101	Pi/2 + 2/Pi	elementary	64	exact	x 2 * pi * = 4 pi dup* +	93	63.8	True	Pi/2 + 2/Pi
+1102	pi(2)^(-1/2)	elementary	64	exact	x pi / = 2 sqrt recip	63	63.7	True	Pi*2^(-1/2)
+1103	y_3, the third of four non-explicit constants recursively derived from Khintchine's [Khinchin's] constant	none	64	not found	x 5 x dup* - * = 7 phi sqrt * recip	121	10.2	True	
+1104	D(1), where D(x) is the infinite product function defined in the formula section (or in the Finch reference)	special	64	not found	x 1 - dup* pi sqrt recip + = 3 pi recip exp + sqrt	135	10.2	True	Glaisher^6/(2^(1/6)*Sqrt[Pi])
+1105	Sqrt 5	algebraic	64	exact	x dup* = 5	41	63.7	True	Sqrt[5]
+1106	Takeuchi-Prellberg constant	special	25	not found	x x sqrt sqrt 4 / + = 4 pi / phi sqrt +	139	9.8	True	ConditionalExpression[Extension`TakeuchiPrellbergConstant == Limit[Subscript[\[FormalCapitalT], \[FormalN]]/(BellB[\[FormalN]]*Exp[ProductLog[\[FormalN]]^2/2]), \[FormalN] -> Infinity], Subscript[\[FormalCapitalT], 0] == 0 && Subscript[\[FormalCapitalT], 1] == 1 && Subscript[\[FormalCapitalT], 2] == 4 && Subscript[\[FormalCapitalT], 3] == 14 && Subscript[\[FormalCapitalT], \[FormalN]] == Sum[Binomial[2*\[FormalK], \[FormalK]]/(1 + \[FormalK]), {\[FormalK], 1, \[FormalN]}] + Sum[Subscript[\[FormalCapitalT], -1 - \[FormalK] + \[FormalN]]*(2*Binomial[-1 + \[FormalK] + \[FormalN], \[FormalK]] - Binomial[\[FormalK] + \[FormalN], \[FormalK]]), {\[FormalK], 0, -2 + \[FormalN]}]]
+1107	Sierpiński's second constant, K2 = lim_{n->oo} ((1/n) * (Sum_{i=1..n} A004018(i^2)) - 4/Pi * log(n))	special	64	not found	x pi dup* 1 - ** 1 - = 7 4 ** pi sqrt /	142	10.1	True	4(12 Log[Gamma[3/4]]-9 Log[Pi]+72 Log[Glaisher]-5 Log[2]+3 EulerGamma-3)/(3 Pi)
+1108	Integral_{0..oo} 1/Gamma(1+x) dx, a variation of the Fransén-Robinson constant	none	64	not found	x 1 + 3 * e - = pi 5 3 recip ** **	134	10.1	True	
+1109	Landau-Kolmogorov constant C(4,1) for derivatives in L_2(0, infinity)	none	64	not found	x phi ** x 1 + - = pi 1 + sqrt ln dup*	132	10.2	True	
+1110	1/A240969	none	64	not found	x 2 recip - pi ** exp = 4 e 8 - * dup*	142	11.3	True	
+1111	first Foias constant	special	64	exact	x x recip ** x recip - = 1	80	64.0	True	Root[{-(1 + 1/#1)^#1 + #1 & , 2.29316628741186103150802829125000000000007305694139121664`29.360435548444247}]
+1112	zeta(2)*zeta(3)*zeta(4)*	none	64	not found	x x sqrt - 2 sqrt * = 6 pi - ln dup*	129	10.5	True	
+1113	Universal parabolic constant	elementary	64	exact	x 2 sqrt - exp = 1 2 sqrt +	91	63.8	True	Sqrt[2] + ArcSinh[1]
+1114	product_{n>=1} (n/(n+1))^((-1)^t(n)), a probabilistic counting constant, where t(n) = A010060(n) is the Thue-Morse seque	none	64	not found	x dup* 2 sqrt pi - + = 2 3 / pi ** recip	129	9.8	True	
+1115	logarithm of 10	elementary	64	exact	x exp = 9 1 +	61	64.0	True	Log[10]
+1116	y_1, the first of four non-explicit constants recursively derived from Khintchine's [Khinchin's] constant	none	64	not found	x 6 pi sqrt - + dup* = 3 2 pi sqrt ** **	137	10.4	True	
+1117	Klarner-Rivest polyomino constant	none	64	not found	x pi ln * 3 recip + = 4 pi 3 / sqrt -	136	9.9	True	
+1118	3D lattice sum analog of Euler γ	special	64	not found	x e - dup* recip 5 - = 8 e sqrt + recip exp	142	9.8	True	(-4*Pi)/3 + (19*Log[2])/2 - 4*Sum[((3 + 3*(-1)^\[FormalM] + (-1)^(\[FormalM] + \[FormalN]))*Csch[Pi*Sqrt[\[FormalM]^2 + \[FormalN]^2]])/Sqrt[\[FormalM]^2 + \[FormalN]^2], {\[FormalM], 1, Infinity}, {\[FormalN], 1, Infinity}]
+1119	constant 1 + B3 (or 1 + B_3) related to the Mertens constant	none	64	not found	x 7 ln - sqrt exp = e 3 4 / + sqrt	138	11.1	True	
+1120	Ti_2(2+sqrt(3)), where Ti_2 is the inverse tangent integral function	none	64	not found	x 9 ln pi - + = pi pi 3 recip + recip **	137	10.1	True	
+1121	three quarters pi	elementary	64	exact	x 4 * = pi 3 *	68	64.0	True	3*Pi/4
+1122	monomer-dimer triangular constant	special	64	not found	x dup* 7 - 5 / = 2 ln recip 3 sqrt -	131	10.4	True	Exp[Integrate[Log[6 + 2*Cos[\[FormalT]] + 2*Cos[\[FormalPhi]] + 2*Cos[\[FormalT] + \[FormalPhi]]], {\[FormalT], -Pi, Pi}, {\[FormalPhi], -Pi, Pi}]/(8*Pi^2)]
+1123	pi^(3/4)	elementary	64	exact	x recip pi * = pi sqrt sqrt	72	63.8	True	Pi^(3/4)
+1124	Pi^2/(6*log 2)	elementary	64	exact	x recip pi dup* * = 8 dup* ln	90	63.9	True	Pi^2/(6*Log[2])
+1125	c = (7-sqrt(5))/2	algebraic	64	exact	x phi + = 4	53	63.9	True	4 - GoldenRatio
+1126	ln(11)	elementary	64	exact	x exp 1 + = 4 3 *	77	64.0	True	Log[11]
+1127	asymptotic evaluation of the constrained maximum of a certain quadratic form	none	64	not found	x 6 sqrt * 2 + recip = pi 7 e sqrt ** /	138	11.1	True	
+1128	Narcissus constant	special	64	exact	x x x 1 - ** - = 1 2 2 sqrt / dup* -	135	64.0	True	Root[{1 + #1 - #1^(-1 + #1) & , 2.39838438278161142938900277955804885011`20.5225995583442}]
+1129	Golden angle	elementary	64	exact	x phi dup* * = pi 2 *	77	64.0	True	(2*Pi)/GoldenRatio^2
+1130	2*zeta(3)	special	64	not found	x x ** dup* 1 + sqrt = 6 sqrt 3 recip - exp	135	10.1	True	2*Zeta[3]
+1131	first zero of the Bessel function J_0(z)	special	64	not found	x ln 1 - recip 8 + = pi 6 / sqrt sqrt ln	141	11.4	True	BesselJZero[0, 1]
+1132	solution to the Lane-Emden equation for a sphere of polytropic index n = 2	none	32	not found	x pi sqrt recip exp dup* / = e pi 9 + sqrt /	139	10.4	True	
+1133	Silver ratio	algebraic	64	exact	x 1 - = 2 sqrt	52	64.0	True	1 + Sqrt[2]
+1134	c = 2.4149..., a random mapping statistics constant such that the asymptotic expectation of the maximum rho length (grap	none	20	not found	x x 1 + sqrt + ln = 7 9 ln dup* /	134	10.4	True	
+1135	prod_{n>=1} (1 + 1/n^3) = cosh(sqrt(3) pi/2)/pi	elementary	64	not found	x 1 - dup* recip 7 * = phi pi 3 sqrt / +	133	11.8	True	Cosh[Sqrt[3]*Pi/2]/Pi
+1136	a constant related to the asymptotic evaluation of the Lebesgue constants L_n	none	64	not found	x phi recip ** x recip + = 6 sqrt pi 2 - /	136	11.3	True	
+1137	theta = 2.472548..., an auxiliary constant used to compute the best constant in Friedrichs' inequality in one dimension	none	64	not found	x e sqrt sqrt / 2 - = e 5 / phi recip -	140	9.9	True	
+1138	Otter's weakly binary tree enumeration asymptotic constant xi	none	64	not found	x 4 ** 6 dup* - = 2 2 6 dup* + recip +	137	10.1	True	
+1139	A1*B1, the average number of non-isomorphic semisimple rings of any order, where A1 is Product_{m>1} zeta(m) and B1 is P	none	64	not found	x dup* 4 / dup* pi / = pi ln 7 recip + recip	136	9.8	True	
+1140	Feigenbaum alpha	none	64	not found	x phi ** 2 sqrt + = 3 2 pi sqrt + sqrt *	133	10.1	True	
+1141	root two pi	elementary	64	exact	x dup* = pi 2 *	55	63.9	True	Sqrt[2*Pi]
+1142	100^(1/5)	algebraic	64	exact	x sqrt 5 ** = 9 1 +	80	64.0	True	100^(1/5)
+1143	a constant related to identity trees	none	64	not found	x e 9 + ln - = 7 pi 8 + dup* /	141	10.9	True	
+1144	doubly infinite sum N_3 = Sum_{i,j,k = -inf..inf} (-1)^(i+j+k)/(i^2+j^2+k^2), a lattice constant analog of Madelung's co	none	64	not found	x 5 2 / - 3 * = 3 ln e / pi **	143	10.4	True	
+1145	sqrt(2)*exp(2*G/Pi), where G = A006752	special	64	not found	x dup* pi + sqrt pi - = 1 1 pi dup* recip + sqrt -	138	10.5	True	Sqrt[2]*Exp[2Catalan/Pi]
+1146	a variant of the Komornik-Loreti constant	none	64	not found	x pi x 1 + - recip + = pi sqrt sqrt 9 exp /	143	10.1	True	
+1147	(Glaisher^12/(2*Pi*e^EulerGamma))^(Pi^2/6)	special	64	not found	x e 2 + sqrt sqrt - = pi pi dup* + recip exp	132	9.8	True	(Glaisher^12/(2Pi E^EulerGamma))^(Pi^2/6)
+1148	ln(13)	elementary	64	exact	x exp 1 + = 7 2 *	77	63.9	True	Log[13]
+1149	exp(gamma)/log(2), a conjectural constant related to the asymptotic counting of Mersenne primes, where gamma is Euler's 	special	64	not found	x pi dup* ln 1 - ** = 1 4 e sqrt + sqrt +	140	10.9	True	Exp[EulerGamma]/Log[2]
+1150	Sierpiński's constant	special	64	not found	x e recip + 1 + 2 / = 5 e pi - ** recip	139	10.2	True	Pi*(2*EulerGamma - Log[Pi] + 4*Log[Gamma[3/4]])
+1151	Barban constant	special	64	not found	x pi dup* 3 - sqrt - = 1 phi 4 * dup* - recip	141	9.8	True	Product[1 + (-1 + 3*Prime[\[FormalK]]^2)/(Prime[\[FormalK]]*(1 + Prime[\[FormalK]])*(-1 + Prime[\[FormalK]]^2)), {\[FormalK], 1, Infinity}]
+1152	twenty-vertex entropy constant	algebraic	64	exact	x 2 * dup* = 3 3 **	77	64.0	True	(3*Sqrt[3])/2
+1153	golden root	algebraic	64	exact	x sqrt = phi	42	63.9	True	2 + 2*Cos[(2*Pi)/5]
+1154	Lemniscate constant	special	64	not found	x pi x - / 3 - = pi 2 phi recip ** /	137	10.9	True	Gamma[1/4]^2/(2*Sqrt[2*Pi])
+1156	positive root of the equation 13x^4 - 7x^2 - 581 = 0	algebraic	64	not found	x 3 2 sqrt / sqrt - = 3 2 e ** recip **	134	10.8	True	Sqrt[1/26*(7+Sqrt[30261])]
+1157	sqrt(2) + sqrt(3/2)	algebraic	64	exact	x 2 sqrt * = 2 3 sqrt +	82	63.8	True	Sqrt[2] + Sqrt[3/2]
+1158	sqrt(7)	algebraic	64	exact	x dup* = 7	42	64.0	True	Sqrt[7]
+1159	Gelfond-Schneider constant	elementary	64	exact	x 2 sqrt ** = 4	59	63.9	True	2^Sqrt[2]
+1160	Gamma(1/3)	special	64	not found	x recip e recip - recip 1 - = pi 4 4 exp + *	139	10.6	True	Gamma[1/3]
+1161	coefficient 'gamma' (see formula) appearing in Otter's result concerning the asymptotics of T_n, the number of non-isomo	none	64	not found	x ln 6 dup* ** recip = pi 1 pi sqrt recip - **	133	9.9	True	
+1162	Khinchin's constant	special	64	not found	x 1 - 6 ** 4 + = pi 2 * 6 ln **	142	10.2	True	Khinchin
+1163	Landau-Kolmogorov constant C(5,1) for derivatives in L_2(0, infinity)	none	64	not found	x e x dup* recip + / = e 3 pi - + ln	138	10.3	True	
+1164	Euler number	elementary	64	exact	x ln = 1	38	64.0	True	E
+1165	pi sqrt(3)/2	elementary	64	exact	x pi / dup* = 3 4 /	79	64.0	True	Pi*Sqrt[3]/2
+1166	log e^(2π)	elementary	64	exact	x recip pi * exp = 9 1 + sqrt	95	64.0	True	Log10[E^(2*Pi)]
+1167	Sum_{k>=1} sigma(k)/2^k where sigma(k) is the sum of divisors of k, 1 <= d <= k	special	64	not found	x 1 - recip e 1 - * = 2 sqrt pi ** 2 - sqrt	141	11.2	True	Sum[n/(2^n - 1), {n, 1, 500}]
+1168	Ramanujan nested radical constant	algebraic	64	exact	x phi x - dup* - = phi 4 * 5 -	127	64.0	True	(2 + Sqrt[5] + Sqrt[15 - 6*Sqrt[5]])/2
+1169	a constant related to A006196	none	64	not found	x pi / dup* 6 * = pi pi sqrt pi recip - +	132	10.0	True	
+1170	C_{1/2}, a constant related to Kolmogorov's inequalities	special	64	not found	x dup* 2 e ** - dup* = pi 9 e recip ** /	140	11.1	True	Gamma[1/4]^2/(Pi*Gamma[3/4]^2)
+1171	(1/sqrt(Pi) + e*erfc(-1))/2	special	64	not found	x dup* 4 - dup* 2 * = 6 5 * e sqrt -	140	10.1	True	(1/Sqrt[Pi]+E Erfc[-1])/2
+1172	'xi', an optimal stopping auxiliary constant associated with the two choice case	none	64	not found	x pi 8 / exp * = pi phi ** 5 sqrt -	139	10.6	True	
+1173	2*Pi*phi(0), a constant appearing in connection with a study of zeros of the integral of xi(z), where phi(t) and xi(z) a	none	64	not found	x 3 pi x / * - = 5 ln dup* pi -	131	10.9	True	
+1174	Fransén–Robinson constant	special	64	not found	x pi 3 - sqrt recip - = 2 3 ln - 6 /	139	10.2	True	Integrate[Gamma[x]^(-1), {x, 0, Infinity}]
+1175	Murata constant	special	64	not found	x phi * x 1 - ** = pi 1 2 sqrt exp + *	140	9.8	True	Product[1 + (-1 + Prime[\[FormalK]])^(-2), {\[FormalK], 1, Infinity}]
+1176	ln(17)	elementary	64	exact	x exp 1 + = 9 2 *	78	64.0	True	Log[17]
+1177	Born's basic potential Pi_0	none	64	not found	x 2 x recip + exp / = 1 2 ln dup* - dup*	131	10.1	True	
+1178	constant appearing in the variance for searching in a digital tree	none	64	not found	x 1 - dup* exp phi + = pi pi dup* 5 recip + *	143	10.1	True	
+1179	Hardy-Littlewood prime triples constant	special	64	not found	x x recip - dup* 3 ** = 4 3 sqrt ** exp sqrt	140	10.5	True	(9*Product[((-3 + Prime[\[FormalK]])*Prime[\[FormalK]]^2)/(-1 + Prime[\[FormalK]])^3, {\[FormalK], 3, Infinity}])/2
+1180	(diagonal)/(shortest side) of 2nd electrum rectangle	none	64	exact	x dup* 5 - = 2 3 sqrt *	87	63.8	True	
+1181	a second variant of the Komornik-Loreti constant	none	64	not found	x 5 ln - dup* exp = 6 pi sqrt ln -	131	10.4	True	
+1182	ln(19)	elementary	64	exact	x exp 1 - = 9 2 *	79	63.9	True	Log[19]
+1183	Otter's rooted tree constant	none	64	not found	x recip x x ** recip - = 2 sqrt pi dup* + sqrt recip	135	12.3	True	
+1184	Landau-Kolmogorov constant C(4,2) for derivatives in L_2(0, infinity)	none	64	not found	x 8 / 1 - dup* recip = e 4 + 7 sqrt /	138	10.3	True	
+1185	B, a constant related to the Goh-Schmutz constant and the asymptotic expected order of a random permutation	none	64	not found	x pi - recip x dup* + = pi e 5 / sqrt **	136	10.3	True	
+1186	oloid volume constant	special	64	not found	x 4 - recip e recip - = 2 e 9 + sqrt -	137	11.3	True	(2*(2*EllipticE[3/4] + EllipticK[3/4]))/3
+1187	Landau-Kolmogorov constant C(3,1) for derivatives in the case L_infinity(0, infinity)	algebraic	64	exact	x 2 * 3 ** = 3 5 **	91	64.0	True	(243/8)^(1/3)
+1188	sqrt(480)/7	algebraic	64	exact	x 2 / dup* 1 + = 2 7 recip - dup*	108	64.0	True	Sqrt[480]/7
+1189	ln(23)	elementary	64	exact	x exp 1 + = 6 4 *	80	63.8	True	Log[23]
+1190	Ramanujan's π-approximation constant	elementary	64	false positive	x = pi	29	16.2	True	Log[262537412640768000]/Sqrt[163]
+1191	Pi	elementary	64	exact	x = pi	29	64.0	True	Pi
+1192	mean value over all positive integers of a function giving the least quadratic nonresidue modulo a given odd integer (th	none	64	not found	x 2 recip - pi / dup* = e 5 / 6 recip +	135	11.4	True	
+1193	10^(1/2)	algebraic	64	exact	x dup* 1 - = 9	58	64.0	True	10^(1/2)
+1194	C = log(2*Pi) + B_3 (where B_3 is A083343), one of Euler totient constants	none	64	not found	x phi ** 6 - recip = e 2 sqrt 2 - +	129	10.4	True	
+1195	plate constant	special	64	not found	x dup* 3 + 7 / = e pi ln - recip exp	134	10.4	True	ConditionalExpression[Extension`PlateConstant == \[FormalX], BesselI[1, \[FormalX]]*BesselJ[0, \[FormalX]] + BesselI[0, \[FormalX]]*BesselJ[1, \[FormalX]] == 0 && 3 < \[FormalX] < 7/2]
+1196	square of the constant A130834	special	64	not found	x pi * 1 + 6 / = pi 2 / sqrt e **	133	10.8	True	Exp[4*Catalan/Pi]
+1197	1 + sqrt(5)	algebraic	64	exact	x 2 / = phi	51	63.9	True	1 + Sqrt[5]
+1198	Pálfy's constant c_3	elementary	64	exact	x 5 / 3 recip - = 2 ln 9 ln /	127	64.0	True	5/3 + Log[9, 32]
+1199	rayleigh kurtosis	elementary	64	exact	x 2 - recip pi recip - recip = pi 3 - recip 5 -	136	64.0	True	(32 - 3*Pi^2)/(4 - Pi)^2
+1200	silver root	algebraic	64	exact	x 1 x sqrt - recip + = 2	78	64.0	True	2 + 2*Cos[(2*Pi)/7]
+1201	Lévy's constant 2	elementary	64	exact	x 8 ln ** = pi 2 / dup* exp	107	64.0	True	E^(Pi^2/(12*Log[2]))
+1202	a constant related to A000620, A000622, A000623 and A000625	none	64	not found	x x recip exp 2 / * = 1 2 2 sqrt + ln +	138	10.1	True	
+1203	y_2, the second of four non-explicit constants recursively derived from Khintchine's [Khinchin's] constant	none	64	not found	x 5 pi sqrt - + dup* = 3 2 pi sqrt ** **	136	10.6	True	
+1204	sqrt(11)	algebraic	64	exact	x dup* 1 - = 9 1 +	72	64.0	True	Sqrt[11]
+1205	average value of the Yekutieli-Mandelbrot parameter, that is the average number of maximal subtrees of an ordered binary	special	64	not found	x pi - recip pi sqrt - = 3 2 sqrt 6 / +	133	10.1	True	2*Catalan/(Pi*Log[2])+5/2
+1206	Reciprocal Fibonacci constant	special	64	not found	x exp sqrt x dup* recip - = 1 9 8 * ln +	142	9.5	True	(Sqrt[5]*(EllipticTheta[2, 0, GoldenRatio^(-2)]^2 + (Log[5] + 2*QPolyGamma[0, 1, GoldenRatio^(-4)] - 4*QPolyGamma[0, 1, GoldenRatio^(-2)])/(2*Log[(1 + Sqrt[5])/2])))/4
+1207	van der Corput constant	special	64	not found	x 1 - x ln dup* * = pi pi ** 4 - ln	139	10.8	True	With[{\[FormalX] = Root[{Cos[#1]*FresnelS[Sqrt[1 - (2*#1)/Pi]] + FresnelC[Sqrt[1 - (2*#1)/Pi]]*Sin[#1] & , -0.726643246813242509590219555941985563257278933469994008688`30.}]}, 2*(Cos[\[FormalX]]*FresnelC[Sqrt[1 - (2*\[FormalX])/Pi]] - FresnelS[Sqrt[1 - (2*\[FormalX])/Pi]]*Sin[\[FormalX]])*Sqrt[Pi]]
+1208	ln(29)	elementary	64	exact	x exp 1 - = 7 4 *	81	64.0	True	Log[29]
+1209	Magata constant	special	64	not found	x e pi exp + recip + = 1 e 4 * + sqrt	132	11.0	True	ConditionalExpression[Extension`MagataConstant == Limit[Sum[Subscript[\[FormalC], \[FormalK]], {\[FormalK], 1, \[FormalN]}], \[FormalN] -> Infinity], Sum[Subscript[\[FormalC], \[FormalK]]*Product[-1 - \[FormalJ] + \[FormalM], {\[FormalJ], 0, -1 + \[FormalK]}], {\[FormalK], 0, -1 + \[FormalN]}] == Prime[\[FormalM]] && \[FormalM] <= \[FormalN]]
+1210	meander critical exponent	algebraic	64	exact	x x 1 - recip + = 4 6 recip -	102	64.0	True	(29 + Sqrt[145])/12
+1211	ln(31)	elementary	64	exact	x exp 1 + = 2 5 **	78	63.9	True	Log[31]
+1212	y_4, the last of four non-explicit constants recursively derived from Khintchine's [Khinchin's] constant	none	64	not found	x ln pi * 3 - = 2 ln pi recip **	119	10.4	True	
+1213	1 + sqrt(6)	algebraic	64	exact	x 1 - = 6 sqrt	57	64.0	True	1+Sqrt[6]
+1214	best constant K for the integral inequality integral_{0..1} f(x)^2*f'(x)^2 dx <= K*integral_{0..1} f'(x)^4 dx	none	64	not found	x 1 + 3 - e ** = e e 9 + recip +	137	10.2	True	
+1215	Product_{k>=1} (1-1/2^k)^(-1)	special	64	not found	x recip 1 + exp sqrt = e 4 + ln	107	9.8	True	1/QPochhammer[1/2, 1/2]
+1216	square root of 12	algebraic	64	exact	x 2 / = 3 sqrt	57	64.0	True	Sqrt[12]
+1217	C, a coin tossing constant related to the asymptotic variance of the length of the longest run of consecutive heads	elementary	64	exact	x 6 * 2 recip - = pi 2 ln / dup*	116	64.0	True	1/12 + Pi^2/(6*Log[2]^2)
+1218	gamma = 8*lambda^2, a critical threshold of a boundary value problem, where lambda is Laplace's limit constant A033259	none	64	not found	x e pi recip + ln * = e 2 pi sqrt recip - *	141	10.2	True	
+1219	infinite product constant	special	64	not found	x 3 e sqrt - + dup* = pi exp pi sqrt recip +	134	10.2	True	Product[(1 + \[FormalK]^(-1))^\[FormalK]^(-1), {\[FormalK], 1, Infinity}]
+1220	log 10800/π	elementary	64	not found	x x e - * exp = pi e dup* - dup*	121	10.1	True	Log10[10800/Pi]
+1221	accumulation point of the logistic map	none	64	not found	x phi dup* + pi - dup* = 7 e dup* recip exp **	143	11.4	True	
+1222	sqrt(13)	algebraic	64	exact	x dup* 1 - = 4 3 *	74	64.0	True	Sqrt[13]
+1223	4*(8 - 4*sqrt(2) - log(2))/(2*sqrt(2) - 1)	elementary	64	not found	x 7 phi ln * - = 3 1 pi sqrt - recip **	139	11.4	True	4(8-4Sqrt[2]-Log[2])/(2Sqrt[2]-1)
+1224	ln(37)	elementary	64	exact	x exp 1 - = 6 dup*	70	64.0	True	Log[37]
+1225	2 + phi, with the golden section phi from A001622	algebraic	64	exact	x 2 - = phi	51	64.0	True	2 + GoldenRatio
+1226	Gamma(1/4)	special	64	not found	x phi dup* + x sqrt * = 2 4 dup* phi / +	139	10.1	True	Gamma[1/4]
+1227	'theta', the unique positive root of the equation polygamma(x) = log(Pi), where polygamma(x) gives gamma'(x)/gamma(x), t	none	64	not found	x exp pi ln ln * = 4 pi sqrt * 2 -	133	10.8	True	
+1228	(65 + 9*sqrt(3))/22	algebraic	64	exact	x 2 - recip 2 - = 3 recip 3 sqrt -	109	64.0	True	(65+9Sqrt[3])/22
+1229	Sum_{n>=1} prime(n)/(2^n)	special	64	not found	x pi - pi exp sqrt * = pi 5 sqrt e / **	141	9.7	True	Sum[Prime[i]/2^i,{i,1000}]
+1230	ln(41)	elementary	64	exact	x exp 1 + = 7 6 *	82	64.0	True	Log[41]
+1231	ln(43)	elementary	64	exact	x exp 1 - = 7 6 *	83	64.0	True	Log[43]
+1232	ln(47)	elementary	64	exact	x exp 2 + = 7 dup*	72	64.0	True	Log[47]
+1233	an optimal stopping constant related to the Secretary problem	none	64	not found	x sqrt e ** 3 / = e 5 ln recip -	124	10.1	True	
+1234	2D lattice sum analog of Euler γ	special	64	not found	x 2 - phi / exp = pi phi + dup* 7 /	137	10.3	True	-2*Zeta[1/2]*(Zeta[1/2, 1/4] - Zeta[1/2, 3/4])
+1235	-zeta'(1/2)	special	64	not found	x sqrt 3 ln sqrt recip - = 3 7 6 * recip **	141	10.8	True	-Derivative[1][Zeta][1/2]
+1236	ln(53)	elementary	64	exact	x exp 3 + = 8 7 *	88	64.0	True	Log[53]
+1237	1000^(1/5)	algebraic	64	exact	x 5 3 / ** = 9 1 +	91	64.0	True	1000^(1/5)
+1239	ln(59)	elementary	64	exact	x exp 3 - = 8 7 *	89	64.0	True	Log[59]
+1240	ln(61)	elementary	64	exact	x exp 3 + = 8 dup*	75	64.0	True	Log[61]
+1241	sqrt(17)	algebraic	64	exact	x dup* 1 - = 4 dup*	64	64.0	True	Sqrt[17]
+1242	sqrt(2*Pi*e)	elementary	64	exact	x dup* 2 / = pi e *	76	64.0	True	Sqrt[2Pi E]
+1243	Hardy-Littlewood prime quadruples constant	special	64	not found	x 2 + exp 1 + sqrt = pi dup* 9 ln *	127	10.6	True	(27*Product[((-4 + Prime[\[FormalK]])*Prime[\[FormalK]]^3)/(-1 + Prime[\[FormalK]])^4, {\[FormalK], 3, Infinity}])/2
+1244	four thirds pi	elementary	64	exact	x 4 / = pi 3 /	70	64.0	True	4*Pi/3
+1245	ln(67)	elementary	64	exact	x exp 3 - = 8 dup*	76	64.0	True	Log[67]
+1246	(4*sqrt(2)*Pi^2)/gamma(1/4)^2	special	64	not found	x 1 - dup* 6 sqrt - = 7 1 5 recip + sqrt +	140	10.9	True	(4*Sqrt[2]*Pi^2)/Gamma[1/4]^2
+1247	ln(71)	elementary	64	exact	x exp 1 + = 9 8 *	84	64.0	True	Log[71]
+1248	Pi*e/2	elementary	64	exact	x e / = pi 2 /	68	64.0	True	(Pi*E)/2
+1249	ln(73)	elementary	64	exact	x exp 1 - = 9 8 *	85	64.0	True	Log[73]
+1250	asymptotic value of the second raw moment of the maximal exponent in the prime factorizations of n (A051903)	special	64	not found	x 4 + 9 * sqrt = 8 2 sqrt 1 - sqrt +	136	9.8	True	1 + Sum[(2*j - 1)*(1 - 1/Zeta[j]), {j, 2, 400}]
+1251	Korn constant	rational	64	exact	x 4 - recip = 3 4 recip +	85	64.0	True	56/13
+1252	alpha, the unique solution on [2,oo) of the equation alpha*log((2*e)/alpha)=1	special	64	exact	x x recip exp * = e 2 *	87	64.0	True	-1/ProductLog[-1/(2*E)]
+1253	sqrt(19)	algebraic	64	exact	x dup* 1 - = 9 2 *	75	64.0	True	Sqrt[19]
+1254	ln(79)	elementary	64	exact	x exp 2 + = 9 dup*	73	64.0	True	Log[79]
+1255	Hayman constant	special	64	not found	x recip 5 sqrt sqrt recip + = 2 recip 5 sqrt recip + dup*	134	11.2	True	Gamma[1/4]^4/(4*Pi^2)
+1256	ln(83)	elementary	64	exact	x exp 2 - = 9 dup*	74	64.0	True	Log[83]
+1257	pi(2)^(1/2)	elementary	64	exact	x pi / = 2 sqrt	56	64.0	True	Pi*2^(1/2)
+1258	ln(89)	elementary	64	exact	x exp 7 - = 1 9 dup* +	93	64.0	True	Log[89]
+1259	Freiman constant	algebraic	64	not found	x exp 5 x / - = pi 2 / 5 ** dup*	134	9.5	True	(2221564096 + 283748*Sqrt[462])/491993569
+1260	Van der Pauw constant	elementary	64	exact	x pi / = 2 ln recip	67	64.0	True	Pi/Log[2]
+1261	Gasper constant	algebraic	64	not found	x pi / 6 recip + = pi 8 pi recip ** /	128	9.9	True	Root[-1134 - 3780*#1 - 5013*#1^2 - 3247*#1^3 - 948*#1^4 - 14*#1^5 + 55*#1^6 + 9*#1^7 & , 1]
+1262	ln(97)	elementary	64	exact	x exp 3 + = 9 1 + dup*	89	64.0	True	Log[97]
+1263	2ln(10)	elementary	64	exact	x exp sqrt = 9 1 +	70	64.0	True	2*Log[10]
+1264	100^(1/3)	algebraic	64	exact	x x sqrt * = 9 1 +	76	64.0	True	100^(1/3)
+1265	Product_{p prime} (1 + 1/p^(4/3) + 1/p^(5/3))	none	64	not found	x ln x ** dup* 1 - = 8 exp 9 - sqrt	138	11.1	True	
+1266	Feigenbaum delta	none	64	not found	x dup* 3 4 / + = phi 6 * sqrt exp	126	9.6	True	
+1267	3pi/2	elementary	64	exact	x pi - = pi 2 /	66	64.0	True	3*Pi/2
+1268	rod constant	special	64	not found	x 5 - 8 * dup* = e 7 ln +	120	10.1	True	Root[{-1 + Cos[#1]*Cosh[#1] & , 4.730040744862704026`19.67486488179338}]
+1269	sqrt(23)	algebraic	64	exact	x dup* 2 + = 5 dup*	67	64.0	True	Sqrt[23]
+1270	John constant lower bound	special	64	exact	x dup* = pi exp	51	64.0	True	I^(-I)
+1271	two-arc beam detection constant	special	64	not found	x ln x ** x - = 4 e 9 * recip +	135	9.7	True	ConditionalExpression[Extension`TwoArcApproximationBeamDetectionConstant == -2*\[FormalA] - \[FormalB] + 2*Pi - Cos[\[FormalB]/2] + Sec[\[FormalB]/2] + 2*Tan[\[FormalA]/2] + Sin[\[FormalB]/2]*Tan[\[FormalA]/2], \[FormalA] == 4*ArcTan[Sqrt[\[FormalC]]] && \[FormalB] == 2*ArcSin[2*Cos[\[FormalA]]] && \[FormalB] == 2*ArcSin[2*Cos[\[FormalA]]] && \[FormalC] == Root[1 + 65*\[FormalX] - 2139*\[FormalX]^2 + 20476*\[FormalX]^3 - 78054*\[FormalX]^4 + 126214*\[FormalX]^5 - 78054*\[FormalX]^6 + 20476*\[FormalX]^7 - 2139*\[FormalX]^8 + 65*\[FormalX]^9 + \[FormalX]^10, \[FormalX], 4]]
+1272	second moment of the reciprocal gamma distribution	none	64	not found	x pi sqrt sqrt * 6 - = 4 2 sqrt sqrt + sqrt recip	141	10.4	True	
+1273	unique solution > 1 of the equation x*log(x)=2(x-1)	none	64	exact	x x recip exp dup* * = 4 sqrt exp	101	64.0	True	
+1274	xi_3 = 5*G, the volume of an ideal hyperbolic cube, where G is Gieseking's constant	none	64	not found	x 2 / dup* x - sqrt = pi pi dup* 5 / -	135	10.5	True	
+1275	'lambda', a Sobolev isoperimetric constant related to the "rod inequality", arising from the elasticity study of a rod t	none	64	not found	x 3 sqrt + e sqrt * = 7 3 2 ln / +	140	9.3	True	
+1276	Lower limit of backward value of 5^n	none	64	not found	x pi 6 sqrt - * dup* = 8 2 sqrt - sqrt exp	142	9.8	True	
+1277	hypersphere maximal volume dimension constant	special	64	not found	x ln 5 * 8 - = 1 8 recip - sqrt pi /	142	10.2	True	Root[{-2 + Log[Pi]*#1 - PolyGamma[0, #1/2]*#1 & , 5.25694640486057678013283838869`29.720733549361597}]
+1278	2*Pi^2*log(2) - 7*zeta(3)	special	64	not found	x sqrt phi 2 sqrt + ** = 1 6 sqrt e ** +	137	9.9	True	2Pi^2Log[2]-7Zeta[3]
+1279	log 648000/π	elementary	64	not found	x ln 6 ** 5 + = e 4 - dup* exp dup*	141	9.8	True	Log10[648000/Pi]
+1280	Pi*csc(Pi/5)	elementary	64	exact	x recip 2 * pi * = 3 phi - sqrt	104	64.0	True	Pi*Csc[Pi/5]
+1281	sqrt(29)	algebraic	64	exact	x dup* 2 - = 3 3 **	78	64.0	True	Sqrt[29]
+1282	analog of Lévy's constant in case of the nearest integer continued fraction of -1/2<x<1/2	elementary	64	exact	x dup* ln 6 * = pi dup* phi ln /	118	64.0	True	Exp[Pi^2/(12*Log[GoldenRatio])]
+1283	sqrt(31)	algebraic	64	exact	x dup* 1 + = 2 5 **	74	64.0	True	Sqrt[31]
+1284	pi^(3/2)	elementary	64	exact	x pi / = pi sqrt	57	64.0	True	Pi^(3/2)
+1285	1000^(1/4)	algebraic	64	exact	x 3 recip ** dup* = 9 1 + sqrt	94	64.0	True	1000^(1/4)
+1286	a constant related to A000151	none	64	not found	x 5 - 4 ** = 2 ln pi phi + **	127	10.0	True	
+1287	c for which b(n+1) = c^(b(n)/n) neither explodes nor converges (A278453)	none	64	not found	x 1 - exp 4 dup* / = 8 3 recip exp recip -	139	10.5	True	
+1288	'lambda', a Sobolev isoperimetric constant related to the "membrane inequality", arising from the study of a vibrating m	none	64	not found	x dup* 7 exp sqrt - = 3 pi 3 ** recip + recip	137	9.5	True	
+1289	zeta(3/4) * Product_{p prime} (1 + 1/p^(5/4) - 1/p^2 - 1/p^(9/4)) (negated)	none	64	not found	x pi ** e dup* - = 8 pi ** e /	125	10.9	True	
+1290	sqrt(37)	algebraic	64	exact	x dup* 1 - = 6 dup*	66	64.0	True	Sqrt[37]
+1291	Tau	elementary	64	exact	x 2 / = pi	47	64.0	True	2*Pi
+1292	2 Pi/sin(arctan(2 Pi))	elementary	64	exact	x dup* 1 - = pi 2 * dup*	79	64.0	True	2*Pi/Sin[ArcTan[2*Pi]]
+1293	sqrt(41)	algebraic	64	exact	x dup* 5 - = 6 dup*	73	64.0	True	Sqrt[41]
+1294	sqrt(43)	algebraic	64	exact	x dup* 6 + = 7 dup*	73	64.0	True	Sqrt[43]
+1295	Froda constant	elementary	64	exact	x = 2 e **	50	64.0	True	2^E
+1296	(real) period of the elliptic function sn(x,1/2)	special	64	not found	x recip 3 * 5 recip - = pi phi * 1 - recip	128	10.2	True	8*EllipticK[-1/3]/Sqrt[3]
+1297	sqrt(47)	algebraic	64	exact	x dup* 2 + = 7 dup*	68	64.0	True	Sqrt[47]
+1298	3ln(10)	elementary	64	exact	x 3 / exp = 9 1 +	81	64.0	True	3*Log[10]
+1299	John constant upper bound	special	64	not found	x e dup* - dup* recip = 5 dup* 2 7 / -	128	11.9	True	ConditionalExpression[Extension`JohnConstantUpperBound == Exp[\[FormalLambda]*Pi], Pi/Exp[2*\[FormalLambda]*Pi] == Sum[(\[FormalK]*Exp[-1/2*(\[FormalK]*Pi)/\[FormalLambda]])/(\[FormalK]^2 + \[FormalLambda]^2), {\[FormalK], 1, Infinity}]]
+1300	hypersphere maximal surface area dimension constant	special	64	not found	x dup* 1 - 3 exp / = phi 7 recip - ln recip	140	10.6	True	Root[{Log[Pi] - PolyGamma[0, #1/2] & , 7.25694640486057678013283838869`29.860753915673623}]
+1301	sqrt(53)	algebraic	64	exact	x dup* 4 - = 7 dup*	72	64.0	True	Sqrt[53]
+1302	c_o, coefficient associated with the asymptotic evaluation c_o*2^(n^2/4) of the number of subspaces of the n-dimensional	none	64	not found	x 7 x - * 2 + = 3 1 phi exp - /	140	9.8	True	
+1303	c_e, coefficient associated with the asymptotic evaluation c_e*2^(n^2/4) of the number of subspaces of the n-dimensional	none	64	not found	x 4 x 2 / - / = phi 5 dup* pi - +	141	10.1	True	
+1304	e^2	elementary	64	exact	x ln = 2	41	64.0	True	E^2
+1305	sqrt(59)	algebraic	64	exact	x dup* 5 + = 8 dup*	73	64.0	True	Sqrt[59]
+1306	digital search tree θ constant	special	64	not found	x sqrt pi * sqrt e - = e pi sqrt / sqrt 1 -	140	9.9	True	Sum[(2^(((-1 + \[FormalK])*\[FormalK])/2)*\[FormalK]*Sum[(-1 + 2^\[FormalI])^(-1), {\[FormalI], 1, \[FormalK]}])/Product[-1 + 2^\[FormalJ], {\[FormalJ], 1, \[FormalK]}], {\[FormalK], 1, Infinity}]
+1307	sqrt(61)	algebraic	64	exact	x dup* 3 + = 8 dup*	71	64.0	True	Sqrt[61]
+1308	Sierpiński's third constant, K3 = lim_{n->oo} ((1/n) * (Sum_{i=1..n} (A004018(i))^2) - 4 * log(n))	special	64	not found	x 8 - 4 ** recip = 9 3 pi dup* ** +	135	10.1	True	4/3 (24*Log[Gamma[3/4]] - 12*Log[Pi] + 72*Log[Glaisher] - 5*Log[2] + 6*EulerGamma - 3)
+1309	sqrt(67)	algebraic	64	exact	x dup* 3 - = 8 dup*	72	64.0	True	Sqrt[67]
+1310	sqrt(71)	algebraic	64	exact	x dup* 7 - = 8 dup*	75	64.0	True	Sqrt[71]
+1311	sqrt(73)	algebraic	64	exact	x dup* 8 + = 9 dup*	75	64.0	True	Sqrt[73]
+1312	polygon circumscription constant	special	64	not found	x 2 / 7 sqrt - dup* = 9 2 3 ln + /	143	10.0	True	Product[Sec[Pi/\[FormalK]], {\[FormalK], 3, Infinity}]
+1313	sqrt(79)	algebraic	64	exact	x dup* 2 + = 9 dup*	69	64.0	True	Sqrt[79]
+1314	sqrt(83)	algebraic	64	exact	x dup* 2 - = 9 dup*	70	64.0	True	Sqrt[83]
+1315	4ln(10)	elementary	64	exact	x exp sqrt sqrt = 9 1 +	79	64.0	True	4*Log[10]
+1316	Varga's constant	none	64	not found	x 8 9 ** recip - = 9 pi pi recip + recip +	140	9.6	True	
+1317	3pi	elementary	64	exact	x pi / = 3	49	64.0	True	3*Pi
+1318	sqrt(89)	algebraic	64	exact	x dup* 8 - = 9 dup*	76	64.0	True	Sqrt[89]
+1319	Wagon's constant	none	64	not found	x 2 / e 2 - ** = phi 6 recip - 3 **	142	10.0	True	
+1320	Product_{p prime} (1 + 1/p^(5/4) + 1/p^(3/2) + 1/p^(7/4))	none	64	not found	x ln sqrt e sqrt recip + = 1 2 3 sqrt * + sqrt	137	11.2	True	
+1321	sqrt(97)	algebraic	64	exact	x dup* 3 + = 9 1 + dup*	85	64.0	True	Sqrt[97]
+1322	π^2	elementary	64	exact	x sqrt = pi	38	64.0	True	Pi^2
+1323	smallest number > 1 with the same digits in decimal and binary	none	64	not found	x pi 2 / 1 - / = 1 e pi 3 + * +	134	9.9	True	
+1324	2*zeta(3/2)^4/(3*sqrt(2*Pi)*zeta(3))	special	64	not found	x 3 x sqrt recip - ** = 1 6 7 ** + sqrt	137	9.6	True	2*Zeta[3/2]^4/(3*Sqrt[2*Pi]*Zeta[3])
+1325	e^(Pi^2/(6*log(2)))	elementary	64	exact	x 8 ln ** = pi dup* exp sqrt	98	63.4	True	E^(Pi^2/(6Log[2]))
+1326	z_c = phi^5 (where phi is the golden ratio), a lattice statistics constant which is the exact value of the critical acti	algebraic	64	exact	x 2 + sqrt = phi 2 +	76	63.5	True	GoldenRatio^5
+1327	5ln(10)	elementary	64	exact	x 5 / exp = 9 1 +	83	63.4	True	5*Log[10]
+1328	4pi	elementary	64	exact	x pi / = 4	50	64.0	True	4*Pi
+1329	6ln(10)	elementary	64	exact	x 3 / exp = 9 1 + dup*	90	63.5	True	6*Log[10]
+1330	Imaginary part of first non-trivial zero of zeta function	special	64	not found	x exp sqrt 3 + sqrt = 9 e sqrt ** pi -	134	9.8	True	Im[ZetaZero[1]]
+1331	Product_{j>=1, j!=2} zeta(j/2) (negated)	none	64	not found	x sqrt 6 pi dup* / * = pi 7 pi - ln /	143	9.3	True	
+1332	exponential reiterated constant	elementary	64	exact	x ln = e	44	63.6	True	E^E
+1333	5pi	elementary	64	exact	x pi / = 5	51	64.0	True	5*Pi
+1334	7ln(10)	elementary	64	exact	x 7 / exp = 9 1 +	84	63.7	True	7*Log[10]
+1335	Product_{p prime} (1 + 1/p^(6/5) + 1/p^(7/5) - 1/p^2 - 1/p^(11/5) - 1/p^(12/5)) (negated)	none	64	not found	x pi / dup* pi - sqrt = pi exp e - 4 /	140	10.4	True	
+1336	8ln(10)	elementary	64	exact	x exp sqrt sqrt = 9 1 + dup*	88	63.9	True	8*Log[10]
+1337	6pi	elementary	64	exact	x pi / = 6	52	63.7	True	6*Pi
+1338	Product_{p prime} (1 + 1/p^(6/5) + 1/p^(7/5) + 1/p^(8/5) + 1/p^(9/5))	none	64	not found	x 3 - e exp / = 9 pi recip - 8 /	138	10.1	True	
+1339	e^pi - pi	elementary	64	exact	x pi + = pi exp	60	63.9	True	E^Pi - Pi
+1340	e^3	elementary	64	exact	x ln = 3	43	64.0	True	E^3
+1341	9ln(10)	elementary	64	exact	x 9 / exp = 9 1 +	85	64.0	True	9*Log[10]
+1342	imaginary part of 2nd nontrivial zero of Riemann zeta function	none	64	not found	x 9 - e dup* - = e 9 * 3 - sqrt	137	9.9	True	
+1343	7pi	elementary	64	exact	x pi / = 7	52	63.8	True	7*Pi
+1344	pi pow e	elementary	64	exact	x = pi e **	51	63.7	True	Pi^E
+1345	Gelfond's constant	elementary	64	exact	x ln = pi	42	64.0	True	E^Pi
+1346	imaginary part of 3rd nontrivial zero of Riemann zeta function	none	64	not found	x 5 phi sqrt / ** = 6 pi 3 - recip **	135	11.4	True	
+1347	8pi	elementary	64	exact	x pi / = 8	53	64.0	True	8*Pi
+1348	9pi	elementary	64	exact	x pi / = 9	53	64.0	True	9*Pi
+1349	pi cubed	elementary	64	exact	x pi / = pi dup*	57	63.9	True	Pi^3
+1350	π^π	elementary	64	exact	x = pi pi **	49	64.0	True	Pi^Pi
+1351	e^4	elementary	64	exact	x ln = 4	44	64.0	True	E^4
+1352	radian	elementary	64	exact	x 6 dup* / = 5 pi /	83	64.0	True	180/Pi
+1353	pi^4	elementary	64	exact	x sqrt sqrt = pi	47	64.0	True	Pi^4
+1354	Product_{j>=1, j!=3} zeta(j/3)	none	64	not found	x x 2 ln / + sqrt = pi 3 ln recip ** exp	142	9.0	True	
+1355	Golden angle degrees	algebraic	64	exact	x 9 1 + / = 6 phi / dup*	103	63.7	True	180*(3 - Sqrt[5])
+1356	e^5	elementary	64	exact	x ln = 5	45	64.0	True	E^5
+1357	pi^5	elementary	64	exact	x pi / sqrt = pi dup*	66	64.0	True	Pi^5
+1358	e^6	elementary	64	exact	x ln = 6	46	64.0	True	E^6
+1359	e^(2pi)	elementary	64	exact	x sqrt ln = pi	51	64.0	True	E^(2*Pi)
+1360	Jenny constant	elementary	64	exact	x pi dup* / 9 + = 7 e e recip - **	134	64.0	True	(-9 + 7^(-E^(-1) + E))*Pi^2
+1361	pi^6	elementary	64	exact	x 3 recip ** = pi dup*	66	64.0	True	Pi^6
+1362	e^7	elementary	64	exact	x ln = 7	46	63.7	True	E^7
+1363	e^8	elementary	64	exact	x ln = 8	47	63.9	True	E^8
+1364	pi^7	elementary	64	exact	x pi / sqrt = pi 3 **	78	63.9	True	Pi^7
+1365	10800/π	elementary	64	exact	x 3 * pi * sqrt = 5 6 dup* *	109	64.0	True	10800/Pi
+1366	e^9	elementary	64	exact	x ln = 9	47	64.0	True	E^9
+1367	Gram point crossover constant	special	64	not found	x sqrt 6 pi sqrt ** - = 3 4 9 recip - **	144	9.0	True	Root[{-RiemannSiegelTheta[#1] + Pi*#1 & , 9146.69819317145926586619766347`29.961264349227967}]
+1368	pi^8	elementary	64	exact	x sqrt sqrt = pi dup*	56	64.0	True	Pi^8
+1369	e^(3pi)	elementary	64	exact	x pi recip ** = 3 exp	70	63.6	True	E^(3*Pi)
+1370	e^10	elementary	64	exact	x sqrt ln = 5	54	63.7	True	E^10
+1371	pi^9	elementary	64	exact	x 3 recip ** = pi 3 **	78	64.0	True	Pi^9
+1372	pi^10	elementary	64	false positive	x pi 5 ** dup* - = 2 5 dup* exp /	123	15.5	True	Pi^10
+1373	648000/π	elementary	64	exact	x pi 9 dup* / * = 5 4 * 3 **	124	64.0	True	648000/Pi
+1374	e^(4pi)	elementary	64	exact	x sqrt sqrt = pi exp	60	64.0	True	E^(4*Pi)
+1375	e^(5pi)	elementary	64	exact	x pi 5 / ** = pi dup* exp	93	64.0	True	E^(5*Pi)
+1376	e^(6pi)	elementary	64	exact	x 3 pi / ** = 9 exp dup*	96	63.9	True	E^(6*Pi)
+1377	e^(7pi)	elementary	64	exact	x pi 7 / ** = pi dup* exp	94	64.0	True	E^(7*Pi)
+1378	e^(8pi)	elementary	64	exact	x sqrt 2 ln ** = 4 pi ** dup*	101	64.0	True	E^(8*Pi)
+1379	e^(9pi)	elementary	64	exact	x 3 recip ** = pi 3 * exp	89	64.0	True	E^(9*Pi)
+1380	e^(10pi)	elementary	64	exact	x pi 5 / ** = pi dup* exp dup*	102	64.0	True	E^(10*Pi)
+1381	Ramanujan's constant	elementary	64	false positive	x sqrt 4 ** x dup* - = 2 8 dup* 1 - **	137	nan	False	E^(Sqrt[163]*Pi)

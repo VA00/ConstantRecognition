@@ -1,0 +1,6 @@
+KR=8 KL=7 tol=1e-12
+CPU generation: |R| = 840809521, |L| = 14399461, equations covered 1.211e+16, 37.38 s
+tree   : 17753889 matches, 486.09 s (build + queries), peak RSS 10.57 GB
+gpu (CPU values): 17753889 matches, copy 0.76 s + sort 0.26 s + match 0.00 s = 1.03 s
+sort   : 17753889 matches, 61.07 s (sort 61.01 s + sweep 0.05 s), peak RSS 12.90 GB
+gpu (all on GPU): 17853496 matches, |R| = 85790543, |L| = 2958019, generate 0.73 s + sort 0.28 s + match 0.00 s = 1.01 s, VRAM used 7.63 GB
