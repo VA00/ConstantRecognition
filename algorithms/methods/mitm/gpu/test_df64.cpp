@@ -1,5 +1,5 @@
-// test_df64.cpp - accuracy of df64.h against 40-digit references, and (built with nvcc -DDF64_CUDA_TEST) the same
-// cases in a CUDA kernel, required bit-identical to the host
+// test_df64.cpp - accuracy of df64.h against 40-digit references, and (built with nvcc -DDF64_CUDA_TEST, or as
+// Objective-C++ with -DDF64_METAL_TEST) the same cases in a CUDA or Metal kernel, required bit-identical to the host
 //
 // Author: Andrzej Odrzywolek
 // Date: October 4, 2026
@@ -7,19 +7,23 @@
 //
 // Input: df64_ref.txt from gen_df64_ref.py. For every function: the number of cases, the maximum and the 99.9 %
 // quantile of the relative error in units of u = 2^-48, and the cases with a non-finite result. With
-// DF64_CUDA_TEST, every result of the kernel is compared bit by bit with the host's.
-// Build: build_mitm_gpu.bat test (test_df64.exe with icx, test_df64_cuda.exe with nvcc --fmad=false)
+// DF64_CUDA_TEST or DF64_METAL_TEST, every result of the kernel is compared bit by bit with the host's.
+// Build: build_mitm_gpu.bat test (test_df64.exe with icx, test_df64_cuda.exe with nvcc --fmad=false); on the Mac
+//        make test (test_df64 and test_df64_metal, see Makefile)
 // Usage: test_df64 df64_ref.txt [--dump results.bin]
-#include "df64.h"
+#include "df64_apply.h"
 #include <cstdio>
 #include <cstdlib>
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <cstring>
+#ifdef DF64_METAL_TEST
+#include "metal_ctx.h"
+#include "df64_metal_src.h"                                 // kDf64Source: df64.h and df64_apply.h (embed_metal.sh)
+#endif
 
-enum { F_ADD, F_SUB, F_MUL, F_DIV, F_SQRT, F_EXP, F_LOG, F_SIN, F_COS, F_TAN, F_ASIN, F_ACOS, F_ATAN, F_SINH, F_COSH,
-       F_TANH, F_ASINH, F_ACOSH, F_ATANH, F_POW, F_GAMMA, F_DIGAMMA, F_COUNT };
 static const char* FNAME[F_COUNT] = {"add", "sub", "mul", "div", "sqrt", "exp", "log", "sin", "cos", "tan", "asin",
                                      "acos", "atan", "sinh", "cosh", "tanh", "asinh", "acosh", "atanh", "pow", "gamma",
                                      "digamma"};
@@ -31,44 +35,10 @@ struct Case {
 };
 
 #ifdef __CUDACC__
-#define HD __host__ __device__
-#else
-#define HD
-#endif
-
-HD static df64 apply(int f, df64 a, df64 b)
-{
-    switch (f) {
-    case F_ADD: return df_add(a, b);
-    case F_SUB: return df_sub(a, b);
-    case F_MUL: return df_mul(a, b);
-    case F_DIV: return df_div(a, b);
-    case F_SQRT: return df_sqrt(a);
-    case F_EXP: return df_exp(a);
-    case F_LOG: return df_log(a);
-    case F_SIN: return df_sin(a);
-    case F_COS: return df_cos(a);
-    case F_TAN: return df_tan(a);
-    case F_ASIN: return df_asin(a);
-    case F_ACOS: return df_acos(a);
-    case F_ATAN: return df_atan(a);
-    case F_SINH: return df_sinh(a);
-    case F_COSH: return df_cosh(a);
-    case F_TANH: return df_tanh(a);
-    case F_ASINH: return df_asinh(a);
-    case F_ACOSH: return df_acosh(a);
-    case F_ATANH: return df_atanh(a);
-    case F_POW: return df_pow(a, b);
-    case F_GAMMA: return df_gamma(a);
-    default: return df_digamma(a);
-    }
-}
-
-#ifdef __CUDACC__
 __global__ void k_apply(const Case* c, int n, df64* out)
 {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < n) out[i] = apply(c[i].f, c[i].a, c[i].b);
+    if (i < n) out[i] = df_apply(c[i].f, c[i].a, c[i].b);
 }
 #endif
 
@@ -102,7 +72,16 @@ int main(int argc, char** argv)
     fclose(in);
     const int n = (int)cs.size();
     std::vector<df64> host(n);
-    for (int i = 0; i < n; i++) host[i] = apply(cs[i].f, cs[i].a, cs[i].b);
+#if defined(DF64_METAL_TEST) && defined(__aarch64__)
+    // --ftz: the host flushes subnormal floats to zero (FPCR.FZ), as Apple GPUs do in every math mode
+    const bool ftz = argc > 2 && std::string(argv[argc - 1]) == "--ftz";
+    uint64_t fpcr0 = __builtin_arm_rsr64("fpcr");
+    if (ftz) __builtin_arm_wsr64("fpcr", fpcr0 | (1ULL << 24));
+#endif
+    for (int i = 0; i < n; i++) host[i] = df_apply(cs[i].f, cs[i].a, cs[i].b);
+#if defined(DF64_METAL_TEST) && defined(__aarch64__)
+    if (ftz) { __builtin_arm_wsr64("fpcr", fpcr0); printf("host: subnormal floats flushed to zero (FPCR.FZ)\n"); }
+#endif
     if (dump) {
         FILE* o = fopen(dump, "wb");
         fwrite(host.data(), sizeof(df64), n, o);
@@ -134,6 +113,22 @@ int main(int argc, char** argv)
         printf("%-8s %7zu %9.2f %11.2f %12.2f %12d   %s\n", FNAME[f], v.size() + bad[f], v.back(),
                v[(size_t)(0.999 * (v.size() - 1))], v[v.size() / 2], bad[f], worst[f].c_str());
     }
+    // a GPU's results, bit by bit against the host's
+    auto compare = [&](const std::vector<df64>& dev, const char* label) {
+        std::vector<int> diff(F_COUNT, 0);
+        int ndiff = 0;
+        for (int i = 0; i < n; i++)
+            if (memcmp(&dev[i], &host[i], sizeof(df64)) != 0) {
+                const bool both_nan = host[i].hi != host[i].hi && dev[i].hi != dev[i].hi;
+                if (both_nan) continue;
+                diff[cs[i].f]++;
+                if (ndiff++ < 10)
+                    printf("GPU differs: %s x = %.9g + %.9g: host %.9g + %.9g, GPU %.9g + %.9g\n", FNAME[cs[i].f], cs[i].a.hi,
+                           cs[i].a.lo, host[i].hi, host[i].lo, dev[i].hi, dev[i].lo);
+            }
+        printf("\n%s vs host: %d of %d results differ in their bits\n", label, ndiff, n);
+        for (int f = 0; f < F_COUNT; f++) if (diff[f]) printf("  %s: %d\n", FNAME[f], diff[f]);
+    };
 #ifdef __CUDACC__
     Case* d_c;
     df64* d_o;
@@ -143,19 +138,24 @@ int main(int argc, char** argv)
     k_apply<<<(n + 255) / 256, 256>>>(d_c, n, d_o);
     std::vector<df64> dev(n);
     cudaMemcpy(dev.data(), d_o, n * sizeof(df64), cudaMemcpyDeviceToHost);
-    std::vector<int> diff(F_COUNT, 0);
-    int ndiff = 0;
-    for (int i = 0; i < n; i++)
-        if (memcmp(&dev[i], &host[i], sizeof(df64)) != 0) {
-            const bool both_nan = host[i].hi != host[i].hi && dev[i].hi != dev[i].hi;
-            if (both_nan) continue;
-            diff[cs[i].f]++;
-            if (ndiff++ < 10)
-                printf("GPU differs: %s x = %.9g + %.9g: host %.9g + %.9g, GPU %.9g + %.9g\n", FNAME[cs[i].f], cs[i].a.hi,
-                       cs[i].a.lo, host[i].hi, host[i].lo, dev[i].hi, dev[i].lo);
-        }
-    printf("\nCUDA kernel vs host: %d of %d results differ in their bits\n", ndiff, n);
-    for (int f = 0; f < F_COUNT; f++) if (diff[f]) printf("  %s: %d\n", FNAME[f], diff[f]);
+    compare(dev, "CUDA kernel");
+#endif
+#ifdef DF64_METAL_TEST
+    {
+        MetalCtx M;
+        const std::string err = M.init(std::string("#include <metal_stdlib>\nusing namespace metal;\n") + kDf64Source +
+                                       "\nstruct Args { device const int* f; device const df64* a; device const df64* b; device df64* out; uint n; };\n"
+                                       "kernel void k_apply(constant Args& A [[buffer(0)]], uint i [[thread_position_in_grid]])\n"
+                                       "{ if (i < A.n) A.out[i] = df_apply(A.f[i], A.a[i], A.b[i]); }\n");
+        if (!err.empty()) { fprintf(stderr, "%s\n", err.c_str()); return 4; }
+        DArr<int> f = M.alloc<int>(n);
+        DArr<df64> a = M.alloc<df64>(n), b = M.alloc<df64>(n), o = M.alloc<df64>(n);
+        for (int i = 0; i < n; i++) { f[i] = cs[i].f; a[i] = cs[i].a; b[i] = cs[i].b; }
+        struct { uint64_t f, a, b, out; uint32_t n, pad; } args = {f.g(), a.g(), b.g(), o.g(), (uint32_t)n, 0};
+        M.run("k_apply", n, &args, sizeof args);
+        std::vector<df64> dev(o.h(), o.h() + n);
+        compare(dev, ("Metal kernel (" + M.name() + ")").c_str());
+    }
 #endif
     return 0;
 }

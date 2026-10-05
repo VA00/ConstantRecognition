@@ -183,7 +183,9 @@ DF_FN df64 df_sqrt(df64 a)
 }
 
 DF_FN bool df_lt(df64 a, df64 b) { return a.hi < b.hi || (a.hi == b.hi && a.lo < b.lo); }
+#if !defined(__METAL_VERSION__)
 DF_FN double df_to_double(df64 a) { return (double)a.hi + (double)a.lo; }     // host only (no double on Metal)
+#endif
 
 // ---------------------------------------------------------------------------------------- constants
 
