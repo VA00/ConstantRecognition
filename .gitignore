@@ -41,6 +41,27 @@ algorithms/methods/gpu_cuda/constant_gpu
 algorithms/methods/gpu_cuda/constant_gpu_fp32
 algorithms/methods/gpu_cuda/constant_gpu_fp32_hybrid
 
+# ==== MITM GPU tools: Makefile outputs on macOS/Linux (no .exe), generated headers ====
+algorithms/methods/mitm/gpu/mitm_cr_ref
+algorithms/methods/mitm/gpu/mitm_gpu
+algorithms/methods/mitm/gpu/mitm_metal
+algorithms/methods/mitm/gpu/ries_cpu
+algorithms/methods/mitm/gpu/ries_gpu
+algorithms/methods/mitm/gpu/ries_metal
+algorithms/methods/mitm/gpu/test_df64
+algorithms/methods/mitm/gpu/test_df64_cuda
+algorithms/methods/mitm/gpu/test_df64_metal
+algorithms/methods/mitm/gpu/bench_df64
+algorithms/methods/mitm/gpu/fp_rates
+algorithms/methods/mitm/gpu/fp_rates_metal
+algorithms/methods/mitm/gpu/mitm_kernels_src.h
+algorithms/methods/mitm/gpu/df64_metal_src.h
+algorithms/methods/mitm/gpu/df64_ref.txt
+# RIES itself (mrob.com, GPL), downloaded and built for the comparison
+algorithms/methods/mitm/gpu/ries
+algorithms/methods/mitm/gpu/ries.c
+algorithms/methods/mitm/gpu/ries.c.txt
+
 # ==== Emscripten SDK (submodule/downloaded) ====
 emsdk/upstream/
 emsdk/downloads/

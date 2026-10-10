@@ -1,0 +1,1349 @@
+id	name	class	digits	verdict	total	LHS	RHS	REL_ERR	candidates	ms	agree	solved	formula
+1	conic constant	elementary	64	exact	4	x, SQR	FOUR, EXP	2.404e-16	0	1.1	64.0	True	-E^2
+2	log π/648000	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	Log10[Pi/648000]
+3	log π/10800	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	Log10[Pi/10800]
+4	log e^(-2π)	elementary	64	exact	8	x, PI, DIVIDE	THREE, INV, ARCTAN, SIN, LOG	1.627e-16	0	1.1	64.0	True	Log10[E^(-2*Pi)]
+5	(1 + 1/e)/(1/e - 1) = -coth(1/2)	elementary	64	exact	6	x, INV	TWO, NEG, DIVIDE, TANH	2.052e-16	0	1.1	63.9	True	(1 + 1/E)/(1/E - 1)
+6	Madelung 6D square lattice constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(3*(4*DirichletBeta[5/2]*(-1 + Sqrt[2])*Zeta[1/2] - DirichletBeta[1/2]*(-1 + 4*Sqrt[2])*Zeta[5/2]))/Pi^2
+7	Madelung 4D square lattice constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-8*(5 - 3*Sqrt[2])*Zeta[-1/2]*Zeta[1/2]
+8	log π/180	elementary	64	exact	11	x, NEG, NINE, SUBTRACT, POWER	SIX, SQR, FIVE, PI, DIVIDE, DIVIDE	0.000e+00	0	1.1	64.0	True	Log10[Pi/180]
+9	Madelung 2D square lattice constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	4*DirichletBeta[1/2]*(-1 + Sqrt[2])*Zeta[1/2]
+10	Bateman-Grosswald constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[2/3]/Zeta[2]
+11	log e^(-π)	elementary	64	exact	8	x, PI, DIVIDE	NEG, NINE, SUBTRACT, INV, LOG	1.627e-16	0	1.1	64.0	True	Log10[E^(-Pi)]
+12	log 1/4π	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	PI, FOUR, TIMES, INV	4.040e-16	0	1.1	63.8	True	Log10[1/(4*Pi)]
+13	generalized Stirling constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma^2/4 - Pi^2/48 + StieltjesGamma[1]/2 - Log[2*Pi]^2/4
+14	Neg	rational	64	exact	2	x	NEG	0.000e+00	0	1.1	64.0	True	-1
+15	log 1/π^2	elementary	64	exact	7	x, THREE, ARCSINH, COSH, POWER	PI, INV	5.918e-15	0	1.1	64.0	True	Log10[1/Pi^2]
+16	log 1/3π	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	PI, THREE, TIMES, INV	4.558e-16	0	1.1	64.0	True	Log10[1/(3*Pi)]
+17	zeta'(2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Derivative[1][Zeta][2]
+18	log 1/e^2	elementary	64	exact	7	x	THREE, INV, ARCTAN, SIN, LOG, INV	2.556e-16	0	1.1	64.0	True	Log10[1/E^2]
+19	log 1/2π	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	PI, PI, PLUS, INV	1.391e-16	0	1.1	64.0	True	Log10[1/(2*Pi)]
+20	infinite tetration of reciprocal root 2	special	64	not found	0			1.000e+00	0	1.1	nan	False	(-2*ProductLog[Log[2]/2])/Log[2]
+21	log e^(-π/2)	elementary	64	exact	8	x, NEG, ARCSIN, DIVIDE	NEG, NINE, SUBTRACT, LOG	1.627e-16	0	1.1	64.0	True	Log10[E^(-Pi/2)]
+22	Granville-Soundararajan constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 + Pi^2/3 + 4*PolyLog[2, -Sqrt[E]]
+23	ln(gamma)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Log[EulerGamma]
+24	log 1/π	elementary	64	exact	7	x, NEG, NINE, SUBTRACT, POWER	PI, INV	5.583e-16	0	1.1	64.0	True	Log10[1/Pi]
+25	log 1/e	elementary	64	exact	7	x	NEG, NINE, SUBTRACT, INV, LOG, INV	2.556e-16	0	1.1	64.0	True	Log10[1/E]
+26	log Sqrt[1/2π]	elementary	64	exact	10	x, NEG, NINE, SUBTRACT, POWER	PI, PI, PLUS, SQRT, INV	1.391e-16	0	1.1	64.0	True	Log10[Sqrt[1/(2*Pi)]]
+27	ln ln two	elementary	64	exact	4	x, EXP	TWO, LOG	1.060e-15	0	1.1	64.0	True	Log[Log[2]]
+28	log M = log e	elementary	64	exact	10	x, NEG, NINE, SUBTRACT, POWER	NEG, NINE, SUBTRACT, LOG, INV	1.226e-15	0	1.1	63.9	True	Log10[Log10[E]]
+29	log π/6	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	SIX, PI, DIVIDE	1.975e-16	0	1.1	64.0	True	Log10[Pi/6]
+31	Airy function constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(1/(3^(1/3)*Gamma[1/3]))
+32	log Sqrt[1/π]	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	PI, INV, SQRT	5.583e-16	0	1.1	63.8	True	Log10[Sqrt[1/Pi]]
+33	log γ	special	64	not found	0			1.000e+00	0	1.1	nan	False	Log10[EulerGamma]
+34	log Sqrt[1/e]	elementary	64	exact	8	x, INV	NEG, NINE, SUBTRACT, SQR, INV, LOG	2.556e-16	0	1.1	64.0	True	Log10[Sqrt[1/E]]
+35	log Cbrt[3/4π]	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	Log10[CubeRoot[3/(4*Pi)]]
+36	log 2/π	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	ONE, ARCSIN, INV	0.000e+00	0	1.1	64.0	True	Log10[2/Pi]
+37	log Cbrt[1/π]	elementary	64	exact	10	x, INV, PI, POWER	THREE, FIVE, POWER, EIGHT, TIMES, INV	3.350e-16	0	1.1	64.0	True	Log10[CubeRoot[1/Pi]]
+38	log Cbrt[1/e]	elementary	64	exact	8	x, THREE, ARCTAN, COS, POWER	SIX, INV, EXP	1.917e-16	0	1.1	63.8	True	Log10[CubeRoot[1/E]]
+39	ln(Gamma(4/3))	special	64	not found	0			1.000e+00	0	1.1	nan	False	LogGamma[4/3]
+40	log π/4	elementary	64	exact	7	x, NEG, NINE, SUBTRACT, POWER	ONE, ARCTAN	5.291e-16	0	1.1	63.6	True	Log10[Pi/4]
+41	ln(Gamma(5/3))	special	64	not found	0			1.000e+00	0	1.1	nan	False	LogGamma[5/3]
+42	ln(Gamma(5/4))	special	64	not found	0			1.000e+00	0	1.1	nan	False	LogGamma[5/4]
+43	log Sqrt[2/π]	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	ONE, ARCSIN, SQRT, INV	0.000e+00	0	1.1	64.0	True	Log10[Sqrt[2/Pi]]
+44	ln(Gamma(7/4))	special	64	not found	0			1.000e+00	0	1.1	nan	False	LogGamma[7/4]
+45	Stieltjes constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 + EulerGamma^2 - Pi^2/8 + 2*StieltjesGamma[1]
+46	Gauchman constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`GauchmanConstant == \[FormalX], E^(\[FormalU]/2) + 2*E^\[FormalU] + E^((3*\[FormalU])/2) + E^(\[FormalU] + \[FormalV]) == E^\[FormalV] + 2*E^(\[FormalU]/2 + \[FormalV]) && 2*(1 + \[FormalX] + E^(\[FormalU]/2 - \[FormalV])) == 4/E^(\[FormalU]/2) + (-2 + \[FormalU])/E^\[FormalV] && 1 + \[FormalU] + 6*E^(\[FormalU]/2) + 4*E^\[FormalU] + 4*E^(\[FormalU]/2 + \[FormalV]) == \[FormalV] + 9*E^\[FormalV] && -1/40 < \[FormalX] < 0]
+47	log 3/π	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	PI, THREE, DIVIDE	0.000e+00	0	1.1	64.0	True	Log10[3/Pi]
+48	Zero	rational	64	exact	3	x, EXP	ONE	0.000e+00	0	1.1	64.0	True	0
+49	e^(-10pi)	elementary	64	exact	6	EIGHT, x, LOG, DIVIDE, TAN	NEG	8.336e-16	0	1.1	64.0	True	E^(-10*Pi)
+50	e^(-9pi)	elementary	64	exact	6	x	NINE, PI, EXP, INV, POWER	2.882e-16	0	1.1	64.0	True	E^(-9*Pi)
+51	'chi', a constant appearing in the asymptotic variance of the number of comparisons required for updating a digital sear	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+52	e^(-8pi)	elementary	64	exact	6	x	EIGHT, PI, EXP, INV, POWER	2.657e-16	0	1.1	63.9	True	E^(-8*Pi)
+53	e^(-7pi)	elementary	64	exact	6	x	SEVEN, PI, EXP, POWER, INV	0.000e+00	0	1.1	64.0	True	E^(-7*Pi)
+54	e^(-6pi)	elementary	64	exact	6	x, INV	SIX, PI, EXP, POWER	5.081e-16	0	1.1	64.0	True	E^(-6*Pi)
+55	e^(-5pi)	elementary	64	exact	6	x, INV, LOG	PI, FIVE, TIMES	7.026e-16	0	1.1	63.6	True	E^(-5*Pi)
+56	e^(-4pi)	elementary	64	exact	6	x, LOG	NEG, ARCSIN, EIGHT, TIMES	0.000e+00	0	1.1	64.0	True	E^(-4*Pi)
+57	1 arcsecond in radians	elementary	64	exact	10	PI, x, DIVIDE, SQRT	SEVEN, GAMMA, TWO, ARCSINH, TANH, DIVIDE	5.241e-16	0	1.1	64.0	True	Pi/648000
+58	pi^-10	elementary	64	exact	6	x	FIVE, PI, POWER, INV, SQR	1.586e-15	0	1.1	63.5	True	Pi^(-10)
+59	pi^-9	elementary	64	exact	5	x	NINE, PI, POWER, INV	8.080e-16	0	1.1	63.8	True	Pi^(-9)
+60	e^-10	elementary	64	exact	5	x	FIVE, EXP, INV, SQR	7.463e-16	0	1.1	64.0	True	E^(-10)
+61	e^(-3pi)	elementary	64	exact	6	x	THREE, PI, EXP, INV, POWER	1.511e-15	0	1.1	64.0	True	E^(-3*Pi)
+62	pi^-8	elementary	64	exact	5	x	EIGHT, PI, POWER, INV	5.144e-16	0	1.1	63.5	True	Pi^(-8)
+63	sum_{r in Z}(1/r^3) where Z is the set of all nontrivial zeros r of the Riemann zeta function	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(-7*Zeta[3]/8 + EulerGamma^3 + 3*EulerGamma*StieltjesGamma[1] + 3/2*StieltjesGamma[2] + 1)
+64	e^-9	elementary	64	exact	4	x, INV	NINE, EXP	4.393e-16	0	1.1	63.4	True	E^(-9)
+65	6th du Bois-Reymond constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+66	1 arcminute in radians	elementary	64	exact	9	x, THREE, TIMES	SEVEN, GAMMA, FIVE, PI, DIVIDE, DIVIDE	5.591e-16	0	1.1	64.0	True	Pi/10800
+67	pi^-7	elementary	64	exact	5	x	SEVEN, PI, POWER, INV	1.146e-15	0	1.1	64.0	True	Pi^(-7)
+68	e^-8	elementary	64	exact	4	x	EIGHT, EXP, INV	4.848e-16	0	1.1	64.0	True	E^(-8)
+69	zeta'(-5) (the derivative of Riemann's zeta function at -5) (negated)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(Zeta'[-5])
+70	zeta'(-7) (the derivative of Riemann's zeta function at -7) (negated)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(Zeta'[-7])
+71	5th Stieltjes constant gamma_5	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(-StieltjesGamma[5])
+72	e^-7	elementary	64	exact	4	x, INV	SEVEN, EXP	1.189e-16	0	1.1	64.0	True	E^(-7)
+73	pi^-6	elementary	64	exact	5	x, INV	SIX, PI, POWER	1.876e-15	0	1.1	63.5	True	Pi^(-6)
+74	5th du Bois-Reymond constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+75	Heath-Brown–Moroz constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[(1 - Prime[n]^(-1))^7*(1 + (1 + 7*Prime[n])/Prime[n]^2), {n, 1, Infinity}]
+76	e^(-2pi)	elementary	64	exact	5	x, SQRT	PI, EXP, INV	0.000e+00	0	1.1	63.8	True	E^(-2*Pi)
+77	'mu', a Sobolev isoperimetric constant related to the "rod inequality", arising from the elasticity study of a rod that 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+78	3rd Stieltjes constant gamma_3	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(-StieltjesGamma[3])
+79	4th Stieltjes constant gamma_4	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(-StieltjesGamma[4])
+80	e^-6	elementary	64	exact	4	x	SIX, EXP, INV	1.050e-15	0	1.1	64.0	True	E^(-6)
+82	pi^-5	elementary	64	exact	5	x	FIVE, PI, POWER, INV	1.194e-15	0	1.1	64.0	True	Pi^(-5)
+83	16/(9*sqrt(184607))	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	16/(9Sqrt[184607])
+84	4th du Bois-Reymond constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(E^4 - 4E^2 - 25)/8
+85	zeta'(-3) (the derivative of Riemann's zeta function at -3)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta'[-3]
+86	zeta'(-6) (the derivative of Riemann's zeta function at -6) (negated)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(Zeta'[-6])
+87	zeta''(0)+2, the coefficient of z^2 in the Laurent expansion of zeta(z) at the origin	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(Zeta''[0]+2)
+88	e^-5	elementary	64	exact	4	x, INV	FIVE, EXP	0.000e+00	0	1.1	64.0	True	E^(-5)
+89	Wyler constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(9*(5!^(-1))^(1/4))/(16*Pi^(11/4))
+90	zeta'(-4) (the derivative of Riemann's zeta function at -4)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta'[-4]
+91	zeta'(-8) (the derivative of Riemann's zeta function at -8)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta'[-8]
+92	sum of the alternating series tau(3), with tau(n) = Sum_{k>0} (-1)^k*log(k)^n/k	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+93	'mu', an isoperimetric constant associated with the study of a vibrating, homogeneous plate clamped at the boundary of t	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+94	2nd Stieltjes constant gamma_2 (negated)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-StieltjesGamma[2]
+95	pi^-4	elementary	64	exact	5	x	PI, SQR, INV, SQR	0.000e+00	0	1.1	63.7	True	Pi^(-4)
+96	p_3 (so named by S. Finch), a probability related to Vallée's constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+97	16/(207*sqrt(53))	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	16/(207Sqrt[53])
+98	cube tetrahedron-picking constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	3977/216000 - Pi^2/2160
+99	2*zeta(3)/Pi^2 - 11/18 + log(Pi)/3	special	64	not found	0			1.000e+00	0	1.1	nan	False	2Zeta[3]/Pi^2-11/18+Log[Pi]/3
+100	b_3, a constant associated with the 3rd Du Bois Reymond constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+101	tetrahedron tetrahedron-picking constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	13/720 - Pi^2/15015
+102	number of radians in one degree	elementary	64	exact	7	x	SIX, SQR, FIVE, PI, DIVIDE, DIVIDE	1.988e-16	0	1.1	64.0	True	Pi/180
+103	sum of the alternating series tau(4), with tau(n) = Sum_{k>0} (-1)^k*log(k)^n/k	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+104	e^-4	elementary	64	exact	4	x	FOUR, EXP, INV	7.577e-16	0	1.1	64.0	True	E^(-4)
+105	log π/3	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	THREE, PI, DIVIDE	0.000e+00	0	1.1	64.0	True	Log10[Pi/3]
+106	a Shapiro-Drinfeld constant, known as Gauchman's constant, related to the difference of cyclic sums (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+107	lambda(1) in Li's criterion	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma/2 + 1 - Log[4 Pi]/2
+108	triple integral of ({x/y}{y/z}{z/x})^2 over the unit cube	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 - Zeta[2]/2 - Zeta[3]/2 + 7*Zeta[6]/48 + Zeta[2]*Zeta[3]/18 + Zeta[3]^2/18 + Zeta[3]*Zeta[4]/12
+109	sum of the alternating series tau(5), with tau(n) = Sum_{k>0} (-1)^k*log(k)^n/k	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+110	Matthews' constant C_4, an analog of Artin's constant for primitive roots	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+111	3rd du Bois-Reymond constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+112	sum of reciprocals of squares of perfect numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+113	pi^-3	elementary	64	exact	5	x	THREE, PI, POWER, INV	3.012e-15	0	1.1	63.9	True	Pi^(-3)
+114	1/2 - log(2)/4 - G/Pi, where G = A006752	special	64	not found	0			1.000e+00	0	1.1	nan	False	1/2-Log[2]/4-Catalan/Pi
+115	percolation cluster density constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	-41/16 + (3*Sqrt[3])/2
+116	1/4 - 7*zeta(3)/(4*Pi^2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	1/4-7Zeta[3]/(4Pi^2)
+117	a constant 'v' such that the asymptotic variance of the distribution of the longest cycle given a random n-permutation e	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+118	H(1/2,1), a constant appearing in the asymptotic variance of the largest component of random mappings on n symbols, expr	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+119	'v', a parking constant associated with the asymptotic variance of the number of cars that can be parked in a given inte	none	30	not found	0			1.000e+00	0	1.1	nan	False	
+120	Integral_{0..1/2} log(gamma(x+1)) dx (negated)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(-1/2 - (7/24)*Log[2] + (1/4)*Log[Pi] + (3/2) * Log[Glaisher])
+121	e^(-1pi)	elementary	64	exact	4	x	PI, EXP, INV	1.606e-16	0	1.1	64.0	True	E^(-1*Pi)
+122	16/(9*sqrt(1609))	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	16/(9Sqrt[1609])
+123	pi^-e	elementary	64	exact	5	x	EULER, PI, INV, POWER	1.247e-15	0	1.1	64.0	True	Pi^(-E)
+124	sum_{r in Z}(1/r^2) where Z is the set of all nontrivial zeros r of the Riemann zeta function	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(-Pi^2/8 + EulerGamma^2 + 2*StieltjesGamma[1] + 1)
+125	Mertens constant M(4,3) arising in the formula for the sum of reciprocals of primes p == 1 (mod 4)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+126	p_2, a probability associated with continuant polynomials	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+127	a constant related to the variance of the number of vertices of the largest tree associated with a random mapping on n s	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+128	e^-3	elementary	64	exact	4	x, INV	THREE, EXP	1.394e-16	0	1.1	64.0	True	E^(-3)
+129	Integral_{x=0..Infinity} x*cos(x)/(1+x^2)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+130	ball tetrahedron-picking constant	elementary	64	exact	10	x, FIVE, PI, DIVIDE, DIVIDE	SIX, LOG, SINH, NINE, PLUS	1.316e-16	0	1.1	64.0	True	(12*Pi)/715
+131	(9*sqrt(65) - 55)/320	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(9Sqrt[65]-55)/320
+132	log ln π	elementary	64	exact	7	x, NEG, NINE, SUBTRACT, POWER	PI, LOG	5.910e-16	0	1.1	64.0	True	Log10[Log[Pi]]
+133	constant A*B in the asymptotic expression of the summatory function Sum_{n=1..N} (1/phi(n)) as A(log(N)+B) + O(log(N)/N)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+134	Matthews' constant C_3, an analog of Artin's constant for primitive roots	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+135	Norton constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(-Pi^2 + 6*Log[2]*(-3 + 2*EulerGamma + Log[2] + 24*Log[Glaisher] - 2*Log[Pi]))/Pi^2
+136	Sum_{k > 0} (-1)^k*log(k)^2/k	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+137	analog of the Gibbs-Wilbraham constant for L_1 trigonometric polynomial approximation	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+138	e^-e	elementary	64	exact	4	x	EULER, EXP, INV	1.682e-15	0	1.1	64.0	True	E^(-E)
+139	Pythagorean triple constant for perimeters	elementary	64	exact	6	x	PI, SQR, TWO, LOG, DIVIDE	1.976e-16	0	1.1	64.0	True	Log[2]/Pi^2
+140	(sqrt(13) - 1)/36	algebraic	64	exact	9	x, INV, THREE, SUBTRACT, SQR	THREE, SIX, GAMMA, SUBTRACT	1.917e-16	0	1.1	64.0	True	(Sqrt[13]-1)/36
+141	1st Stieltjes constant gamma_1 (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+142	probability that a random walk on an 8-d lattice returns to the origin	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+143	disk triangle-picking constant	elementary	64	exact	9	x, FOUR, TIMES	PI, SQR, SIX, LOG, SINH, DIVIDE	3.757e-16	0	1.1	64.0	True	35/(48*Pi^2)
+144	1/4π	elementary	64	exact	5	x	PI, FOUR, TIMES, INV	5.232e-16	0	1.1	64.0	True	1/(4*Pi)
+145	-Integral {x=1..2} log Gamma(x) dx	special	64	exact	8	x, EXP	PI, PI, PLUS, SQRT, EULER, DIVIDE	1.712e-16	0	1.1	64.0	True	-Integrate[ Log[ Gamma[ x]], {x, 1, 2}]
+146	-Zeta'(-1)/2	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(1/24 - Log[Glaisher]/2)
+147	solution to the Heilbronn triangle problem for seven points in a unit square	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+148	1-Catalan	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 - Catalan
+149	probability that a random walk on a 7-d lattice returns to the origin	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+150	Erdős–Tenenbaum–Ford constant	elementary	64	exact	9	x, TWO, POWER	EULER, EIGHT, POWER, LOG, SIX, DIVIDE	1.290e-15	0	1.1	64.0	True	1 - (1 + Log[Log[2]])/Log[2]
+151	1/2-G/Pi, the lowest limiting trough of a square wave Fourier series, where G is the Gibbs-Wilbraham constant. [negated]	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+152	integral_{0..infinity} x*log(x)*(1-eta(x)^2) dx, where the function 'eta' is a solution of the Painlevé III differential	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(1/4 + (7/12)*Log[2] - 3*Log[Glaisher])
+153	lambda(2) in Li's criterion	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+154	e^(-Pi^2/(6*log(2)))	elementary	64	exact	9	x, SQR, LOG	EIGHT, INV, LOG, PI, SQR, DIVIDE	1.489e-16	0	1.1	64.0	True	E^(-Pi^2/(6Log[2]))
+155	second non-alternating series of reciprocal primes constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[(-2 + Mod[Prime[\[FormalK]], 4])/Prime[\[FormalK]]^2, {\[FormalK], 2, Infinity}]
+156	area of the convex hull of a circle of circumference 1 and a line segment of length 1/2 with midpoint at the circle cent	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(Sqrt[Pi^2-4]+Pi-2ArcCos[2/Pi])/(4Pi^2)
+157	log Sqrt[π/2]	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	ONE, ARCSIN, SQRT	0.000e+00	0	1.1	64.0	True	Log10[Sqrt[Pi/2]]
+158	Sum_{n>=0} 1/10^(3^n), a transcendental number	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+159	pi^-2	elementary	64	exact	4	x, SQRT	PI, INV	0.000e+00	0	1.1	64.0	True	Pi^(-2)
+160	value of the Dickman function at phi + 1 = phi^2 = (3 + sqrt(5))/2 (A104457)	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	1 - 2*Log[GoldenRatio] + Log[GoldenRatio]^2 - Pi^2/60
+161	Quinn-Rand-Strogatz constant c2 (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+162	probability that a random walk on a 6-d lattice returns to the origin	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+163	log 4/π	elementary	64	exact	8	x, THREE, ARCTAN, COS, POWER	ONE, ARCTAN, SQRT	5.291e-16	0	1.1	63.6	True	Log10[4/Pi]
+164	1/3π	elementary	64	exact	5	x	PI, THREE, TIMES, INV	5.232e-16	0	1.1	63.4	True	1/(3*Pi)
+165	one-ninth constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	With[{\[FormalX] = Root[{-2*EllipticE[#1^2] + EllipticK[#1^2] & , 0.908908557548541478236118908745`29.9585201924082}]}, Exp[-((Pi*EllipticK[1 - \[FormalX]^2])/EllipticK[\[FormalX]^2])]]
+166	Michael Trott's constant: continued fraction expansion (allowing 0's) begins in same way as decimal expansion	none	53	not found	0			1.000e+00	0	1.1	nan	False	
+167	Liouville's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[10^(-n!), {n, 1, Infinity}]
+168	1/sqrt(80) = sqrt(5)/20	algebraic	64	exact	5	x, ARCSINH	NINE, INV, ARCTANH	1.241e-16	0	1.1	63.6	True	1/Sqrt[80]
+169	mean cluster density for bond percolation on the triangular lattice	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	35/4 - 3/(2*Sin[Pi/18])
+170	Kepler–Bouwkamp constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[Cos[Pi/n], {n, 3, Infinity}]
+171	Given the two curves y = (1 - exp(x/2))/(exp(x) + exp(x/2)) and y = (exp(-x) - 1)/2, draw a line tangent to both. This s	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+172	C_2 (so named by S. Finch), a constant which is an analog of Niven's constant when mean of exponents is considered inste	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+173	4*Pi/105	elementary	64	exact	8	SIX, LOG, SINH, x, TIMES	NINE, PI, DIVIDE	1.160e-16	0	1.1	63.9	True	4*Pi/105
+174	2/(5*sqrt(11))	algebraic	64	exact	9	x, FIVE, TIMES	FOUR, SEVEN, DIVIDE, SQRT, ARCTAN, COS	0.000e+00	0	1.1	63.6	True	2/(5Sqrt[11])
+175	3*zeta(3)/2 + 12*log(2) - 10	special	64	not found	0			1.000e+00	0	1.1	nan	False	3Zeta[3]/2+12Log[2]-10
+176	50*Pi/1296	elementary	64	exact	8	NINE, SQR, x, TIMES, TAN	NEG, ARCSINH, EXP	3.435e-16	0	1.1	63.4	True	50Pi/1296
+177	sqrt(Pi^2 - 4)/(2*Pi^2)	elementary	64	exact	8	PI, SQR, x, TIMES	ONE, ARCSIN, ARCCOSH, SINH	3.392e-16	0	1.1	64.0	True	Sqrt[Pi^2-4]/(2Pi^2)
+178	Champernowne constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ChampernowneNumber[]
+179	first (of 10) decimal selvage numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+180	Product_{k >= 1} (k*(k+1))^(-1/(k*(k+1))), a constant related to the alternating Lüroth representations of real numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+181	3*sqrt(3)/(4*Pi^2)	elementary	64	exact	9	PI, SQR, x, TIMES	SEVEN, ARCCOSH, SINH, NINE, DIVIDE	2.531e-15	0	1.1	63.7	True	3Sqrt[3]/(4Pi^2)
+182	harmonic oscillator tunneling constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	2/(3^(2/3)*Gamma[1/3]^2)
+183	probability that a random walk on the 5-d simple cubic (hypercubic) lattice returns to the origin	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+184	e^-2	elementary	64	exact	4	x	TWO, EXP, INV	0.000e+00	0	1.1	63.5	True	E^(-2)
+185	probability that an integer 4-tuple is pairwise unitary coprime	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+186	Given the two curves y = (1 - exp(x/2))/(exp(x) + exp(x/2)) and y = (exp(-x) - 1)/2, draw a line tangent to both. This s	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+187	pi minus three	elementary	64	exact	4	x, SIN	THREE, SIN	7.841e-16	0	1.1	64.0	True	Pi - 3
+188	Pi^4/15 + Pi^2*log(2)^2/4 - log(2)^4/4 - 21*log(2)*zeta(3)/4 - 6*Li_4(1/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi^4/15+Pi^2Log[2]^2/4-Log[2]^4/4-21Log[2]Zeta[3]/4-6PolyLog[4,1/2]
+189	log Cbrt[e]	elementary	64	exact	8	x, INV	THREE, FIVE, POWER, EIGHT, TIMES, LOG	1.917e-16	0	1.1	63.8	True	Log10[CubeRoot[E]]
+190	Matthews' constant C_2, an analog of Artin's constant for primitive roots	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+191	arctan(1/2)/Pi	elementary	64	exact	6	x, PI, TIMES	TWO, INV, ARCTAN	0.000e+00	0	1.1	63.6	True	ArcTan[1/2]/Pi
+192	(1-C_2)/e, a constant connected with two-sided generalized Fibonacci sequences, where C_2 is the Euler-Gompertz constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+193	Given the two curves y = exp(-x) and y = 2/(exp(x) + exp(x/2)), draw a line tangent to both. This sequence is the decima	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+194	9*zeta(3)/Pi^2 - 93*zeta(5)/(2*Pi^4) - log(2) + 1/4	special	64	not found	0			1.000e+00	0	1.1	nan	False	9Zeta[3]/Pi^2-93Zeta[5]/(2Pi^4)-Log[2]+1/4
+195	Sum_{k >= 0} 1/(4*k+3)^2	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi^2/16 - Catalan/2
+196	Pythagorean triple constant for hypotenuses	elementary	64	exact	5	x	PI, PI, PLUS, INV	5.232e-16	0	1.1	63.6	True	1/(2*Pi)
+197	Sum_{k>=1} (-1)^k*log(k)/k	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma*Log[2] - Log[2]^2/2
+198	Euler-Kronecker constant (as named by P. Moree) for hypotenuse numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+199	log Cbrt[π]	elementary	64	exact	9	x, INV, PI, POWER	THREE, FIVE, POWER, EIGHT, TIMES	3.350e-16	0	1.1	64.0	True	Log10[CubeRoot[Pi]]
+200	sixth	rational	64	exact	3	x	SIX, INV	8.327e-16	0	1.1	63.7	True	1/6
+201	Hall-Montgomery constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 + Pi^2/6 + 2*PolyLog[2, -Sqrt[E]]
+202	(-2*Catalan + Pi*log(2))/2	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi*Log[2]/2 - Catalan
+203	'mu', a Sobolev isoperimetric constant related to the "membrane inequality", arising from the study of a vibrating membr	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+204	log(2)/4	elementary	64	exact	5	x	FOUR, TWO, LOG, DIVIDE	1.602e-16	0	1.1	63.8	True	Log[2]/4
+205	probability that three positive integers are pairwise not coprime	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+206	H, an auxiliary constant used to evaluate some Ising-related constants on triangular and hexagonal lattices (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+207	Gibbs-Wilbraham constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-1 + (2*SinIntegral[Pi])/Pi
+208	pi^(-3/2)	elementary	64	exact	6	x	THREE, PI, POWER, SQRT, INV	1.546e-16	0	1.1	63.8	True	Pi^(-3/2)
+209	Markoff number asymptotic density constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+210	a1, the first of two constants associated with Djokovic's conjecture on an integral inequality	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+211	G/2 - Pi*log(2)/8, where G = A006752	special	64	not found	0			1.000e+00	0	1.1	nan	False	Catalan/2-Pi Log[2]/8
+212	Hardy-Littlewood constant C_6 = Product_{p prime > 6} 1/(1-1/p)^6 (1-6/p)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+213	MRB constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[(-1)^n*(-1 + n^n^(-1)), {n, 1, Infinity}]
+214	9*zeta(3)/(2*Pi^2) - log(2) + 1/3	special	64	not found	0			1.000e+00	0	1.1	nan	False	9Zeta[3]/(2Pi^2)-Log[2]+1/3
+215	entropy of folding of the triangular lattice constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Log[(Gamma[1/3]^(3/2)*Sqrt[3])/(2*Pi)]
+216	gamma^3	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma^3
+217	1/sqrt(27)	algebraic	64	exact	5	x	NINE, THREE, SQRT, DIVIDE	1.442e-15	0	1.1	63.7	True	1/Sqrt[27]
+218	q of the maximum of the Dedekind eta function	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+219	probability that a random walk on a 4-d lattice returns to the origin	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+220	Second du Bois-Reymond constant	elementary	64	exact	7	x, FOUR, PLUS	NEG, COSH, EULER, TIMES	4.280e-16	0	1.1	63.7	True	(-7 + E^2)/2
+221	log π/2	elementary	64	exact	7	x, NEG, NINE, SUBTRACT, POWER	ONE, ARCSIN	0.000e+00	0	1.1	64.0	True	Log10[Pi/2]
+222	Pi/16	none	64	exact	5	x	FOUR, SQR, PI, DIVIDE	1.131e-15	0	1.1	64.0	True	
+223	Vallée constant	none	24	not found	0			1.000e+00	0	1.1	nan	False	
+224	Erdős-Lebensold constant	special	24	not found	0			1.000e+00	0	1.1	nan	False	Sum[1/(Prime[\[FormalK]]^\[FormalS]*Log[Prime[\[FormalK]]^\[FormalS]]), {\[FormalS], 1, Infinity}, {\[FormalK], 1, Infinity}]
+225	(6/Pi^2) Sum_{p prime} 1/(p(p+1)), a Meissel-Mertens constant related to the asymptotic density of certain sequences of 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+226	Given the two curves y = exp(-x) and y = 2/(exp(x) + exp(x/2)), draw a line tangent to both. This sequence is the decima	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+227	White House switchboard constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[-(1 + 8^(-1 + E)^(-1))^Pi^(-1)]
+228	Rumor's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-ProductLog[ -2/E^2]/2
+229	ln(Gamma(3/4))	special	64	not found	0			1.000e+00	0	1.1	nan	False	LogGamma[3/4]
+230	sum of the reciprocals of the perfect numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+231	log Cbrt[4π/3]	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	Log10[CubeRoot[4*Pi/3]]
+232	lambda(3) in Li's criterion	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+233	e^(-pi/2)	elementary	64	exact	4	x, LOG	NEG, ARCSIN	1.335e-16	0	1.1	63.7	True	E^(-Pi/2)
+234	-zeta(-1/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-Zeta[-1/2]
+235	a constant related to A000621	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+236	log Sqrt[e]	elementary	64	exact	7	x	NEG, NINE, SUBTRACT, SQR, LOG, INV	2.556e-16	0	1.1	64.0	True	Log10[Sqrt[E]]
+237	Lochs-Porter constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	3/4 - (3*Log[2]*(-2 + 4*EulerGamma + 3*Log[2] - (24*Derivative[1][Zeta][2])/Pi^2))/Pi^2 - (6*Log[2]*(-1/2 + (6*Derivative[1][Zeta][2])/Pi^2))/Pi^2
+238	B (negated), a constant related to Glaisher's constant A and the Gaussian unitary ensemble hypothesis	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+239	2*log(2) - 4*Catalan/Pi	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Log[2] - 4*Catalan/Pi
+240	gamma^e	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma^E
+241	7*zeta(3)/(2*Pi^2) - log(2) + 1/2	special	64	not found	0			1.000e+00	0	1.1	nan	False	7Zeta[3]/(2Pi^2)-Log[2]+1/2
+242	Conway-Guy constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`ConwayGuyConstant == Limit[\[FormalV][\[FormalN]]/2^\[FormalN], \[FormalN] -> Infinity], \[FormalV][0] == 0 && \[FormalV][1] == 1 && \[FormalV][\[FormalN]] == 2*\[FormalV][-1 + \[FormalN]] - \[FormalV][-1 + \[FormalN] - Floor[1/2 + Sqrt[2*(-1 + \[FormalN])]]]]
+243	Copeland–Erdős constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[10^(-\[FormalK] - Sum[Floor[Log[10, Prime[\[FormalJ]]]], {\[FormalJ], 1, \[FormalK]}])*Prime[\[FormalK]], {\[FormalK], 1, Infinity}]
+244	Pi*(3 - gamma)/32, where gamma is Euler's constant A001620	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi*(3 - EulerGamma)/32
+245	quadtree constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	228 - 26*Pi^2 + 24*Zeta[3]
+246	1/sqrt(2*Pi*e), one of the Traveling Salesman constants	elementary	64	exact	8	x, SQR	PI, PI, PLUS, EULER, TIMES, INV	8.029e-16	0	1.1	64.0	True	1/Sqrt[2*Pi*E]
+247	a(F_5), the maximum inradius of all triangles that lie in a regular pentagon of width 1	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+248	rayleigh kurtosis excess	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	-(6*Pi^2 - 24*Pi + 16)/(4 - Pi)^2
+250	second (of 10) decimal selvage numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+251	log Sqrt[π]	elementary	64	exact	7	x, NEG, NINE, SUBTRACT, POWER	PI, SQRT	6.588e-15	0	1.1	63.8	True	Log10[Sqrt[Pi]]
+252	logarithm of Glaisher's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Log[Glaisher]
+253	a multiplicative constant related to A006196	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+254	self number density constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[Piecewise[{{1, SatisfiableQ[\[FormalK] == Sum[(1 + 2^\[FormalN])*\[FormalA][\[FormalK], \[FormalN]], {\[FormalN], 1, Infinity}] && ForAll[\[FormalN], Element[\[FormalN], Integers] && \[FormalN] > 0, Element[\[FormalA][\[FormalK], \[FormalN]], Integers]], {\[FormalA]}]}}, 0]/2^\[FormalK], {\[FormalK], 1, Infinity}]^2/8
+255	(1/384)*Pi^4	elementary	64	exact	8	x, SIX, TIMES	EIGHT, PI, SQR, DIVIDE, SQR	8.753e-16	0	1.1	64.0	True	Pi^4/ 384
+256	Flajolet-Prodinger constant 'K', a constant related to asymptotically enumerating level number sequences for binary tree	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+257	third (of 10) decimal selvage numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+258	Meissel-Mertens constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma + Sum[Log[1 - Prime[n]^(-1)] + Prime[n]^(-1), {n, 1, Infinity}]
+259	Pi/12	none	64	exact	5	x	THREE, ONE, ARCTAN, DIVIDE	4.241e-16	0	1.1	64.0	True	
+260	Mrs. Miniver constant	special	64	false positive	11	FIVE, x, GAMMA, COSH, DIVIDE	SIX, INV, GAMMA, SQRT, TAN, ARCCOS	5.448e-15	0	1.1	12.7	True	Root[{#1 - Sin[Pi/6 - #1*Sqrt[1 - #1^2]] & , 0.264932084602776862`17.423134556719873}]
+261	Ti_2(2-sqrt(3)), where Ti_2 is the inverse tangent integral function	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+262	unforgeable word constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[(2*(-1)^(-1 + \[FormalK])*Product[2^(-1 + 2^\[FormalJ])/(-1 + 2^(-1 + 2^\[FormalJ])), {\[FormalJ], 2, \[FormalK]}])/(-1 + 2^(-1 + 2^(1 + \[FormalK]))), {\[FormalK], 1, Infinity}]
+263	volume of a regular ideal hyperbolic 4-simplex	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	10*Pi/3*ArcSin[1/3] - Pi^2/3
+265	one of the Pell-Stevenhagen constants	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+266	1/(8*log(2)*A005597), where A005597 is the twin prime constant C_2	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+267	constant appearing in the expected number of comparisons for an unsuccessful digital tree search (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+269	(6/Pi^2)*Sum_{n>=1} 1/prime(n)^2	special	64	not found	0			1.000e+00	0	1.1	nan	False	6*PrimeZetaP[2]/Pi^2
+270	1/Gamma(1/4)	special	64	exact	7	x, INV, GAMMA	FOUR, INV, GAMMA, GAMMA	8.050e-16	0	1.1	64.0	True	1/Gamma[1/4]
+271	rho_c = (5-sqrt(5))/10, the asymptotic critical density for the hard hexagon model	algebraic	64	exact	5	x	GOLDENRATIO, TWO, PLUS, INV	2.008e-16	0	1.1	63.8	True	(5 - Sqrt[5])/10
+272	Bernstein's constant	none	50	not found	0			1.000e+00	0	1.1	nan	False	
+273	Series-parallel networks constant	none	22	not found	0			1.000e+00	0	1.1	nan	False	
+274	log 6/π	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	PI, SIX, DIVIDE	1.975e-16	0	1.1	64.0	True	Log10[6/Pi]
+275	((5 - 2*sqrt(2))*Pi)/24	elementary	64	exact	10	x, NEG, ARCTAN, DIVIDE	FIVE, EIGHT, SQRT, SUBTRACT, SIX, DIVIDE	3.906e-16	0	1.1	64.0	True	((5-2*Sqrt[2])*Pi)/24
+276	Mertens constant M(3,2) arising in the formula for the sum of reciprocals of primes p == 2 (mod 3)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+277	Mertens constant M(4,1) arising in the formula for the sum of reciprocals of primes p == 1 (mod 4) (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+278	strongly carefree constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - (-2 + 3*Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 1, Infinity}]
+279	digital search tree Q constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	QPochhammer[1/2, 1/2]
+280	Sum_{k>=0} (k!/(k+2)!)^2	elementary	64	exact	7	x	THREE, THREE, PI, SQR, DIVIDE, SUBTRACT	1.341e-15	0	1.1	63.9	True	Pi^2/3 - 3
+281	domino tiling constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Catalan/Pi
+282	d_0, the constant term in the asymptotic expansion of the average number of registers needed to evaluate a binary tree	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+283	(1/105)*Pi^3	elementary	64	exact	10	x, FIVE, TIMES, THREE, TIMES	SEVEN, THREE, PI, POWER, DIVIDE	5.640e-16	0	1.1	63.8	True	Pi^3/105
+284	Pythagorean triple second-order constant for areas	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(((1 + 2^(-1/3))*Zeta[1/3])/((1 + 2^(-2/3))*Zeta[4/3]))
+285	a constant that appears in flux/diffusion problems with trapping surfaces	special	64	not found	0			1.000e+00	0	1.1	nan	False	-1/Pi * Integrate[Log[(6/x^2) * (1 - Sin[x]/x)]/x^2, {x, 0, Infinity}]
+286	Wadsworth constant	rational	64	exact	6	x	THREE, INV, THREE, PLUS, INV	5.551e-16	0	1.1	64.0	True	3/10
+287	Sum_{m,n >= 1} (-1)^(m + n)/(m*n*(m + n))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+288	log10(2)	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	TWO	1.844e-16	0	1.1	64.0	True	Log[10, 2]
+289	ln(Gamma(2/3))	special	64	not found	0			1.000e+00	0	1.1	nan	False	LogGamma[2/3]
+290	coefficient c appearing in the asymptotic evaluation of the number of prime additive compositions of n as c*(1/xi)^n, wh	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+291	Gauss-Kuzmin-Wirsing constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Inactive[Limit][Inactive[Part][SortBy[N][Abs[Eigenvalues[Inactive[Table][((-1)^\[FormalJ]*Inactive[Sum][(-2)^\[FormalI]*Binomial[\[FormalK], \[FormalI]]*Pochhammer[2 + \[FormalI], \[FormalJ]]*(-2^(2 + \[FormalI] + \[FormalJ]) + (-1 + 2^(2 + \[FormalI] + \[FormalJ]))*Zeta[2 + \[FormalI] + \[FormalJ]]), {\[FormalI], 0, \[FormalK]}])/((-2)^\[FormalK]*\[FormalJ]!), {\[FormalJ], 0, -1 + \[FormalN]}, {\[FormalK], 0, -1 + \[FormalN]}]]]], -2], \[FormalN] -> Infinity]
+292	3/pi^2	elementary	64	exact	5	x	PI, SQR, THREE, DIVIDE	1.461e-15	0	1.1	64.0	True	3/Pi^2
+293	radius of convergence of the generating function of A000625 (alcohol stereoisomers enumeration)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+294	1 - log(2)	elementary	64	exact	5	x	TWO, LOG, ONE, SUBTRACT	3.618e-16	0	1.1	64.0	True	1-Log[2]
+295	Hardy-Littlewood constant Product_{p prime >= 5} (1-(6*p^2-4*p+1)/(p-1)^4)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+296	coefficient c_v in c_v*log(N), the asymptotic variance of the number of factors in a random factorization of n <= N	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+297	Littlewood-Salem-Izumi constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{HypergeometricPFQ[{1/2 - #1/2}, {1/2, 3/2 - #1/2}, (-(1/16))*(9*Pi^2)] & , 0.3084437795619860030341969509860000000000000000000000000001`29.489176016177844}]
+298	sin(Pi/10) (angle of 18 degrees)	algebraic	64	exact	5	x	GOLDENRATIO, GOLDENRATIO, PLUS, INV	0.000e+00	0	1.1	63.8	True	Sin[18 Degree]
+299	-(8*(EulerGamma - log(2)))/3	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(8*(EulerGamma - Log[2]))/3
+300	Zolotarev-Schur constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	With[{\[FormalX] = Root[{EllipticE[#1^2]^3 - 3*EllipticE[#1^2]^2*EllipticK[#1^2] + EllipticK[#1^2]*(-1 - EllipticK[#1^2]^2 + #1^2) + EllipticE[#1^2]*(1 + 3*EllipticK[#1^2]^2 + #1^2) & , 0.9155020553896763963055240364016622896543129422884607667501`30.102999566398122}]}, (1 - EllipticE[\[FormalX]^2]/EllipticK[\[FormalX]^2])^2/\[FormalX]^2]
+301	k_3 = 3/(2*Pi*m_3), a constant associated with the asymptotic expansion of the probability that a three-dimensional rand	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+302	(negated) constant in the expansion of the prime zeta function about s = 1	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+303	Atkinson-Negro-Santoro constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`AtkinsonNegroSantoroConstant == Limit[\[FormalU][\[FormalN]]/2^\[FormalN], \[FormalN] -> Infinity], \[FormalU][0] == 0 && \[FormalU][1] == 1 && \[FormalU][\[FormalN]] == 2*\[FormalU][-1 + \[FormalN]] - \[FormalU][-1 + \[FormalN] - Floor[1 + (-1 + \[FormalN])/2]]]
+304	real part of the solution of z = log z	special	64	not found	0			1.000e+00	0	1.1	nan	False	Re[-ProductLog[-1]]
+305	Kalmar composition constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`KalmarCompositionConstant == -(1/(\[FormalRho]*Derivative[1][Zeta][\[FormalRho]])), \[FormalRho] == Root[{-2 + Zeta[#1] & , 1.7286472389981836181351030103`29.237706376855613}]]
+306	reciprocal of π	elementary	64	exact	3	x	PI, INV	5.232e-16	0	1.1	64.0	True	Pi^(-1)
+307	a constant related to a certain Sobolev isoperimetric inequality	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+308	eta/xi = A086318/A086317, a coefficient associated with the asymptotics of the number of weakly binary trees	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+309	Feller-Tornier product constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 2/Prime[\[FormalK]]^2, {\[FormalK], 1, Infinity}]
+310	second Kneser-Mahler polynomial constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(9 - PolyGamma[1, 2/3] + PolyGamma[1, 4/3])/(4*Pi*Sqrt[3])
+311	1/(4*K), a constant related to the asymptotic evaluation of the number of positive integers all of whose prime factors a	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+312	infinite product of (j/Pi)*sin(Pi/j), for j >= 2, a constant similar to the Kepler-Bouwkamp constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+313	constant that appears in the asymptotic formula for average order of an infinitary analog of Euler's phi function (A0917	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+314	Given the two curves y = (1 + exp(x))/2 and y = (1 + exp(x))/(1 + exp(x/2)), draw a line tangent to both. This sequence 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+315	9099999999923/27500000000000	rational	64	not found	0			1.000e+00	0	1.1	nan	False	9099999999923/27500000000000
+316	euler sqr	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma^2
+317	log(A085851)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+318	third	rational	64	exact	3	x	THREE, INV	8.327e-16	0	1.1	64.0	True	1/3
+319	Sum_{k>=2} c(k)/prime(k), where c(k) = -1 if p == 1 (mod 4) and c(k) = +1 if p == 3 (mod 4)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+320	radius of convergence of g.f. for unlabeled trees (A000055)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+321	probability that a random walk on a 3-D lattice returns to the origin	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 - (16*Sqrt[2/3]*Pi^3) / (Gamma[1/24]*Gamma[5/24]*Gamma[7/24]*Gamma[11/24])
+322	2*sin(Pi/18)	algebraic	64	exact	8	TWO, x, DIVIDE, ARCSIN	NINE, ONE, ARCSIN, DIVIDE	0.000e+00	0	1.1	64.0	True	2Sin[Pi/18]
+323	sqrt(5^(1/3)-4^(1/3))	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[Surd[5, 3] - Surd[4, 3]]
+324	meander connective constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 2^(-2^\[FormalK]), {\[FormalK], 0, Infinity}]
+325	lim_{N->infinity} (1/N^2 Sum_{n=1..N} K(n)), where K(n) is the squarefree kernel of n	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+326	a coefficient associated with the asymptotics of the variance of the distance between a vertex and the root of a random 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+327	Hafner–Sarnak–McCurley constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+328	radius of convergence of the generating function of A000598, the number of rooted ternary trees of n vertices	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+330	imaginary part of the infinite power tower of i	special	64	not found	0			1.000e+00	0	1.1	nan	False	Im[-ProductLog[-Log[I]]/Log[I]]
+331	log 1/M = ln 10	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	NEG, NINE, SUBTRACT, LOG	1.226e-15	0	1.1	63.9	True	Log10[Log[10]]
+332	equilateral triangle line-picking constant	elementary	64	exact	11	x, FIVE, TIMES, NEG, PLUS	TWO, LOG, SINH, THREE, POWER, LOG	1.522e-16	0	1.1	63.9	True	(4 + 3*Log[3])/20
+333	(3*sqrt(6) - 7)*Pi/3	elementary	64	exact	10	PI, x, DIVIDE, TWO, PLUS	THREE, INV, SIX, SQRT, SUBTRACT	1.521e-16	0	1.1	64.0	True	(3Sqrt[6]-7)Pi/3
+334	standard Gumbel distribution median	elementary	64	exact	5	x	TWO, LOG, INV, LOG	2.272e-15	0	1.1	64.0	True	-Log[Log[2]]
+335	constant that appears in the asymptotic formula for average order of the number of  infinitary divisors function (A03744	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+336	reciprocal of e	elementary	64	exact	3	x	NEG, EXP	1.207e-15	0	1.1	64.0	True	E^(-1)
+337	Hardy-Littlewood constant C_7 = Product_{p prime > 7} 1/(1-1/p)^7 (1-7/p)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+338	fourth (of 10) decimal selvage number	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+339	constant c appearing in the expected number of pair of twin vacancies in a digital tree	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+340	variance of the maximum of a size 8 sample from a normal (0,1) distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+341	(1/144)*3^(1/2)*Pi^3	elementary	64	exact	10	x, SIX, TIMES, SQR	THREE, SIX, NEG, ARCSIN, POWER, DIVIDE	2.530e-15	0	1.1	64.0	True	Sqrt[3]*Pi^3/144
+342	1/Gamma(1/3)	special	64	exact	7	x, INV	THREE, ARCTAN, TAN, INV, GAMMA	1.041e-15	0	1.1	64.0	True	1/Gamma[1/3]
+343	first positive solution to exp(1-1/x)/x = 1/2, a binary search tree constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-1/ProductLog[-1, -1/(2*E)]
+344	Artin's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 1/((-1 + Prime[n])*Prime[n]), {n, 1, Infinity}]
+345	64/169, the upper bound (as given by S. Finch) of the 2-dimensional simultaneous Diophantine approximation constant	none	64	exact	7	x, SQRT	FOUR, NINE, PLUS, EIGHT, DIVIDE	4.398e-16	0	1.1	64.0	True	
+346	upper bound of the 6-dimensional simultaneous Diophantine approximation constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+347	expected distance from a randomly selected point in the unit square to its center: (sqrt(2) + log(1 + sqrt(2)))/6	elementary	64	exact	8	x, SIX, TIMES	NEG, ARCSINH, TWO, SQRT, SUBTRACT	0.000e+00	0	1.1	64.0	True	(Sqrt[2] + Log[1 + Sqrt[2]])/6
+348	Given the two curves y = (1 + exp(x))/2 and y = (1 + exp(x))/(1 + exp(x/2)), draw a line tangent to both. This sequence 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+349	upper bound of the 5-dimensional simultaneous Diophantine approximation constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	3/(208 + 72*Pi - 96*Sqrt[2]*Pi)
+350	variance of the maximum of a size 7 sample from a normal (0,1) distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+351	1 - 6/pi^2	elementary	64	exact	7	x, ONE, SUBTRACT	PI, SQR, SIX, DIVIDE	0.000e+00	0	1.1	64.0	True	1 - 6/Pi^2
+352	Pi/8	none	64	exact	4	x	EIGHT, PI, DIVIDE	1.131e-15	0	1.1	64.0	True	
+353	A(rectangles), an analog of Moser's worm constant, which is associated with the class of rectangular regions of the plan	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+354	radius of convergence of the generating function for the enumeration of rooted identity trees (A004111)	none	50	not found	0			1.000e+00	0	1.1	nan	False	
+355	Pi*G - 33*zeta(3)/16, where G = A006752	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi Catalan-33Zeta[3]/16
+356	one div root two pi	elementary	64	exact	6	x	PI, PI, PLUS, SQRT, INV	1.391e-16	0	1.1	64.0	True	1/Sqrt[2*Pi]
+357	log Sqrt[2π]	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	PI, PI, PLUS, SQRT	1.391e-16	0	1.1	64.0	True	Log10[Sqrt[2*Pi]]
+358	'lambda', a Somos quadratic recurrence constant mentioned by Steven Finch	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+359	Feigenbaum's constant 0.399535	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+360	Li_3(2 - phi)	special	64	not found	0			1.000e+00	0	1.1	nan	False	PolyLog[3,2-GoldenRatio]
+361	radius of convergence of Wedderburn-Etherington numbers g.f	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+362	'mu', a percolation constant associated with the asymptotic threshold for 3-dimensional bootstrap percolation	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+363	log(A085850)	none	41	not found	0			1.000e+00	0	1.1	nan	False	
+364	m_2 = (2-1/e)/4, one of Renyi's parking constants, the mean car density in case "monomer with nearest neighbor exclusion	elementary	64	exact	7	x	FOUR, EULER, INV, TWO, SUBTRACT, DIVIDE	2.721e-16	0	1.1	64.0	True	(2 - 1/E)/4
+365	upper bound of the 4-dimensional simultaneous Diophantine approximation constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	27/(4*(8*Sqrt[3]*Pi - 27))
+366	Euler-Kronecker constant (as named by P. Moree) for non-hypotenuse numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+367	lower bound of the Berry-Esseen constant	elementary	64	exact	11	x, PI, SQRT, INV, DIVIDE	THREE, ARCCOSH, NINE, ARCCOSH, SUBTRACT, SINH	1.355e-16	0	1.1	64.0	True	(3 + Sqrt[10])/(6*Sqrt[2*Pi])
+368	Hardy-Littlewood constant C_5 = Product_{p prime > 5} 1/(1-1/p)^5 (1-5/p)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+369	sqrt(2)*(sqrt(6) - 1)/5	algebraic	64	exact	7	x, ARCTANH	NEG, ARCSINH, TWO, ARCCOSH, PLUS	2.708e-16	0	1.1	64.0	True	Sqrt[2](Sqrt[6]-1)/5
+370	Prouhet–Thue–Morse constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(2 - Product[(-1 + 2^2^\[FormalK])/2^2^\[FormalK], {\[FormalK], 0, Infinity}])/4
+371	1/(eta*P'(eta)), a constant related to the asymptotic evaluation of the number of prime multiplicative compositions, whe	none	30	not found	0			1.000e+00	0	1.1	nan	False	
+372	sqrt(2) - 1	algebraic	64	exact	4	x, LOG	NEG, ARCSINH	8.041e-16	0	1.1	64.0	True	Sqrt[2] - 1
+373	isosceles triangle line-picking constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(2 + 4*Sqrt[2] + ArcSinh[1]*(4 + Sqrt[2]))/30
+374	Prime constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[2^(-Prime[n]), {n, 1, Infinity}]
+375	variance of the maximum of a size 6 sample from a normal (0,1) distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+376	volume of the Meissner Body	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(2/3 - Sqrt[3]/4 * ArcCos[1/3])* Pi
+377	Minkowski-Bower constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Inactive[Root][{#1 - MinkowskiQuestionMark[#1] & , 0.420372339423223075640993`23.623634131640042}]
+378	Schlüter ten disk constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[819200 - 14172160*\[FormalX] + 114038784*\[FormalX]^2 - 563649536*\[FormalX]^3 + 1899131648*\[FormalX]^4 - 4564076288*\[FormalX]^5 + 7918461504*\[FormalX]^6 - 9722063488*\[FormalX]^7 + 7803109440*\[FormalX]^8 - 2960321792*\[FormalX]^9 - 1038261808*\[FormalX]^10 + 1526909568*\[FormalX]^11 + 227573920*\[FormalX]^12 - 1398966480*\[FormalX]^13 + 1145811528*\[FormalX]^14 - 462103584*\[FormalX]^15 + 98015844*\[FormalX]^16 - 11436428*\[FormalX]^17 + 1180129*\[FormalX]^18, \[FormalX], 1]
+379	logarithmic capacity of the unit equilateral triangle	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+380	c_1, a constant associated with the computation of the maximal modulus of an algebraic integer	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+381	Reuleaux tetrahedron volume	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(8*Pi)/3 - (27*ArcCos[1/3])/4 + Sqrt[2]/4
+382	1 - gamma, where gamma is Euler's constant (or the Euler-Mascheroni constant)	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 - EulerGamma
+383	pi^(-3/4)	elementary	64	exact	6	x	PI, PI, SQRT, SQRT, DIVIDE	4.061e-15	0	1.1	64.0	True	Pi^(-3/4)
+384	Dawson's integral at the inflection point	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+385	(2/3)*x where x is the real solution of the equation x^2 + 2*sqrt(1 - x^2) = 2*x*(x + arccos(x))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+386	gamma', the analog of Euler's constant when 1/x is replaced by 1/(x*log(x))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+387	carefree constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - (-1 + 2*Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 1, Infinity}]
+388	'lambda', a Young-Fejér-Jackson constant linked to the positivity of certain sine sums	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+389	2*arccsch(2)/sqrt(5)	none	64	exact	7	x	GOLDENRATIO, LOG, COSH, GOLDENRATIO, LOG, DIVIDE	7.738e-16	0	1.1	64.0	True	
+390	m = (1-1/e^2)/2, one of Renyi's parking constants	elementary	64	exact	5	x	EULER, ONE, SINH, DIVIDE	3.724e-15	0	1.1	64.0	True	(1 - 1/E^2)/2
+391	Bloch constant lower limit	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	1/5000 + Sqrt[3]/4
+392	common logarithm of e	elementary	64	exact	6	x	NEG, NINE, SUBTRACT, LOG, INV	2.556e-16	0	1.1	64.0	True	Log10[E]
+393	asymptotic probability of success in the full-information secretary problem with uniform distribution when the number of	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+394	a constant related to the [dimensionless] electrical capacitance of the ring torus without hole (with unit circle radius	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+395	1/(2*(Pi-2)), the upper bound of the 3-dimensional simultaneous Diophantine approximation constant	elementary	64	exact	5	x, INV	FOUR, COS, ARCCOS	8.872e-16	0	1.1	64.0	True	1/(2*(Pi - 2))
+397	real part of the infinite power tower of i	special	64	not found	0			1.000e+00	0	1.1	nan	False	Re[-ProductLog[-Log[I]]/Log[I]]
+398	breadth of the "caliper", the broadest worm of unit length	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+399	Otter's asymptotic constant beta for the number of rooted trees	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+400	Ising constant	elementary	64	exact	5	x	FOUR, THREE, ARCCOSH, DIVIDE	1.260e-16	0	1.1	64.0	True	Log[1 + Sqrt[2]]/2
+401	1/log(2)-1, the mean value of a random variable following the Gauss-Kuzmin distribution	elementary	64	exact	6	x	TWO, LOG, INV, NEG, PLUS	3.009e-15	0	1.1	64.0	True	1/Log[2] - 1
+403	1D Diophantine approximation constant	algebraic	64	exact	4	x	FIVE, SQRT, INV	1.241e-16	0	1.1	64.0	True	Sqrt[5]^(-1)
+404	variance of the maximum of a size 5 sample from a normal (0,1) distribution	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 - 25/Pi + 150*ArcCsc[Sqrt[3]]/Pi^2 + 5*Sqrt[3]*ArcSec[2*Sqrt[2/3]]/Pi^2 - 225*ArcCsc[Sqrt[3]]^2/Pi^3
+405	7*sqrt(3)/27	algebraic	64	exact	7	x	FIVE, THREE, POWER, SQRT, SEVEN, DIVIDE	1.236e-16	0	1.1	64.0	True	7Sqrt[3]/27
+406	asymptotic probability of success in the full information version of the secretary problem	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+407	2^(1/2)/pi	elementary	64	exact	5	x, PI, TIMES	TWO, SQRT	1.233e-16	0	1.1	64.0	True	2^(1/2)/Pi
+408	log(Pi/2)	elementary	64	exact	4	x, EXP	ONE, ARCSIN	2.459e-16	0	1.1	64.0	True	Log[Pi/2]
+409	prime zeta function at 2: Sum_{p prime} 1/p^2	special	64	not found	0			1.000e+00	0	1.1	nan	False	PrimeZetaP[2]
+410	Product_{n>1} (1-1/n)^(1/n)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+411	e^(-pi/4)	elementary	64	exact	4	x, LOG	NEG, ARCTAN	1.218e-16	0	1.1	64.0	True	E^(-Pi/4)
+412	c^c^c^...  where c is the constant defined in A037077	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+413	Machin Gregory series constant	elementary	64	exact	4	x	TWO, INV, ARCTAN	1.197e-16	0	1.1	64.0	True	ArcTan[1/2]
+414	6*K/Pi^2, a constant related to the asymptotic evaluation of the number of positive squarefree integers of the form a^2 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+415	(1/30)*2^(1/2)*Pi^2	elementary	64	exact	9	x, THREE, TIMES	SEVEN, ARCTAN, COS, PI, SQR, TIMES	0.000e+00	0	1.1	64.0	True	(Sqrt[2] Pi^2)/30
+416	'etaHat', a constant used in the asymptotic evaluation of e.g.f. coefficients for the number of labeled mobiles	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+417	pi^(-2/3)	elementary	64	exact	6	THREE, x, POWER	PI, SQR, INV	0.000e+00	0	1.1	64.0	True	Pi^(-2/3)
+418	Bloch constant upper limit	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Sqrt[(-1 + Sqrt[3])/2]*Gamma[1/3]*Gamma[11/12])/Gamma[1/4]
+419	Weierstrass constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(2*2^(1/4)*E^(Pi/8)*Sqrt[Pi])/Gamma[1/4]^2
+420	Plouffe's b-constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+421	common logarithm of 3	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	THREE	1.513e-15	0	1.1	64.0	True	Log10[3]
+422	quadtree leaf proportion constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	-39 + 4*Pi^2
+423	(6*sqrt(3) + 12*log(2+sqrt(3)) - Pi)/48	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(6Sqrt[3]+12Log[2+Sqrt[3]]-Pi)/48
+424	(ln 2)^2	elementary	64	exact	4	x, SQRT	TWO, LOG	0.000e+00	0	1.1	64.0	True	Log[2]^2
+425	2*zeta(3)/5	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Zeta[3]/5
+426	logarithm of golden ratio	elementary	64	exact	3	x	GOLDENRATIO, LOG	1.154e-15	0	1.1	64.0	True	Log[GoldenRatio]
+427	Trott's third constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+428	a constant related to the expected number of vertices of the largest tree associated with a random mapping on n symbols	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+429	2*K/Pi, a constant related to the asymptotic evaluation of the number of positive integers all of whose prime factors ar	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+430	Gaussian twin prime constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Pi^2*Product[Piecewise[{{((1 - 4/Prime[\[FormalK]])*(1 + Prime[\[FormalK]])^2)/(-1 + Prime[\[FormalK]])^2, Mod[Prime[\[FormalK]], 4] == 1}}, 1], {\[FormalK], 1, Infinity}])/8
+431	3/(8*K), a constant related to the asymptotic evaluation of the number of positive integers that can be expressed as the	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+432	variance of the maximum of a size 4 sample from a normal (0,1) distribution	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 + Sqrt[3]/Pi - 36*ArcSec[Sqrt[3]]^2/Pi^3
+433	Shapiro-Drinfeld cyclic sum constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`ShapiroDrinfeldCyclicSumConstant == \[FormalY]/2, \[FormalY] + \[FormalY]*E^(\[FormalX]/2) == (2 + \[FormalX])/E^(\[FormalX]/2) + \[FormalX]/(1 + E^(\[FormalX]/2)) && \[FormalX] + (1 + 2*E^(\[FormalX]/2))^(-1) == Log[(4*E^\[FormalX]*Cosh[\[FormalX]/4]^2)/(1 + 2*E^(\[FormalX]/2))] && -3/2 < \[FormalX] < -1/2 && 1/2 < \[FormalY] < 1]
+434	fifth (of 10) decimal selvage number	none	64	false positive	7	x	SEVEN, ARCTAN, SIN, ARCTAN, SIN, SQR	3.365e-16	0	1.1	19.6	True	
+435	1-gamma-gamma(1), a constant related to the asymptotic expansion of j(n), the counting function of "jagged" numbers, whe	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 - EulerGamma - StieltjesGamma[1]
+436	common logarithm of π	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	PI	5.583e-16	0	1.1	64.0	True	Log10[Pi]
+437	Half	rational	64	exact	3	x	TWO, INV	0.000e+00	0	1.1	64.0	True	1/2
+438	birthday problem constant	rational	64	not found	0			1.000e+00	0	1.1	nan	False	38093904702297390785243708291056390518886454060947061/75091883268515350125426207425223147563269805908203125
+439	A245781*Pi/2	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+440	sqrt(2 - sqrt(3)), edge length of a regular dodecagon with circumradius 1	none	64	exact	5	x, SQR, LOG, COSH	TWO	4.290e-16	0	1.1	64.0	True	
+441	a constant related to the asymptotic expansion of the smallest Lebesgue constant corresponding to an optimal interpolati	special	64	not found	0			1.000e+00	0	1.1	nan	False	2/Pi*(2*Log[2] - Log[Pi] + EulerGamma)
+442	square line-picking constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(2 + 5*Log[1 + Sqrt[2]] + Sqrt[2])/15
+443	sixth pi	elementary	64	exact	4	x	SIX, PI, DIVIDE	4.241e-16	0	1.1	64.0	True	Pi/6
+444	Upper limit of backward value of 5^n	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+445	Mrs. Miniver's constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+446	Pythagorean triple constant for areas	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^2/Sqrt[2*Pi^5]
+447	Otter's asymptotic constant beta for the number of unrooted trees	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+448	Product_{p odd prime} 1-2/(p*(p-1)), a constant related to Artin's conjecture in the context of quadratic fields	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+449	2*(2 - sqrt(3))	algebraic	64	exact	6	x, TWO, DIVIDE	TWO, ARCCOSH, EXP	0.000e+00	0	1.1	64.0	True	2(2-Sqrt[3])
+450	Li_3(1/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	PolyLog[3, 1/2]
+451	'c', one of Polya's Random Walk constants, related to the asymptotics of the number of 3-D random walks starting from an	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+452	Ioachimescu constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	2 + Zeta[1/2]
+453	cos one	elementary	64	exact	3	x	NEG, COS	8.219e-16	0	1.1	64.0	True	Cos[1]
+454	value of the maximum of Dawson's integral D_+(x)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+455	Landau constant upper limit	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Gamma[1/3]*Gamma[5/6])/Gamma[1/6]
+456	Pi^2/18	elementary	64	exact	7	x	THREE, SIX, PI, SQR, DIVIDE, DIVIDE	0.000e+00	0	1.1	64.0	True	Pi^2/18
+457	-ln gamma	special	64	not found	0			1.000e+00	0	1.1	nan	False	-Log[EulerGamma]
+458	coefficient c_m in c_m*log(N), the asymptotic mean number of factors in a random factorization of n <= N	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+459	probability that an integer triple is pairwise unitary coprime	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+460	Kuijlaars-Saff constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-1/2*(3^(3/4)*Zeta[1/2]*(Zeta[1/2, 1/3] - Zeta[1/2, 2/3]))/Sqrt[2*Pi]
+461	smallest disk radius for which six equal disks can cover the unit disk	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+462	1-9/(4*Pi)+sqrt(3)/(2*Pi), an extreme value constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	1 - 9/(4*Pi) + Sqrt[3]/(2*Pi)
+463	value of the Buchstab function at phi + 2 = (5 + sqrt(5))/2 (A296184)	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(1 + 2*Log[GoldenRatio] + Log[GoldenRatio]^2 - Pi^2/60)/(GoldenRatio + 2)
+464	reciprocal exponential of Euler γ	special	64	not found	0			1.000e+00	0	1.1	nan	False	E^(-EulerGamma)
+465	one div root pi	elementary	64	exact	4	x	PI, SQRT, INV	5.903e-16	0	1.1	64.0	True	1/Sqrt[Pi]
+466	Omega constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ProductLog[1]
+467	infinite tetration of i absolute value	special	64	not found	0			1.000e+00	0	1.1	nan	False	Limit[Abs[Nest[I^#1 & , I, \[FormalN]]], \[FormalN] -> Infinity]
+468	B, a constant appearing in an asymptotic formula related to the exponential divisor function sigma^(e)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+469	(PolyGamma(1,(1+sqrt(5))/4)-PolyGamma(1,(3+sqrt(5))/4))/2	special	64	not found	0			1.000e+00	0	1.1	nan	False	(PolyGamma[1,(1+Sqrt[5])/4]-PolyGamma[1,(3+Sqrt[5])/4])/2
+470	weakly carefree constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Product[1 - (-1 + 2*Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 1, Infinity}] - Product[1 - (-2 + 3*Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 1, Infinity}]
+471	Product_{p prime > 2} 1-1/(p^2-3p+3), a constant related to I. M. Vinogradov's proof of the "ternary" Goldbach conjectur	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+472	eta_A, a constant associated with the asymptotics of the enumeration of labeled acyclic digraphs	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+473	Stephens' constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - Prime[n]/(-1 + Prime[n]^3), {n, 1, Infinity}]
+474	a constant related to the asymptotics of A005169	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+475	Euler gamma	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma
+476	3^(-1/2)	algebraic	64	exact	4	x	THREE, INV, SQRT	7.692e-16	0	1.1	64.0	True	3^(-1/2)
+477	Pi/(2e)	none	64	exact	5	x	EULER, ONE, ARCSIN, DIVIDE	3.843e-16	0	1.1	64.0	True	
+478	k3, a Diophantine approximation constant such that the conjectured volume of the "critical parallelepiped" is 2^3*k3 (th	algebraic	64	exact	11	x, SEVEN, TIMES, LOG, SINH	SEVEN, PI, DIVIDE, COS, ONE, PLUS	0.000e+00	0	1.1	64.0	True	8/7*Cos[2*Pi/7]*Cos[Pi/7]^2
+479	asymptotic probability of success in one of the Secretary problems	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+480	Pell constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 - QPochhammer[1/2, 1/4]
+481	gamma_3, a lattice sum constant, analog of Euler's constant for 3-dimensional lattices	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+482	-zeta(1/2)/sqrt(2*Pi)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-Zeta[1/2]/Sqrt[2*Pi]
+483	first Kneser-Mahler polynomial constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(2*Catalan)/Pi
+484	Logarithmic capacity of the unit disk	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^2/(4*Pi^(3/2))
+485	Lehmer constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`LehmerConstant == Cot[Sum[(-1)^\[FormalK]*ArcCot[Subscript[\[FormalC], \[FormalK]]], {\[FormalK], 0, Infinity}]], Subscript[\[FormalC], 0] == 0 && Subscript[\[FormalC], \[FormalK]] == 1 + Subscript[\[FormalC], -1 + \[FormalK]] + Subscript[\[FormalC], -1 + \[FormalK]]^2]
+487	Gompertz constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(E*ExpIntegralEi[-1])
+489	Champernowne base-3 constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ChampernowneNumber[3]
+490	second lemniscate constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[3/4]^2/Sqrt[2*Pi]
+491	sqrt(13)/6	algebraic	64	exact	6	x	SIX, SEVEN, DIVIDE, ARCCOSH, SINH	3.510e-15	0	1.1	64.0	True	Sqrt[13] / 6
+492	log10(4)	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	FOUR	1.844e-16	0	1.1	64.0	True	Log[10, 4]
+493	G(1/2) where G is the Barnes G-function	special	64	not found	0			1.000e+00	0	1.1	nan	False	BarnesG[1/2]
+494	sum_{n>=1} 1/(n binomial(2n, n))	elementary	64	exact	7	x	THREE, THREE, POWER, SQRT, PI, DIVIDE	1.836e-16	0	1.1	64.0	True	Pi/(3*Sqrt[3])
+495	QRS constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{Zeta[1/2, #1/2] & , 0.605443657196732749478922842447`29.782073733759695}]
+496	exp minus half	elementary	64	exact	4	x	EULER, INV, SQRT	3.661e-16	0	1.1	64.0	True	Exp[-1/2]
+497	6/Pi^2	elementary	64	exact	5	x	PI, SQR, SIX, DIVIDE	1.461e-15	0	1.1	64.0	True	6/Pi^2
+498	Sum{p prime>=2} log(p)/(p^2-p+1)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+499	Neville five disk constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[625 - 800*\[FormalX] + 22*\[FormalX]^2 - 1776*\[FormalX]^3 + 1665*\[FormalX]^4 + 1360*\[FormalX]^5 - 3480*\[FormalX]^6 + 2112*\[FormalX]^7 + 1296*\[FormalX]^8, \[FormalX], 3]
+500	strongly triple-free set constant	none	28	not found	0			1.000e+00	0	1.1	nan	False	
+501	best lower bound for the Steiner ratio rho_3, the least upper bound on the ratio of the length of the Steiner minimal tr	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+502	(1/16)*Pi^2	special	64	exact	4	x	NEG, ARCTAN, SQR	3.600e-16	0	1.1	64.0	True	Gamma[3/2]^4
+503	-1/(e^2 Ei(-1)), an increasing rooted tree enumeration constant associated with the Euler-Gompertz constant, where Ei is	special	64	not found	0			1.000e+00	0	1.1	nan	False	-1/(E^2*ExpIntegralEi[-1])
+504	Lenz-Ising constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	1 + Pi/4 + Log[(Log[1 + Sqrt[2]]*Sqrt[2])/4]
+505	Cbrt[3/4π]	elementary	64	exact	7	THREE, x, INV, POWER, TAN	THREE, SQRT	7.159e-16	0	1.1	64.0	True	CubeRoot[3/(4*Pi)]
+506	1/(theta*P'(theta)), a constant appearing in the asymptotic evaluation of the coefficients q_n in 1/(1+P(x)), where P(x)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+507	'kappa', an asymptotic enumeration constant related to unit interval graphs	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+508	Golomb–Dickman constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Integrate[E^LogIntegral[\[FormalX]], {\[FormalX], 0, 1}]
+509	constant in Kac's formula	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+510	'lambda', a constant such that exp(lambda*Pi) is the best-known upper bound (as given by Julian Gevirtz) of the John con	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+511	Davison-Shallit constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`DavisonShallitConstant == Sum[(-1)^\[FormalK]/(Subscript[\[FormalQ], \[FormalK]]*Subscript[\[FormalQ], 1 + \[FormalK]]), {\[FormalK], 0, Infinity}], Subscript[\[FormalQ], 0] == 1 && Subscript[\[FormalQ], 1] == 1 && Subscript[\[FormalQ], \[FormalK]] == Subscript[\[FormalQ], -2 + \[FormalK]]*(1 + Subscript[\[FormalQ], -1 + \[FormalK]])]
+512	rayleigh skewness	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	2*Sqrt[Pi]*(Pi - 3)/(4 - Pi)^(3/2)
+513	1 - 1/e	elementary	64	exact	5	x	NEG, EXP, ONE, SUBTRACT	7.025e-16	0	1.1	64.0	True	1 - 1/E
+514	Hardy-Littlewood constant Product_{p prime >= 5} (1-(3*p-1)/(p-1)^3)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+515	Buffon constant	elementary	64	exact	4	x	ONE, ARCSIN, INV	5.232e-16	0	1.1	64.0	True	2/Pi
+516	(2^(1/3)-1)^(1/3)	algebraic	64	exact	9	THREE, x, POWER, ONE, PLUS	THREE, INV, TWO, POWER	1.044e-15	0	1.1	64.0	True	Power[Power[2, (3)^-1] - 1, (3)^-1]
+517	an analog of the Landau-Ramanujan constant for Loeschian numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+518	first non-alternating series of reciprocal primes constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[Piecewise[{{-1, Mod[Prime[\[FormalK]], 3] == 1}, {1, Mod[Prime[\[FormalK]], 3] == 2}}, 0]/Prime[\[FormalK]], {\[FormalK], 1, Infinity}]
+519	Cahen's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`CahenConstant == Sum[(-1)^\[FormalK]/(-1 + \[FormalS][\[FormalK]]), {\[FormalK], 0, Infinity}], \[FormalS][0] == 2 && \[FormalS][\[FormalN]] == 1 - \[FormalS][-1 + \[FormalN]] + \[FormalS][-1 + \[FormalN]]^2 && \[FormalS][\[FormalN]] == 1 + Product[\[FormalS][\[FormalK]], {\[FormalK], 0, -1 + \[FormalN]}]]
+520	a constant related to a conjectured value of the Masser-Gramain constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi/4*(2*EulerGamma + 2*Log[2] + 3*Log[Pi] - 4*Log[Gamma[1/4]])
+521	Integral_{x=0..Infinity} sin(x)/(x^2+1) dx	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+522	unit-diameter hexagon area	algebraic	64	exact	6	x	THREE, TWO, ARCCOSH, TANH, POWER	0.000e+00	0	1.1	64.0	True	(3*Sqrt[3])/8
+523	Maximal unitary square-free divisor sum constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+524	delta = (1+alpha)/4, a constant appearing in Koecher's formula for Euler's gamma constant, where alpha is A065442, the E	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+525	negative of Granville-Soundararajan constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(4*PolyLog[2, -Sqrt[E]] + Pi^2/3 + 1)
+526	harmonic power tower even term limit	special	64	not found	0			1.000e+00	0	1.1	nan	False	Limit[Fold[(1/#2)^#1 & , 1, Table[\[FormalI], {\[FormalI], 2*\[FormalN], 2, -1}]], \[FormalN] -> Infinity]
+527	escape probability for a random walk on the 3-D cubic lattice (a Polya random walk constant)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+528	Twin primes constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - (-1 + Prime[\[FormalK]])^(-2), {\[FormalK], 2, Infinity}]
+529	Feller–Tornier constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	1/2 + Product[1 - 2/Prime[n]^2, {n, 1, Infinity}]/2
+530	Robbins constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(4 + 17*Sqrt[2] - 6*Sqrt[3] - 7*Pi)/105 + Log[1 + Sqrt[2]]/5 + (2*Log[2 + Sqrt[3]])/5
+531	Laplace limit	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{-1 + E^Sqrt[1 + #1^2]*#1 - Sqrt[1 + #1^2] & , 0.6627434193491815809747420971092529070562335491150224175204`30.}]
+532	twothirds	rational	64	exact	4	x	THREE, TWO, DIVIDE	8.327e-16	0	1.1	64.0	True	2/3
+533	3/2 - gamma / log(2), a coin tossing constant related to the asymptotic evaluation of the expected length of the longest	special	64	not found	0			1.000e+00	0	1.1	nan	False	3/2 - EulerGamma/Log[2]
+534	Shanks constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Pi^2*Product[Piecewise[{{((1 - 4/Prime[\[FormalK]])*(1 + Prime[\[FormalK]])^2)/(-1 + Prime[\[FormalK]])^2, Mod[Prime[\[FormalK]], 8] == 1}}, 1], {\[FormalK], 1, Infinity}])/(16*Log[1 + Sqrt[2]])
+535	sqrt(3)/(4 - sqrt(2))	algebraic	64	exact	8	x, THREE, SQRT, DIVIDE	TWO, SQRT, FOUR, SUBTRACT	2.818e-15	0	1.1	64.0	True	Sqrt[3]/(4-Sqrt[2])
+536	gamma_2, a lattice sum constant, analog of Euler's constant for two-dimensional lattices	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+537	probable error constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	InverseErf[1/2]*Sqrt[2]
+538	Graham biggest little hexagon area	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[11993 - 78488*#1 + 144464*#1^2 + 1232*#1^3 - 221360*#1^4 + 146496*#1^5 + 21056*#1^6 - 30848*#1^7 - 3008*#1^8 + 8192*#1^9 + 4096*#1^10 & , 5]
+539	generalized Euler constant gamma(1,3)	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma/3 + Pi*Sqrt[3]/18 + Log[3]/6
+540	Taniguchi constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - Prime[n]^(-6) + Prime[n]^(-5) + 2/Prime[n]^4 - 3/Prime[n]^3, {n, 1, Infinity}]
+541	1 - 1/Pi	elementary	64	exact	5	x	PI, INV, ONE, SUBTRACT	1.629e-16	0	1.1	64.0	True	1 - 1/Pi
+542	positive solution to the equation x/(1-x) = 1+log(1/(1-x)), an auxiliary constant associated with the problem of enumera	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+543	log e^(π/2)	elementary	64	exact	8	x, PI, DIVIDE	NEG, NINE, SUBTRACT, SQR, LOG	1.627e-16	0	1.1	64.0	True	Log10[E^(Pi/2)]
+544	one div cbrt pi	elementary	64	exact	5	THREE, x, POWER	PI, INV	3.252e-16	0	1.1	64.0	True	Pi^(-1/3)
+545	least x>0 having sin(4x) = (sin x)^2	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+546	Integral_{x=0..1} log(floor(1/x))/(1+x) dx	special	64	not found	0			1.000e+00	0	1.1	nan	False	Log[2]*Log[Khinchin]
+547	-x, the real root of the equation 0 = 1 + Sum_{k>=1} prime(k) x^k. The inverse of Backhouse's constant (A072508)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+548	harmonic power tower odd term limit	special	64	not found	0			1.000e+00	0	1.1	nan	False	Limit[Fold[(1/#2)^#1 & , 1, Table[\[FormalI], {\[FormalI], 1 + 2*\[FormalN], 2, -1}]], \[FormalN] -> Infinity]
+549	reciprocal of Steiner number	elementary	64	exact	5	x, LOG	EULER, NEG, DIVIDE	4.812e-16	0	1.1	64.0	True	E^(-E^(-1))
+550	Sum_{k=1..50000} (-1)^(k+1) / k	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[(-1)^(k + 1)/k, {k, 1, 50000}]
+551	Natural logarithm of 2	elementary	64	exact	3	x	TWO, LOG	1.602e-16	0	1.1	64.0	True	Log[2]
+552	rank-2 Artin constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 1/((-1 + Prime[\[FormalK]])*Prime[\[FormalK]]^2), {\[FormalK], 1, Infinity}]
+553	First continued fraction constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	BesselI[1, 2]/BesselI[0, 2]
+554	log10(5)	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	FIVE	1.588e-16	0	1.1	64.0	True	Log[10, 5]
+555	probability that a point of an infinite (rooted) tree is fixed by every automorphism of the tree	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+558	Integral_{x = 1..infinity} 1/x^x dx	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+559	carefree product constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 1/(Prime[\[FormalK]]*(1 + Prime[\[FormalK]])), {\[FormalK], 1, Infinity}]
+560	rectilinear crossing constant	elementary	64	exact	9	x, ONE, SUBTRACT	PI, SQR, SIX, LOG, SINH, DIVIDE	1.576e-16	0	1.1	64.0	True	1 - 35/(12*Pi^2)
+561	'C' (as designated by D. Shanks), a constant appearing in the second order term of the asymptotic expansion of the numbe	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+562	K, a constant arising in the analysis of the binary Euclidean algorithm	none	40	not found	0			1.000e+00	0	1.1	nan	False	
+563	sqrt(1/2)	algebraic	64	exact	4	x	ONE, ARCTAN, SIN	4.710e-16	0	1.1	64.0	True	1/Sqrt[2]
+564	rabbit constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[2^(-Floor[\[FormalK]*GoldenRatio]), {\[FormalK], 1, Infinity}]
+565	generalized Euler constant gamma(1,4)	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma/4 + Pi/8 + Log[2]/4
+566	Hopf constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	6/Pi^2 + Integrate[3/\[FormalTheta]^2 - (1 - \[FormalTheta]*Cot[\[FormalTheta]])^(-1), {\[FormalTheta], 0, Pi/2}]/Pi
+567	1/(phi*log(4 - phi))	elementary	64	exact	8	x, INV, EXP	GOLDENRATIO, GOLDENRATIO, FOUR, SUBTRACT, POWER	1.559e-16	0	1.1	64.0	True	(GoldenRatio Log[4-GoldenRatio])^(-1)
+568	Traveling Salesman constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	4/153*(1 + 2*Sqrt[2])*Sqrt[51]
+569	e^(-1/3)	elementary	64	exact	5	x	THREE, INV, EXP, INV	7.747e-16	0	1.1	64.0	True	E^(-1/3)
+570	constant appearing in the expected number of comparisons for a successful digital tree search (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+571	1/(2 log 2)	elementary	64	exact	4	x, INV	FOUR, LOG	3.078e-16	0	1.1	64.0	True	1/(2Log[2])
+572	k2, a Diophantine approximation constant such that the area of the "critical parallelogram" (in this case a square) is 4	algebraic	64	exact	5	x	FIVE, SQRT, GOLDENRATIO, DIVIDE	9.206e-16	0	1.1	64.0	True	(1+1/Sqrt[5])/2
+573	Sarnak constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - (2 + Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 2, Infinity}]
+574	Langford constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	97/150 + Pi/40
+575	constant that appears in the asymptotic formula for average order of the infinitary divisors sum function (A049417)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+576	a constant related to the asymptotic evaluation of Product_{p prime congruent to 1 modulo 4} (1 + 1/p)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+577	sum_{n>=1} 1/binomial(2n, n)	elementary	64	exact	10	THREE, x, NINE, TIMES, SUBTRACT	TWO, ARCCOSH, TANH, PI, DIVIDE	9.046e-16	0	1.1	64.0	True	1/3 + 2*Sqrt[3]*Pi/27
+579	1/Gamma(2/3)	special	64	false positive	11	FOUR, SQR, TANH, x, TIMES	THREE, INV, ONE, SUBTRACT, GAMMA, INV	1.052e-15	0	1.1	13.6	True	1/Gamma[2/3]
+580	Dottie number	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{Cos[#1] - #1 & , 0.7390851332151606416553120876738734040134117589007574649656`30.}]
+581	densest spatial packing of spheres constant	elementary	64	exact	7	x	PI, SIX, DIVIDE, TWO, SQRT, DIVIDE	0.000e+00	0	1.1	64.0	True	Pi/(3*Sqrt[2])
+582	Rosser constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(8*Catalan)/Pi^2
+583	Sarnak product constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(5*Pi^2*Product[1 - (2 + Prime[\[FormalK]])/Prime[\[FormalK]]^3, {\[FormalK], 2, Infinity}])/48
+584	s_4, a 4-dimensional Steiner ratio analog	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+585	B, the coefficient of n*log(n)^2 in the asymptotic formula of Ramanujan for Sum_{k=1..n} (d(k)^2), where d(k) is the num	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+586	Rényi parking constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Integrate[Exp[-2*(EulerGamma + Gamma[0, \[FormalT]] + Log[\[FormalT]])], {\[FormalT], 0, Infinity}]
+587	exp(-gamma/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[-EulerGamma/2]
+588	three quarters	rational	64	exact	4	x	FOUR, THREE, DIVIDE	0.000e+00	0	1.1	64.0	True	3/4
+589	pi^(-1/4)	elementary	64	exact	5	x	PI, INV, SQRT, SQRT	0.000e+00	0	1.1	64.0	True	Pi^(-1/4)
+590	Sum_{n>=1} (-1)^(n-1)*H(n)/n^2, where H(n) is the n-th harmonic number	special	64	not found	0			1.000e+00	0	1.1	nan	False	5*Zeta[3]/8
+591	linear asymptotic constant B in Sum_{k=1..n} 1/A000688(k) = ~B*n + 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+592	Flajolet-Odlyzko constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Integrate[1 - E^(ExpIntegralEi[-\[FormalT]]/2), {\[FormalT], 0, Infinity}]
+593	constant appearing in the variance for inserting in a digital tree	special	64	false positive	8	FOUR, LOG, INV, x, SUBTRACT	FIVE, GAMMA, INV	4.365e-16	0	1.1	22.7	True	1/Log[4] + 1/24 + (4*Pi^2/Log[2]^2)*Sum[DivisorSigma[1, n]*Exp[-4*Pi^2*n/Log[2]], {n, 1, 6}]
+594	Landau-Ramanujan constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[((4^2^\[FormalK]*(1 - 2^(-2^\[FormalK]))*Zeta[2^\[FormalK]])/(Zeta[2^\[FormalK], 1/4] - Zeta[2^\[FormalK], 3/4]))^2^(-1 - \[FormalK]), {\[FormalK], 1, Infinity}]/Sqrt[2]
+595	analog of the Mertens constant B_2 in the asymptotic series for the variance of the number of prime factors Omega	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+596	binary Liouville number	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[1/2^(n!), {n, Infinity}]
+597	-x, where x is the negative solution to the equation 2^x = x^2	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+598	Sum_{k>1} 1/(k*(k-1)*zeta(k)), a constant related to Niven's constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+599	C = 2^(1/3)*e^(1/4)/A^3, a constant associated with the Gaudin-Mehta probability distribution and the Glaisher-Kinkelin 	special	64	not found	0			1.000e+00	0	1.1	nan	False	2^(1/3)*E^(1/4)/Glaisher^3
+600	trace of the Ruelle-Mayer linear operator G_2	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+601	Sum_{p prime} 1/(p*(p-1))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+602	Flajolet-Martin constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(E^EulerGamma*Product[(1 + 1/(2*\[FormalK]))^(-1)^Mod[DigitCount[\[FormalK], 2, 1], 2], {\[FormalK], 1, Infinity}])/Sqrt[2]
+603	Pi*G - 7*zeta(3)/4, where G = A006752	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi Catalan-7Zeta[3]/4
+604	lambda_3, an analog of the Stolarsky-Harborth constant for the number of elements not divisible by 3 in Pascal's triangl	none	64	exact	10	x, TWO, TIMES, LOG	THREE, LOG, TWO, LOG, SQR, DIVIDE	1.434e-16	0	1.1	64.0	True	
+605	strongly carefree product constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - (1 + Prime[\[FormalK]])^(-2), {\[FormalK], 1, Infinity}]
+606	Bender r constant	none	51	not found	0			1.000e+00	0	1.1	nan	False	
+607	hypercube line-picking constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(-644 + 1344*Catalan + 3744*ArcCsch[Sqrt[2]] + 270*ArcSinh[1] - 3024*Im[PolyLog[2, I*(3 - 2*Sqrt[2])]] + 1773*Log[3] + 84*(PolyGamma[1, 1/12] + PolyGamma[1, 5/12]) + (6048*I)*(PolyLog[2, (1/2 - I/2)*(-2 + Sqrt[2])] - PolyLog[2, (1/2 + I/2)*(-2 + Sqrt[2])]) + (6048*I)*(PolyLog[2, I*(1 - Sqrt[2])] - PolyLog[2, I*(-1 + Sqrt[2])]) + 438*Sqrt[2] - 2448*ArcCot[2*Sqrt[2]]*Sqrt[2] - 189*(PolyGamma[1, 1/8] + PolyGamma[1, 3/8])*Sqrt[2] + 12*Pi*(-16 + 7*Pi*(-8 + 9*Sqrt[2])) + 288*Sqrt[3])/3780
+608	6/(Pi^2 A086724)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+609	log10(6)	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	SIX	2.853e-16	0	1.1	64.0	True	Log[10, 6]
+610	Purdom-Williams constant, a constant related to the Golomb-Dickman constant and to the asymptotic evaluation of the expe	none	64	false positive	11	SEVEN, SIN, x, SUBTRACT, TAN	FIVE, COS, TANH, LOG, FIVE, POWER	5.108e-15	0	1.1	14.3	True	
+611	first Bernoulli sophomore dream constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-Sum[(-\[FormalK])^(-\[FormalK]), {\[FormalK], 1, Infinity}]
+612	(sqrt(3) + sqrt(5) + 2*sqrt(6))/(8*sqrt(2))	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(Sqrt[3]+Sqrt[5]+2Sqrt[6])/(8Sqrt[2])
+613	(3*sqrt(3)+sqrt(7))/10	algebraic	64	exact	10	x, INV, ARCCOSH, TWO, TIMES	TWO, ARCCOSH, EIGHT, ARCCOSH, SUBTRACT	5.663e-16	0	1.1	64.0	True	(3*Sqrt[3]+Sqrt[7])/10
+614	Integral_{x = 0 to oo} Product_{m=1..oo} cos(x/m) dx	none	39	not found	0			1.000e+00	0	1.1	nan	False	
+615	pi/4	elementary	64	exact	3	x	ONE, ARCTAN	1.131e-15	0	1.1	64.0	True	Pi/4
+616	Lüroth constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[Log[\[FormalK]/(-1 + \[FormalK])]/\[FormalK], {\[FormalK], 2, Infinity}]
+617	asymptotic constant eta for counts of weakly binary trees	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+618	Lal's constant: the Hardy-Littlewood constant for A217795	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+619	Kolakoski constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+620	root two div pi	elementary	64	exact	5	x	ONE, ARCSIN, SQRT, INV	1.391e-16	0	1.1	64.0	True	Sqrt[2/Pi]
+621	log 2π	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	PI, PI, PLUS	1.391e-16	0	1.1	64.0	True	Log10[2*Pi]
+622	Product_{n>1} (1 - 1/n^2)^(1/n)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+624	unique real solution of the equation Ei(x)-gamma-log(x) = 1, where Ei is the exponential integral function and gamma the	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+625	disk half-area offset constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{Pi - 4*ArcCos[#1/2] + #1*Sqrt[4 - #1^2] & , 0.8079455065990344186379234801330000000000000000000000000001`29.907382069955993}]
+626	Solomon parking constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Integrate[(1 + 2*\[FormalX])*Exp[-2*(-1 + \[FormalX] + Exp[-\[FormalX]])]*Exp[-2*(EulerGamma - ExpIntegralEi[-\[FormalX]] + Log[\[FormalX]])], {\[FormalX], 0, Infinity}]
+627	Alladi-Grinstead constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[-1 - Sum[Log[1 - \[FormalK]^(-1)]/\[FormalK], {\[FormalK], 2, Infinity}]]
+628	product_{n>=1} (n/(n+1))^((-1)^t(n-1)), a probabilistic counting constant, where t(n) = A010060(n) is the Thue-Morse seq	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+629	'mu', a Young-Fejér-Jackson constant linked to the positivity of certain sine sums	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+630	(1 + sqrt(6))/(3*sqrt(2))	algebraic	64	exact	9	THREE, SQRT, x, TIMES	SIX, INV, SQRT, ONE, PLUS	2.731e-16	0	1.1	64.0	True	(1+Sqrt[6])/(3Sqrt[2])
+631	1/Gamma(3/4)	special	64	exact	8	x, INV	FOUR, THREE, ARCTAN, TAN, DIVIDE, GAMMA	4.081e-16	0	1.1	64.0	True	1/Gamma[3/4]
+632	sum_{n>=0} 1/2^(2^n)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[1/2^(2^n), {n, 0, Infinity}]
+633	a2, the second of two constants associated with Djokovic's conjecture on an integral inequality	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+634	First Nielsen-Ramanujan constant	elementary	64	exact	6	x	THREE, NEG, ARCSIN, SQR, DIVIDE	1.350e-16	0	1.1	64.0	True	Pi^2/12
+635	Sierpiński constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*EulerGamma + 2*Log[2] + 3*Log[Pi] - 4*Log[Gamma[1/4]]
+636	sigma_3, a Turán's Power Sum Constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+637	Prouhet-Thue-Morse constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 - Product[(-1 + 2^2^\[FormalK])/2^2^\[FormalK], {\[FormalK], 0, Infinity}]/2
+638	Pi/8 + sqrt(3)/4	elementary	64	exact	7	x, FOUR, TIMES, SIN, ARCCOS	THREE, SQRT	1.345e-16	0	1.1	64.0	True	Pi/8+Sqrt[3]/4
+639	asymptotic efficiency constant	elementary	64	exact	8	x, PI, TIMES	FOUR, INV, SEVEN, SUBTRACT, SQRT	1.342e-16	0	1.1	64.0	True	(3*Sqrt[3])/(2*Pi)
+640	1/zeta(3)	special	64	not found	0			1.000e+00	0	1.1	nan	False	1/Zeta[3]
+641	Rosser's constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+642	Gauss's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ArithmeticGeometricMean[1, Sqrt[2]]^(-1)
+643	Baker constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(Log[2] + Pi/Sqrt[3])/3
+645	Shepp's constant 'alpha', an optimal stopping constant associated with the case of a zero mean and unit variance distrib	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+646	2*G/(Pi*log(2)), a constant appearing in the average root bifurcation ratio of binary trees, where G is Catalan's consta	special	64	not found	0			1.000e+00	0	1.1	nan	False	2 Catalan/(Pi*Log[2])
+647	sin one	elementary	64	exact	3	x	ONE, SIN	2.639e-16	0	1.1	64.0	True	Sin[1]
+648	reciprocal of the Khinchin-Lévy constant	elementary	64	exact	7	x	NEG, ARCSIN, SQR, EIGHT, LOG, DIVIDE	2.635e-16	0	1.1	64.0	True	(12*Log[2])/Pi^2
+650	log10(7)	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	SEVEN	1.314e-16	0	1.1	64.0	True	Log[10, 7]
+651	3/(2*sqrt(Pi))	elementary	64	exact	6	PI, x, TIMES, SQR, TAN	ONE	2.624e-15	0	1.1	64.0	True	3/(2*Sqrt[Pi])
+652	ubiquitous constant	special	64	exact	11	PI, SQRT, x, TIMES, SQRT	FOUR, THREE, ARCTAN, TAN, DIVIDE, GAMMA	1.310e-16	0	1.1	64.0	True	(2*Pi^(3/2))/Gamma[1/4]^2
+653	Regular paperfolding sequence	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[8^2^n/(-1 + 2^2^(2 + n)), {n, 0, Infinity}]
+654	maximal quantum success probability of the CHSH game	algebraic	64	exact	6	x	EIGHT, PI, DIVIDE, COS, SQR	7.804e-16	0	1.1	64.0	True	Cos[Pi/8]^2
+655	1/(2*K^2) = Product_(p prime congruent to 3 modulo 4) (1 - 1/p^2), where K is the Landau-Ramanujan constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+656	rank-3 Artin constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 1/((-1 + Prime[\[FormalK]])*Prime[\[FormalK]]^3), {\[FormalK], 1, Infinity}]
+657	four minus pi	elementary	64	exact	4	x, TAN	FOUR, TAN	1.293e-16	0	1.1	64.0	True	4 - Pi
+658	Champernowne base-2 constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ChampernowneNumber[2]
+659	Steiner ratio of the Euclidean plane	algebraic	64	exact	4	x	TWO, ARCCOSH, TANH	7.692e-16	0	1.1	64.0	True	Sqrt[3]/2
+660	log(4 - phi), where phi = A001622	elementary	64	exact	5	x, EXP	GOLDENRATIO, FOUR, SUBTRACT	1.279e-16	0	1.1	64.0	True	Log[4-GoldenRatio]
+661	log e^2	elementary	64	exact	6	x, INV, EXP, ARCCOSH	THREE, ARCSINH	2.556e-16	0	1.1	64.0	True	Log10[E^2]
+662	sqrt(Pi)/(2K)*exp(-gamma/2) where K is the Landau-Ramanujan constant and gamma the Euler-Mascheroni constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+663	square edge line-picking constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(2 + 5*Log[1 + Sqrt[2]] + Sqrt[2])/9
+664	integral_{0..infinity} exp(-x^2)*log(x) dx	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(-(1/4)*Sqrt[Pi]*( EulerGamma + 2*Log[2]))
+666	product_{n>=1} (2n/(2n+1))^((-1)^t(n-1)), a probabilistic counting constant, where t(n) = A010060(n) is the Thue-Morse s	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+667	total area of Ford circles	special	64	not found	0			1.000e+00	0	1.1	nan	False	(45*Zeta[3])/(2*Pi^3)
+668	(5/18)*Pi	elementary	64	exact	6	x, THREE, TIMES, SIN	TWO, INV	1.272e-16	0	1.1	64.0	True	5Pi/18
+669	a constant related to the asymptotic counting function of numbers of the form x^2 + 2*y^2 (A002479)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+670	Integral_{x=0..Pi/2} sin(x)^(3/2) dx	special	64	not found	0			1.000e+00	0	1.1	nan	False	1/3*Sqrt[2]*EllipticK[1/2]
+671	sqrt(2)/phi, where phi = (1+sqrt(5))/2	algebraic	64	exact	5	x	GOLDENRATIO, TWO, SQRT, DIVIDE	8.892e-16	0	1.1	64.0	True	Sqrt[2]/GoldenRatio
+672	sum of reciprocal perfect powers (excluding 1)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+673	average length of a line segment picked at random in a unit 5-cube	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+674	an Ising constant related to the triangular lattice	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+675	quadratic class number constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 1/(Prime[\[FormalK]]^2*(1 + Prime[\[FormalK]])), {\[FormalK], 1, Infinity}]
+676	positive minimum of the gamma function	special	64	false positive	11	EULER, LOG, GAMMA, x, TIMES	NINE, ARCSINH, ARCSINH, GAMMA, COSH, GAMMA	2.382e-15	0	1.1	13.9	True	Gamma[Root[{PolyGamma[0, #1] & , 1.46163214496836234126265954233`29.164838085677864}]]
+677	sqrt(Pi)/2	elementary	64	exact	4	x, SQR	ONE, ARCTAN	6.264e-16	0	1.1	64.0	True	Sqrt[Pi]/2
+678	exp(gamma)/2	special	64	not found	0			1.000e+00	0	1.1	nan	False	E^EulerGamma/2
+679	reciprocal sum of integer powers constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[-1 + Zeta[Prime[\[FormalK]]], {\[FormalK], 1, Infinity}]
+680	Gamma(4/3)	special	64	exact	8	x, THREE, TIMES	THREE, ARCTAN, TAN, INV, GAMMA	3.730e-16	0	1.1	64.0	True	Gamma[4/3]
+681	Product_{p prime, p == 1 (mod 4)} (1 - 2/p^2)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+682	'delta', a constant arising in the asymptotics of the regularized product of the Fibonacci numbers	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+683	Gamma(5/3)	special	64	exact	7	x	THREE, LOG, ARCTAN, TAN, COSH, GAMMA	3.444e-15	0	1.1	64.0	True	Gamma[5/3]
+684	log10(8)	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	EIGHT	2.459e-16	0	1.1	64.0	True	Log[10, 8]
+685	disk line-picking constant	elementary	64	exact	10	ONE, ARCTAN, x, TIMES	TWO, LOG, TANH, NINE, INV, PLUS	8.583e-16	0	1.1	64.0	True	128/(45*Pi)
+686	Gamma(5/4)	special	64	exact	7	x	TWO, ARCTAN, SIN, SQR, INV, GAMMA	4.165e-15	0	1.1	64.0	True	Gamma[5/4]
+687	densest planar packing of circles constant	elementary	64	exact	6	x, THREE, SQRT, TIMES	ONE, ARCSIN	2.448e-16	0	1.1	64.0	True	Pi/(2*Sqrt[3])
+688	value of x such that K(x) = 2E(x)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+689	(sqrt(Pi)/(2^(1/4)*Gamma(5/8)*Gamma(7/8)))^2	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Pi/Sqrt[2])*(1/(Gamma[5/8]*Gamma[7/8]))^2
+690	(1 + sqrt(3))/3	algebraic	64	exact	7	x	THREE, INV, SQRT, THREE, INV, PLUS	8.534e-16	0	1.1	64.0	True	(1+Sqrt[3])/3
+691	Catalan's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Catalan
+692	log root two pi	elementary	64	exact	6	x, EXP	PI, PI, PLUS, SQRT	6.041e-16	0	1.1	64.0	True	Log[Sqrt[2*Pi]]
+693	Gamma(7/4)	special	64	exact	7	x	FOUR, SEVEN, DIVIDE, TANH, ARCTANH, GAMMA	6.040e-15	0	1.1	64.0	True	Gamma[7/4]
+694	position of the positive real maximum of Dawson's integral D_+(x)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+695	cube face line-picking constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(4 - 7*Pi + 21*Log[1 + Sqrt[2]] + 42*Log[2 + Sqrt[3]] + 17*Sqrt[2] - 6*Sqrt[3])/75
+696	Product_{n>=1} (1 - 1/(4n+1)^2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 1/(4 n + 1)^2, {n, 1, Infinity}]
+697	an Ising constant related to the random coloring problem	special	64	not found	0			1.000e+00	0	1.1	nan	False	Log[2]/2 + 2*Catalan/Pi
+698	rank-4 Artin constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 - 1/((-1 + Prime[\[FormalK]])*Prime[\[FormalK]]^4), {\[FormalK], 1, Infinity}]
+699	-zeta'(2) (the first derivative of the zeta function at 2)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+700	(4K/Pi)^2 where K is the Landau-Ramanujan constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+701	Pi*(1+sqrt(2))/8	elementary	64	exact	8	x, PI, DIVIDE	ONE, ARCSINH, EXP, EIGHT, DIVIDE	0.000e+00	0	1.1	64.0	True	Pi*(1+Sqrt[2])/8
+702	log10(9)	elementary	64	exact	6	x, NEG, NINE, SUBTRACT, POWER	NINE	1.513e-15	0	1.1	64.0	True	Log[10, 9]
+703	3/π	elementary	64	exact	4	x	PI, THREE, DIVIDE	4.650e-16	0	1.1	64.0	True	3/Pi
+704	Magic angle	elementary	64	exact	4	x, TAN	TWO, SQRT	3.486e-16	0	1.1	64.0	True	ArcCos[1/Sqrt[3]]
+705	(log(2) + Pi)/4	elementary	64	exact	7	x, FOUR, TIMES, TAN	TWO, LOG, TAN	4.632e-16	0	1.1	64.0	True	(Log[2]+Pi)/4
+706	a limit associated with the asymptotic number of ways of writing a number as a sum of powers of 2, with each power used 	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	3^(Log[GoldenRatio]/Log[2]) / Sqrt[5]
+707	a constant related to the asymptotic expansion of the Lebesgue constant corresponding to the n-th Chebyshev polynomial	special	64	not found	0			1.000e+00	0	1.1	nan	False	2/Pi*(3*Log[2] - Log[Pi] + EulerGamma)
+708	L(3, chi4), where L(s, chi4) is the Dirichlet L-function for the non-principal character modulo 4	elementary	64	exact	7	ONE, ARCSIN, x, DIVIDE	NEG, ARCTAN, SQR	4.583e-16	0	1.1	64.0	True	Pi^3/32
+709	Lochs constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	6*Log[2]*Log[10]/Pi^2
+710	4*K/Pi, a constant appearing in the asymptotic evaluation of the number of non-hypotenuse numbers not exceeding a given 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+711	log 3π	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	PI, THREE, TIMES	4.558e-16	0	1.1	64.0	True	Log10[3*Pi]
+712	Elbert constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`ElbertConstant == 1 + E^\[FormalU] - (\[FormalV]*E^\[FormalU])/2 + E^(\[FormalU] + \[FormalV]/2) - E^\[FormalV], E^\[FormalU] + 2*E^(\[FormalU] + \[FormalV]/2) + E^(\[FormalV]/2) + E^(\[FormalU] + \[FormalV]) == 2*E^\[FormalV] + E^((3*\[FormalV])/2) && 1 + (1 + \[FormalU] - \[FormalV])*E^\[FormalU] + 2*E^(\[FormalU] + \[FormalV]/2) == 2*E^\[FormalV] && -1/3 < \[FormalU] < 0 && 1/3 < \[FormalV] < 1]
+713	4*sqrt(2) - 6*sqrt(6)/Pi	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	4Sqrt[2]-6Sqrt[6]/Pi
+714	generalized Glaisher-Kinkelin constant A(3)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[-11/720 - Zeta'[-3]]
+715	a parking constant related to the asymptotic expected number of cars, assuming random car lengths	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+716	a constant related to the asymptotic evaluation of Product_{p prime congruent to 3 modulo 4} (1 + 1/p)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+717	ln(Gamma(1/3))	special	64	exact	7	x, EXP	THREE, ARCTAN, TAN, INV, GAMMA	0.000e+00	0	1.1	64.0	True	LogGamma[1/3]
+718	Reuleaux triangle square cutting fraction	elementary	64	exact	11	x, THREE, TIMES, COS, ARCSIN	THREE, SQRT, SIX, TIMES, NINE, SUBTRACT	1.124e-16	0	1.1	64.0	True	-3 + Pi/6 + 2*Sqrt[3]
+719	logarithm of Khinchin constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Log[Khinchin]
+720	phi(0), an auxiliary constant associated with Shapiro's cyclic sum constant lambda	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+721	Asymptotic behavior of Lebesgue constants	special	64	not found	0			1.000e+00	0	1.1	nan	False	(-4*PolyGamma[0, 1/2])/Pi^2 + (8*Sum[Log[k]/(-1 + 4*k^2), {k, 1, Infinity}])/Pi^2
+722	generalized Glaisher-Kinkelin constant A(4)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[-3*Zeta[5]/(4*Pi^4)]
+723	log π^2	elementary	64	exact	7	x, INV, PI, POWER	THREE, ARCSINH, COSH	5.583e-16	0	1.1	64.0	True	Log10[Pi^2]
+724	Ramanujan's first continued fraction constant	elementary	64	false positive	9	x, TWO, DIVIDE	PI, TANH, LOG, TANH, TWO, SUBTRACT	1.780e-15	0	1.1	16.4	True	Exp[(2*Pi)/5]*(-GoldenRatio + Sqrt[GoldenRatio*Sqrt[5]])
+725	One	rational	64	exact	2	x	ONE	0.000e+00	0	1.1	64.0	True	1
+726	'nu', a coefficient related to the variance for searching corresponding to patricia tries	none	64	false positive	7	x	FOUR, SQR, GAMMA, GOLDENRATIO, DIVIDE, EXP	1.175e-16	0	1.1	16.1	True	
+727	zeta(9)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[9]
+728	side of the equilateral triangle that can cover every triangle of perimeter 2	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+729	generalized Stirling constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+730	Pi^3/(36*sqrt(3)) + 91*zeta(3)/216	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi^3/(36*Sqrt[3])+91*Zeta[3]/216
+731	DeVicci's tesseract constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[16 + 16*#1^2 - 7*#1^4 - 28*#1^6 + 4*#1^8 & , 3, 0]
+732	zeta(7)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[7]
+733	generalized Glaisher-Kinkelin constant A(5)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[137/15120-Zeta'[-5]]
+734	Pi^3/64 + 7*zeta(3)/16	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi^3/64+7Zeta[3]/16
+735	Gieseking constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(3*Sqrt[3]*(1 - PolyGamma[1, 2/3]/9 + PolyGamma[1, 4/3]/9))/4
+736	h_3, a constant related to certain evaluations of the gamma function from elliptic integrals	special	64	not found	0			1.000e+00	0	1.1	nan	False	4*EllipticK[4*Sqrt[3]-7]/(Sqrt[2+Sqrt[3]]*Pi)
+737	2*Pi^3/(81*sqrt(3)) + 13*zeta(3)/27	special	64	not found	0			1.000e+00	0	1.1	nan	False	2Pi^3/(81Sqrt[3])+13Zeta[3]/27
+738	an Ising constant related to the hexagonal lattice	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+739	6*arcsec(sqrt(3))/Pi^(3/2), an extreme value constant	special	64	exact	11	TWO, INV, ARCSIN, x, TIMES	PI, SQRT, TWO, SQRT, ARCTAN, DIVIDE	1.294e-15	0	1.1	64.0	True	6*ArcSec[Sqrt[3]]/Pi^(3/2)
+740	e^pi/pi^e	elementary	64	exact	7	x	EULER, PI, POWER, PI, EXP, DIVIDE	1.509e-15	0	1.1	64.0	True	E^Pi/Pi^E
+741	continued fraction constant (base 10)	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	Pi^2/(6Log[2]Log[10])
+742	generalized Glaisher-Kinkelin constant A(2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[Zeta[3]/(4*Pi^2)]
+743	generalized hypergeometric function 3F2(1/2,1/2,1/2; 3/2,3/2; x) at x=1/2	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Pi*Log[2]/4 + Catalan)/Sqrt[2]
+744	Hadamard-de la Vallee-Poussin constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma + Sum[(-1 + Prime[\[FormalK]])^(-1) + Log[1 - Prime[\[FormalK]]^(-1)], {\[FormalK], 1, Infinity}]
+745	secant of 15 degrees (cosecant of 75 degrees)	algebraic	64	exact	6	x	TWO, SQRT, SIX, SQRT, SUBTRACT	5.147e-15	0	1.1	63.6	True	Sec[15 Degree]
+746	zeta(5)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[5]
+747	Landau-Kolmogorov constant C(3,1) for derivatives in the case L_infinity(-infinity, infinity)	none	64	exact	6	THREE, x, POWER	EIGHT, NINE, DIVIDE	0.000e+00	0	1.1	64.0	True	
+748	log10(11)	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	TWO, NINE, PLUS	3.411e-15	0	1.1	63.5	True	Log[10, 11]
+749	sec(phi), a constant related to the "broadworm" (or "caliper") problem	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+750	Landau-Kolmogorov constant C(5,1) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	10	FIVE, x, POWER, SIX, TIMES	NINE, FOUR, FIVE, DIVIDE, POWER	2.126e-16	0	1.1	63.7	True	
+751	li(2) = gamma + log(log(2)) + Sum_{k>=1} log(2)^k / ( k*k! )	special	64	not found	0			1.000e+00	0	1.1	nan	False	LogIntegral[2]
+752	third pi	elementary	64	exact	4	x	THREE, PI, DIVIDE	4.241e-16	0	1.1	64.0	True	Pi/3
+753	asymptotic constant in Goebel's sequence A003504	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+754	Sum_{i>=0} 1/(2*i+1)^3	special	64	not found	0			1.000e+00	0	1.1	nan	False	7 Zeta[3]/8
+755	192*K^2*G/Pi^4 = Product_{p prime congruent to 1 modulo 4} (1 + 1/p^2), where K is the Landau-Ramanujan constant and G C	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+756	1/2+2/sqrt(13), a constant related to the asymptotic evaluation of the number of self-avoiding rook paths joining opposi	algebraic	64	exact	9	TWO, INV, x, SUBTRACT, ARCTANH	THREE, TWO, DIVIDE, ARCSINH	1.053e-15	0	1.1	63.5	True	1/2 + 2/Sqrt[13]
+757	an infinite product involving the ratio of n! to its Stirling approximation	special	64	not found	0			1.000e+00	0	1.1	nan	False	Glaisher^3/(2^(7/12)*Pi^(1/4))
+758	Twelfth root of 2	algebraic	64	exact	5	SIX, x, POWER	TWO, SQRT	6.287e-16	0	1.1	63.4	True	2^(1/12)
+759	(3/4)*sqrt(2)	algebraic	64	exact	5	x	TWO, SQRT, LOG, COSH	1.465e-15	0	1.1	63.3	True	3 Sqrt[2]/4
+760	I, a constant appearing (as I^2) in the asymptotic variance of the area of the convex hull of random points in the unit 	special	64	exact	11	TWO, SQRT, x, TIMES, SQRT	FOUR, THREE, ARCTAN, TAN, DIVIDE, GAMMA	4.182e-16	0	1.1	63.5	True	Sqrt[2]*Pi^2/Gamma[1/4]^2
+761	(8*G - Pi*log(2 + sqrt(3)))/3, where G = A006752	special	64	not found	0			1.000e+00	0	1.1	nan	False	(8Catalan-Pi Log[2+Sqrt[3]])/3
+762	(gamma + log(16))/Pi	special	64	not found	0			1.000e+00	0	1.1	nan	False	(EulerGamma + Log[16])/Pi
+763	m_3, the expected number of returns to the origin in a three-dimensional random walk restricted to the region x >= y >= 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+764	Sum_{k >= 0} 1/(4*k+1)^2	special	64	not found	0			1.000e+00	0	1.1	nan	False	Catalan/2 + Pi^2/16
+765	expected number of returns to the origin of a random walk on an 8-d lattice	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+766	beta = 1.07869..., the best constant in Friedrichs' inequality in one dimension	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+767	Landau-Kolmogorov constant C(4,1) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	9	x, EIGHT, DIVIDE, SQR	SIX, GAMMA, SQRT, FIVE, TIMES	6.162e-16	0	1.1	63.4	True	
+768	c = twice the maximum of Dawson's integral, a constant used in the asymptotic evaluation of the ideal hyperbolic n-cube 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+769	zeta(4) = pi^4/90	elementary	64	exact	9	EIGHT, x, DIVIDE	SEVEN, GAMMA, PI, SQR, SQR, DIVIDE	1.641e-15	0	1.1	63.4	True	Pi^4/90
+770	6*exp(gamma)/Pi^2	special	64	not found	0			1.000e+00	0	1.1	nan	False	6*Exp[EulerGamma]/Pi^2
+771	Feller α coin-tossing constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(2*(-1 - 2/(17 + 3*Sqrt[33])^(1/3) + (17 + 3*Sqrt[33])^(1/3)))/3
+772	1/Gamma(7/4)	special	64	exact	8	x, INV	FOUR, SEVEN, DIVIDE, ARCTAN, TAN, GAMMA	6.122e-15	0	1.1	63.7	True	1/Gamma[7/4]
+773	Pi*log(2)/2	elementary	64	exact	6	x	ONE, ARCSIN, TWO, POWER, LOG	2.039e-16	0	1.1	63.4	True	Pi*Log[2]/2
+775	1/2+G/Pi, the highest limiting crest of a square wave Fourier series, where G is the Gibbs-Wilbraham constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+776	expected number of returns to the origin of a random walk on a 7-d lattice	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+777	Gamma(1/4)^4/(16*Pi^2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^4/(16Pi^2)
+778	square root of 6/5	none	64	exact	5	x, SQR	FIVE, SIX, DIVIDE	4.054e-16	0	1.1	63.4	True	
+779	a 5-dimensional analog of DeVicci's tesseract constant	algebraic	64	exact	6	x	THREE, SQRT, EIGHT, SQRT, SUBTRACT	2.025e-16	0	1.1	63.4	True	Sqrt[11-4*Sqrt[6]]
+781	ln(3)	elementary	64	exact	3	x	THREE, LOG	6.063e-16	0	1.1	63.5	True	Log[3]
+782	Paris constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`ParisConstant == Limit[(2*GoldenRatio)^\[FormalN]*(GoldenRatio - Subscript[\[FormalCapitalF], \[FormalN]]), \[FormalN] -> Infinity]/2, Subscript[\[FormalCapitalF], 1] == 1 && Subscript[\[FormalCapitalF], \[FormalN]] == Sqrt[1 + Subscript[\[FormalCapitalF], -1 + \[FormalN]]]]
+783	Lengyel constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`LengyelConstant == Limit[(2^\[FormalN]*\[FormalN]^(1 + Log[2]/3)*Subscript[\[FormalC], \[FormalN]]*Log[2]^\[FormalN])/\[FormalN]!^2, \[FormalN] -> Infinity], Subscript[\[FormalC], 1] == 1 && Subscript[\[FormalC], \[FormalN]] == Sum[StirlingS2[\[FormalN], \[FormalK]]*Subscript[\[FormalC], \[FormalK]], {\[FormalK], 1, -1 + \[FormalN]}]]
+784	log 4π	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	PI, FOUR, TIMES	4.040e-16	0	1.1	63.8	True	Log10[4*Pi]
+785	9*Sum_{k>=1} 1/(10^k-1)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+786	1/Gamma(5/4)	special	64	exact	8	x, FOUR, DIVIDE, GAMMA	FOUR, INV, GAMMA, GAMMA	8.050e-16	0	1.1	63.4	True	1/Gamma[5/4]
+788	sqrt(8/Pi)*log(2), a constant related to the asymptotic evaluation of the minimum number of one-dimensional random walks	elementary	64	exact	7	x	ONE, ARCSIN, SQRT, FOUR, LOG, DIVIDE	6.022e-16	0	1.1	64.0	True	Sqrt[8/Pi]*Log[2]
+790	1/Gamma(5/3)	special	64	exact	8	x, INV	THREE, LOG, ARCTAN, TAN, COSH, GAMMA	3.408e-15	0	1.1	64.0	True	1/Gamma[5/3]
+791	Pi/(2*sqrt(2))	none	64	exact	5	x, PI, DIVIDE	EIGHT, SQRT	7.996e-16	0	1.1	63.6	True	
+792	4*L/(3*Pi), a constant related to the asymptotic evaluation of the number of primes of the form a^2+b^4, where L is Gaus	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+793	log10(13)	elementary	64	exact	8	x, NEG, NINE, SUBTRACT, POWER	FOUR, NINE, PLUS	1.993e-16	0	1.1	64.0	True	Log[10, 13]
+794	positive real root of 3*x^4 - x^3 - x^2 - 2, a constant related to quasi-isometric mappings	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+795	Landau-Kolmogorov constant C(5,2) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	10	FIVE, FIVE, x, DIVIDE, POWER	SIX, GAMMA, SQR, EIGHT, DIVIDE	7.954e-16	0	1.1	63.5	True	
+796	expected number of returns to the origin of a random walk on a 6-d lattice	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+797	Goh-Schmutz constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-Sum[(E^\[FormalK]*ExpIntegralEi[-\[FormalK]])/\[FormalK], {\[FormalK], 1, Infinity}]
+798	Steinitz constant of the Euclidean plane	algebraic	64	exact	4	x, ARCCOSH	GOLDENRATIO, LOG	0.000e+00	0	1.1	63.6	True	Sqrt[5]/2
+799	Landau-Kolmogorov constant C(5,3) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	9	FIVE, x, POWER	TWO, FOUR, LOG, SINH, SQR, DIVIDE	1.984e-16	0	1.1	63.9	True	
+800	1/Gamma(4/3)	special	64	exact	8	x, THREE, DIVIDE, TANH	THREE, INV, GAMMA, TANH	1.190e-15	0	1.1	63.6	True	1/Gamma[4/3]
+801	2*exp(-gamma)	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Exp[-EulerGamma]
+802	zeta(7/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[7/2]
+803	2/sqrt(pi)	elementary	64	exact	5	x	ONE, ARCTAN, SQRT, INV	5.903e-16	0	1.1	63.4	True	2/Sqrt[Pi]
+805	a coefficient associated with the asymptotics of the average distance between a vertex and the root of a random rooted t	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+806	digital search tree β constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-1 + (Log[2]*QPolyGamma[0, 1, 1/2] + QPolyGamma[1, 1, 1/2])/Log[2]^2
+807	extreme value skewness	special	64	not found	0			1.000e+00	0	1.1	nan	False	12*Sqrt[6]*Zeta[3]/Pi^3
+808	a function approximation constant which is the analog of Gibbs's constant 2*G/Pi (A036793) for de la Vallée-Poussin sums	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+809	ln(pi)	elementary	64	exact	3	x	PI, LOG	5.819e-16	0	1.1	63.4	True	Log[Pi]
+810	1/sqrt(tanh(1))	elementary	64	exact	5	x	ONE, TANH, INV, SQRT	9.689e-16	0	1.1	63.5	True	1/Sqrt[Tanh[1]]
+811	Goldbach-Vinogradov constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 + (-1 + Prime[\[FormalK]])^(-3), {\[FormalK], 1, Infinity}]/2
+812	Pi^2/(16*K^2*G) = Product_{p prime congruent to 3 modulo 4} (1 + 1/p^2), where K is the Landau-Ramanujan constant and G 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+813	Second Hermite constant	algebraic	64	exact	5	x	SEVEN, INV, ARCTANH, EXP	7.692e-16	0	1.1	64.0	True	2/Sqrt[3]
+814	expected number of returns to the origin of a random walk on a 5-d lattice	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+815	cubic recurrence constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[\[FormalK]^3^(-\[FormalK]), {\[FormalK], 1, Infinity}]
+816	'xiHat', a constant used in the asymptotic evaluation of e.g.f. coefficients for the number of labeled mobiles	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+817	grazing goat constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{Pi - 2*ArcCos[1 - #1^2/2] - 2*ArcCos[#1/2]*#1^2 + #1*Sqrt[4 - #1^2] & , 1.158728473018121517828233509934`30.063981678858028}]
+818	Given the two curves y = exp(-x) and y = 2/(exp(x) + exp(x/2)), draw a line tangent to both. This sequence is the decima	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+819	expectation of the maximum of a size 5 sample from a normal (0,1) distribution	special	64	not found	0			1.000e+00	0	1.1	nan	False	5/Sqrt[Pi] - 15*ArcCsc[Sqrt[3]]/Pi^(3/2)
+820	'c', an optimal stopping constant associated with the two choice case	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+821	spanning tree constant of the square lattice	special	64	not found	0			1.000e+00	0	1.1	nan	False	4*Catalan/Pi
+822	(5 + 3*sqrt(5))/10	algebraic	64	exact	6	x	GOLDENRATIO, THREE, SUBTRACT, GOLDENRATIO, DIVIDE	1.896e-16	0	1.1	63.5	True	(5 + 3 Sqrt[5])/10
+823	sinh one	elementary	64	exact	3	x	ONE, SINH	1.889e-15	0	1.1	64.0	True	Sinh[1]
+824	Salem constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[1 + #1 - #1^3 - #1^4 - #1^5 - #1^6 - #1^7 + #1^9 + #1^10 & , 2, 0]
+825	root ln four	elementary	64	exact	4	x	FOUR, LOG, SQRT	5.658e-16	0	1.1	63.4	True	Sqrt[Log[4]]
+826	Gibbs constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(2*SinIntegral[Pi])/Pi
+827	Lévy's constant	elementary	64	exact	7	x	EIGHT, LOG, NEG, ARCSIN, SQR, DIVIDE	0.000e+00	0	1.1	63.5	True	Pi^2/(12*Log[2])
+828	Foias constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+829	2^(1/4)	algebraic	64	exact	4	x	TWO, SQRT, SQRT	9.336e-16	0	1.1	63.6	True	2^(1/4)
+830	theta_2, one of the angles associated with the bow-and-arrow configuration used in the 2-arc smallest length problem	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+831	arithmetic-geometric mean constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(2*Pi^(3/2)*Sqrt[2])/Gamma[1/4]^2
+832	real fixed point of coth(z)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{-Coth[#1] + #1 & , 1.199678640257733833916369848641`30.079064926502777}]
+833	lim_{n->infinity} ((1/log(n)^2)*Product_{2 < p < n, p prime} p/(p-2))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+834	sqrt(e^(1/e)) = 1.20194336847031	elementary	64	exact	5	x	NEG, EXP, EXP, SQRT	5.542e-16	0	1.1	63.9	True	E^(E^-1/2)
+835	Apéry's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[3]
+836	growth constant in random Fibonacci sequence	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[#1^3 + #1^2 - #1 - 2 &, 1]
+837	sqrt(A224273)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[3] Gamma[1/3]^(3/2)/(2 Pi)
+838	2/sqrt(e), a constant appearing in the expression of the asymptotic expected volume V(d) of the convex hull of randomly 	elementary	64	exact	5	x	EULER, FOUR, DIVIDE, SQRT	3.661e-16	0	1.1	63.4	True	2/Sqrt[E]
+839	12/Pi^2	elementary	64	exact	6	x	NEG, ARCSIN, SQR, THREE, DIVIDE	1.461e-15	0	1.1	63.7	True	12/Pi^2
+840	positive real root of x^4 - x - 1	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[#1^4 - #1 - 1 &, 2]
+841	Mertens constant C(5,1)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+842	Gamma(3/4)	special	64	exact	7	x	FOUR, THREE, ARCTAN, TAN, DIVIDE, GAMMA	2.174e-15	0	1.1	63.6	True	Gamma[3/4]
+843	Fibonacci factorial constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	QPochhammer[-GoldenRatio^(-2)]
+844	log10(17)	elementary	64	exact	8	x, THREE, ARCSINH, COSH, POWER	FOUR, ARCSINH, COSH	1.263e-15	0	1.1	63.6	True	Log[10, 17]
+845	Second Favard constant	elementary	64	exact	5	x	EIGHT, PI, SQR, DIVIDE	3.600e-16	0	1.1	64.0	True	Pi^2/8
+846	Feller β coin-tossing constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(2 + 4*(17 + 3*Sqrt[33])^(1/3) - (17 + 3*Sqrt[33])^(2/3))/(6 + 9*(17 + 3*Sqrt[33])^(1/3) - 3*(17 + 3*Sqrt[33])^(2/3))
+847	expected number of returns to the origin of a random walk on a 4-d lattice	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+848	Bertrand's constant	none	46	not found	0			1.000e+00	0	1.1	nan	False	
+849	root half pi	elementary	64	exact	4	x, SQR	ONE, ARCSIN	0.000e+00	0	1.1	63.9	True	Sqrt[Pi/2]
+850	Khinchin-Lévy sum constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[Log[1 + \[FormalK]]/(\[FormalK]*(1 + \[FormalK])), {\[FormalK], 1, Infinity}]
+851	Cube root of 2	algebraic	64	exact	4	THREE, x, POWER	TWO	5.287e-16	0	1.1	63.9	True	2^(1/3)
+852	limiting length appearing in the asymptotic probability involved in the "stick breaking" problem	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+853	c*sqrt(e/2), a constant associated with Dawson's integral and the asymptotic evaluation of the ideal hyperbolic n-cube v	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+854	fractal dimension of Koch snowflake	elementary	64	exact	4	x, THREE, POWER	FOUR	1.936e-15	0	1.1	63.6	True	Log[4]/Log[3]
+855	Vardi constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`VardiConstant == (Exp[Sum[2^(-1 - \[FormalK])*Log[1 + (-1 + 2*Subscript[\[FormalA], \[FormalK]])^(-2)], {\[FormalK], 1, Infinity}]]*Sqrt[6])/2, Subscript[\[FormalA], 0] == 2 && Subscript[\[FormalA], \[FormalN]] == 1 - Subscript[\[FormalA], -1 + \[FormalN]] + Subscript[\[FormalA], -1 + \[FormalN]]^2]
+856	expectation of the maximum of a size 6 sample from a normal (0,1) distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+857	constant c_0 appearing in the asymptotic evaluation of the n-th Lebesgue constant (related to Fourier series) as L_n ~ (	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+858	Ramanujan-Forsyth series constant	elementary	64	exact	4	x	ONE, ARCTAN, INV	5.232e-16	0	1.1	63.4	True	4/Pi
+859	log10(19)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	FOUR, SQR, THREE, PLUS	0.000e+00	0	1.1	63.6	True	Log[10, 19]
+860	Glaisher-Kinkelin constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Glaisher
+861	theta_1, one of the angles associated with the bow-and-arrow configuration used in the 2-arc smallest length problem	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+862	ln(Gamma(1/4))	special	64	exact	8	x, EXP	NEG, ARCSINH, TANH, SQR, SQR, GAMMA	8.620e-16	0	1.1	63.4	True	LogGamma[1/4]
+863	integral of the q-Pochhammer symbol over -1..1	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	4*Sqrt[3/23]*Pi*(2*Sinh[Sqrt[23]*Pi/6] + Sqrt[2]*Sinh[Sqrt[23]*Pi/4])/(2*Cosh[Sqrt[23]*Pi/3] - 1)
+864	second Bernoulli sophomore dream constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[\[FormalK]^(-\[FormalK]), {\[FormalK], 1, Infinity}]
+865	(4/sqrt(Pi))*exp(-gamma/2)*K where K is the Landau-Ramanujan constant and gamma the Euler-Mascheroni constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+866	Salem number of degree 38 (Mossinghoff)	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[#1^38 - #1^36 - #1^34 - #1^29 + #1^28 - #1^24 - #1^14 + #1^10 - #1^9 - #1^4 - #1^2 + 1 &, 4]
+868	Mertens constant C(5,4)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+871	Conway's constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[-6 + 3*#1 - 6*#1^2 + 12*#1^3 - 4*#1^4 + 7*#1^5 - 7*#1^6 + #1^7 + 5*#1^9 - 2*#1^10 - 4*#1^11 - 12*#1^12 + 2*#1^13 + 7*#1^14 + 12*#1^15 - 7*#1^16 - 10*#1^17 - 4*#1^18 + 3*#1^19 + 9*#1^20 - 7*#1^21 - 8*#1^23 + 14*#1^24 - 3*#1^25 + 9*#1^26 + 2*#1^27 - 3*#1^28 - 10*#1^29 - 2*#1^30 - 6*#1^31 + #1^32 + 10*#1^33 - 3*#1^34 + #1^35 + 7*#1^36 - 7*#1^37 + 7*#1^38 - 12*#1^39 - 5*#1^40 + 8*#1^41 + 6*#1^42 + 10*#1^43 - 8*#1^44 - 8*#1^45 - 7*#1^46 - 3*#1^47 + 9*#1^48 + #1^49 + 6*#1^50 + 6*#1^51 - 2*#1^52 - 3*#1^53 - 10*#1^54 - 2*#1^55 + 3*#1^56 + 5*#1^57 + 2*#1^58 - #1^59 - #1^60 - #1^61 - #1^62 - #1^63 + #1^64 + 2*#1^65 + 2*#1^66 - #1^67 - 2*#1^68 - #1^69 + #1^71 & , 3, 0]
+872	Mills' constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`MillsConstant == \[FormalX], ForAll[\[FormalN], Element[\[FormalN], Integers] && \[FormalN] > 0, Element[Floor[\[FormalX]^3^\[FormalN]], Primes]] && ForAll[Subscript[\[FormalX], 1], Subscript[\[FormalX], 1] < \[FormalX], Exists[\[FormalN], Element[\[FormalN], Integers] && \[FormalN] > 0, NotElement[Floor[Subscript[\[FormalX], 1]^3^\[FormalN]], Primes]]]]
+873	first lemniscate constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^2/(4*Sqrt[2*Pi])
+874	Khinchin mean K_{-3}	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+875	3^(1/4)	algebraic	64	exact	4	x, SQR	THREE, SQRT	0.000e+00	0	1.1	63.5	True	3^(1/4)
+876	extended twin prime conjecture constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Product[1 - (-1 + Prime[\[FormalK]])^(-2), {\[FormalK], 2, Infinity}]
+877	Plastic ratio	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(27/2 - (3*Sqrt[69])/2)^(1/3)/3 + ((9 + Sqrt[69])/2)^(1/3)/3^(2/3)
+878	pi^(1/4)	elementary	64	exact	4	x, SQR	PI, SQRT	1.167e-15	0	1.1	64.0	True	Pi^(1/4)
+879	constant B3 (or B_3) related to the Mertens constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+880	imaginary part of the solution of z = log z	special	64	not found	0			1.000e+00	0	1.1	nan	False	Im[ProductLog[-1]]
+881	monomer-dimer constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	E^(Catalan/Pi)
+882	totient product constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 + 1/((-1 + Prime[\[FormalK]])*Prime[\[FormalK]]^2), {\[FormalK], 1, Infinity}]
+883	zeta(5/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[5/2]
+884	entropy constant related to A063443	none	18	not found	0			1.000e+00	0	1.1	nan	False	
+885	'b', an auxiliary constant associated with the asymptotic probability of success in the full information version of the 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+886	Davis constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi^2/(8*Catalan)
+887	'xi', a constant related to the second order quadratic recurrence q(0)=q(1)=1, q(n)=q(n-2)*(q(n-1)+1)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+888	mean number of iterations in comparing two numbers via their continued fractions	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+889	expectation of the maximum of a size 7 sample from a normal (0,1) distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+890	'c', an asymptotic constant related to a variation of the "Secretary problem" with a uniform distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+891	Gamma(2/3)	special	64	exact	10	x, TANH, SIN, ARCSIN	THREE, INV, ONE, SUBTRACT, GAMMA, TANH	1.148e-15	0	1.1	64.0	True	Gamma[2/3]
+892	golden spiral constant	elementary	64	exact	5	PI, x, POWER	GOLDENRATIO, SQR	1.798e-15	0	1.1	63.7	True	GoldenRatio^(2/Pi)
+893	Pippenger product constant	elementary	64	exact	4	x	TWO, EULER, DIVIDE	1.144e-15	0	1.1	64.0	True	E/2
+894	log10(23)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	FOUR, SQR, SEVEN, PLUS	1.631e-16	0	1.1	63.5	True	Log[10, 23]
+895	log e^π	elementary	64	exact	7	x	NEG, NINE, SUBTRACT, LOG, PI, DIVIDE	1.627e-16	0	1.1	64.0	True	Log10[E^Pi]
+896	Shallit constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`ShallitConstant == Limit[3*\[FormalN] - Min[Sum[Subscript[\[FormalX], \[FormalK]], {\[FormalK], 1, \[FormalN]}] + Sum[Product[Subscript[\[FormalX], \[FormalJ]]^(-1), {\[FormalJ], \[FormalI], \[FormalK]}], {\[FormalK], 1, \[FormalN]}, {\[FormalI], 1, \[FormalK]}]], \[FormalN] -> Infinity], Element[Subscript[\[FormalX], \[FormalJ]], Reals] && Subscript[\[FormalX], \[FormalJ]] > 0]
+897	Hardy-Littlewood conjecture constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Inactive[Product][1 - (-1)^((-1 + Prime[\[FormalK]])/2)/(-1 + Prime[\[FormalK]]), {\[FormalK], 2, Infinity}]
+898	sum of 1/(p-1)^2 over all primes p	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+899	Kneser-Mahler β constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[(9 - PolyGamma[1, 2/3] + PolyGamma[1, 4/3])/(4*Pi*Sqrt[3])]
+900	arccosh(8)/2 = ln((3 + sqrt 7)/sqrt 2)	elementary	64	exact	5	x	TWO, EIGHT, ARCCOSH, DIVIDE	8.020e-16	0	1.1	63.7	True	ArcCosh[8]/2
+901	ln(4)	elementary	64	exact	3	x	FOUR, LOG	1.602e-16	0	1.1	64.0	True	Log[4]
+903	Gamma(1/4)^4/(4*Pi^3)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^4/(4*Pi^3)
+904	hard hexagon entropy constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[-32751691810479015985152 + 97143135277377575190528*#1^4 - 73347491183630103871488*#1^6 - 71220809441400405884928*#1^8 + 107155448150443388043264*#1^10 - 72405670285649161617408*#1^12 + 2958015038376958230528*#1^14 + 7449488310131083100160*#1^16 + 797726698866658379776*#1^18 + 2505062311720673792*#1^20 + 2013290651222784*#1^22 + 25937424601*#1^24 &, 2]
+905	e^(1/3)	elementary	64	exact	4	x, LOG	THREE, INV	4.773e-16	0	1.1	64.0	True	E^(1/3)
+906	unique solution of the equation sum_(p prime)(1/p^x) = 1, a constant related to the asymptotic evaluation of the number 	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+907	Myrberg point	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+908	L = Integral_{t=0..1} 1/(1-2t^2/3) dt, an auxiliary constant associated with one of the integral inequalities studied by	elementary	64	exact	8	FIVE, ARCCOSH, x, DIVIDE, SQR	EIGHT, THREE, DIVIDE	1.582e-16	0	1.1	63.7	True	Sqrt[3/2]*ArcTanh[Sqrt[2/3]]
+909	complex Grothendieck constant upper bound	special	64	not found	0			1.000e+00	0	1.1	nan	False	(-EllipticE[-1] + 2*EllipticK[-1])^(-1)
+910	1 + 1/(1*3) + 1/(1*3*5) + 1/(1*3*5*7) + 	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[E*Pi/2] * Erf[1/Sqrt[2]]
+911	Pythagoras constant	algebraic	64	exact	3	x	TWO, SQRT	7.850e-16	0	1.1	64.0	True	Sqrt[2]
+912	inverse of carefree constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 + (-1 + Prime[\[FormalK]] + Prime[\[FormalK]]^2)^(-1), {\[FormalK], 1, Infinity}]
+913	Sum_{m >= 0, m not a binary self number} 2^(-m)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+914	expectation of the maximum of a size 8 sample from a normal (0,1) distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+915	'eta', a constant related to the second order quadratic recurrence q(0)=q(1)=1, q(n)=q(n-2)*(q(n-1)+1)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+916	exp(sqrt(Pi/24))	elementary	64	exact	7	x	TWO, INV, ARCSIN, SQRT, EXP, SQRT	3.093e-16	0	1.1	63.7	True	Exp[Sqrt[Pi/24]]
+917	first Lebesgue constant	elementary	64	exact	9	x, THREE, INV, SUBTRACT	NEG, ARCSIN, THREE, SQRT, DIVIDE	1.392e-15	0	1.1	64.0	True	1/3 + (2*Sqrt[3])/Pi
+918	Cube root of 3	algebraic	64	exact	4	THREE, x, POWER	THREE	9.237e-16	0	1.1	63.5	True	3^(1/3)
+919	log2(e)	elementary	64	exact	4	x, INV	TWO, LOG	3.078e-16	0	1.1	64.0	True	1/Log[2]
+920	Steiner number	elementary	64	exact	4	x, LOG	NEG, EXP	3.074e-16	0	1.1	63.7	True	E^E^(-1)
+921	Khinchin mean K_{-2}	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+922	Soldner constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{LogIntegral[#1] & , 1.4513692348833810502839684858920274494930322836480158630931`30.}]
+923	Backhouse's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`BackhouseConstant == Limit[Abs[Subscript[\[FormalQ], 1 + \[FormalN]]/Subscript[\[FormalQ], \[FormalN]]], \[FormalN] -> Infinity], Sum[\[FormalZ]^\[FormalK]*Subscript[\[FormalQ], \[FormalK]], {\[FormalK], 0, Infinity}] == (1 + Sum[\[FormalZ]^\[FormalK]*Prime[\[FormalK]], {\[FormalK], 1, Infinity}])^(-1)]
+924	AGM(1, 2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	ArithmeticGeometricMean[1, 2]
+926	1 - ln(1 - 1/e) (random mappings)	elementary	64	exact	7	x	EULER, NEG, PLUS, LOG, TWO, SUBTRACT	1.066e-15	0	1.1	63.8	True	1 - Log[1 - 1/E]
+927	zeta(1/2) (negated)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(Zeta[1/2])
+928	Baxter's four-coloring constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	3 Gamma[1/3]^3/(4 Pi^2)
+929	position of the positive minimum of the gamma function	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{PolyGamma[0, #1] & , 1.46163214496836234126265954233`29.164838085677864}]
+930	log10(29)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	FIVE, GAMMA, FIVE, PLUS	9.110e-16	0	1.1	63.6	True	Log[10, 29]
+931	cbrt pi	elementary	64	exact	4	THREE, x, POWER	PI	0.000e+00	0	1.1	64.0	True	Pi^(1/3)
+932	Supergolden ratio	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(1 + (29/2 - (3*Sqrt[93])/2)^(1/3) + ((29 + 3*Sqrt[93])/2)^(1/3))/3
+933	Porter's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	-1/2 + (6*Log[2]*(-2 + 4*EulerGamma + 3*Log[2] - (24*Derivative[1][Zeta][2])/Pi^2))/Pi^2
+934	Product_{p prime} (1+1/p)^(1/p), an infinite product considered and computed by Marc Deléglise	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+935	variance of the degree (valency) of the root of a random rooted tree with n vertices	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+936	constant C such that Sum_{k>=1} 1/C^p(k) = 1 where p(k) is the k-th prime	none	64	false positive	11	EIGHT, x, TAN, DIVIDE, ARCSINH	EULER, GAMMA, TANH, SQRT, ARCTANH, ARCTAN	2.407e-15	0	1.1	14.4	True	
+937	Landau-Kolmogorov constant C(4,3) for derivatives in the case L_infinity(infinity, infinity)	none	64	exact	7	x, SQR	FIVE, INV, FIVE, SUBTRACT, SQRT	1.500e-16	0	1.1	63.9	True	
+938	coefficient c_md in c_md*log(N)^(1/rho), the asymptotic mean number of distinct factors in a random factorization of n <	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+939	Bateman-Grosswald constant zeta(2/3)/zeta(2), a constant (negated) arising in the asymptotic evaluation of the number of	special	64	not found	0			1.000e+00	0	1.1	nan	False	-(Zeta[2/3] / Zeta[2])
+940	smallest positive root of the function lambda(x) = Sum_{n>=0} (-1)^n*x^n/(2^(n*(n-1)/2)*n!)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+941	log10(31)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	FIVE, GAMMA, SEVEN, PLUS	8.933e-16	0	1.1	64.0	True	Log[10, 31]
+942	Landau-Kolmogorov constant C(5,4) for derivatives in the case L_infinity(-infinity, infinity)	none	64	exact	7	FIVE, x, POWER	TWO, INV, SEVEN, PLUS	7.420e-16	0	1.1	63.5	True	
+943	lim_{n -> infinity} A001699(n)^(1/2^n)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+944	hard square entropy constant	none	44	not found	0			1.000e+00	0	1.1	nan	False	
+945	Greenfield-Nussbaum constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+946	Selberg-Delange constant Product_{prime p > 2} (1 + 1/(p(p-2)))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+947	value of Watson's integral	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[6]/32/Pi^3*Gamma[1/24]*Gamma[5/24]*Gamma[7/24]*Gamma[11/24]
+948	(Glaisher^12/(2^(4/3) * Pi * e^EulerGamma))^(Pi^2/8)	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Glaisher^12/(2^(4/3)Pi E^EulerGamma))^(Pi^2/8)
+949	Bateman-Stemmler constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[(1 - (2 + KroneckerSymbol[-3, Prime[\[FormalK]]])/Prime[\[FormalK]])/(1 - Prime[\[FormalK]]^(-1))^2, {\[FormalK], 1, Infinity}]
+950	equianharmonic Weierstrass elliptic ω_2 constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/3]^3/(4*Pi)
+951	exp(7*zeta(3)/(2*Pi^2))	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[7*Zeta[3]/(2*Pi^2)]
+952	Sum_{n>=1} 1/Fibonacci(2*n)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+953	Lieb's square ice constant	algebraic	64	exact	7	x	THREE, SQRT, THREE, EIGHT, DIVIDE, DIVIDE	2.884e-16	0	1.1	63.7	True	8/(3*Sqrt[3])
+954	Madelung 2D hexagonal lattice constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(-3 + Sqrt[3])*Zeta[1/2]*(Zeta[1/2, 1/6] + (1 - Sqrt[2])*Zeta[1/2, 1/3])
+955	cosh one	elementary	64	exact	3	x	NEG, COSH	2.302e-15	0	1.1	63.7	True	Cosh[1]
+956	maximal width of a Reuleaux triangle avoiding all vertices of the integer square lattice	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+957	Integral_{x=0..Pi/2} (x^2/sin(x)) dx	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Pi*Catalan - 7*Zeta[3]/2
+958	D(1/2), where D(x) is the infinite product function defined in the formula section (or in the Finch reference)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+959	Calabi ratio	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	1/3 + 11/(3*2^(1/3)*(-23 + (3*I)*Sqrt[237])^(1/3)) + (-23 + (3*I)*Sqrt[237])^(1/3)/(3*2^(2/3))
+960	sqrt(sqrt(2) + 1)	algebraic	64	exact	5	x, SQR	ONE, ARCSINH, EXP	4.287e-16	0	1.1	63.7	True	Sqrt[Sqrt[2] + 1]
+961	c, a constant appearing in the asymptotic lower bound of the size of a restricted difference set	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+962	triangular root of two	algebraic	64	exact	7	x, SQRT	TWO, FOUR, ARCSINH, DIVIDE, SINH	2.844e-16	0	1.1	63.5	True	(-1 + Sqrt[17])/2
+963	log10(37)	elementary	64	exact	8	x, THREE, ARCSINH, COSH, POWER	SIX, ARCSINH, COSH	4.531e-15	0	1.1	63.9	True	Log[10, 37]
+964	2*Sum_{k=1..50000} (-1)^(k-1)/(2k-1)	special	64	false positive	7	x	FIVE, NEG, NINE, SUBTRACT, POWER, ARCTAN	7.068e-16	0	1.1	15.4	True	2*Sum[(-1)^(k - 1)/(2*k - 1), {k, 1, 50000}]
+965	Favard constant	elementary	64	exact	3	x	ONE, ARCSIN	1.131e-15	0	1.1	64.0	True	Pi/2
+966	10^(1/5)	algebraic	64	exact	6	FIVE, x, POWER	NEG, NINE, SUBTRACT	2.802e-16	0	1.1	63.7	True	10^(1/5)
+967	Sierpiński triangle fractal dimension	elementary	64	exact	4	x, FOUR, POWER	NINE	1.121e-15	0	1.1	63.5	True	Log[3]/Log[2]
+968	Erdős–Borwein constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Log[2] - QPolyGamma[0, 1, 1/2])/Log[2]
+969	ln(5)	elementary	64	exact	3	x	FIVE, LOG	4.139e-16	0	1.1	63.5	True	Log[5]
+970	exponential primorial constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+971	Cbrt[4π/3]	elementary	64	exact	6	THREE, x, POWER, TAN	THREE, SQRT	8.265e-16	0	1.1	63.6	True	CubeRoot[4*Pi/3]
+972	log10(41)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	SIX, SQR, FIVE, PLUS	1.101e-15	0	1.1	64.0	True	Log[10, 41]
+973	z_tri, a constant related to the enumeration of spanning trees on the triangular lattice (this is different from A242968	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+974	Madelung's constant M2	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+975	Golden ratio	algebraic	64	exact	2	x	GOLDENRATIO	0.000e+00	0	1.1	63.7	True	GoldenRatio
+976	Odlyzko-Wilf constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`OdlyzkoWilfConstant == Limit[(2/3)^\[FormalN]*\[FormalS][\[FormalN]], \[FormalN] -> Infinity], \[FormalS][0] == 0 && \[FormalS][\[FormalN]] == 1 + Floor[(3*\[FormalS][-1 + \[FormalN]])/2]]
+977	Product_{n>=1} (2n/(2n+1))^((-1)^t(n)), where t(n) = A010060(n) is the Thue-Morse sequence	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+978	log10(43)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	SIX, SQR, SEVEN, PLUS	6.797e-16	0	1.1	64.0	True	Log[10, 43]
+979	Erdős-Cohen constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[1/(Prime[\[FormalK]]*Log[Prime[\[FormalK]]]), {\[FormalK], 1, Infinity}]
+980	2nd Lebesgue constant L2	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	1/5 + Sqrt[25 - 2*Sqrt[5]]/Pi
+981	Riemann ζ of 2	elementary	64	exact	5	x	SIX, PI, SQR, DIVIDE	1.350e-16	0	1.1	63.6	True	Pi^2/6
+982	Product_{k>=0} (1+1/2^(2k))^(1/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[Product[1 + 1/2^(2*k), {k, 0, Infinity}]]
+983	square root of e	elementary	64	exact	3	x	EULER, SQRT	2.694e-15	0	1.1	63.7	True	Sqrt[E]
+984	minimum value of the function s(t) = (Pi + 2*sqrt(1 + t^2))/(1 + Pi/2 + t) for t > 0	elementary	64	exact	11	TWO, x, DIVIDE, ARCTANH, EXP	PI, TWO, PLUS, SQRT, ONE, PLUS	1.340e-15	0	1.1	63.8	True	2(Pi+Pi^2+Sqrt[8+Pi^3+4Pi(3+Sqrt[2+Pi])+Pi^2(7+2Sqrt[2+Pi])])/(4+Pi^2+Pi(4+Sqrt[2+Pi]))
+985	Somos' quadratic recurrence constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	E^(-Derivative[1, 0][PolyLog][0, 1/2])
+986	Hermite's constant gamma_6 = 2/3^(1/6)	algebraic	64	exact	6	SIX, x, TWO, DIVIDE, POWER	THREE	1.067e-15	0	1.1	63.6	True	2/3^(1/6)
+987	log10(47)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	TWO, SEVEN, SQR, SUBTRACT	2.656e-16	0	1.1	63.8	True	Log[10, 47]
+988	a constant related to A000621 and A000624	none	64	false positive	11	x, SQRT, SIN, ARCTANH, GAMMA	FIVE, SQR, ARCCOSH, TANH, ARCSIN, ARCTAN	4.094e-15	0	1.1	14.7	True	
+989	zeta(3/5) * zeta(4/5) * Product_{p prime} (1 - 1/p^(8/5) - 1/p^(9/5) - 1/p^2 + 1/p^(13/5) + 1/p^(14/5))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+990	1 + log(2*Pi) - 2*gamma, where gamma is Euler's constant (A001620)	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 + Log[2*Pi] - 2*EulerGamma
+991	maximal circumradius of a planar convex set containing no lattice point except for the origin where it has its circumcen	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+992	Sum_{k>=0} 1/A007018(k)	none	64	false positive	11	x, TWO, DIVIDE, TANH, SQR	FIVE, COS, ARCCOS, TANH, SIN, SIN	3.939e-15	0	1.1	14.2	True	
+993	Niven's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 + Sum[1 - Zeta[n]^(-1), {n, 2, Infinity}]
+994	Pi^2/(12*log(phi))	elementary	64	exact	7	x	TWO, ARCSINH, NEG, ARCSIN, SQR, DIVIDE	6.496e-16	0	1.1	63.6	True	Pi^2/(12*Log[GoldenRatio])
+995	log10(53)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	SEVEN, SQR, FOUR, PLUS	3.863e-16	0	1.1	63.9	True	Log[10, 53]
+996	Kalmar ρ composition constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{-2 + Zeta[#1] & , 1.7286472389981836181351030103`29.237706376855613}]
+997	Theodorus constant	algebraic	64	exact	3	x	THREE, SQRT	1.282e-15	0	1.1	63.6	True	Sqrt[3]
+998	reciprocal of Euler γ	special	64	not found	0			1.000e+00	0	1.1	nan	False	EulerGamma^(-1)
+999	1/A347901	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1000	sqrt(2*Pi)*log(2), a constant associated with asymptotic evaluation of random mapping statistics	elementary	64	exact	7	x	ONE, ARCSIN, SQRT, FOUR, POWER, LOG	2.556e-16	0	1.1	64.0	True	Sqrt[2*Pi]*Log[2]
+1001	value of a nonregular continued fraction giving tau/(3*tau-1), where tau is the Prouhet-Thue-Morse constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1002	'tau' (named sigma_2 by C. Pomerance), a constant associated with the expected number of random elements to generate a f	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1003	Khinchin harmonic mean	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`KhinchinHarmonicMeanConstant == Limit[\[FormalN]/Sum[Subscript[\[FormalA], \[FormalK]]^(-1), {\[FormalK], 1, \[FormalN]}], \[FormalN] -> Infinity], Element[Subscript[\[FormalA], \[FormalK]], Integers] && Subscript[\[FormalA], \[FormalK]] > 0]
+1004	Madelung constant (negated) for NaCl structure	special	64	not found	0			1.000e+00	0	1.1	nan	False	12Pi*Sum[ Sech[Pi/2*Sqrt[(2j + 1)^2 + (2k + 1)^2]]^2, {j, 0, 40}, {k, 0, 40}]
+1005	continued fraction expansion [1; 1/2, 1/3, 1/4, 1/5, 1/6, ...]	elementary	64	exact	5	x	ONE, SIN, ARCCOS, INV	8.872e-16	0	1.1	64.0	True	2/(Pi - 2)
+1006	Feller coin-tossing constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(2 + (25 - 3*Sqrt[69])^(1/3)/2^(1/3) + (25 + 3*Sqrt[69])^(1/3)/2^(1/3))/3
+1007	nested radical constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Limit[Fold[Sqrt[#1 + #2] & , Sqrt[1 + \[FormalN]], Table[\[FormalI], {\[FormalI], \[FormalN], 1, -1}]], \[FormalN] -> Infinity]
+1008	log 180/π	elementary	64	exact	11	x, THREE, ARCSINH, COSH, POWER	FIVE, PI, DIVIDE, SQRT, SIX, DIVIDE	0.000e+00	0	1.1	64.0	True	Log10[180/Pi]
+1009	Product_{n>1} (1+1/n)^(1/n)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1010	constant x such that x^x = e. Inverse of W(1), where W is Lambert's function	special	64	not found	0			1.000e+00	0	1.1	nan	False	1/ProductLog[1]
+1011	'b', an optimal stopping constant associated with the secretary problem when the objective is to maximize the hiree's ex	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1012	log10(59)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	FIVE, EIGHT, SQR, SUBTRACT	1.755e-15	0	1.1	63.8	True	Log[10, 59]
+1013	Sierpiński's S^ (Ŝ or "S hat" as named by S. Finch), a constant appearing in the asymptotics of the number of representa	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1014	Carlson-Levin constant	elementary	64	exact	3	x	PI, SQRT	1.378e-15	0	1.1	64.0	True	Sqrt[Pi]
+1015	angle in radians at the apex of the Calabi triangle	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1016	10^(1/4)	algebraic	64	exact	5	x, SQR, ARCCOSH	THREE, ARCSINH	2.497e-16	0	1.1	63.9	True	10^(1/4)
+1017	3rd Lebesgue constant L3	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(3*Pi-14*Cos[Pi/14]+70*Cos[3*Pi/14]+154*Sin[Pi/7])/(21*Pi)
+1018	exponential of Euler γ	special	64	not found	0			1.000e+00	0	1.1	nan	False	E^EulerGamma
+1019	conjectured upper bound on Grothendieck's constant	elementary	64	exact	5	x	THREE, ARCCOSH, PI, DIVIDE	1.620e-15	0	1.1	64.0	True	Pi/(2*Log[1 + Sqrt[2]])
+1020	log10(61)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	THREE, EIGHT, SQR, SUBTRACT	0.000e+00	0	1.1	63.7	True	Log[10, 61]
+1021	Silverman constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[1/(DivisorSigma[1, \[FormalK]]*EulerPhi[\[FormalK]]), {\[FormalK], 1, Infinity}]
+1022	Komornik–Loreti constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{Product[1 - 1/#1^2^\[FormalK], {\[FormalK], 0, Infinity}] - (2 - #1)/(#1 - 1) & , 1.7872316501829659330132`22.252180846784352}]
+1023	2D dimer constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	E^((2*Catalan)/Pi)
+1024	ln(6)	elementary	64	exact	3	x	SIX, LOG	2.479e-16	0	1.1	64.0	True	Log[6]
+1026	Hermite's constant gamma_7 = 2^(6/7)	algebraic	64	exact	5	SEVEN, x, POWER	EIGHT, SQR	1.348e-15	0	1.1	63.9	True	2^(6/7)
+1027	limit of a recursive sequence connected to the Plastic constant (A060006)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1028	sqrt((3+sqrt(13))/2), a constant related to the asymptotic evaluation of the number of self-avoiding rook paths joining 	algebraic	64	exact	7	x, SQR	TWO, THREE, DIVIDE, ARCSINH, EXP	3.665e-16	0	1.1	64.0	True	Sqrt[(3 + Sqrt[13])/2]
+1029	Masser-Gramain constant conjectured value	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 + 2*EulerGamma + 2*Log[2] + 3*Log[Pi] - 4*Log[Gamma[1/4]]
+1030	log10(67)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	EIGHT, SQR, THREE, PLUS	2.432e-16	0	1.1	63.6	True	Log[10, 67]
+1031	two times the Catalan constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	2 Catalan
+1032	ln(2 pi)	elementary	64	exact	5	x, EXP	PI, PI, PLUS	6.041e-16	0	1.1	64.0	True	Log[2*Pi]
+1033	Tribonacci constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(1 + (19 - 3*Sqrt[33])^(1/3) + (19 + 3*Sqrt[33])^(1/3))/3
+1034	4th Madelung constant (negated)	special	64	not found	0			1.000e+00	0	1.1	nan	False	8*(5 - 3*Sqrt[2])*Zeta[1/2]*Zeta[-1/2]
+1035	Landau-Kolmogorov constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[3]/(2^(1/3)*(-1 + Sqrt[2])^(1/3))
+1036	Connective constant	algebraic	64	exact	6	x	TWO, SQRT, TWO, PLUS, SQRT	7.210e-16	0	1.1	63.6	True	Sqrt[2 + Sqrt[2]]
+1037	log10(71)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	EIGHT, SQR, SEVEN, PLUS	3.598e-16	0	1.1	64.0	True	Log[10, 71]
+1038	Integral_{x=0..Pi} (sin(x)/x) dx	special	64	not found	0			1.000e+00	0	1.1	nan	False	SinIntegral[Pi]
+1039	Gauss lemniscate constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^2/(4*Sqrt[Pi])
+1040	spiral of Theodorus constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[1/((1 + \[FormalK])*Sqrt[\[FormalK]]), {\[FormalK], 1, Infinity}]
+1041	log10(73)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	EIGHT, SQR, NINE, PLUS	9.533e-16	0	1.1	63.6	True	Log[10, 73]
+1042	expected reciprocal Euclidean distance between two random points in the unit cube	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1043	log10(79)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	TWO, NINE, SQR, SUBTRACT	2.106e-15	0	1.1	63.8	True	Log[10, 79]
+1045	Boyd constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[(9 - PolyGamma[1, 2/3] + PolyGamma[1, 4/3])/(2*Pi*Sqrt[3])]
+1046	M_5, the 5-dimensional analog of Madelung's constant (negated)	none	32	not found	0			1.000e+00	0	1.1	nan	False	
+1047	6/π	elementary	64	exact	4	x	PI, SIX, DIVIDE	4.650e-16	0	1.1	63.8	True	6/Pi
+1048	tetrahedral bond angle	elementary	64	exact	4	x, TAN, SQR	EIGHT	3.486e-16	0	1.1	63.7	True	ArcCos[-1/3]
+1049	log10(83)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	NINE, SQR, TWO, PLUS	1.157e-16	0	1.1	63.6	True	Log[10, 83]
+1050	tetranacci constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[-1 - #1 - #1^2 - #1^3 + #1^4 & , 2]
+1052	Omega prime-generating constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1053	first moment of the reciprocal gamma distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1054	Euler totient A constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(315*Zeta[3])/(2*Pi^4)
+1055	ln(7)	elementary	64	exact	3	x	SEVEN, LOG	1.027e-15	0	1.1	64.0	True	Log[7]
+1056	C_4, a constant related to sharp inequalities for the product of 4 polynomials, which was introduced by David Boyd	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1057	log10(89)	elementary	64	exact	9	x, NEG, NINE, SUBTRACT, POWER	NINE, SQR, EIGHT, PLUS	6.834e-16	0	1.1	64.0	True	Log[10, 89]
+1058	Z score	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[2]*InverseErf[19/20]
+1059	reciprocal Lucas constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(-1 + EllipticTheta[3, 0, GoldenRatio^(-2)]^2)/4 + (7*Log[GoldenRatio] - Log[1 + GoldenRatio^2] - QPolyGamma[0, 1, GoldenRatio^(-4)] + 4*QPolyGamma[0, 1, GoldenRatio^(-2)] - 4*QPolyGamma[0, 1, GoldenRatio^(-1)])/(4*Log[GoldenRatio])
+1060	M_6, the 6th Madelung constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1061	pentanacci constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[-1 - #1 - #1^2 - #1^3 - #1^4 + #1^5 & , 1]
+1062	C_5, a constant related to sharp inequalities for the product of 5 polynomials, which was introduced by David Boyd	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1063	C_6, a constant related to sharp inequalities for the product of 6 polynomials, which was introduced by David Boyd	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1064	Gamma''(1)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1065	hexanacci constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[-1 - #1 - #1^2 - #1^3 - #1^4 - #1^5 + #1^6 & , 2]
+1066	log10(97)	elementary	64	exact	10	x, NEG, NINE, SUBTRACT, POWER	FOUR, SQR, NINE, SQR, PLUS	2.235e-16	0	1.1	64.0	True	Log[10, 97]
+1067	heptanacci constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[-1 - #1 - #1^2 - #1^3 - #1^4 - #1^5 - #1^6 + #1^7 & , 1]
+1068	integral_{x=0..Infinity} 1/x^x dx	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1069	Two	rational	64	exact	2	x	TWO	0.000e+00	0	1.1	64.0	True	2
+1070	M_7, the 7-dimensional analog of Madelung's constant (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1071	Sierpiński's S~ (S "tilde" as named by S. Finch), a constant appearing in the asymptotics of the number of representatio	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1072	solution to the Lane-Emden equation for a sphere of polytropic index n = 3	none	32	not found	0			1.000e+00	0	1.1	nan	False	
+1073	least x > 0 satisfying x + tan(x) = 0	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1074	figure-eight knot hyperbolic volume	special	64	not found	0			1.000e+00	0	1.1	nan	False	((-2*Pi^2 + 3*PolyGamma[1, 1/3])*Sqrt[3])/9
+1075	QRS associated constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[3/2, Root[{Zeta[1/2, #1/2] & , 0.605443657196732749478922842447`29.782073733759695}]/2]/4
+1076	'beta', a constant appearing in the random links Traveling Salesman Problem	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1077	Lüroth analog of Lévy constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[Log[\[FormalK]*(1 + \[FormalK])]/(\[FormalK]*(1 + \[FormalK])), {\[FormalK], 1, Infinity}]
+1078	M_8, the 8th Madelung constant (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1079	semi-meander critical exponent	algebraic	64	false positive	11	x, ARCTAN, TAN, COSH, TAN	FOUR, SIN, EXP, ARCSINH, COS, GAMMA	2.163e-16	0	1.1	13.8	True	1 + (Sqrt[11]*(Sqrt[5] + Sqrt[29]))/24
+1080	one div ln phi	elementary	64	exact	4	x, INV	GOLDENRATIO, LOG	4.274e-16	0	1.1	64.0	True	1/Log[GoldenRatio]
+1081	ln(8)	elementary	64	exact	3	x	EIGHT, LOG	2.136e-16	0	1.1	63.6	True	Log[8]
+1082	two thirds pi	elementary	64	exact	4	x, TAN, SQR	THREE	4.241e-16	0	1.1	64.0	True	2*Pi/3
+1083	Wallis's constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(135/2 - (3*Sqrt[1929])/2)^(1/3)/3 + ((45 + Sqrt[1929])/2)^(1/3)/3^(2/3)
+1084	Brown-Wang constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	With[{\[FormalLambda] = Root[{(1 + #1)*Pi - Tan[#1*Pi] & , 0.43029665312420275777`20.}]}, Root[{(1 + \[FormalLambda])*Pi*((#1 - 1)*PolyGamma[1 + (#1 - 1)/2] - 2*#1*PolyGamma[1 + #1/2] + (#1 + 1)*PolyGamma[1 + (#1 + 1)/2]) - 2*Sin[\[FormalLambda]*Pi] & , 2.11023396612157219646682815666`30.}]]
+1085	'sigma', a constant associated with the expected number of random elements to generate a finite abelian group	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1086	'a', an auxiliary constant associated with the asymptotic probability of success in the secretary problem when the numbe	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1087	Jacobi theta function theta_2(0, 1/2) where theta_2 is the 2nd Jacobi theta function	special	64	not found	0			1.000e+00	0	1.1	nan	False	EllipticTheta[2,0,1/2]
+1088	Jacobi theta function theta_3(0, 1/2) where theta_3 is the 3rd Jacobi theta function	special	64	not found	0			1.000e+00	0	1.1	nan	False	EllipticTheta[3,0,1/2]
+1089	pi^(2/3)	elementary	64	exact	5	THREE, x, POWER	PI, SQR	6.211e-16	0	1.1	63.7	True	Pi^(2/3)
+1090	10^(1/3)	algebraic	64	exact	6	THREE, x, POWER	NEG, NINE, SUBTRACT	6.184e-16	0	1.1	63.8	True	10^(1/3)
+1092	Erdős-Szekeres constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Zeta[3/2]/Zeta[3]
+1093	K = exp(8*G/(3*Pi)), a Kneser-Mahler constant related to an asymptotic inequality involving Bombieri's supremum norm, wh	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[8*Catalan/(3*Pi)]
+1094	normalized asymptotic mean of omega(m) when m is one of the values <= n taken by Euler's phi totient function	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1095	a constant related to series-reduced trees	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1096	'theta', the expected degree (valency) of the root of a random rooted tree with n vertices	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1097	e^(pi/4)	elementary	64	exact	4	x	ONE, ARCTAN, EXP	1.215e-15	0	1.1	63.8	True	E^(Pi/4)
+1098	ln(9)	elementary	64	exact	3	x	NINE, LOG	6.063e-16	0	1.1	63.9	True	Log[9]
+1099	Lüroth analog of Khinchin constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[\[FormalK]^(1/(\[FormalK]*(1 + \[FormalK]))), {\[FormalK], 1, Infinity}]
+1100	totient constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[1/(\[FormalK]*EulerPhi[\[FormalK]]), {\[FormalK], 1, Infinity}]
+1101	Pi/2 + 2/Pi	elementary	64	exact	6	x, COS	NEG, ARCSIN, INV, SIN	6.035e-16	0	1.1	63.8	True	Pi/2 + 2/Pi
+1102	pi(2)^(-1/2)	elementary	64	exact	5	x, PI, DIVIDE	TWO, SQRT	7.996e-16	0	1.1	63.7	True	Pi*2^(-1/2)
+1103	y_3, the third of four non-explicit constants recursively derived from Khintchine's [Khinchin's] constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1104	D(1), where D(x) is the infinite product function defined in the formula section (or in the Finch reference)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Glaisher^6/(2^(1/6)*Sqrt[Pi])
+1105	Sqrt 5	algebraic	64	exact	3	x	FIVE, SQRT	0.000e+00	0	1.1	63.7	True	Sqrt[5]
+1106	Takeuchi-Prellberg constant	special	25	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`TakeuchiPrellbergConstant == Limit[Subscript[\[FormalCapitalT], \[FormalN]]/(BellB[\[FormalN]]*Exp[ProductLog[\[FormalN]]^2/2]), \[FormalN] -> Infinity], Subscript[\[FormalCapitalT], 0] == 0 && Subscript[\[FormalCapitalT], 1] == 1 && Subscript[\[FormalCapitalT], 2] == 4 && Subscript[\[FormalCapitalT], 3] == 14 && Subscript[\[FormalCapitalT], \[FormalN]] == Sum[Binomial[2*\[FormalK], \[FormalK]]/(1 + \[FormalK]), {\[FormalK], 1, \[FormalN]}] + Sum[Subscript[\[FormalCapitalT], -1 - \[FormalK] + \[FormalN]]*(2*Binomial[-1 + \[FormalK] + \[FormalN], \[FormalK]] - Binomial[\[FormalK] + \[FormalN], \[FormalK]]), {\[FormalK], 0, -2 + \[FormalN]}]]
+1107	Sierpiński's second constant, K2 = lim_{n->oo} ((1/n) * (Sum_{i=1..n} A004018(i^2)) - 4/Pi * log(n))	special	64	not found	0			1.000e+00	0	1.1	nan	False	4(12 Log[Gamma[3/4]]-9 Log[Pi]+72 Log[Glaisher]-5 Log[2]+3 EulerGamma-3)/(3 Pi)
+1108	Integral_{0..oo} 1/Gamma(1+x) dx, a variation of the Fransén-Robinson constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1109	Landau-Kolmogorov constant C(4,1) for derivatives in L_2(0, infinity)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1110	1/A240969	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1111	first Foias constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{-(1 + 1/#1)^#1 + #1 & , 2.29316628741186103150802829125000000000007305694139121664`29.360435548444247}]
+1112	zeta(2)*zeta(3)*zeta(4)*	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1113	Universal parabolic constant	elementary	64	exact	6	x	NEG, ARCSINH, TWO, SQRT, SUBTRACT	0.000e+00	0	1.1	63.8	True	Sqrt[2] + ArcSinh[1]
+1114	product_{n>=1} (n/(n+1))^((-1)^t(n)), a probabilistic counting constant, where t(n) = A010060(n) is the Thue-Morse seque	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1115	logarithm of 10	elementary	64	exact	5	x	NEG, NINE, SUBTRACT, LOG	3.857e-16	0	1.1	64.0	True	Log[10]
+1116	y_1, the first of four non-explicit constants recursively derived from Khintchine's [Khinchin's] constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1117	Klarner-Rivest polyomino constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1118	3D lattice sum analog of Euler γ	special	64	not found	0			1.000e+00	0	1.1	nan	False	(-4*Pi)/3 + (19*Log[2])/2 - 4*Sum[((3 + 3*(-1)^\[FormalM] + (-1)^(\[FormalM] + \[FormalN]))*Csch[Pi*Sqrt[\[FormalM]^2 + \[FormalN]^2]])/Sqrt[\[FormalM]^2 + \[FormalN]^2], {\[FormalM], 1, Infinity}, {\[FormalN], 1, Infinity}]
+1119	constant 1 + B3 (or 1 + B_3) related to the Mertens constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1120	Ti_2(2+sqrt(3)), where Ti_2 is the inverse tangent integral function	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1121	three quarters pi	elementary	64	exact	3	x, TAN	NEG	0.000e+00	0	1.1	64.0	True	3*Pi/4
+1122	monomer-dimer triangular constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[Integrate[Log[6 + 2*Cos[\[FormalT]] + 2*Cos[\[FormalPhi]] + 2*Cos[\[FormalT] + \[FormalPhi]]], {\[FormalT], -Pi, Pi}, {\[FormalPhi], -Pi, Pi}]/(8*Pi^2)]
+1123	pi^(3/4)	elementary	64	exact	6	x	THREE, PI, POWER, SQRT, SQRT	1.882e-16	0	1.1	63.8	True	Pi^(3/4)
+1124	Pi^2/(6*log 2)	elementary	64	exact	7	x	EIGHT, SQR, LOG, PI, SQR, DIVIDE	0.000e+00	0	1.1	63.9	True	Pi^2/(6*Log[2])
+1125	c = (7-sqrt(5))/2	algebraic	64	exact	4	x	GOLDENRATIO, FOUR, SUBTRACT	7.458e-16	0	1.1	63.9	True	4 - GoldenRatio
+1126	ln(11)	elementary	64	exact	5	x	TWO, NINE, PLUS, LOG	7.408e-16	0	1.1	64.0	True	Log[11]
+1127	asymptotic evaluation of the constrained maximum of a certain quadratic form	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1128	Narcissus constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{1 + #1 - #1^(-1 + #1) & , 2.39838438278161142938900277955804885011`20.5225995583442}]
+1129	Golden angle	elementary	64	exact	7	x	GOLDENRATIO, SQR, TWO, DIVIDE, PI, TIMES	7.402e-16	0	1.1	64.0	True	(2*Pi)/GoldenRatio^2
+1130	2*zeta(3)	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Zeta[3]
+1131	first zero of the Bessel function J_0(z)	special	64	not found	0			1.000e+00	0	1.1	nan	False	BesselJZero[0, 1]
+1132	solution to the Lane-Emden equation for a sphere of polytropic index n = 2	none	32	not found	0			1.000e+00	0	1.1	nan	False	
+1133	Silver ratio	algebraic	64	exact	4	x	ONE, ARCSINH, EXP	1.104e-15	0	1.1	64.0	True	1 + Sqrt[2]
+1134	c = 2.4149..., a random mapping statistics constant such that the asymptotic expectation of the maximum rho length (grap	none	20	not found	0			1.000e+00	0	1.1	nan	False	
+1135	prod_{n>=1} (1 + 1/n^3) = cosh(sqrt(3) pi/2)/pi	elementary	64	exact	9	x, PI, TIMES	THREE, SQRT, NEG, ARCSIN, TIMES, COSH	1.646e-15	0	1.1	63.9	True	Cosh[Sqrt[3]*Pi/2]/Pi
+1136	a constant related to the asymptotic evaluation of the Lebesgue constants L_n	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1137	theta = 2.472548..., an auxiliary constant used to compute the best constant in Friedrichs' inequality in one dimension	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1138	Otter's weakly binary tree enumeration asymptotic constant xi	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1139	A1*B1, the average number of non-isomorphic semisimple rings of any order, where A1 is Product_{m>1} zeta(m) and B1 is P	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1140	Feigenbaum alpha	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1141	root two pi	elementary	64	exact	5	x, SQR	PI, PI, PLUS	0.000e+00	0	1.1	63.9	True	Sqrt[2*Pi]
+1142	100^(1/5)	algebraic	64	exact	7	FIVE, x, POWER	NEG, NINE, SUBTRACT, SQR	1.768e-16	0	1.1	64.0	True	100^(1/5)
+1143	a constant related to identity trees	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1144	doubly infinite sum N_3 = Sum_{i,j,k = -inf..inf} (-1)^(i+j+k)/(i^2+j^2+k^2), a lattice constant analog of Madelung's co	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1145	sqrt(2)*exp(2*G/Pi), where G = A006752	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[2]*Exp[2Catalan/Pi]
+1146	a variant of the Komornik-Loreti constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1147	(Glaisher^12/(2*Pi*e^EulerGamma))^(Pi^2/6)	special	64	not found	0			1.000e+00	0	1.1	nan	False	(Glaisher^12/(2Pi E^EulerGamma))^(Pi^2/6)
+1148	ln(13)	elementary	64	exact	5	x	FOUR, NINE, PLUS, LOG	1.731e-16	0	1.1	63.9	True	Log[13]
+1149	exp(gamma)/log(2), a conjectural constant related to the asymptotic counting of Mersenne primes, where gamma is Euler's 	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[EulerGamma]/Log[2]
+1150	Sierpiński's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Pi*(2*EulerGamma - Log[Pi] + 4*Log[Gamma[3/4]])
+1151	Barban constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 + (-1 + 3*Prime[\[FormalK]]^2)/(Prime[\[FormalK]]*(1 + Prime[\[FormalK]])*(-1 + Prime[\[FormalK]]^2)), {\[FormalK], 1, Infinity}]
+1152	twenty-vertex entropy constant	algebraic	64	exact	6	x	FOUR, INV, SEVEN, SUBTRACT, SQRT	0.000e+00	0	1.1	64.0	True	(3*Sqrt[3])/2
+1153	golden root	algebraic	64	exact	3	x	GOLDENRATIO, SQR	2.036e-15	0	1.1	63.9	True	2 + 2*Cos[(2*Pi)/5]
+1154	Lemniscate constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^2/(2*Sqrt[2*Pi])
+1156	positive root of the equation 13x^4 - 7x^2 - 581 = 0	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Sqrt[1/26*(7+Sqrt[30261])]
+1157	sqrt(2) + sqrt(3/2)	algebraic	64	exact	7	x	TWO, SQRT, TWO, ARCCOSH, EXP, DIVIDE	3.366e-16	0	1.1	63.8	True	Sqrt[2] + Sqrt[3/2]
+1158	sqrt(7)	algebraic	64	exact	3	x	SEVEN, SQRT	1.678e-15	0	1.1	64.0	True	Sqrt[7]
+1159	Gelfond-Schneider constant	elementary	64	exact	5	x	TWO, SQRT, TWO, POWER	4.999e-16	0	1.1	63.9	True	2^Sqrt[2]
+1160	Gamma(1/3)	special	64	exact	6	x, TANH	THREE, INV, GAMMA, TANH	1.658e-16	0	1.1	63.8	True	Gamma[1/3]
+1161	coefficient 'gamma' (see formula) appearing in Otter's result concerning the asymptotics of T_n, the number of non-isomo	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1162	Khinchin's constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Khinchin
+1163	Landau-Kolmogorov constant C(5,1) for derivatives in L_2(0, infinity)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1164	Euler number	elementary	64	exact	2	x	EULER	1.144e-15	0	1.1	64.0	True	E
+1165	pi sqrt(3)/2	elementary	64	exact	6	x	THREE, SQRT, ONE, ARCSIN, TIMES	3.265e-16	0	1.1	64.0	True	Pi*Sqrt[3]/2
+1166	log e^(2π)	elementary	64	exact	7	x, PI, DIVIDE, EXP, ARCCOSH	THREE, ARCSINH	1.627e-16	0	1.1	64.0	True	Log10[E^(2*Pi)]
+1167	Sum_{k>=1} sigma(k)/2^k where sigma(k) is the sum of divisors of k, 1 <= d <= k	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[n/(2^n - 1), {n, 1, 500}]
+1168	Ramanujan nested radical constant	algebraic	64	exact	11	FIVE, x, TWO, TIMES, SUBTRACT	THREE, FIVE, SQRT, SUBTRACT, ARCSINH, EXP	1.132e-15	0	1.1	64.0	True	(2 + Sqrt[5] + Sqrt[15 - 6*Sqrt[5]])/2
+1169	a constant related to A006196	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1170	C_{1/2}, a constant related to Kolmogorov's inequalities	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^2/(Pi*Gamma[3/4]^2)
+1171	(1/sqrt(Pi) + e*erfc(-1))/2	special	64	not found	0			1.000e+00	0	1.1	nan	False	(1/Sqrt[Pi]+E Erfc[-1])/2
+1172	'xi', an optimal stopping auxiliary constant associated with the two choice case	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1173	2*Pi*phi(0), a constant appearing in connection with a study of zeros of the integral of xi(z), where phi(t) and xi(z) a	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1174	Fransén–Robinson constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Integrate[Gamma[x]^(-1), {x, 0, Infinity}]
+1175	Murata constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[1 + (-1 + Prime[\[FormalK]])^(-2), {\[FormalK], 1, Infinity}]
+1176	ln(17)	elementary	64	exact	5	x	EIGHT, NINE, PLUS, LOG	0.000e+00	0	1.1	64.0	True	Log[17]
+1177	Born's basic potential Pi_0	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1178	constant appearing in the variance for searching in a digital tree	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1179	Hardy-Littlewood prime triples constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(9*Product[((-3 + Prime[\[FormalK]])*Prime[\[FormalK]]^2)/(-1 + Prime[\[FormalK]])^3, {\[FormalK], 3, Infinity}])/2
+1180	(diagonal)/(shortest side) of 2nd electrum rectangle	none	64	exact	7	x, ARCCOSH, SINH	THREE, SQRT, ONE, PLUS	4.579e-16	0	1.1	63.8	True	
+1181	a second variant of the Komornik-Loreti constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1182	ln(19)	elementary	64	exact	6	x	FOUR, SQR, THREE, PLUS, LOG	6.033e-16	0	1.1	63.9	True	Log[19]
+1183	Otter's rooted tree constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1184	Landau-Kolmogorov constant C(4,2) for derivatives in L_2(0, infinity)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1185	B, a constant related to the Goh-Schmutz constant and the asymptotic expected order of a random permutation	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1186	oloid volume constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(2*(2*EllipticE[3/4] + EllipticK[3/4]))/3
+1187	Landau-Kolmogorov constant C(3,1) for derivatives in the case L_infinity(0, infinity)	algebraic	64	exact	7	THREE, x, NINE, DIVIDE, POWER	FIVE, GAMMA	1.708e-15	0	1.1	64.0	True	(243/8)^(1/3)
+1188	sqrt(480)/7	algebraic	64	exact	8	x, ARCSINH	SEVEN, TWO, DIVIDE, THREE, PLUS, ARCCOSH	2.838e-16	0	1.1	64.0	True	Sqrt[480]/7
+1189	ln(23)	elementary	64	exact	6	x	FOUR, SQR, SEVEN, PLUS, LOG	0.000e+00	0	1.1	63.8	True	Log[23]
+1190	Ramanujan's π-approximation constant	elementary	64	false positive	2	x	PI	1.131e-15	0	1.1	16.2	True	Log[262537412640768000]/Sqrt[163]
+1191	Pi	elementary	64	exact	2	x	PI	1.131e-15	0	1.1	64.0	True	Pi
+1192	mean value over all positive integers of a function giving the least quadratic nonresidue modulo a given odd integer (th	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1193	10^(1/2)	algebraic	64	exact	4	x, ARCCOSH	THREE, ARCSINH	4.213e-16	0	1.1	64.0	True	10^(1/2)
+1194	C = log(2*Pi) + B_3 (where B_3 is A083343), one of Euler totient constants	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1195	plate constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`PlateConstant == \[FormalX], BesselI[1, \[FormalX]]*BesselJ[0, \[FormalX]] + BesselI[0, \[FormalX]]*BesselJ[1, \[FormalX]] == 0 && 3 < \[FormalX] < 7/2]
+1196	square of the constant A130834	special	64	not found	0			1.000e+00	0	1.1	nan	False	Exp[4*Catalan/Pi]
+1197	1 + sqrt(5)	algebraic	64	exact	4	x	GOLDENRATIO, GOLDENRATIO, PLUS	0.000e+00	0	1.1	63.9	True	1 + Sqrt[5]
+1198	Pálfy's constant c_3	elementary	64	exact	10	SIX, x, THREE, POWER, POWER	FIVE, EIGHT, NINE, TIMES, POWER	5.476e-16	0	1.1	64.0	True	5/3 + Log[9, 32]
+1199	rayleigh kurtosis	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(32 - 3*Pi^2)/(4 - Pi)^2
+1200	silver root	algebraic	64	exact	8	x, SQRT	SEVEN, PI, DIVIDE, COS, TWO, TIMES	9.574e-16	0	1.1	64.0	True	2 + 2*Cos[(2*Pi)/7]
+1201	Lévy's constant 2	elementary	64	exact	8	x, LOG	EIGHT, LOG, NEG, ARCSIN, SQR, DIVIDE	0.000e+00	0	1.1	64.0	True	E^(Pi^2/(12*Log[2]))
+1202	a constant related to A000620, A000622, A000623 and A000625	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1203	y_2, the second of four non-explicit constants recursively derived from Khintchine's [Khinchin's] constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1204	sqrt(11)	algebraic	64	exact	5	x	TWO, NINE, PLUS, SQRT	5.356e-16	0	1.1	64.0	True	Sqrt[11]
+1205	average value of the Yekutieli-Mandelbrot parameter, that is the average number of maximal subtrees of an ordered binary	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Catalan/(Pi*Log[2])+5/2
+1206	Reciprocal Fibonacci constant	special	64	false positive	11	SEVEN, ARCCOSH, x, DIVIDE, TAN	THREE, SIN, SIN, COSH, SINH, EXP	1.454e-15	0	1.1	15.0	True	(Sqrt[5]*(EllipticTheta[2, 0, GoldenRatio^(-2)]^2 + (Log[5] + 2*QPolyGamma[0, 1, GoldenRatio^(-4)] - 4*QPolyGamma[0, 1, GoldenRatio^(-2)])/(2*Log[(1 + Sqrt[5])/2])))/4
+1207	van der Corput constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	With[{\[FormalX] = Root[{Cos[#1]*FresnelS[Sqrt[1 - (2*#1)/Pi]] + FresnelC[Sqrt[1 - (2*#1)/Pi]]*Sin[#1] & , -0.726643246813242509590219555941985563257278933469994008688`30.}]}, 2*(Cos[\[FormalX]]*FresnelC[Sqrt[1 - (2*\[FormalX])/Pi]] - FresnelS[Sqrt[1 - (2*\[FormalX])/Pi]]*Sin[\[FormalX]])*Sqrt[Pi]]
+1208	ln(29)	elementary	64	exact	6	x	FIVE, GAMMA, FIVE, PLUS, LOG	1.319e-16	0	1.1	64.0	True	Log[29]
+1209	Magata constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`MagataConstant == Limit[Sum[Subscript[\[FormalC], \[FormalK]], {\[FormalK], 1, \[FormalN]}], \[FormalN] -> Infinity], Sum[Subscript[\[FormalC], \[FormalK]]*Product[-1 - \[FormalJ] + \[FormalM], {\[FormalJ], 0, -1 + \[FormalK]}], {\[FormalK], 0, -1 + \[FormalN]}] == Prime[\[FormalM]] && \[FormalM] <= \[FormalN]]
+1210	meander critical exponent	algebraic	64	exact	11	x, TWO, DIVIDE, ONE, SUBTRACT	FIVE, INV, SIX, SUBTRACT, INV, SQRT	0.000e+00	0	1.1	64.0	True	(29 + Sqrt[145])/12
+1211	ln(31)	elementary	64	exact	6	x	FIVE, GAMMA, SEVEN, PLUS, LOG	7.759e-16	0	1.1	63.9	True	Log[31]
+1212	y_4, the last of four non-explicit constants recursively derived from Khintchine's [Khinchin's] constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1213	1 + sqrt(6)	algebraic	64	exact	5	x	SIX, SQRT, ONE, PLUS	1.802e-15	0	1.1	64.0	True	1+Sqrt[6]
+1214	best constant K for the integral inequality integral_{0..1} f(x)^2*f'(x)^2 dx <= K*integral_{0..1} f'(x)^4 dx	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1215	Product_{k>=1} (1-1/2^k)^(-1)	special	64	not found	0			1.000e+00	0	1.1	nan	False	1/QPochhammer[1/2, 1/2]
+1216	square root of 12	algebraic	64	exact	5	x	THREE, SQRT, SIX, DIVIDE	7.692e-16	0	1.1	64.0	True	Sqrt[12]
+1217	C, a coin tossing constant related to the asymptotic variance of the length of the longest run of consecutive heads	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	1/12 + Pi^2/(6*Log[2]^2)
+1218	gamma = 8*lambda^2, a critical threshold of a boundary value problem, where lambda is Laplace's limit constant A033259	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1219	infinite product constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[(1 + \[FormalK]^(-1))^\[FormalK]^(-1), {\[FormalK], 1, Infinity}]
+1220	log 10800/π	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	Log10[10800/Pi]
+1221	accumulation point of the logistic map	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1222	sqrt(13)	algebraic	64	exact	5	x	FOUR, NINE, PLUS, SQRT	3.695e-16	0	1.1	64.0	True	Sqrt[13]
+1223	4*(8 - 4*sqrt(2) - log(2))/(2*sqrt(2) - 1)	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	4(8-4Sqrt[2]-Log[2])/(2Sqrt[2]-1)
+1224	ln(37)	elementary	64	exact	6	x	SIX, ARCSINH, COSH, SQR, LOG	3.690e-16	0	1.1	64.0	True	Log[37]
+1225	2 + phi, with the golden section phi from A001622	algebraic	64	exact	4	x	GOLDENRATIO, TWO, PLUS	4.910e-16	0	1.1	64.0	True	2 + GoldenRatio
+1226	Gamma(1/4)	special	64	exact	6	x, GAMMA	FOUR, INV, GAMMA, GAMMA	2.205e-15	0	1.1	63.9	True	Gamma[1/4]
+1227	'theta', the unique positive root of the equation polygamma(x) = log(Pi), where polygamma(x) gives gamma'(x)/gamma(x), t	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1228	(65 + 9*sqrt(3))/22	algebraic	64	exact	9	x, FIVE, SUBTRACT, NINE, DIVIDE	THREE, SQRT, FIVE, PLUS	0.000e+00	0	1.1	64.0	True	(65+9Sqrt[3])/22
+1229	Sum_{n>=1} prime(n)/(2^n)	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[Prime[i]/2^i,{i,1000}]
+1230	ln(41)	elementary	64	exact	6	x	SIX, SQR, FIVE, PLUS, LOG	2.392e-16	0	1.1	64.0	True	Log[41]
+1231	ln(43)	elementary	64	exact	6	x	SIX, SQR, SEVEN, PLUS, LOG	1.181e-16	0	1.1	64.0	True	Log[43]
+1232	ln(47)	elementary	64	exact	6	x, EXP	TWO, SEVEN, SQR, SUBTRACT	6.921e-16	0	1.1	64.0	True	Log[47]
+1233	an optimal stopping constant related to the Secretary problem	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1234	2D lattice sum analog of Euler γ	special	64	not found	0			1.000e+00	0	1.1	nan	False	-2*Zeta[1/2]*(Zeta[1/2, 1/4] - Zeta[1/2, 3/4])
+1235	-zeta'(1/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	-Derivative[1][Zeta][1/2]
+1236	ln(53)	elementary	64	exact	6	x	SEVEN, SQR, FOUR, PLUS, LOG	5.593e-16	0	1.1	64.0	True	Log[53]
+1237	1000^(1/5)	algebraic	64	exact	8	FIVE, x, POWER	THREE, FIVE, POWER, EIGHT, TIMES	2.231e-16	0	1.1	64.0	True	1000^(1/5)
+1239	ln(59)	elementary	64	exact	6	x	FIVE, EIGHT, SQR, SUBTRACT, LOG	2.178e-16	0	1.1	64.0	True	Log[59]
+1240	ln(61)	elementary	64	exact	6	x	THREE, EIGHT, SQR, SUBTRACT, LOG	6.482e-16	0	1.1	64.0	True	Log[61]
+1241	sqrt(17)	algebraic	64	exact	4	x, ARCCOSH	FOUR, ARCSINH	2.154e-16	0	1.1	64.0	True	Sqrt[17]
+1242	sqrt(2*Pi*e)	elementary	64	exact	7	x	PI, PI, PLUS, EULER, TIMES, SQRT	4.298e-16	0	1.1	64.0	True	Sqrt[2Pi E]
+1243	Hardy-Littlewood prime quadruples constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	(27*Product[((-4 + Prime[\[FormalK]])*Prime[\[FormalK]]^3)/(-1 + Prime[\[FormalK]])^4, {\[FormalK], 3, Infinity}])/2
+1244	four thirds pi	elementary	64	exact	4	x, TAN	THREE, SQRT	4.241e-16	0	1.1	64.0	True	4*Pi/3
+1245	ln(67)	elementary	64	exact	6	x	EIGHT, SQR, THREE, PLUS, LOG	6.337e-16	0	1.1	64.0	True	Log[67]
+1246	(4*sqrt(2)*Pi^2)/gamma(1/4)^2	special	64	exact	11	EIGHT, SQRT, x, DIVIDE, SQRT	FOUR, THREE, ARCTAN, TAN, DIVIDE, GAMMA	4.182e-16	0	1.1	64.0	True	(4*Sqrt[2]*Pi^2)/Gamma[1/4]^2
+1247	ln(71)	elementary	64	exact	6	x	EIGHT, SQR, SEVEN, PLUS, LOG	1.459e-15	0	1.1	64.0	True	Log[71]
+1248	Pi*e/2	elementary	64	exact	5	x	ONE, ARCSIN, EULER, TIMES	2.288e-15	0	1.1	64.0	True	(Pi*E)/2
+1249	ln(73)	elementary	64	exact	6	x	EIGHT, SQR, NINE, PLUS, LOG	1.242e-15	0	1.1	64.0	True	Log[73]
+1250	asymptotic value of the second raw moment of the maximal exponent in the prime factorizations of n (A051903)	special	64	not found	0			1.000e+00	0	1.1	nan	False	1 + Sum[(2*j - 1)*(1 - 1/Zeta[j]), {j, 2, 400}]
+1251	Korn constant	rational	64	exact	7	x	SEVEN, INV, TWO, SUBTRACT, EIGHT, DIVIDE	2.062e-16	0	1.1	64.0	True	56/13
+1252	alpha, the unique solution on [2,oo) of the equation alpha*log((2*e)/alpha)=1	special	64	not found	0			1.000e+00	0	1.1	nan	False	-1/ProductLog[-1/(2*E)]
+1253	sqrt(19)	algebraic	64	exact	6	x, SQR	FOUR, SQR, THREE, PLUS	1.426e-15	0	1.1	64.0	True	Sqrt[19]
+1254	ln(79)	elementary	64	exact	6	x	TWO, NINE, SQR, SUBTRACT, LOG	6.098e-16	0	1.1	64.0	True	Log[79]
+1255	Hayman constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Gamma[1/4]^4/(4*Pi^2)
+1256	ln(83)	elementary	64	exact	6	x	NINE, SQR, TWO, PLUS, LOG	4.020e-16	0	1.1	64.0	True	Log[83]
+1257	pi(2)^(1/2)	elementary	64	exact	5	x	PI, TWO, SQRT, TIMES	7.996e-16	0	1.1	64.0	True	Pi*2^(1/2)
+1258	ln(89)	elementary	64	exact	6	x	NINE, SQR, EIGHT, PLUS, LOG	1.187e-15	0	1.1	64.0	True	Log[89]
+1259	Freiman constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	(2221564096 + 283748*Sqrt[462])/491993569
+1260	Van der Pauw constant	elementary	64	exact	5	x	TWO, LOG, PI, DIVIDE	7.839e-16	0	1.1	64.0	True	Pi/Log[2]
+1261	Gasper constant	algebraic	64	not found	0			1.000e+00	0	1.1	nan	False	Root[-1134 - 3780*#1 - 5013*#1^2 - 3247*#1^3 - 948*#1^4 - 14*#1^5 + 55*#1^6 + 9*#1^7 & , 1]
+1262	ln(97)	elementary	64	exact	7	x	FOUR, SQR, NINE, SQR, PLUS, LOG	1.553e-15	0	1.1	64.0	True	Log[97]
+1263	2ln(10)	elementary	64	exact	6	x	NEG, NINE, SUBTRACT, SQR, LOG	3.857e-16	0	1.1	64.0	True	2*Log[10]
+1264	100^(1/3)	algebraic	64	exact	7	THREE, x, POWER	NEG, NINE, SUBTRACT, SQR	1.531e-15	0	1.1	64.0	True	100^(1/3)
+1265	Product_{p prime} (1 + 1/p^(4/3) + 1/p^(5/3))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1266	Feigenbaum delta	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1267	3pi/2	elementary	64	exact	5	SIX, x, DIVIDE	ONE, ARCTAN	0.000e+00	0	1.1	64.0	True	3*Pi/2
+1268	rod constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{-1 + Cos[#1]*Cosh[#1] & , 4.730040744862704026`19.67486488179338}]
+1269	sqrt(23)	algebraic	64	exact	6	x	FOUR, SQR, SEVEN, PLUS, SQRT	1.111e-15	0	1.1	64.0	True	Sqrt[23]
+1270	John constant lower bound	special	64	exact	4	x	PI, EXP, SQRT	1.846e-16	0	1.1	64.0	True	I^(-I)
+1271	two-arc beam detection constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`TwoArcApproximationBeamDetectionConstant == -2*\[FormalA] - \[FormalB] + 2*Pi - Cos[\[FormalB]/2] + Sec[\[FormalB]/2] + 2*Tan[\[FormalA]/2] + Sin[\[FormalB]/2]*Tan[\[FormalA]/2], \[FormalA] == 4*ArcTan[Sqrt[\[FormalC]]] && \[FormalB] == 2*ArcSin[2*Cos[\[FormalA]]] && \[FormalB] == 2*ArcSin[2*Cos[\[FormalA]]] && \[FormalC] == Root[1 + 65*\[FormalX] - 2139*\[FormalX]^2 + 20476*\[FormalX]^3 - 78054*\[FormalX]^4 + 126214*\[FormalX]^5 - 78054*\[FormalX]^6 + 20476*\[FormalX]^7 - 2139*\[FormalX]^8 + 65*\[FormalX]^9 + \[FormalX]^10, \[FormalX], 4]]
+1272	second moment of the reciprocal gamma distribution	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1273	unique solution > 1 of the equation x*log(x)=2(x-1)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1274	xi_3 = 5*G, the volume of an ideal hyperbolic cube, where G is Gieseking's constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1275	'lambda', a Sobolev isoperimetric constant related to the "rod inequality", arising from the elasticity study of a rod t	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1276	Lower limit of backward value of 5^n	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1277	hypersphere maximal volume dimension constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{-2 + Log[Pi]*#1 - PolyGamma[0, #1/2]*#1 & , 5.25694640486057678013283838869`29.720733549361597}]
+1278	2*Pi^2*log(2) - 7*zeta(3)	special	64	not found	0			1.000e+00	0	1.1	nan	False	2Pi^2Log[2]-7Zeta[3]
+1279	log 648000/π	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	Log10[648000/Pi]
+1280	Pi*csc(Pi/5)	elementary	64	exact	7	x, PI, DIVIDE	FIVE, PI, DIVIDE, SIN	0.000e+00	0	1.1	64.0	True	Pi*Csc[Pi/5]
+1281	sqrt(29)	algebraic	64	exact	6	x	FIVE, GAMMA, FIVE, PLUS, SQRT	4.948e-16	0	1.1	64.0	True	Sqrt[29]
+1282	analog of Lévy's constant in case of the nearest integer continued fraction of -1/2<x<1/2	elementary	64	exact	8	x, LOG	TWO, ARCSINH, NEG, ARCSIN, SQR, DIVIDE	3.216e-16	0	1.1	64.0	True	Exp[Pi^2/(12*Log[GoldenRatio])]
+1283	sqrt(31)	algebraic	64	exact	6	x, SQR	FIVE, GAMMA, SEVEN, PLUS	4.786e-16	0	1.1	64.0	True	Sqrt[31]
+1284	pi^(3/2)	elementary	64	exact	5	x	THREE, PI, POWER, SQRT	4.785e-16	0	1.1	64.0	True	Pi^(3/2)
+1285	1000^(1/4)	algebraic	64	exact	7	x	THREE, THREE, ARCSINH, COSH, POWER, SQRT	6.002e-15	0	1.1	64.0	True	1000^(1/4)
+1286	a constant related to A000151	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1287	c for which b(n+1) = c^(b(n)/n) neither explodes nor converges (A278453)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1288	'lambda', a Sobolev isoperimetric constant related to the "membrane inequality", arising from the study of a vibrating m	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1289	zeta(3/4) * Product_{p prime} (1 + 1/p^(5/4) - 1/p^2 - 1/p^(9/4)) (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1290	sqrt(37)	algebraic	64	exact	4	x	SIX, ARCSINH, COSH	1.022e-15	0	1.1	64.0	True	Sqrt[37]
+1291	Tau	elementary	64	exact	4	x	PI, PI, PLUS	1.131e-15	0	1.1	64.0	True	2*Pi
+1292	2 Pi/sin(arctan(2 Pi))	elementary	64	exact	6	x	PI, PI, PLUS, ARCSINH, COSH	8.376e-16	0	1.1	64.0	True	2*Pi/Sin[ArcTan[2*Pi]]
+1293	sqrt(41)	algebraic	64	exact	6	x	SIX, SQR, FIVE, PLUS, SQRT	0.000e+00	0	1.1	64.0	True	Sqrt[41]
+1294	sqrt(43)	algebraic	64	exact	6	x	SIX, SQR, SEVEN, PLUS, SQRT	0.000e+00	0	1.1	64.0	True	Sqrt[43]
+1295	Froda constant	elementary	64	exact	4	x	EULER, TWO, POWER	3.374e-15	0	1.1	64.0	True	2^E
+1296	(real) period of the elliptic function sn(x,1/2)	special	64	not found	0			1.000e+00	0	1.1	nan	False	8*EllipticK[-1/3]/Sqrt[3]
+1297	sqrt(47)	algebraic	64	exact	6	x, SQR	TWO, SEVEN, SQR, SUBTRACT	2.591e-16	0	1.1	64.0	True	Sqrt[47]
+1298	3ln(10)	elementary	64	exact	7	x	THREE, FIVE, POWER, EIGHT, TIMES, LOG	0.000e+00	0	1.1	64.0	True	3*Log[10]
+1299	John constant upper bound	special	64	not found	0			1.000e+00	0	1.1	nan	False	ConditionalExpression[Extension`JohnConstantUpperBound == Exp[\[FormalLambda]*Pi], Pi/Exp[2*\[FormalLambda]*Pi] == Sum[(\[FormalK]*Exp[-1/2*(\[FormalK]*Pi)/\[FormalLambda]])/(\[FormalK]^2 + \[FormalLambda]^2), {\[FormalK], 1, Infinity}]]
+1300	hypersphere maximal surface area dimension constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{Log[Pi] - PolyGamma[0, #1/2] & , 7.25694640486057678013283838869`29.860753915673623}]
+1301	sqrt(53)	algebraic	64	exact	6	x, SQR	SEVEN, SQR, FOUR, PLUS	0.000e+00	0	1.1	64.0	True	Sqrt[53]
+1302	c_o, coefficient associated with the asymptotic evaluation c_o*2^(n^2/4) of the number of subspaces of the n-dimensional	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1303	c_e, coefficient associated with the asymptotic evaluation c_e*2^(n^2/4) of the number of subspaces of the n-dimensional	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1304	e^2	elementary	64	exact	3	x	TWO, EXP	2.404e-16	0	1.1	64.0	True	E^2
+1305	sqrt(59)	algebraic	64	exact	6	x	FIVE, EIGHT, SQR, SUBTRACT, SQRT	3.469e-16	0	1.1	64.0	True	Sqrt[59]
+1306	digital search tree θ constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Sum[(2^(((-1 + \[FormalK])*\[FormalK])/2)*\[FormalK]*Sum[(-1 + 2^\[FormalI])^(-1), {\[FormalI], 1, \[FormalK]}])/Product[-1 + 2^\[FormalJ], {\[FormalJ], 1, \[FormalK]}], {\[FormalK], 1, Infinity}]
+1307	sqrt(61)	algebraic	64	exact	6	x, SQR	THREE, EIGHT, SQR, SUBTRACT	9.098e-16	0	1.1	64.0	True	Sqrt[61]
+1308	Sierpiński's third constant, K3 = lim_{n->oo} ((1/n) * (Sum_{i=1..n} (A004018(i))^2) - 4 * log(n))	special	64	not found	0			1.000e+00	0	1.1	nan	False	4/3 (24*Log[Gamma[3/4]] - 12*Log[Pi] + 72*Log[Glaisher] - 5*Log[2] + 6*EulerGamma - 3)
+1309	sqrt(67)	algebraic	64	exact	6	x, SQR	EIGHT, SQR, THREE, PLUS	1.085e-15	0	1.1	64.0	True	Sqrt[67]
+1310	sqrt(71)	algebraic	64	exact	6	x, SQR	EIGHT, SQR, SEVEN, PLUS	1.265e-15	0	1.1	64.0	True	Sqrt[71]
+1311	sqrt(73)	algebraic	64	exact	6	x	EIGHT, SQR, NINE, PLUS, SQRT	6.237e-16	0	1.1	64.0	True	Sqrt[73]
+1312	polygon circumscription constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Product[Sec[Pi/\[FormalK]], {\[FormalK], 3, Infinity}]
+1313	sqrt(79)	algebraic	64	exact	6	x	TWO, NINE, SQR, SUBTRACT, SQRT	0.000e+00	0	1.1	64.0	True	Sqrt[79]
+1314	sqrt(83)	algebraic	64	exact	6	x	NINE, SQR, TWO, PLUS, SQRT	3.047e-17	0	1.1	64.0	True	Sqrt[83]
+1315	4ln(10)	elementary	64	exact	7	x	NEG, NINE, SUBTRACT, LOG, FOUR, TIMES	3.857e-16	0	1.1	64.0	True	4*Log[10]
+1316	Varga's constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1317	3pi	elementary	64	exact	4	x	PI, THREE, TIMES	1.131e-15	0	1.1	64.0	True	3*Pi
+1318	sqrt(89)	algebraic	64	exact	6	x	NINE, SQR, EIGHT, PLUS, SQRT	1.883e-16	0	1.1	64.0	True	Sqrt[89]
+1319	Wagon's constant	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1320	Product_{p prime} (1 + 1/p^(5/4) + 1/p^(3/2) + 1/p^(7/4))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1321	sqrt(97)	algebraic	64	exact	7	x	FOUR, SQR, NINE, SQR, PLUS, SQRT	3.607e-16	0	1.1	64.0	True	Sqrt[97]
+1322	π^2	elementary	64	exact	3	x	PI, SQR	3.600e-16	0	1.1	64.0	True	Pi^2
+1323	smallest number > 1 with the same digits in decimal and binary	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1324	2*zeta(3/2)^4/(3*sqrt(2*Pi)*zeta(3))	special	64	not found	0			1.000e+00	0	1.1	nan	False	2*Zeta[3/2]^4/(3*Sqrt[2*Pi]*Zeta[3])
+1325	e^(Pi^2/(6*log(2)))	elementary	64	exact	8	x, LOG	EIGHT, SQR, LOG, PI, SQR, DIVIDE	6.621e-16	0	1.1	63.4	True	E^(Pi^2/(6Log[2]))
+1326	z_c = phi^5 (where phi is the golden ratio), a lattice statistics constant which is the exact value of the critical acti	algebraic	64	exact	4	x	FIVE, GOLDENRATIO, POWER	4.325e-15	0	1.1	63.5	True	GoldenRatio^5
+1327	5ln(10)	elementary	64	exact	7	x	NEG, NINE, SUBTRACT, LOG, FIVE, TIMES	7.715e-16	0	1.1	63.4	True	5*Log[10]
+1328	4pi	elementary	64	exact	4	x	PI, FOUR, TIMES	1.131e-15	0	1.1	64.0	True	4*Pi
+1329	6ln(10)	elementary	64	exact	7	x	SIX, NEG, NINE, SUBTRACT, POWER, LOG	0.000e+00	0	1.1	63.5	True	6*Log[10]
+1330	Imaginary part of first non-trivial zero of zeta function	special	64	not found	0			1.000e+00	0	1.1	nan	False	Im[ZetaZero[1]]
+1331	Product_{j>=1, j!=2} zeta(j/2) (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1332	exponential reiterated constant	elementary	64	exact	3	x	EULER, EXP	2.462e-15	0	1.1	63.6	True	E^E
+1333	5pi	elementary	64	exact	4	x	PI, FIVE, TIMES	2.262e-16	0	1.1	64.0	True	5*Pi
+1334	7ln(10)	elementary	64	exact	7	x, EXP	SEVEN, NEG, NINE, SUBTRACT, POWER	6.613e-16	0	1.1	63.7	True	7*Log[10]
+1335	Product_{p prime} (1 + 1/p^(6/5) + 1/p^(7/5) - 1/p^2 - 1/p^(11/5) - 1/p^(12/5)) (negated)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1336	8ln(10)	elementary	64	exact	7	x	NEG, NINE, SUBTRACT, LOG, EIGHT, TIMES	3.857e-16	0	1.1	63.9	True	8*Log[10]
+1337	6pi	elementary	64	exact	4	x	PI, SIX, TIMES	1.131e-15	0	1.1	63.7	True	6*Pi
+1338	Product_{p prime} (1 + 1/p^(6/5) + 1/p^(7/5) + 1/p^(8/5) + 1/p^(9/5))	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1339	e^pi - pi	elementary	64	exact	5	x, PI, PLUS	PI, EXP	1.776e-16	0	1.1	63.9	True	E^Pi - Pi
+1340	e^3	elementary	64	exact	3	x	THREE, EXP	1.769e-16	0	1.1	64.0	True	E^3
+1341	9ln(10)	elementary	64	exact	7	x	NINE, NEG, NINE, SUBTRACT, POWER, LOG	1.371e-15	0	1.1	64.0	True	9*Log[10]
+1342	imaginary part of 2nd nontrivial zero of Riemann zeta function	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1343	7pi	elementary	64	exact	4	x	PI, SEVEN, TIMES	1.777e-15	0	1.1	63.8	True	7*Pi
+1344	pi pow e	elementary	64	exact	4	x	EULER, PI, POWER	1.582e-16	0	1.1	63.7	True	Pi^E
+1345	Gelfond's constant	elementary	64	exact	3	x	PI, EXP	9.212e-16	0	1.1	64.0	True	E^Pi
+1346	imaginary part of 3rd nontrivial zero of Riemann zeta function	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1347	8pi	elementary	64	exact	4	x	PI, EIGHT, TIMES	1.131e-15	0	1.1	64.0	True	8*Pi
+1348	9pi	elementary	64	exact	4	x	PI, NINE, TIMES	1.131e-15	0	1.1	64.0	True	9*Pi
+1349	pi cubed	elementary	64	exact	4	x	THREE, PI, POWER	2.292e-15	0	1.1	63.9	True	Pi^3
+1350	π^π	elementary	64	exact	5	PI, INV, x, POWER	PI	3.897e-16	0	1.1	64.0	True	Pi^Pi
+1351	e^4	elementary	64	exact	3	x	FOUR, EXP	1.041e-15	0	1.1	64.0	True	E^4
+1352	radian	elementary	64	exact	7	x, FIVE, DIVIDE	SIX, SQR, PI, DIVIDE	0.000e+00	0	1.1	64.0	True	180/Pi
+1353	pi^4	elementary	64	exact	4	x	PI, SQR, SQR	8.753e-16	0	1.1	64.0	True	Pi^4
+1354	Product_{j>=1, j!=3} zeta(j/3)	none	64	not found	0			1.000e+00	0	1.1	nan	False	
+1355	Golden angle degrees	algebraic	64	exact	8	x, SEVEN, GAMMA, DIVIDE	FIVE, SQRT, THREE, PLUS	0.000e+00	0	1.1	63.7	True	180*(3 - Sqrt[5])
+1356	e^5	elementary	64	exact	3	x	FIVE, EXP	1.915e-16	0	1.1	64.0	True	E^5
+1357	pi^5	elementary	64	exact	4	x	FIVE, PI, POWER	1.115e-15	0	1.1	64.0	True	Pi^5
+1358	e^6	elementary	64	exact	3	x	SIX, EXP	1.409e-16	0	1.1	64.0	True	E^6
+1359	e^(2pi)	elementary	64	exact	4	x	PI, EXP, SQR	1.486e-15	0	1.1	64.0	True	E^(2*Pi)
+1360	Jenny constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	(-9 + 7^(-E^(-1) + E))*Pi^2
+1361	pi^6	elementary	64	exact	4	x	SIX, PI, POWER	2.838e-15	0	1.1	64.0	True	Pi^6
+1362	e^7	elementary	64	exact	3	x	SEVEN, EXP	4.147e-16	0	1.1	63.7	True	E^7
+1363	e^8	elementary	64	exact	3	x	EIGHT, EXP	9.153e-16	0	1.1	63.9	True	E^8
+1364	pi^7	elementary	64	exact	4	x	SEVEN, PI, POWER	1.506e-15	0	1.1	63.9	True	Pi^7
+1365	10800/π	elementary	64	exact	9	x, THREE, DIVIDE	SEVEN, GAMMA, FIVE, PI, DIVIDE, DIVIDE	0.000e+00	0	1.1	64.0	True	10800/Pi
+1366	e^9	elementary	64	exact	3	x	NINE, EXP	2.245e-16	0	1.1	64.0	True	E^9
+1367	Gram point crossover constant	special	64	not found	0			1.000e+00	0	1.1	nan	False	Root[{-RiemannSiegelTheta[#1] + Pi*#1 & , 9146.69819317145926586619766347`29.961264349227967}]
+1368	pi^8	elementary	64	exact	4	x	EIGHT, PI, POWER	3.834e-16	0	1.1	64.0	True	Pi^8
+1369	e^(3pi)	elementary	64	exact	5	x	THREE, PI, EXP, POWER	3.670e-15	0	1.1	63.6	True	E^(3*Pi)
+1370	e^10	elementary	64	exact	4	x	FIVE, EXP, SQR	0.000e+00	0	1.1	63.7	True	E^10
+1371	pi^9	elementary	64	exact	4	x	NINE, PI, POWER	9.763e-16	0	1.1	64.0	True	Pi^9
+1372	pi^10	elementary	64	exact	5	x	FIVE, PI, SQR, POWER	1.398e-15	0	1.1	64.0	True	Pi^10
+1373	648000/π	elementary	64	exact	10	SEVEN, GAMMA, x, DIVIDE	PI, FIVE, SIX, TIMES, SQR, DIVIDE	7.055e-16	0	1.1	64.0	True	648000/Pi
+1374	e^(4pi)	elementary	64	exact	5	x, LOG	PI, FOUR, TIMES	0.000e+00	0	1.1	64.0	True	E^(4*Pi)
+1375	e^(5pi)	elementary	64	exact	5	x, LOG	PI, FIVE, TIMES	0.000e+00	0	1.1	64.0	True	E^(5*Pi)
+1376	e^(6pi)	elementary	64	exact	5	x	SIX, PI, EXP, POWER	2.523e-15	0	1.1	63.9	True	E^(6*Pi)
+1377	e^(7pi)	elementary	64	exact	5	x	SEVEN, PI, EXP, POWER	1.745e-15	0	1.1	64.0	True	E^(7*Pi)
+1378	e^(8pi)	elementary	64	exact	5	x, LOG	PI, EIGHT, TIMES	0.000e+00	0	1.1	64.0	True	E^(8*Pi)
+1379	e^(9pi)	elementary	64	exact	5	NINE, x, LOG, DIVIDE	PI	3.849e-16	0	1.1	64.0	True	E^(9*Pi)
+1380	e^(10pi)	elementary	64	exact	6	x, SQRT, LOG	PI, FIVE, TIMES	0.000e+00	0	1.1	64.0	True	E^(10*Pi)
+1381	Ramanujan's constant	elementary	64	not found	0			1.000e+00	0	1.1	nan	False	E^(Sqrt[163]*Pi)

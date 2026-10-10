@@ -1,13 +1,13 @@
 """Run a command and measure what a user would feel: wall time, peak memory (the process and its
 children), and the responsiveness of the machine (how long a trivial child process takes to start,
 probed every 2 s). The command is killed at a memory cap or a time limit."""
-import subprocess, threading, time
+import os, subprocess, threading, time
 import psutil
 
 
 def _probe_latency():
     t0 = time.perf_counter()
-    subprocess.run(["cmd", "/c", "exit"], capture_output=True)
+    subprocess.run(["cmd", "/c", "exit"] if os.name == "nt" else ["true"], capture_output=True)
     return time.perf_counter() - t0
 
 

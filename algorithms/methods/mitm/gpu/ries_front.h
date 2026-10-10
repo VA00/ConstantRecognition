@@ -1,4 +1,4 @@
-// ries_front.h - a RIES-like command line for the meet-in-the-middle search (ries_cpu.cpp, ries_gpu.cu)
+// ries_front.h - a RIES-like command line for the meet-in-the-middle search (ries_cpu.cpp, ries_gpu.cu, ries_metal.mm)
 //
 // Author: Andrzej Odrzywolek
 // Date: October 4, 2026
@@ -22,7 +22,8 @@
 //   --once        x appears exactly once (explicit formulas); default: any number of times, as in RIES
 //   --kl K --kr K the longest left and right side directly (instead of -l)
 //   --tol E       "exact" means the root within E * 2.2e-16 relative (default 16); --tolrel R: within R relative
-//   --threads N   (ries_cpu) threads for the right-side table, default all; --vram GB (ries_gpu) device memory cap
+//   --threads N   (ries_cpu) threads for the right-side table, default all; --vram GB (ries_gpu, ries_metal) device
+//                 memory cap
 //   --consts, --funcs, --ops LIST   the buttons by name, as mitm_cr (e.g. --funcs LOG,EXP,SQRT)
 // Output: as RIES, the equations that come ever closer to T, by increasing size {total number of symbols}, up to the
 // first one that holds within the tolerance ('exact' match), in RIES's notation. Sizes count symbols: x = 1, 2 x = 3

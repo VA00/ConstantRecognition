@@ -294,3 +294,315 @@ tolerance, acceptance in double precision on the host.
 `bench_df64.cu`, `fp_rates.cu`; binaries (`mitm_gpu.exe`, `ries_cpu.exe`, `ries_gpu.exe`, `mitm_cr_ref.exe`,
 `mitm_cr_ref_cl.exe`, test programs) and `df64_ref.txt` (made by `gen_df64_ref.py`) are build outputs, not in git. Results:
 `benchmark/results/v0_mitm_win5080_{cuda,cuda_vhost,cpu1,cpu12}_<config>.tsv` and `_raw.txt`.
+
+## m3: MacBook Pro, Apple M3 Max, Metal (2026-10-04)
+
+The Metal backend of the plan, built and measured in one night, with the CPU baseline on the same machine. Apple GPUs
+have no double precision, so the GPU computes in df64 (pairs of floats, `df64.h`) and only finds candidates; every
+decision is taken in double precision on the host, with `mitm_cr`'s own code.
+
+### Machine
+
+- CPU: Apple M3 Max, 14 cores (10 performance, 4 efficiency), 36 GB unified memory; macOS 26.6.2
+- GPU: Apple M3 Max, 30 cores, Metal 4 (family Apple9); recommended working set 28.1 GB, largest buffer 21 GB
+- Compiler: Apple clang 21.0.0, Command Line Tools only (no Xcode): `-O3 -std=c++17 -ffp-contract=off`; the kernels
+  are compiled at run time (`MTLMathModeSafe`, precise library functions, no FMA contraction)
+- CPU reference: `mitm_cr_ref` (`make cpu`), Apple's libm
+
+### The answer
+
+**On benchmark v0 the Apple GPU gives the same verdicts as `mitm_cr` in four of the seven configurations and differs
+by at most 1 exact identification in the other three; it is 10 to 16 times faster than one CPU core, but only 1.2 to
+3.0 times faster than all 14 cores of the M3 Max.** All 1348 constants with >= 17 digits, one process per run, wall
+time from process start to end (after the tuning of 5 October, section "Tuning"):
+
+| config | exact / false pos., Metal | exact / false pos., CPU | Metal | CPU, 1 thread | CPU, 14 threads | Metal vs 1 thread | Metal vs 14 threads |
+|---|---|---|---|---|---|---|---|
+| \|L\|<=4, \|R\|<=5 | 444 / 3 | 444 / 3 | 0.2 s | 0.9 s | 0.3 s | 4.5 | 1.5 |
+| \|L\|<=5, \|R\|<=6 | 532 / 8 | 532 / 8 | 2.3 s | 24.2 s | 2.8 s | 10 | 1.2 |
+| \|L\|<=5, \|R\|<=6, x any number of times | 550 / 8 | 550 / 8 | 2.4 s | 23.4 s | 2.8 s | 10 | 1.2 |
+| \|L\|<=6, \|R\|<=6 | 557 / 51 | 557 / 53 | 29.6 s | 442 s | 66.7 s | 15 | 2.3 |
+| \|L\|<=5, \|R\|<=7, tol 2 eps | 547 / 9 | 548 / 9 | 16.0 s | 158 s | 22.5 s | 10 | 1.4 |
+| RIES's buttons, x any number of times, \|L\|<=7, \|R\|<=7 | 539 / 8 | 539 / 8 | 40.6 s | 659 s | 94.7 s | 16 | 2.3 |
+| \|L\|<=6, \|R\|<=7, tol 2 eps | 568 / 121 | 569 / 125 | 46.2 s | not run | 138 s | - | 3.0 |
+
+(Tags `m3_metal_*`, `m3_cpu1_*`, `m3_cpu14_*` in `benchmark/results/`; the CPU gives the same counts on 1 and 14
+threads. The CPU numbers equal Windows' except 6/6, 557 / 53 instead of 557 / 52, and 6/7, 569 / 125 instead of
+570 / 123: Apple's libm. `--bench` counts 2 308 910 pairs here, 2 310 800 with icx, 2 310 973 with MSVC. The kernels
+are compiled for the longest left and right sides of the run, so the first run of a new pair of lengths, or after a
+change of the kernels, takes up to 1.2 s longer: Metal compiles them then, later runs use its cache. The times above
+are of such later runs.)
+
+- **The same answers.** 4/5, 5/6, anyx 5/6 and RIES's buttons 7/7: no constant changes its verdict. The rest differ
+  by 1 exact identification and a few chance matches of the CPU, all for one reason (section "Differences" below).
+- **The M3 Max CPU is fast.** One core runs `mitm_cr` 2.3 times faster than one core of the Ryzen 9 5900X (5/6:
+  24.2 s against 55.9 s), and 14 cores finish 5/6 in 2.8 s (Ryzen, 12 threads: 6.1 s). Against that, the GPU wins
+  clearly only where the left sides are long (6/6, 7/7, 6/7: 2.3 to 3.0 times).
+- **Against the RTX 5080** (CUDA, double precision, section win5080): the RTX is 3.1 to 5.5 times faster (5/6: 0.7 s
+  against 2.3 s; 6/6: 8.7 s against 29.6 s; 6/7: 10.8 s against 46.2 s). The Mac's GPU computes everything in df64
+  (exp is 75 times slower than float, see below), and the right-side table needs a pass on the host.
+
+### What was built (`algorithms/methods/mitm/gpu/`)
+
+- `mitm_metal.mm` (host, Objective-C++) and `mitm_kernels.metal` (kernels) -> `mitm_metal`: the search, with the
+  command line, input and output of `mitm_cr` (`run_mitm_v0.py --exe`, `compare_v0.py`, `run_matrix.sh` work unchanged).
+  Extra options: `--vram GB` (cap of the GPU buffers, default 60 % of the recommended working set, at most `--memcap`),
+  `--verify gpu` (decisions in df64 alone, below), `--tol-u`, `--margin`, `--cw`, `--cand-max`, `--df64-stats`,
+  `--input FILE`. `mitm_cr.cpp` is included as a library, unchanged except one line (below).
+- `ries_metal.mm` -> `ries_metal`: the RIES-like program (`ries_front.h`) on the GPU, as `ries_gpu`.
+- `df64_ops.h`: the buttons of `mitm_cr` in df64 (values, derivatives, error bounds), shared by the kernels and the host;
+  `mitm_metal_shared.h`: data layouts of host and kernels; `metal_ctx.h`: device, buffers, dispatches;
+  `embed_metal.sh`: the kernel sources as one string in the binary (no file next to it is needed).
+- `df64_apply.h` and the `DF64_METAL_TEST` part of `test_df64.cpp` -> `test_df64_metal`: the df64 tests in a Metal
+  kernel; `fp_rates_metal.mm`: float and df64 throughput of the GPU.
+- `Makefile`: `make metal` (`mitm_metal`, `ries_metal`), `make test` (adds `test_df64_metal --ftz` on macOS),
+  `make fp_rates_metal`.
+
+Changes to existing files: `mitm_cr.cpp`: peak memory on macOS in the right unit (`ru_maxrss` is in bytes there, in
+kilobytes on Linux; it printed "517 GB"); `df64.h`: the host-only `df_to_double` hidden from Metal (`double` does not
+compile there); `test_df64.cpp`: the function table moved to `df64_apply.h`, the Metal run added;
+`benchmark/depth/monitor.py`: the responsiveness probe runs `true` outside Windows (it ran `cmd /c exit`, so
+`run_mitm_v0.py` failed on macOS).
+
+### How it works
+
+The pipeline is `mitm_cuda.cu`'s, with df64 values on the GPU and the decisions on the host:
+
+1. **Right sides.** Generated on the GPU in df64 (lockstep odometer, as CUDA), sorted, one entry per df64 value (the
+   lowest rank), split by length; passes over value ranges when everything does not fit (|R| <= 7: 5 passes under
+   the 14.4 GB cap). Then the host evaluates every entry in double with `mitm_cr`'s buttons (sorted by rank, so that
+   neighbouring codes share their prefix, as the odometer) and stores the difference c = double value - df64 value as a
+   float: the kernels compare with df64 value + c, i.e. with `mitm_cr`'s own values. As `mitm_cr`, one code per double
+   value is kept: an entry whose double value is that of a code of lower rank (shorter, or of the same length) is
+   dropped. Entries whose double value is more than 32 u from their df64 value (7-9 % of them: Gamma, powers, chains
+   of exp) go to a side table per length, sorted by the double value, which the kernels search as well.
+2. **Left sides.** Per length, all open targets in batches: df64 values and derivatives with `enum_L`'s guards,
+   corrected for the rounding of T to df64 (L(T) = L(Tdf) + L'(T - Tdf)), and two error bounds: one of the df64
+   rounding (for the window) and `mitm_cr`'s own double-precision bound (`eval_full`'s rule, in float), sorted by value
+   and target, one entry per (target, df64 value).
+3. **Matching.** Per distinct left value and right length: every right side with |L - R| <= tol |T| |L'| + 2 E (mitm_cr's
+   window, widened by the df64 error bound E of L) is a candidate for the host. A left value whose double-precision
+   error bound alone exceeds errcap gets none: `mitm_cr` would try its candidates and reject them all
+   (`atanh(tanh(x))` at large x had windows of thousands of entries before this rule). At most 256 candidates per
+   left value and length, closest first (reached 78 times at 5/6, 55 740 times for RIES's buttons 7/7; no verdict
+   depends on it).
+4. **Decisions** on the host, per target, as `mitm_cr`'s `flush` and `match_length` would take them: each left value
+   re-evaluated in double with all guards, duplicates of a double value dropped, per length the candidates inside
+   `mitm_cr`'s window, closest first, at most maxtry, Newton steps, errcap (`Worker::newton`, `r_error`). The GPU passes
+   the host 3 000 (4/5) to 14 million (RIES's buttons 7/7) candidates, of which it tries 1 350 to 3 900 (`mitm_cr` tries
+   1 400 to 610 000, mostly of left values whose candidates errcap rejects: the "candidates" column of the output
+   differs for that reason).
+5. **Closest pairs** (FAILURE lines, the listing of `ries_metal`): per (target, total length) on the GPU with `mitm_cr`'s
+   noise check (its error bounds, one byte per right side), near ties included, then decided in double on the host
+   in `mitm_cr`'s order, and refined by Newton steps as `mitm_cr`. The slot of a (target, length) holds an upper
+   bound of the distance (df64 distance + margin E), lowered only by pairs that pass the noise check for sure; a pair
+   is recorded when its lower bound reaches the slot. So the host sees every pair that can be the closest in double,
+   whatever the order of the threads or the batches. (Until 5 October a doubtful pair could lower the slot and hide a
+   sure one, and the FAILURE lines changed from run to run in a few cases.)
+6. **Own primitives:** a stable LSD radix sort of (64- or 32-bit key, 32-bit value) with 8-bit digits (tiles reordered
+   in threadgroup memory before the scatter; equal digits ranked with SIMD ballots): 100 million pairs in 0.18 s;
+   prefix sums; compactions. Atomics only 32-bit.
+
+### Differences from `mitm_cr`, and why
+
+Verdicts that differ (`compare_v0.py`, 80-digit classification of both outputs):
+
+| config | different verdicts | same equation |
+|---|---|---|
+| 4/5, 5/6, anyx 5/6, RIES's buttons 7/7 | 0 | 87-97 % |
+| 6/6 | 2: chance matches of the CPU (454, 915) not found | 95 % |
+| 5/7, tol 2 | 1: 248 (Rayleigh kurtosis excess) exact on the CPU, not found | 87 % |
+| 6/7, tol 2 (CPU on 14 threads) | 5: 248 as above; 4 chance matches of the CPU not found (194, 290, 576, 720) | 85 % |
+
+**The cause: two codes with the same df64 value and different double values.** A df64 value has 48 bits, a double 53,
+and the GPU keeps one code per df64 value. 248: `x atan(tan 4) = acos(cos(8 / asin(cos 2)))` is the CPU's equation;
+on the GPU, `acos(cos(...))` has the same df64 value as `asin(sin(...))` of lower rank, which is kept, but in double
+their values differ by 1.5 windows of tol 2 eps. 454 (a chance match): `cos(5) tanh(e^e)` has the same df64 value as
+`cos(tan(atan 5 + pi))`, whose df64 value is 40 u off. Keeping the two lowest codes per df64 value would remove most
+of these cases at the cost of a larger table (not tried; at |R| <= 7 memory is already the limit).
+
+The other answers that are not the same equation have another equation of the same length and the same verdict, as
+between the CPU builds of Windows.
+
+**Planted formulas** (`test_planted.py`, 210 formulas of length 3-9, 5/6): 189 retrieved by both, the same counts per
+length (the RTX 5080 missed two more there, through CUDA's math library; here every decision is taken with the CPU's
+libm). **Known identities** (pi, e, the lemniscate constant; with `--anyx` the Dottie number and the omega constant):
+the same equations as `mitm_cr`.
+
+**What the GPU's tables miss.** At |R| <= 6 the search on the GPU sees 19 950 984 distinct right values, 6.4 % fewer
+than `mitm_cr`'s 21 307 215: 3.4 % are not usable in df64 (2.1 % sin, cos or tan of arguments beyond 1608, 1.3 %
+magnitudes above 3.4e38 or below 2^-76 = 1.3e-23; `mitm_cr`'s table evaluated in df64), the other 3.1 % are codes
+merged with another code of the same df64 value (above). Duplicate left values are dropped per batch.
+
+### df64 on Metal
+
+- **Bit identity.** The 44 000 cases of `test_df64` in a Metal kernel give results bit-identical to the CPU when the
+  CPU flushes subnormal floats to zero as well (`test_df64_metal --ftz`, which sets the FZ bit of the ARM FPCR):
+  0 of 44 000 differ. Without it, 59 differ (sqrt 6, exp 2, gamma 51), every one through an intermediate or a low
+  part below 2^-126. So the Apple GPU computes IEEE float arithmetic with flush-to-zero, in the safe math mode, and the
+  pragma against FMA contraction works.
+- **Accuracy:** the table of the win5080 section holds for the GPU, except for results below about 1e-30, whose low
+  part is flushed: there exp and gamma lose up to 2^-30 relative. Hence the usable range on Metal starts at 2^-76
+  (instead of 2^-100): the low part keeps 2^-50 relative there. A result flushed to zero is unusable unless zero is
+  exact (exp(-100) = 0 in df64).
+- **Buttons in df64** (`df64_ops.h`): x^n for integer |n| <= 64 by repeated squaring (2^3 = 8 exactly, as the C
+  library; exp(s log t) is a few u off), Gamma of the integers 1..21 exact; SINPI, COSPI, TANPI as `mitm_cr`'s
+  sin(M_PI a) with the double M_PI, 1.2e-16 below pi (sinpi(1) = 1.2e-16, tanpi(1/2) = 1.6e16), to first order.
+- **df64 against double** (`--df64-stats`, right sides usable in both):
+
+  | \|df64 - double\| / \|double\|, in u = 2^-48 | < 1 | 1-4 | 4-16 | 16-64 | 64-256 | 256-4096 | 4096-2^20 | >= 2^20 |
+  |---|---|---|---|---|---|---|---|---|
+  | length <= 6 (21.8 M) | 53.2 % | 22.1 % | 12.6 % | 6.8 % | 2.5 % | 1.8 % | 0.7 % | 0.3 % |
+  | length <= 7 (456 M) | 48.9 % | 22.8 % | 13.9 % | 7.8 % | 3.2 % | 2.3 % | 0.9 % | 0.3 % |
+
+  So a fixed window of a few u around the df64 values would lose 10-20 % of the right sides: the double values from the
+  host (or side tables) are needed.
+- **Throughput** (`fp_rates_metal`, dependent chains, 2^20 threads):
+
+  | operation | float, G/s | df64, G/s | float / df64 |
+  |---|---|---|---|
+  | fma (df64: mul + add) | 577 | 147 | 3.9 |
+  | exp | 577 | 7.7 | 75 |
+  | log | 456 | 7.1 | 65 |
+  | sin | 177 | 10.5 | 17 |
+  | 1/x | 426 | 34 | 12 |
+  | sqrt | 321 | 51 | 6.3 |
+
+### What a GPU without double decides alone (`--verify gpu`)
+
+What WebGPU gets without a WebAssembly verifier: the df64 table as generated (no double values, no side tables),
+candidates inside tol-u u, accepted by Newton steps and error bounds in df64 on the GPU:
+
+| config | --verify host (= mitm_cr) | gpu, tol 1 u | 2 u | 4 u | 8 u | 16 u | 2 u, errcap 16x |
+|---|---|---|---|---|---|---|---|
+| 4/5 | 444 / 3 | | 425 / 3 | | | | |
+| 5/6 | 532 / 8 | 506 / 11 | 506 / 15 | 507 / 20 | 511 / 32 | 515 / 50 | 516 / 15 |
+
+df64 alone loses 3-5 % of the identifications and gains false positives; a wider tolerance buys few identifications
+for many false positives. Of the 26 identifications lost at 5/6, 24 contain Gamma, whose df64 values are tens of u off
+(even e^x = Gamma(3/2), constant 289); errcap 1.6e-11 (16 times larger, as the df64 error bounds) recovers 10 of them.
+
+### Where the time goes
+
+Timers of `mitm_metal` (`_raw.txt`):
+
+| config | right sides (GPU / host) | left sides | sort + dedup | match | host decisions | total |
+|---|---|---|---|---|---|---|
+| \|L\|<=5, \|R\|<=6 | 0.54 s (0.18 / 0.36) | 0.59 s | 0.54 s | 0.57 s | 0.02 s | 2.3 s |
+| \|L\|<=6, \|R\|<=6 | 0.54 s | 7.86 s | 12.97 s | 7.98 s | 0.13 s | 29.5 s |
+| \|L\|<=5, \|R\|<=7, tol 2 | 13.69 s (gen 2.7, sort 1.8, split 0.9; double values 7.9) | 0.52 s | 0.41 s | 1.20 s | 0.02 s | 15.9 s |
+| RIES's buttons, anyx, 7/7 | 0.25 s | 6.53 s | 25.42 s | 7.18 s | 1.11 s | 40.5 s |
+| \|L\|<=6, \|R\|<=7, tol 2 | 13.92 s | 7.86 s | 9.91 s | 14.21 s | 0.14 s | 46.1 s |
+
+- The **sort of the left values** dominates the long runs, as on CUDA (12.8e9 left values for RIES's buttons 7/7; the
+  sort runs at about 1.7 ns per value, 8 passes of 8 bits over 12 bytes, about 150 GB/s). A cheaper deduplication
+  first would pay off.
+- The **right-side table of |R| <= 7** takes 13.8 s (CPU, 14 threads: 17.6 s; RTX 5080: 2.2 s): the double values of
+  457 million entries on the host (values 1.0 s, the bounds kernel and rank sorts 2.1 s, duplicates and side tables
+  2.3 s), and five passes because of the memory cap. Peak memory 15.0 GB (unified: host and GPU together).
+- The **host decisions** are cheap (0.02-1.1 s): the double precision costs the Mac little time, the df64 arithmetic
+  of the generation and the window search cost more.
+
+### Tuning (5 October)
+
+Profiled with Instruments (Xcode 27; `xctrace record` with a template of Metal System Trace and the "Performance
+Limiters" counter set, made once in the GUI; every counter sample attributed to the kernel running at its time).
+6/6 on the first 300 constants of v0, before:
+
+| kernel | GPU time | occupancy (target) | ALU | limiter |
+|---|---|---|---|---|
+| `k_gen_l` (left sides) | 2.82 s | 17 % (25 %) | 28 % | F32 40 %, instruction issue 37 %; registers spilled to L1 (L1 register residency 56 %) |
+| `k_match` | 1.50 s | 32 % (39 %) | 27 % | instruction issue 57 %, integer 43 % |
+| `k_rs_scatter2_64` (sort) | 1.27 s | 25 % (95 %) | 11 % | threadgroup launch 99 % |
+| no kernel running (host waits) | about 20 % of the samples | | | |
+
+The Apple GPU allocates registers per thread at launch: `k_gen_l` ran at 17 % occupancy and spilled registers to L1
+(its df64 state: value, derivative and two error bounds per node, for MAXK = 12 nodes), the sort and the matching
+waited for the host between short command buffers. Three changes, none of which changed a result (output identical to
+a reference build after each step):
+
+1. The `--verify gpu` branch of `k_match` moved to its own kernel `k_match_verify`, the window statistics only with
+   `MITM_METAL_CHECK`: fewer registers in `k_match`.
+2. The kernels are compiled for the longest sides of the run (`MM_LK` = `--kl`, `MM_RK` = `--kr`, prepended to the
+   source) instead of MAXK = 12, and read the forms from device memory instead of copying them: 6 instead of 12 nodes
+   at 6/6.
+3. Fewer host waits: per left-side batch, the generation is one command buffer, and keys, both sorts, deduplication,
+   prefix sum and compaction another (all radix passes encoded at once, the sizes from the generation's counters);
+   matching in ranges of 2^20 distinct left values per dispatch instead of 2^18.
+
+After (same run): `k_gen_l` 2.13 s (occupancy hardly higher, 18 %, target 27 %, but half the spills: L1 register
+residency 31 %), `k_match` 1.26 s (197 GB/s read instead of 156), the sort unchanged, no kernel running in about 10 %
+of the samples. Whole v0 runs: 5/6 2.5 -> 2.3 s, 6/6 35.7 -> 29.6 s, RIES's buttons 7/7 46.8 -> 40.6 s, 6/7
+51.8 -> 46.2 s.
+
+What did not help: smaller sort tiles (1024 instead of 2048 elements per threadgroup: the same 1.71 ns per element,
+200 million pairs alone and in the run), `noinline` on the df64 buttons (slower). The left-side generation stays at
+an occupancy target of 27 %, set by its registers; the sort now runs at its stand-alone rate, so the next gain there
+is fewer elements (a deduplication before the sort) or fewer bits per key, not tuning.
+
+The same day also fixed the closest pairs (section "How it works", item 5) and one bound: `mitm_cr`'s error bound of
+a power with a negative base is NaN (`eval_full` multiplies the exponent's error by log t), so `mitm_cr` treats such a
+left side as noisy; the kernels now do the same (`cpu_bound_nan`). With both, the output equals `mitm_cr`'s (same
+equation and result) for 16 more constants at 5/6 and 42 more with RIES's buttons 7/7, all FAILURE lines; no verdict
+changed (`compare_v0.py` of the runs before and after: 0 different verdicts in every configuration; the `--verify gpu`
+runs identical).
+
+### `ries_metal` against `ries_cpu` and RIES
+
+zeta(3) = 1.2020569031595942 (no known closed form, every level runs to the end), RIES's default symbols:
+
+| level | RIES (1 core) | ries_cpu, 1 thread | ries_cpu, 14 threads | ries_metal | left/right symbols |
+|---|---|---|---|---|---|
+| -l2 | 0.16 s | 0.10 s | 0.18 s | 0.09 s | 5/5 |
+| -l3 | 0.79 s | 0.25 s | 0.26 s | 0.08 s | 6/5 |
+| -l4 | 3.8 s | 0.66 s | 0.36 s | 0.15 s | 6/6 |
+| -l5 | 21.8 s | 3.5 s | 3.3 s | 0.56 s | 7/6 |
+| -l6 | 117 s | 13.7 s | 5.1 s | 1.9 s | 7/7 |
+| -l7 | 285 s | 13.7 s | 5.2 s | 1.8 s | 7/7 |
+
+(RIES: the `ries` binary in `gpu/`, wall time; `ries_cpu` and `ries_metal`: the times they print, process start to end.
+One M3 Max core runs RIES 1.3 times faster than the Ryzen.)
+
+**The listings** of `ries_metal` and `ries_cpu` (the lines of equations) are identical in 13 of 18 checks (zeta(3) at
+-l2 to -l6; -l4 for pi, e, ln 2, sqrt 2, alpha, 1/alpha, Catalan, pi^2/6, the Dottie number, the omega constant, Euler's
+gamma, Feigenbaum's delta and 1.3063778838630806, all to 16-17 digits; alpha = 0.0072973525693, 1/alpha =
+137.035999084). Rerun after the tuning; a build with the closest-pair logic of 4 October gives the same listings in
+the cases that differ. The five others:
+
+- zeta(3) at -l5 and -l6: `ries_cpu` stops at `atan2(atan2(x,e^(e^6)),x) = 1/e^(e^6)` ('exact', 11 symbols), which
+  holds for every x (e^(e^6) = 1e175: atan2(x, 1e175) = x / 1e175 to double precision); e^(e^6) is outside df64's range,
+  so `ries_metal` lists three more approximations instead (at -l6 it ends with a chance 'exact' match of 14 symbols,
+  4.8e14 equations, beyond the precision limit). At -l5 one line has another equation of the same size and distance
+  (`5^((e-2)"/x) = 8` against `((2-e)"/x)"/5 = 8`).
+- 1/alpha, Euler's gamma and 1.3063778838630806 at -l4: one or two lines show another equation of the same size and
+  the same distance to 6 digits (`tanpi(log_(e^8)(x))^2` against `tanpi(ln(8"/x))^2`, `8-4"/7` against
+  `8-sqrt(sqrt(7))`, `tanpi(x"/pi-3)` against `tanpi(x"/pi-2)`): two codes with the same df64 value and different
+  double values, as in "Differences". (ln 2 to 8 digits, 0.69314718, gives one line more of that kind.) For
+  1.3063778838630806 `ries_metal` also misses `phi-e^(-x) = atan2(e,1/phi)` (size 9, 4.7e-10) and lists a worse
+  equation of size 9 and one of size 10 instead; not investigated.
+
+The "values" counts of the two programs differ: `ries_cpu` counts distinct left values per chunk of 2^20 codes, so a
+value that recurs in several chunks counts several times; `ries_metal` counts per batch.
+
+### Recommendations for the WebGPU phase
+
+- **df64 on the GPU, decisions in double (WebAssembly) works**: on Metal it gives `mitm_cr`'s verdicts. The verifier
+  needs (a) the double values of the right sides, one evaluation per table entry (21 million at |R| <= 6, 0.35 s on 14
+  cores here), (b) the candidates of the GPU (28 000 for all of v0 at 5/6), and (c) `mitm_cr`'s decisions per target. Without (a), a fixed window around the df64 values misses 10-20 % of the
+  right sides (table above).
+- Apple GPUs flush subnormal floats (so WebGPU on them will too, not checked elsewhere): the usable range
+  [2^-76, 3.4e38] of `df64_ops.h` keeps df64 accurate there.
+- Without a verifier, 3-5 % fewer identifications and more false positives (v0, above); almost all the lost ones
+  contain Gamma, so a more accurate df64 Gamma is the first thing to improve.
+- The browser will be limited by the left-side sort and by memory: |R| <= 6 needs 0.33 GB of tables plus left-side
+  batches; |R| <= 7 (6.8 GB) is out of reach.
+
+### Files
+
+`algorithms/methods/mitm/gpu/`: `mitm_metal.mm`, `mitm_kernels.metal`, `mitm_metal_shared.h`, `metal_ctx.h`,
+`df64_ops.h`, `df64_apply.h`, `embed_metal.sh`, `ries_metal.mm`, `fp_rates_metal.mm`; changed: `Makefile`,
+`test_df64.cpp`, `df64.h`, `ries_front.h` (comments), `../mitm_cr.cpp` (one line), `benchmark/depth/monitor.py`. Build
+outputs, not in git: `mitm_metal`, `ries_metal`, `test_df64_metal`, `test_df64`, `fp_rates_metal`, `mitm_cr_ref`,
+`df64_ref.txt`, the generated `mitm_kernels_src.h` and `df64_metal_src.h`. Results: `benchmark/results/v0_mitm_m3_{metal,cpu1,cpu14}_<config>.tsv` and `_raw.txt`;
+`v0_mitm_m3_metal_vgpu_*` (`--verify gpu`). The tools need only the Command Line Tools; `run_mitm_v0.py` needs
+`psutil` (`pip install psutil`).
