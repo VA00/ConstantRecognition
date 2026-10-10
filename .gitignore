@@ -154,6 +154,7 @@ synthetic_benchmark/*.csv
 # ==== Debug files ====
 found.txt
 benchmark/build/formula_values_cache.wl
+benchmark/run/ordner_cache/
 algorithms/methods/gpu_cuda/*.exe
 algorithms/methods/gpu_cuda/*.exp
 algorithms/methods/gpu_cuda/*.lib
