@@ -23,7 +23,12 @@ the same CALC4 buttons and success test, every formula evaluated in FP32 and the
 64 FLT_EPSILON verified in FP64 on the CPU; build with `algorithms/methods/gpu_cuda/build_benchmark.bat`), `run/run_ries_v0.py`
 (RIES by R. Munafo, GPL, 2026 May 06 version: a bidirectional search for equations LHS(x) = RHS with its
 default symbols; its claimed match, an equation marked exact or the best one when it stops early, is
-solved for x with 80 digits). `run/compare_results_v0.py` puts them side by side; `results/SURVEY_2026-10-01.md`
+solved for x with 80 digits), `run/score_mesearch_v0.py` (MESearch 2.0 by J. Zurutuza Salsamendi, 2013: an
+exhaustive bidirectional search for the shortest expressions; it has only a GUI, driven by the scripts in
+`run/mesearch_gui`, and takes at most 15 significant digits, so its input is the value rounded to 15 digits;
+all 38 functions and 236 constants, among them 165 named constants besides pi, e, sqrt 2 and phi;
+expressions of length <= 5; its answer, the first expression it lists, is computed with 80 digits).
+`run/compare_results_v0.py` puts them side by side; `results/SURVEY_2026-10-01.md`
 records the first full survey (with versions and the machine; its LaTeX and PDF are made from it with
 pandoc, see below). On the 1348 constants with >= 17 digits:
 
@@ -36,11 +41,16 @@ pandoc, see below). On the 1348 constants with >= 17 digits:
 | Wolfram\|Alpha | 411 (and 231 agreeing to the ~20 digits it shows, without an expression) | 691 | 15 | 1 h of queries |
 | AskConstants | 993 | 13 | 342 | 4.8 h of searches, about 1 h on 5-6 kernels |
 | RIES -l2 / -l4 / -l5 | 497 / 535 / 548 | 6 / 9 / 12 | 841 / 801 / 784 | 22 s / 9.5 min / 50 min on 12 cores |
+| MESearch 2.0, length <= 5 | 738 | 4 | 606 | 1.7 h of searches (4.3 h with the GUI driven) |
 
-The union of all tools is 1007: nearly everything the others recognize, AskConstants does too, except
+The union of all tools except MESearch is 1007: nearly everything the others recognize, AskConstants does too, except
 mostly what RIES finds as roots of equations no explicit formula reaches (x e^(1/x) = 2e for a binary
 search tree constant, log_(2-x) x = -1/6 for the hexanacci constant, x/(3 + ln x) = 1/e); 341 constants
-are recognized by no tool. Most wrong answers of Constant Recognition, Maple and AskConstants are the same traps: Ramanujan's
+are recognized by no tool. MESearch adds 54, all with its named constants, which make up much of its
+count: of its 738, 146 are a named constant alone (Madelung's constants, the Stieltjes constants, ...)
+and 153 more combine one (1 - Catalan, the Granville-Soundararajan constant as 2 hall - 1); 439 use no
+constant besides pi, e, sqrt 2, phi and ln 2. With MESearch the union is 1061 and 287 are recognized by no tool. Most wrong answers of Constant Recognition, Maple and
+AskConstants, and all four of MESearch's, are the same traps: Ramanujan's
 pi approximation, the decimal selvage numbers, nu = 1 + 1.2e-12, a 50000-term partial sum of pi/2.
 Wolfram|Alpha proposes closed forms only for numbers written without an exponent (0.0000807, not
 8.07e-5), so the queries are positional decimals.
@@ -73,6 +83,7 @@ Each run script documents its usage and options in its header; for example (from
 ```
 python run/run_benchmark_v0.py --engine <path to vsearch_batch.js> --maxk 6
 python run/run_ries_v0.py --ries <path to ries.exe> --level 2
+python run/score_mesearch_v0.py <MESearch results dir>   # after run/mesearch_gui/start.ps1 and batch.ps1
 python run/compare_results_v0.py
 ```
 

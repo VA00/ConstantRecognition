@@ -36,6 +36,7 @@ TOOLS = [  # label, results file
     ('RIES -l2', os.path.join(RESULTS, 'v0_ries_l2.tsv')),
     ('RIES -l4', os.path.join(RESULTS, 'v0_ries_l4.tsv')),
     ('RIES -l5', os.path.join(RESULTS, 'v0_ries_l5.tsv')),
+    ('MESearch length<=5', os.path.join(RESULTS, 'v0_mesearch_l5.tsv')),
 ]
 WRONG = ('false positive', 'rational fallback')
 
