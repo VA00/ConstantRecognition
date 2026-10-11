@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { ActiveWorker, Precision, ErrorMode } from '../lib/types';
 import { Domain } from '../lib/complex';
 import { formatDuration, formatCount } from '../lib/estimate';
@@ -186,6 +187,9 @@ export function Sidebar({
               )}
             </button>
           </div>
+          <Link href="/mitm" className="mt-2 inline-block text-[11px] text-[#0066cc] hover:underline">
+            Equation search (meet in the middle, real numbers) →
+          </Link>
         </div>
 
         {/* Settings */}

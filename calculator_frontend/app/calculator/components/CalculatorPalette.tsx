@@ -158,18 +158,21 @@ export function CalculatorPalette({
   const enabled = new Set(enabledTokens);
   const countEnabled = (tokens: string[]) => tokens.filter((t) => enabled.has(t)).length;
 
-  // The standard set is what the page enables on load; everything else
-  // (extras and default-disabled buttons: -1, 0, i) is counted separately
+  // The standard set is what the page enables on load
   const standardTokens = defaultEnabledTokens(calculator);
-  const totalButtons = standardTokens.length;
-  const totalEnabled = countEnabled(standardTokens);
+  const standardEnabled = countEnabled(standardTokens);
   // The custom integer counts only while its typed number is usable
   const customActive = enabled.has(CUSTOM_INT) && 'value' in parseCustomInteger(customInt);
   const intsEnabled = countEnabled(calculator.constantsInt) + (customActive ? 1 : 0);
   const extrasEnabled = intsEnabled + countEnabled([
     ...calculator.constantsExtra, ...calculator.extra, ...calculator.defaultDisabled,
   ]);
-  const isStandard = totalEnabled === totalButtons && extrasEnabled === 0;
+  const isStandard = standardEnabled === standardTokens.length && extrasEnabled === 0;
+  // The counter: enabled buttons out of all the palette's buttons (the custom integer included)
+  const totalEnabled = standardEnabled + extrasEnabled;
+  const totalButtons = calculator.constantsCore.length + calculator.constantsDigits.length +
+    calculator.constantsExtra.length + calculator.constantsInt.length + 1 + calculator.unaryCore.length +
+    calculator.unaryOther.length + calculator.operators.length + calculator.extra.length;
 
   const renderGrid = (tokens: string[], cols: string) => (
     <div className={`grid ${cols} gap-2`}>
@@ -195,7 +198,7 @@ export function CalculatorPalette({
         </div>
         <div className="flex flex-col items-end gap-1">
           <div className="rounded-full bg-[#0066cc]/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#0066cc]">
-            {totalEnabled}/{totalButtons} buttons{extrasEnabled > 0 ? ` +${extrasEnabled}` : ''}
+            {totalEnabled}/{totalButtons} buttons
           </div>
           {!isStandard && (
             <button
@@ -203,7 +206,7 @@ export function CalculatorPalette({
               onClick={onEnableAll}
               disabled={disabled}
               className="text-[10px] font-medium text-[#0066cc] hover:underline disabled:cursor-not-allowed disabled:opacity-60"
-              title={`Enable the ${totalButtons} default buttons, disable the rest`}
+              title={`Enable the ${standardTokens.length} default buttons, disable the rest`}
             >
               Reset to standard
             </button>

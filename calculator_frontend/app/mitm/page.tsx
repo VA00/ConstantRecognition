@@ -6,7 +6,7 @@
 // once and keeps it, so every further number costs only its left sides (milliseconds).
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ErrorMode } from '../calculator/lib/types';
+import { ErrorMode, examples } from '../calculator/lib/types';
 import { parseTargetInput, targetDelta, formatComplex } from '../calculator/lib/complex';
 import { withBasePath, wasmVersionQuery } from '../calculator/lib/basePath';
 import {
@@ -29,15 +29,6 @@ const EPS = 2.220446049250313e-16;
 const LIST_CAP = 50;
 const MEMCAP_GB = 1.5;
 
-// Each example with the settings that find it (checked with the engine on the default buttons)
-const EXAMPLES: { value: string; label: string; description: string; anyx?: boolean; kr?: number; enable?: string[] }[] = [
-  { value: '1.919078092376074', label: '\\log_{10} 83', description: 'Found as 10^x = 9^2 + 2' },
-  { value: '0.7390851332151607', label: '\\cos x = x', description: 'Dottie number: x any number of times', anyx: true },
-  { value: '0.5671432904097838', label: 'x\\,e^{x} = 1', description: 'Omega constant: x any number of times', anyx: true },
-  { value: '2.6220575542921198', label: '\\frac{\\Gamma(1/4)^2}{2\\sqrt{2\\pi}}', description: 'Lemniscate constant: needs right sides of 6 symbols and Γ; the first search builds a 0.25 GB table (several seconds), later ones reuse it', kr: 6, enable: ['GAMMA'] },
-  { value: '3.14159', label: '3.14159', description: 'Six digits: searched within ± half a unit of the last digit' },
-];
-
 type Phase = { kind: 'idle' } | { kind: 'building'; start: number; seconds: number } | { kind: 'searching'; start: number };
 
 interface Outcome {
@@ -55,7 +46,9 @@ export default function MitmPage() {
   const [enabledTokens, setEnabledTokens] = useState<string[]>(DEFAULT_TOKENS);
   const [customInt, setCustomInt] = useState('');
   const [kl, setKl] = useState(5);
-  const [kr, setKr] = useState(4);   // small table at a fresh start (milliseconds); larger on request
+  // the table is rebuilt at the first search after any button change; on one thread (the default buttons) it takes
+  // 16 ms at |R| <= 4, 0.2 s at 5 and 5 s at 6, so 5 keeps button changes quick; 6 on request
+  const [kr, setKr] = useState(5);
   const [anyx, setAnyx] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
@@ -315,16 +308,10 @@ export default function MitmPage() {
                 With x once, each equation is solved for x and shown as an explicit formula. Real numbers only.
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
-                {EXAMPLES.map(ex => (
+                {examples.map(ex => (
                   <button
                     key={ex.value}
-                    onClick={() => {
-                      setInputValue(ex.value);
-                      setAnyx(ex.anyx ?? false);
-                      if (ex.kr !== undefined) setKr(Math.max(kr, ex.kr));
-                      const enable = ex.enable ?? [];
-                      if (enable.length > 0) setEnabledTokens(prev => [...prev, ...enable.filter(t => !prev.includes(t))]);
-                    }}
+                    onClick={() => setInputValue(ex.value)}
                     className="px-4 py-2 text-sm bg-gray-100 dark:bg-[#2a2a2e] hover:bg-gray-200 dark:hover:bg-[#3a3a3e] text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
                     title={ex.description}
                   >

@@ -25,8 +25,8 @@ export interface CalculatorDefinition {
 export const CALCULATORS: CalculatorDefinition[] = [
   {
     id: 'calc4',
-    name: 'CALC4',
-    shortName: '36-button scientific RPN calculator',
+    name: 'RPN CALC',
+    shortName: 'Scientific RPN calculator',
     description: 'Default search calculator. Click buttons to restrict the search space.',
     // Euler's identity e^(i pi) + 1 = 0: pi, e, -1, 0, i. -1, 0 and i start
     // disabled (see defaultDisabled); enabling i switches the Auto domain to

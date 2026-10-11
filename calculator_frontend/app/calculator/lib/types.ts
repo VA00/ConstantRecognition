@@ -60,8 +60,9 @@ export const defaultErrorSettings: ErrorSettings = {
   customError: '0',
 };
 
-// enable: buttons switched on together with the example (e.g. i for a complex search)
-export const examples: { value: string; label: string; description: string; enable?: string[] }[] = [
+// The examples of both pages, the formula search and the equation search (app/mitm). Clicking one only fills the
+// input box; each is found by both with the settings they load with (checked with their engines, 2026-10-11)
+export const examples: { value: string; label: string; description: string }[] = [
   {
     value: '1.17809724509617246442', 
     label: '\\displaystyle \\int_0^{\\infty} \\left(\\frac{\\sin(x)}{x}\\right)^3 \\, dx', 
@@ -85,8 +86,7 @@ export const examples: { value: string; label: string; description: string; enab
   {
     value: '0.20787957635076190854695561983497877',
     label: 'e^{-\\pi/2}',
-    description: 'Complex search: enables i, which switches the domain to complex; expect i^i',
-    enable: ['I']
+    description: 'Equals i^i'
   },
   {
     value: '10.185916357881301489208560855841',

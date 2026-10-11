@@ -37,9 +37,11 @@ const wasmVersion = (() => {
   
     // Generate a static export in `out/` when running `next build`
     output: "export",
-    // Keep all asset URLs relative to an optional base path (or the current folder)
+    // Keep all asset URLs relative to an optional base path (or the current folder). Not in `next dev`: there
+    // "./" resolves against the page (/mitm/_next/... for /mitm/), every subpage's scripts 404, and switching
+    // pages fails with "Application error: a client-side exception"
     basePath: normalizedBasePath,
-    assetPrefix: normalizedBasePath ?? "./",
+    assetPrefix: normalizedBasePath ?? (process.env.NODE_ENV === "development" ? undefined : "./"),
     trailingSlash: true,
     images: {
       unoptimized: true,

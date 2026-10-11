@@ -594,12 +594,8 @@ export default function CalculatorPage() {
     setElapsedTime(0);
   };
 
-  const handleExampleClick = (value: string, enable: string[] = []) => {
-    setInputValue(value);
-    if (enable.length > 0) {
-      setEnabledTokens(prev => [...prev, ...enable.filter(t => !prev.includes(t))]);
-    }
-  };
+  // an example only fills the input box; the settings stay as they are
+  const handleExampleClick = (value: string) => setInputValue(value);
 
   return (
     <div className="flex h-screen w-screen bg-gray-50 dark:bg-[#1a1a1d] overflow-hidden">
