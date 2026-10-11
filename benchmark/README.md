@@ -32,7 +32,12 @@ expressions of length <= 5; its answer, the first expression it lists, is comput
 `run/run_ordner_v0.py` (Ordner by F. Johansson, part of Fungrim, MIT license, 2021: an index of 3249 real
 numbers by 30-digit keys with the 5375 Fungrim formulas that have those values, used as the minimal
 recognizer, a pure lookup table: its pages go into an SQLite database, the nearest key within 16 eps of the
-input wins, and its shortest formula is computed with 80 digits).
+input wins, and its shortest formula is computed with 80 digits), `run/run_numberdb_v0.py` (NumberDB by
+B. Matschke, https://numberdb.org, data CC BY-SA 4.0: in October 2026 450 tables of numbers with a definition,
+such as values of K(m), zeros of Bessel functions or Pólya's random walk constants, 115,647 real numbers,
+mostly to 100 or more digits; asked through its web API, as Wolfram|Alpha, with the interval of 16 eps around
+the input; its answer, a table and parameter, is scored by NumberDB's own digits of that entry; its GitHub
+repository holds only the first 107 tables, so the site is asked).
 `run/compare_results_v0.py` puts them side by side; `results/SURVEY_2026-10-01.md`
 records the first full survey (with versions and the machine; its LaTeX and PDF are made from it with
 pandoc, see below). On the 1348 constants with >= 17 digits:
@@ -48,6 +53,7 @@ pandoc, see below). On the 1348 constants with >= 17 digits:
 | RIES -l2 / -l4 / -l5 | 497 / 535 / 548 | 6 / 9 / 12 | 841 / 801 / 784 | 22 s / 9.5 min / 50 min on 12 cores |
 | MESearch 2.0, length <= 5 | 738 | 4 | 606 | 1.7 h of searches (4.3 h with the GUI driven) |
 | Ordner (lookup table) | 184 | 2 | 1161 (and 1 stored only as a decimal) | 0.075 s of lookups (55 us per constant) |
+| NumberDB (lookup table, web API) | 286 | 2 | 1060 | 2 min of API requests with a key (about 12 h at the anonymous rate limit) |
 
 One constant was corrected after these runs: the Erdős-Lebensold constant (now id 1069) was 10 times too
 small in v0 (an erratum of the Wolfram Knowledgebase, see `data/v0/README.md`); its verdicts are kept as
@@ -61,8 +67,12 @@ count: of its 738, 146 are a named constant alone (Madelung's constants, the Sti
 and 153 more combine one (1 - Catalan, the Granville-Soundararajan constant as 2 hall - 1); 439 use no
 constant besides pi, e, sqrt 2, phi and ln 2. With MESearch the union is 1061 and 287 are recognized by no tool.
 Ordner, 3249 numbers looked up in 55 us per constant, finds 184, all but one (Barnes G(1/2)) also found
-by other tools: union 1062, 286 by no tool. Most wrong answers of Constant Recognition, Maple and
-AskConstants, all four of MESearch's and both of Ordner's, are the same traps: Ramanujan's
+by other tools: union 1062, 286 by no tool. NumberDB, whose tables are families rather than named constants,
+finds 286, 17 of them by no other tool (Pólya's random walk constants in 5-8 dimensions, Mertens constants of
+primes in arithmetic progressions, Khinchin means K_-2 and K_-3, growth constants of classes of trees, a Salem
+number of degree 38): union 1079, 269 by no tool. Its second wrong answer is an element of its table of Markov
+quadratic irrationals, which converge to (7 - sqrt 5)/2 and agree with it to 14 digits. Most wrong answers of Constant Recognition, Maple and
+AskConstants, all four of MESearch's, both of Ordner's and the first of NumberDB's, are the same traps: Ramanujan's
 pi approximation, the decimal selvage numbers, nu = 1 + 1.2e-12, a 50000-term partial sum of pi/2.
 Wolfram|Alpha proposes closed forms only for numbers written without an exponent (0.0000807, not
 8.07e-5), so the queries are positional decimals.
@@ -97,6 +107,7 @@ python run/run_benchmark_v0.py --engine <path to vsearch_batch.js> --maxk 6
 python run/run_ries_v0.py --ries <path to ries.exe> --level 2
 python run/score_mesearch_v0.py <MESearch results dir>   # after run/mesearch_gui/start.ps1 and batch.ps1
 python run/run_ordner_v0.py                    # downloads Ordner's pages once, into run/ordner_cache
+python run/run_numberdb_v0.py                  # NumberDB's web API; an API key in ~/.config/numberdb/env (see the script)
 python run/compare_results_v0.py
 ```
 

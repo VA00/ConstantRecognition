@@ -38,6 +38,7 @@ TOOLS = [  # label, results file
     ('RIES -l5', os.path.join(RESULTS, 'v0_ries_l5.tsv')),
     ('MESearch length<=5', os.path.join(RESULTS, 'v0_mesearch_l5.tsv')),
     ('Ordner (lookup table)', os.path.join(RESULTS, 'v0_ordner.tsv')),
+    ('NumberDB (lookup table)', os.path.join(RESULTS, 'v0_numberdb.tsv')),
 ]
 WRONG = ('false positive', 'rational fallback')
 

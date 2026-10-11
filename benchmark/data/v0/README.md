@@ -204,6 +204,12 @@ conjectured to be equal, agreeing to 11 digits).
 For the larger, separate benchmark: Finch's two books themselves; the other OEIS decimal expansions
 (about 14000, with b-files for many digits).
 
+Shamos's Catalog of the Real Numbers (M. I. Shamos, Carnegie Mellon University, 2011): a 700-page PDF of more
+than 10,000 numbers, listed by their digits after the decimal point (15-29 of them), each with closed forms
+(integrals, series, products). The link usually cited, at CiteSeerX, is dead; the Internet Archive keeps a copy:
+https://web.archive.org/web/20220206102634/https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.366.9997&rep=rep1&type=pdf
+"All rights reserved", no licence.
+
 Not used: MathWorld. It is not independent of the Wolfram Knowledgebase (same editor; the
 `MathematicalConstant` entities are its constant pages in structured form), its values are given in the
 text to 10-20 digits, mostly computed in Mathematica or taken from OEIS, and it has no machine-readable
