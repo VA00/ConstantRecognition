@@ -3,6 +3,7 @@
 | Directory | Contents |
 |---|---|
 | `data/v0/` | the benchmark: `constants_v0.tsv` (generated, the file to use), `constants_v0_sources.tsv` (the file to edit), and a README with the columns, sources, ground truth and errata |
+| `data/v1/` | benchmark v1, every OEIS decimal expansion: `constants_v1.tsv` (the file to use), `suspicious_v1.tsv` (entries whose b-file, formula or a near duplicate disagrees), `constants_v1_sources.tsv` (imported from the OEIS data repository), and a README |
 | `build/` | scripts that import the sources into `constants_v0_sources.tsv`, build `constants_v0.tsv` from it and check it |
 | `run/` | scripts that run a recognition tool over `constants_v0.tsv`, and `compare_results_v0.py` |
 | `results/` | result files of the runs done so far, and `SURVEY_2026-10-01.md`, the first full survey (versions, settings, machine) |
@@ -108,6 +109,14 @@ python build/import_oeis_finch.py <oeisdata checkout>    # only to refresh the O
 python build/import_mesearch_names.py <oeisdata checkout> # only to refresh the MESearch rows
 wolframscript -file build/build_constants_v0.wls         # writes data/v0/constants_v0.tsv, prints mismatches
 python build/check_constants_v0.py                       # mpmath: needs mpmath (pip install mpmath)
+```
+
+Benchmark v1 (step by step, with the expected numbers and times, in `build/BUILD_v1.md`):
+
+```
+python build/fetch_oeis_v1.py <work dir>                 # the OEIS entries and their b-files, outside the repository
+python build/import_oeis_v1.py <work dir>/oeisdata --bfiles <work dir>/bfiles   # writes data/v1/constants_v1_sources.tsv
+wolframscript -file build/build_constants_v1.wls [kernels]   # writes data/v1/constants_v1.tsv and suspicious_v1.tsv
 ```
 
 The build keeps the N[] values of all formulas in `build/formula_values_cache.wl` (not in the repository),
