@@ -88,12 +88,12 @@ def formula(lines):
             if not re.fullmatch(r'\s*(,\s*\d+\s*)?\]', rest):
                 break
             x = inner.strip()
-        if re.search(r':=|(?<![=!<>])=(?!=)|;|/\.|@|//|->|\bN\[', x):
+        if re.search(r':=|(?<![=!<>])=(?!=)|;|/\.|@|//|->|\bN\[|%', x):     # % is the previous output: RealDigits[%]
             return ''
         if ('#' in x or '&' in x) and not x.startswith('Root['):
             return ''
         bound = set(re.findall(r'\{\s*([a-z]\w*)\s*,', x))
-        for name in re.findall(r'(?<![\w$`])[A-Za-z$][A-Za-z0-9$]*', x):
+        for name in re.findall(r'(?<![A-Za-z_$`])[A-Za-z$][A-Za-z0-9$]*', x):    # also after a digit: 2Pi, 2s
             if name[0].isupper() and name not in ALLOWED:
                 return ''
             if not name[0].isupper() and name not in bound:

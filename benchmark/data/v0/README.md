@@ -41,6 +41,7 @@ Classes: 402 elementary, 409 special, 133 algebraic, 13 rational, 424 without cl
 | Plouffe, Miscellaneous Mathematical Constants, Project Gutenberg #634 (1996), https://www.gutenberg.org/ebooks/634 | 109 | 17-256 (truncated) |
 | OEIS decimal expansions citing Finch, Mathematical Constants (2003) or Mathematical Constants II (2018), from https://github.com/oeis/oeisdata (2026-09-30) | 897 | 5-120 |
 | MESearch 2.0 predefined constants (J. Zurutuza Salsamendi, 2013), names only, digits from OEIS | 6 | 22-106 |
+| OEIS A137250, second source for the Erdős-Lebensold constant, whose Wolfram value is wrong (oeisdata 67283234, 2026-10-11) | 1 | 105 |
 
 The Wolfram constants are imported by `build/import_wolfram_constants.wls` (needs internet access): the
 DefiningFormula, the NumericalApproximation with the digits its precision claims, and every
@@ -178,6 +179,14 @@ Errata found in the collected lists, kept in the sources with a note:
 - Wikipedia (as collected), Landau-Ramanujan constant: digit 14, `0.76422365358920066299`, correct
   `0.76422365358922066299`
 - Wolfram Shallit constant: a digit 9 is missing, `1.369451403937`, correct `1.3694514039938` (OEIS A086276)
+- Wolfram Erdős-Lebensold constant: the NumericalApproximation `2.00666645283106875643229e-1` has the wrong
+  exponent; the constant is 2.0066664528... (OEIS A137250, 105 digits; Wolfram's own DefiningFormula,
+  sum_p -log(1 - 1/p)/log p, gives 2.00667 from the primes below 10^7 and the tail). Found on 2026-10-11 by
+  comparing with benchmark v1. Until then v0 had 0.2006666... as its value (id 224); corrected, the
+  constant sorts to id 1069 and ids 224-1068 are the former 225-1069. The results in `../../results` were
+  renumbered with it (`compare_results_v0.py` gives the same tables before and after) and keep their
+  verdicts as recorded, which for this constant were computed with the wrong value: AskConstants answered
+  A137250/10 (scored exact), Wolfram|Alpha and nsimplify gave wrong answers, the other tools found nothing.
 - Wolfram infinite product constant: the DefiningFormula is prod_{k>=1} (1+1/k)^(1/k) = 3.5174872559...,
   the published digits 1.7587436... are the product from k = 2, half of it. The value comes from the
   series 2 exp(sum_n (-1)^(n+1) (zeta(n+1)-1)/n)

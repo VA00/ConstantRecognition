@@ -7,11 +7,13 @@ Code assist: Claude Opus 5.5
 Benchmark v1 is every decimal expansion of a constant in the OEIS: the entries with keyword "cons", not
 dead, whose terms are single digits, and whose name says "decimal expansion" or that lack keyword "base"
 (expansions in other bases have it; so does Champernowne's decimal constant, hence the name test).
+Arrays of several expansions (keyword "tabl") are not one constant and are left out.
 
 Reads a sparse checkout of the OEIS data repository (https://github.com/oeis/oeisdata) holding these
 entries, and their b-files; fetch_oeis_v1.py fetches both (see BUILD_v1.md). Run it first.
 
-Per entry: the digits are its terms, the value is 0.d1 d2 ... * 10^offset (offset = first number of %O).
+Per entry: the digits are its terms, the value is 0.d1 d2 ... * 10^offset (offset = first number of %O),
+with the offset corrected for the entries in OFFSET_ERRATA.
 Checks; an entry that fails one is kept and marked suspicious:
   - b-file against terms, digit by digit at the same index n. The value then has only the digits both
     agree on. A last term that is the b-file's digit rounded up is not suspicious ("last term rounded").
@@ -44,6 +46,28 @@ BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(BENCH, 'data', 'v1', 'constants_v1_sources.tsv')
 V0 = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
 KEEP = 80             # significant digits written
+
+# Wrong offsets in the OEIS (2026-10-11): the digits are right, the decimal point is not. Found by
+# build_constants_v1.wls, where the entry's formula differed from the digits by a power of 10; the name,
+# the formula and the %e or %F line agree on the corrected value. A-number -> correct offset.
+OFFSET_ERRATA = {
+    'A102521': 0,   # Ahmed's 2nd integral, 0.5904...
+    'A110993': 4,   # zeta(zeta(10)) = 1006.03...
+    'A111513': 1,   # |log_10 sin 1 degree| = 1.758...
+    'A113272': 1,   # Gamma(1/4)^4/Pi^3 = 5.572...
+    'A113477': 1,   # Gamma(1/3)^3/(2^(4/3) Pi) = 2.428...
+    'A156547': 0,   # central angle of the dodecahedron, arccos(sqrt(5)/3) = 0.7297...
+    'A160205': 1,   # (989043 + 524338 sqrt(2))/809^2 = 2.644...
+    'A179449': 0,   # volume of the great icosahedron, (5/12)(3 - sqrt(5)) = 0.3183...
+    'A242600': 0,   # -dilog(phi) = 0.5421...
+    'A245698': 0,   # expected distance in an equilateral triangle, 0.2656...
+    'A246644': 0,   # real root of s^3 - s^2 + s - 1/3, 0.4424...
+    'A301862': 0,   # probabilities of intersecting chords, 0.5866..., 0.6781..., 0.7277...
+    'A301863': 0,
+    'A301864': 0,
+    'A319129': 1,   # (1 + sqrt(3) + sqrt(2 sqrt(3)))/2 = 2.296...
+    'A352527': 0,   # -Sum_{k>=1} (-1)^k zeta(2k)/(2k) = 0.6509...
+}
 
 
 def read_seq(f):
@@ -136,6 +160,9 @@ def select(root):
         if 'base' in kw and not re.search(r'decimal expansion', name, re.I):
             skipped['other base'] += 1
             continue
+        if 'tabl' in kw:
+            skipped['array (tabl)'] += 1
+            continue
         entries.append((a, e, kw, name, terms))
     return entries, skipped
 
@@ -190,7 +217,10 @@ def main():
                 if len(bdig) > len(tdig):
                     digits = bdig
                 source = f'terms({len(tdig)}); b-file({len(bdig)})'
-        sig, exp = significant(digits, offset)
+        point = OFFSET_ERRATA.get(a, offset)
+        if point != offset:
+            notes.append(f'OEIS offset {offset} corrected to {point} (the name and the formula agree)')
+        sig, exp = significant(digits, point)
         r, carry = rounded(sig, KEEP)
         rows.append({'key': a, 'name': re.sub(r'^Decimal expansion of (the )?', '', name).rstrip('.')[:160],
                      'keywords': ','.join(k for k in kw if k not in ('cons', 'nonn')), 'offset': offset,
@@ -210,7 +240,8 @@ def main():
             y['check'].append(f'near duplicate of {x["key"]} (agree to {k} of {m} digits)')
             stats['near duplicates'] += 1
 
-    # the same constant in v0 (>= 12 digits, agreeing to all digits both have, at most 20)
+    # the same constant in v0 (>= 12 digits, agreeing to all digits both have within one unit of the last,
+    # as v0 rounds and the OEIS truncates; near-identities that agree to only 20 or 40 digits are not linked)
     v0 = collections.defaultdict(list)
     for r in csv.DictReader(open(V0, encoding='utf-8'), delimiter='\t'):
         m = re.match(r'^-?(\d*)\.?(\d*)(?:[eE]([+-]?\d+))?$', r['value'])    # 1.25, -0.10491, 0.123e5
@@ -222,7 +253,8 @@ def main():
     for r in rows:
         if r['ndigits'] >= 12:
             for s, e, d, i in v0.get((r['sig'][:12], r['exp']), []):
-                if agree((s, e), (r['sig'], r['exp'])) >= min(d, r['ndigits'], 20) - 1:
+                k = min(d, r['ndigits'])
+                if abs(int(s[:k]) - int(r['sig'][:k])) <= 1:
                     r['v0'] = i
     stats['in v0'] = sum(r['v0'] != '' for r in rows)
 

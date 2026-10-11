@@ -49,6 +49,10 @@ pandoc, see below). On the 1348 constants with >= 17 digits:
 | MESearch 2.0, length <= 5 | 738 | 4 | 606 | 1.7 h of searches (4.3 h with the GUI driven) |
 | Ordner (lookup table) | 184 | 2 | 1161 (and 1 stored only as a decimal) | 0.075 s of lookups (55 us per constant) |
 
+One constant was corrected after these runs: the Erdős-Lebensold constant (now id 1069) was 10 times too
+small in v0 (an erratum of the Wolfram Knowledgebase, see `data/v0/README.md`); its verdicts are kept as
+recorded, and the result files were renumbered with v0.
+
 The union of all tools except MESearch is 1007: nearly everything the others recognize, AskConstants does too, except
 mostly what RIES finds as roots of equations no explicit formula reaches (x e^(1/x) = 2e for a binary
 search tree constant, log_(2-x) x = -1/6 for the hexanacci constant, x/(3 + ln x) = 1/e); 341 constants

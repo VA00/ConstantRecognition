@@ -137,7 +137,9 @@ alsoSame = {{"GaussianTwinPrimeConstant", "A337606"}, {"ShanksConstant", "A33760
    {"BrunPrimeQuadrupleConstant", "A213007"}, {"DeBruijnConstant", "A113276"}, {"Brun's constant", "A065421"},
    {"JohnConstantUpperBound", "A244382"},
    (* digit typos (erratum notes), found by the near-duplicate report *)
-   {"Landau-Ramanujan constant", "LandauRamanujanConstant"}, {"ShallitConstant", "A086276"}};
+   {"Landau-Ramanujan constant", "LandauRamanujanConstant"}, {"ShallitConstant", "A086276"},
+   (* a wrong exponent (erratum note), found by benchmark v1 *)
+   {"ErdosLebensoldConstant", "A137250"}};
 sameA = Select[Tally[Select[#["key"] & /@ rows, StringMatchQ[#, "A" ~~ Repeated[DigitCharacter, {6}]] &]], Last[#] > 1 &][[All, 1]];
 mergeKeys[gs_, ks_List] := Module[{pos = Select[Range[Length[gs]], Function[i, AnyTrue[gs[[i]], MemberQ[ks, #["key"]] &]]]},
    If[Length[pos] < 2, gs, Append[Delete[gs, List /@ pos], Join @@ gs[[pos]]]]];
