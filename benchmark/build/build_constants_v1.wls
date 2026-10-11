@@ -17,7 +17,7 @@
      digits of |x|: a formula whose value is minus the digits is negated (noted). A trusted formula
      that disagrees makes the entry suspicious.
    Value: the trusted formula with 64 significant digits when there is one, otherwise OEIS's digits,
-   rounded to 64 when there are more.
+   rounded to 64 when there are more; positional as in v0, with an exponent (d.ddd...e<n>) beyond 10^-64 .. 10^64.
 
    Formulas run in parallel, at most 60 s and 2 GB each, saved to formula_values_cache_v1.wl after every
    400 (so an interrupted build continues where it stopped).
@@ -31,19 +31,37 @@ src = Import[FileNameJoin[{data, "constants_v1_sources.tsv"}], "TSV", "Numeric" 
 cols = First[src];
 src = AssociationThread[cols -> #] & /@ (Rest[src] /. _Missing -> "");
 
-(* "0.31415e1" -> {exact value, unit of the last digit, significant digits}; "" -> no digits *)
-published[""] := {Missing["none"], Missing["none"], 0};
-published[s_String] := Module[{m, int, frac, exp, digits},
+(* "0.31415e1" -> {exact value, unit of the last digit, significant digits, {significant digits, e}} with
+   value = 0.digits * 10^e; "" -> no digits. Beyond 10^(10^7) (the leading digits of the largest Mersenne
+   primes, 9^9^9, 3^^4, Pi^Pi^Pi^Pi) the exact value is too long to compute and is left out: such an entry is
+   written from its digits, and its formula, if it had one, is not checked. Pi^Pi^Pi^Pi = 10^(6.7*10^17)
+   exceeds even $MaxNumber, so these values never pass through a number. *)
+published[""] := {Missing["none"], Missing["none"], 0, {"", 0}};
+published[s_String] := Module[{m, int, frac, exp, digits, e},
   m = First@StringCases[StringTrim[s],
       RegularExpression["^(-?)(\\d*)\\.?(\\d*)(?:[eE]([+-]?\\d+))?$"] :> {"$2", "$3", "$4"}];
   {int, frac, exp} = m;
   exp = If[exp === "", 0, ToExpression[exp]];
   digits = StringDelete[int <> frac, StartOfString ~~ "0" ..];
-  {FromDigits[int <> frac] * 10^(exp - StringLength[frac]), 10^(exp - StringLength[frac]), StringLength[digits]}];
+  e = StringLength[digits] + exp - StringLength[frac];
+  If[Abs[e] > 10^7,
+    {Missing["too large"], Missing["too large"], StringLength[digits], {digits, e}},
+    {FromDigits[int <> frac] * 10^(exp - StringLength[frac]), 10^(exp - StringLength[frac]), StringLength[digits], {digits, e}}]];
 
-(* n significant digits as a plain decimal string *)
-fmt[x_, n_] := If[x == 0, "0",
-   StringReplace[ToString[NumberForm[N[x, n + 10], n, ExponentFunction -> (Null &), NumberSigns -> {"-", ""}]], " " -> ""]];
+(* the digits of 0.digits * 10^e rounded half up to n significant digits, as a decimal string: positional within
+   10^-64 .. 10^64, as in v0; beyond that d.ddd...e<exponent> (2^-1074, e^1000, the Mersenne primes, ...) *)
+dfmt[{digits_String, e_Integer}, n_Integer] := Module[{k = StringLength[digits] - n, s, x = e},
+  s = IntegerString[If[k > 0, Floor[FromDigits[digits]/10^k + 1/2], FromDigits[digits] 10^-k]];
+  If[StringLength[s] > n, s = StringDrop[s, -1]; x++];        (* 999.. rounded up to 1000.. *)
+  Which[
+    Abs[x - 1] > 64, StringTake[s, 1] <> If[n > 1, "." <> StringDrop[s, 1], ""] <> "e" <> ToString[x - 1],
+    x <= 0, "0." <> StringRepeat["0", -x] <> s,
+    x < n, StringTake[s, x] <> "." <> StringDrop[s, x],
+    True, s <> StringRepeat["0", x - n] <> "."]];
+
+(* n significant digits of a number as a decimal string *)
+fmt[x_, n_] := If[x == 0, "0", Module[{d = RealDigits[N[x, n + 10], 10, n + 10]},
+   If[x < 0, "-", ""] <> dfmt[{StringJoin[ToString /@ d[[1]]], d[[2]]}, n]]];
 
 numericalQ[f_String] := StringContainsQ[f, "Sum[" | "Product[" | "Integrate[" | "Limit["];
 
@@ -89,24 +107,25 @@ values = Lookup[cache, $VersionNumber];
 agreeDigits[a_, b_] := If[a == b, 64., Min[64., -Log10[Abs[a - b]/Abs[b]]]];
 
 out = Map[Module[{r = #, p = published[#["value"]], f = #["formula"], ev, v, prec, cls, check = {}, notes = {},
-      value, digits, formula = #["formula"]},
+      value, digits, formula = #["formula"], ok = False},
     If[#["check"] =!= "ok", AppendTo[check, #["check"]]];
     If[#["notes"] =!= "", AppendTo[notes, #["notes"]]];
     {ev, prec, cls} = If[f === "", {$Failed, 0, "none"}, values[f]];
     v = If[NumericQ[ev] && Im[ev] == 0, Re[ev], $Failed];
+    (* ok: the formula is trusted and agrees with the digits *)
     Which[
-      f === "" || MissingQ[p[[1]]], Null,
+      f === "" || p[[3]] == 0, Null,
+      MissingQ[p[[1]]], AppendTo[notes, "formula not checked (value beyond 10^(10^7))"],
       v === $Failed, AppendTo[notes, "formula has no real value (N[] " <> If[NumericQ[ev], "complex", "failed or over 60 s"] <> ")"],
       numericalQ[f], AppendTo[notes, "numerical formula, not trusted: agrees to " <> ToString[Round[agreeDigits[Abs[v], p[[1]]], 0.1]] <> " digits"],
       prec < 80, AppendTo[notes, "N[] Precision " <> ToString[Round[prec, 0.1]] <> ", formula not trusted"],
-      Abs[v - p[[1]]] <= p[[2]], Null,
-      Abs[-v - p[[1]]] <= p[[2]], (formula = "-(" <> f <> ")"; v = -v; AppendTo[notes, "formula negated (OEIS gives the digits of |x|)"]),
+      Abs[v - p[[1]]] <= p[[2]], ok = True,
+      Abs[-v - p[[1]]] <= p[[2]], (formula = "-(" <> f <> ")"; v = -v; ok = True; AppendTo[notes, "formula negated (OEIS gives the digits of |x|)"]),
       True, AppendTo[check, "formula differs from the digits: agree to " <> ToString[Round[agreeDigits[v, p[[1]]], 0.1]] <> " digits"]];
     {value, digits} = Which[
-      MissingQ[p[[1]]], {"", 0},
-      NumericQ[v] && !numericalQ[f] && prec >= 80 && Abs[v - p[[1]]] <= p[[2]], {fmt[v, 64], 64},
-      p[[3]] > 64, {fmt[p[[1]], 64], 64},
-      True, {fmt[p[[1]], p[[3]]], p[[3]]}];
+      p[[3]] == 0, {"", 0},
+      ok, {fmt[v, 64], 64},
+      True, {dfmt[p[[4]], Min[p[[3]], 64]], Min[p[[3]], 64]}];
     <|"id" -> r["key"], "name" -> r["name"], "value" -> value, "digits" -> digits, "formula" -> formula, "class" -> cls,
       "keywords" -> r["keywords"], "sources" -> "OEIS " <> r["source"],
       "check" -> If[check === {}, "ok", StringRiffle[check, "; "]], "notes" -> StringRiffle[notes, "; "], "v0" -> r["v0"]|>] &, src];
@@ -119,7 +138,7 @@ sus = Select[out, #["check"] =!= "ok" &];
 write["suspicious_v1.tsv", sus];
 
 Print["constants_v1.tsv: ", Length[out], " entries, ", Count[out, a_ /; a["digits"] >= 17], " with >= 17 digits, ",
-  Count[out, a_ /; a["digits"] == 64 && a["formula"] =!= "" && !StringContainsQ[a["notes"], "not trusted" | "no real value"]], " with a checked formula"];
+  Count[out, a_ /; a["digits"] == 64 && a["formula"] =!= "" && !StringContainsQ[a["notes"], "not trusted" | "no real value" | "not checked"]], " with a checked formula"];
 Print["classes: ", Tally[Lookup[out, "class"]]];
 Print["suspicious: ", Length[sus], "; formula differs: ", Count[sus, a_ /; StringContainsQ[a["check"], "formula differs"]],
   "; b-file: ", Count[sus, a_ /; StringContainsQ[a["check"], "b-file"]], "; near duplicate: ", Count[sus, a_ /; StringContainsQ[a["check"], "near duplicate"]]];
