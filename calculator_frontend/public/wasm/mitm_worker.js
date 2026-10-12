@@ -6,7 +6,7 @@
 // in worker.js).
 //
 // Messages in:  {type: 'build', id, consts, funcs, ops, kr, memcapGB}
-//               {type: 'search', id, T, tolrel, kl, anyx, listCap}
+//               {type: 'search', id, T, tolrel, kl, anyX, listCap}
 // Messages out: {type: 'ready'} once, then {type: 'built' | 'result', id, ...JSON of the engine}
 //               or {type: 'error', id, error}
 var wasmQuery = (typeof self !== 'undefined' && self.location && self.location.search) ? self.location.search : '';
@@ -46,7 +46,7 @@ function handle(msg) {
             postMessage(b);
         } else if (msg.type === 'search') {
             var r = call('mitm_search', ['number', 'number', 'number', 'number', 'number'],
-                         [msg.T, msg.tolrel || 0, msg.kl, msg.anyx ? 1 : 0, msg.listCap || 0]);
+                         [msg.T, msg.tolrel || 0, msg.kl, msg.anyX ? 1 : 0, msg.listCap || 0]);
             r.type = 'result';
             r.id = msg.id;
             postMessage(r);

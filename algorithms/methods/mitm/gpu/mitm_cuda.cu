@@ -1284,7 +1284,7 @@ static bool gpu_search(Ctx& c, Gpu& G, const std::vector<std::string>& ids, cons
         memset(&A, 0, sizeof A);
         A.forms = G.Lf; A.f0 = (int)c.Lbeg[a]; A.nf = (int)(c.Lbeg[a + 1] - c.Lbeg[a]); A.uoff = d_luoff[a]; A.usz = d_lusz[a]; A.upt = upt;
         A.act = d_act; A.T = d_T; A.kmin = o.kappa_min; A.kmax = o.kappa_max; A.pmax = o.periodic_max;
-        A.xonce = !o.anyx; A.want_der = 1; A.bench = 0; A.stat = d_stat;
+        A.xonce = !o.any_x; A.want_der = 1; A.bench = 0; A.stat = d_stat;
         MArgs M;
         make_margs(M, c, G);
         M.a = a; M.NS = NS; M.maxtry = (int)std::min<size_t>(o.maxtry, INT_MAX); M.verify_gpu = verify_gpu; M.no_apx = no_apx;
@@ -1473,7 +1473,7 @@ int main(int argc, char** argv)
         else if (a == "--consts") o.consts = next();
         else if (a == "--funcs") o.funcs = next();
         else if (a == "--ops") o.ops = next();
-        else if (a == "--anyx") o.anyx = true;
+        else if (a == "--any-x" || a == "--anyx") o.any_x = true;
         else if (a == "--list") { fprintf(stderr, "--list is not supported by mitm_gpu (use mitm_cr)\n"); return 2; }
         else if (a == "--tol") o.tol_eps = atof(next());
         else if (a == "--tolrel") o.tolrel = atof(next());
@@ -1495,7 +1495,7 @@ int main(int argc, char** argv)
             else if (v == "host") S.verify_gpu = false;
             else { fprintf(stderr, "--verify gpu|host\n"); return 2; }
         }
-        else if (a == "--bench") { o.bench = true; o.anyx = true; g_subnormal_ok = true; o.bench_T = atof(next()); o.bench_tol = atof(next()); }
+        else if (a == "--bench") { o.bench = true; o.any_x = true; g_subnormal_ok = true; o.bench_T = atof(next()); o.bench_tol = atof(next()); }
         else if (a == "--eval") { eval_code = next(); eval_x = atof(next()); }
         else { fprintf(stderr, "unknown option %s (see the header of mitm_cuda.cu)\n", a.c_str()); return 2; }
     }
@@ -1513,7 +1513,7 @@ int main(int argc, char** argv)
     const uint64_t nLcodes = c.Lf.empty() ? 0 : c.Lf.back().offset + c.Lf.back().count;
     fprintf(stderr, "grammar: %d constants, %d functions, %d operators; left sides: x %s, length <= %d, %llu codes "
             "per target; tol %g, kappa %g..%g, errcap %g, maxtry %zu, verify %s\n",
-            c.g.nc, c.g.nu, c.g.nb, o.anyx ? "any number of times" : "exactly once", o.kl, (unsigned long long)nLcodes,
+            c.g.nc, c.g.nu, c.g.nb, o.any_x ? "any number of times" : "exactly once", o.kl, (unsigned long long)nLcodes,
             o.tolrel > 0 ? o.tolrel : o.tol_eps * DBL_EPSILON, o.kappa_min, o.kappa_max, o.errcap, o.maxtry,
             S.verify_gpu ? "gpu" : "host");
 

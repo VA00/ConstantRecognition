@@ -1383,7 +1383,7 @@ int main(int argc, char** argv)
         else if (a == "--consts") o.consts = next();
         else if (a == "--funcs") o.funcs = next();
         else if (a == "--ops") o.ops = next();
-        else if (a == "--anyx") o.anyx = true;
+        else if (a == "--any-x" || a == "--anyx") o.any_x = true;
         else if (a == "--list") { fprintf(stderr, "--list is not supported by mitm_metal (use mitm_cr)\n"); return 2; }
         else if (a == "--tol") o.tol_eps = atof(next());
         else if (a == "--tolrel") o.tolrel = atof(next());
@@ -1409,7 +1409,7 @@ int main(int argc, char** argv)
         }
         else if (a == "--tol-u") S.tolu = atof(next());
         else if (a == "--df64-stats") df64_stats = true;
-        else if (a == "--bench") { o.bench = true; o.anyx = true; g_subnormal_ok = true; o.bench_T = atof(next()); o.bench_tol = atof(next()); }
+        else if (a == "--bench") { o.bench = true; o.any_x = true; g_subnormal_ok = true; o.bench_T = atof(next()); o.bench_tol = atof(next()); }
         else if (a == "--eval") { eval_code = next(); eval_x = atof(next()); }
         else { fprintf(stderr, "unknown option %s (see the header of mitm_metal.mm)\n", a.c_str()); return 2; }
     }
@@ -1427,7 +1427,7 @@ int main(int argc, char** argv)
     const uint64_t nLcodes = c.Lf.empty() ? 0 : c.Lf.back().offset + c.Lf.back().count;
     fprintf(stderr, "grammar: %d constants, %d functions, %d operators; left sides: x %s, length <= %d, %llu codes "
             "per target; tol %g, kappa %g..%g, errcap %g, maxtry %zu, verify %s; window margin %g, cw %g u\n",
-            c.g.nc, c.g.nu, c.g.nb, o.anyx ? "any number of times" : "exactly once", o.kl, (unsigned long long)nLcodes,
+            c.g.nc, c.g.nu, c.g.nb, o.any_x ? "any number of times" : "exactly once", o.kl, (unsigned long long)nLcodes,
             o.tolrel > 0 ? o.tolrel : o.tol_eps * DBL_EPSILON, o.kappa_min, o.kappa_max, o.errcap, o.maxtry,
             S.verify_gpu ? "gpu (df64 alone)" : "host", S.margin, G.cw);
     if (S.verify_gpu)

@@ -80,19 +80,19 @@ EMSCRIPTEN_KEEPALIVE char* mitm_build(const char* consts, const char* funcs, con
 }
 
 // One target T with relative tolerance tolrel (<= 0: 16 DBL_EPSILON; at least DBL_EPSILON), left sides of length
-// <= KL, x exactly once (anyx = 0) or any number of times; listCap accepted equations are returned besides the
+// <= KL, x exactly once (any_x = 0) or any number of times; listCap accepted equations are returned besides the
 // shortest. Returns
 // {"ok":1,"status":"SUCCESS"|"FAILURE","tol","ms","candidates","best":{...}|null,"approx":[...],"matches":[...],
 // "nL":[...]}; an equation is {"total","a","b","lhs","rhs","err","x"} with RPN in the engine's button names
 // and x its root next to the target (null if Newton did not converge).
-EMSCRIPTEN_KEEPALIVE char* mitm_search(double T, double tolrel, int KL, int anyx, int listCap)
+EMSCRIPTEN_KEEPALIVE char* mitm_search(double T, double tolrel, int KL, int any_x, int listCap)
 {
     if (!G) return to_c("{\"ok\":0,\"error\":\"no right-side table: call mitm_build first\"}");
     Ctx& c = *G;
     if (KL < 1 || KL > 8) return to_c("{\"ok\":0,\"error\":\"left-side length must be 1..8\"}");
-    if (KL != c.o.kl || (anyx != 0) != c.o.anyx) {
+    if (KL != c.o.kl || (any_x != 0) != c.o.any_x) {
         c.o.kl = KL;
-        c.o.anyx = anyx != 0;
+        c.o.any_x = any_x != 0;
         setup_left(c);
     }
     c.o.tolrel = tolrel > 0 ? std::max(tolrel, DBL_EPSILON) : 16 * DBL_EPSILON;

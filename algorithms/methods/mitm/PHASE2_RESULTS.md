@@ -163,7 +163,7 @@ GPU times from the program's own timers (`_raw.txt`), v0:
 | \|L\|<=5, \|R\|<=6 | 0.09 s | 0.06 s | 0.19 s | 0.14 s | 0.12 s | 0.65 s |
 | \|L\|<=6, \|R\|<=6 | 0.08 s | 0.06 s | 2.70 s | 3.45 s | 2.21 s | 8.56 s |
 | \|L\|<=5, \|R\|<=7, tol 2 | 0.08 s | 2.24 s (gen 1.25, sort 0.33, split 0.27, join 0.10) | 0.16 s | 0.11 s | 0.21 s | 2.84 s |
-| RIES's buttons, anyx, 7/7 | 0.08 s | 0.04 s | 2.92 s | 8.13 s | 1.90 s | 13.1 s |
+| RIES's buttons, any-x, 7/7 | 0.08 s | 0.04 s | 2.92 s | 8.13 s | 1.90 s | 13.1 s |
 | \|L\|<=6, \|R\|<=7, tol 2 | 0.08 s | 2.24 s | 2.81 s | 3.02 s | 2.54 s | 10.7 s |
 
 - The **sort** of the left values dominates the long runs (64-bit radix sort, 8 passes over 12 bytes per value). With
@@ -181,9 +181,9 @@ Verdicts, all constants, `compare_v0.py` (80-digit classification of both output
 
 | config | different verdicts | same equation |
 |---|---|---|
-| 4/5, 5/6, anyx 5/6, 5/7 tol 2 | 0 | 93-95 % |
+| 4/5, 5/6, any-x 5/6, 5/7 tol 2 | 0 | 93-95 % |
 | 6/6 | 3: two chance matches of the CPU that the GPU does not find (762, 915), one the other way (1040) | 92 % |
-| RIES's buttons, anyx, 7/7 | 1: constant 248 exact on the GPU, not found on the CPU | 93 % |
+| RIES's buttons, any-x, 7/7 | 1: constant 248 exact on the GPU, not found on the CPU | 93 % |
 | 6/7, tol 2 | 28, all chance matches of total length 13: 15 only on the GPU, 13 only on the CPU | 88 % |
 
 The other answers have another equation of the same total length and the same verdict: among equations of equal
@@ -215,7 +215,7 @@ Gamma(4) and 6, do not on the GPU), and the `--bench` count is 2 335 894 pairs i
 **Planted formulas** (`test_planted.py`, 210 formulas of length 3-9, 5/6): GPU 189 retrieved, CPU 191. The two
 extra misses are tan(sinh 5) and arccos(sin(sinh 4)): trigonometric functions of 74 and 27, where a 1-2 ulp error
 of CUDA's `sinh` or `sin` is amplified beyond the tolerance (icx's library happens to stay within it there).
-Known identities (pi, e, the lemniscate constant; with `--anyx` the Dottie number and the omega constant): the same
+Known identities (pi, e, the lemniscate constant; with `--any-x` the Dottie number and the omega constant): the same
 equations on both.
 
 **GPU vs host verification** (`--verify host`: the host decides on the GPU's candidates): the same verdicts up to
@@ -333,7 +333,7 @@ are compiled for the longest left and right sides of the run, so the first run o
 change of the kernels, takes up to 1.2 s longer: Metal compiles them then, later runs use its cache. The times above
 are of such later runs.)
 
-- **The same answers.** 4/5, 5/6, anyx 5/6 and RIES's buttons 7/7: no constant changes its verdict. The rest differ
+- **The same answers.** 4/5, 5/6, any-x 5/6 and RIES's buttons 7/7: no constant changes its verdict. The rest differ
   by 1 exact identification and a few chance matches of the CPU, all for one reason (section "Differences" below).
 - **The M3 Max CPU is fast.** One core runs `mitm_cr` 2.3 times faster than one core of the Ryzen 9 5900X (5/6:
   24.2 s against 55.9 s), and 14 cores finish 5/6 in 2.8 s (Ryzen, 12 threads: 6.1 s). Against that, the GPU wins
@@ -409,7 +409,7 @@ Verdicts that differ (`compare_v0.py`, 80-digit classification of both outputs):
 
 | config | different verdicts | same equation |
 |---|---|---|
-| 4/5, 5/6, anyx 5/6, RIES's buttons 7/7 | 0 | 87-97 % |
+| 4/5, 5/6, any-x 5/6, RIES's buttons 7/7 | 0 | 87-97 % |
 | 6/6 | 2: chance matches of the CPU (454, 915) not found | 95 % |
 | 5/7, tol 2 | 1: 248 (Rayleigh kurtosis excess) exact on the CPU, not found | 87 % |
 | 6/7, tol 2 (CPU on 14 threads) | 5: 248 as above; 4 chance matches of the CPU not found (194, 290, 576, 720) | 85 % |
@@ -426,7 +426,7 @@ between the CPU builds of Windows.
 
 **Planted formulas** (`test_planted.py`, 210 formulas of length 3-9, 5/6): 189 retrieved by both, the same counts per
 length (the RTX 5080 missed two more there, through CUDA's math library; here every decision is taken with the CPU's
-libm). **Known identities** (pi, e, the lemniscate constant; with `--anyx` the Dottie number and the omega constant):
+libm). **Known identities** (pi, e, the lemniscate constant; with `--any-x` the Dottie number and the omega constant):
 the same equations as `mitm_cr`.
 
 **What the GPU's tables miss.** At |R| <= 6 the search on the GPU sees 19 950 984 distinct right values, 6.4 % fewer
@@ -491,7 +491,7 @@ Timers of `mitm_metal` (`_raw.txt`):
 | \|L\|<=5, \|R\|<=6 | 0.54 s (0.18 / 0.36) | 0.59 s | 0.54 s | 0.57 s | 0.02 s | 2.3 s |
 | \|L\|<=6, \|R\|<=6 | 0.54 s | 7.86 s | 12.97 s | 7.98 s | 0.13 s | 29.5 s |
 | \|L\|<=5, \|R\|<=7, tol 2 | 13.69 s (gen 2.7, sort 1.8, split 0.9; double values 7.9) | 0.52 s | 0.41 s | 1.20 s | 0.02 s | 15.9 s |
-| RIES's buttons, anyx, 7/7 | 0.25 s | 6.53 s | 25.42 s | 7.18 s | 1.11 s | 40.5 s |
+| RIES's buttons, any-x, 7/7 | 0.25 s | 6.53 s | 25.42 s | 7.18 s | 1.11 s | 40.5 s |
 | \|L\|<=6, \|R\|<=7, tol 2 | 13.92 s | 7.86 s | 9.91 s | 14.21 s | 0.14 s | 46.1 s |
 
 - The **sort of the left values** dominates the long runs, as on CUDA (12.8e9 left values for RIES's buttons 7/7; the

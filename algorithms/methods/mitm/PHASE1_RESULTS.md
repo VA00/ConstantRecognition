@@ -85,7 +85,7 @@ An equation L(x) = R is split into its two halves, which are enumerated separate
    built **once for the whole batch** of 1348 constants: evaluated, non-finite and subnormal values dropped,
    sorted, and **one entry per distinct double** kept, with its shortest code. An entry is 12 bytes: the value
    and a 32-bit index from which the code is rebuilt when needed. RIES rebuilds both halves for every target.
-2. **Left sides** L: every code of length 1..KL with x **exactly once** (default; `--anyx`: any number of
+2. **Left sides** L: every code of length 1..KL with x **exactly once** (default; `--any-x`: any number of
    times, as RIES), evaluated at the target T together with dL/dx (dual numbers), sorted, duplicates dropped.
 3. **Matching**: both lists are sorted, so a single pass finds the R near every L. The test is made in x, not in
    value: the Newton root x* = T - (L(T) - R)/L'(T) must lie within 16 DBL_EPSILON of T, the CR engine's SUCCESS
@@ -126,7 +126,7 @@ sizes are counted first (per 2^20 value bins), and every pass regenerates all co
   conditioned equation, correct to 59 digits). Beyond KR (K = 7..10) most formulas are still found, through
   equations that split them; 2 false positives at K = 10.
 - **Known identities** (spot check): pi, e, e^pi, pi^2/6, ln 2 as x = formula; sqrt 2 + sqrt 3 as
-  exp(arsinh(sqrt 2)); with `--anyx` also the Dottie number (x / arccos x = 1) and the omega constant
+  exp(arsinh(sqrt 2)); with `--any-x` also the Dottie number (x / arccos x = 1) and the omega constant
   (x / ln x = -1).
 - **Threads**: the multithreaded runs give the same answer for every constant as the single-threaded run.
 - **Explicit formulas** (below): all 532 exact equations of |L| <= 5, |R| <= 6 solved for x reproduce the
@@ -199,18 +199,18 @@ the search.
 | kl6_kr6_t12 | 6 | 6 | 12 | - | 556 | 72 | 0 | 720 | 151.0 | 1800.2 | 0.8 | 1787.2 | 1.14 | 2.13e+07 | 3.4e+06 | 7.2e+13 |
 | kl6_kr7_t12 | 6 | 7 | 12 | - | 571 | 591 | 0 | 186 | 279.8 | 3312.9 | 26.3 | 3033.2 | 8.42 | 4.44e+08 | 3.4e+06 | 1.5e+15 |
 | kl5_kr6_t24 | 5 | 6 | 24 | - | 532 | 9 | 0 | 807 | 6.6 | 135.6 | 0.6 | 122.9 | 2.04 | 2.13e+07 | 1.29e+05 | 2.7e+12 |
-| anyx_kl4_kr4 | 4 | 4 | 1 | --anyx | 423 | 3 | 0 | 922 | 0.8 | 0.8 | 0.0 | 0.7 | 0.08 | 5.33e+04 | 6.29e+03 | 3.4e+08 |
-| anyx_kl4_kr5 | 4 | 5 | 1 | --anyx | 451 | 3 | 0 | 894 | 1.1 | 1.1 | 0.2 | 0.8 | 0.09 | 1.05e+06 | 6.29e+03 | 6.6e+09 |
-| anyx_kl5_kr4 | 5 | 4 | 1 | --anyx | 501 | 4 | 1 | 842 | 15.7 | 15.6 | 0.0 | 14.6 | 0.08 | 5.33e+04 | 1.32e+05 | 7e+09 |
-| anyx_kl5_kr5 | 5 | 5 | 1 | --anyx | 530 | 6 | 1 | 811 | 17.7 | 17.7 | 0.2 | 16.5 | 0.09 | 1.05e+06 | 1.32e+05 | 1.4e+11 |
-| anyx_kl5_kr6 | 5 | 6 | 1 | --anyx | 550 | 9 | 0 | 789 | 27.0 | 26.9 | 4.1 | 21.6 | 0.56 | 2.13e+07 | 1.32e+05 | 2.8e+12 |
-| common_anyx_kl4_kr5 | 4 | 5 | 1 | --common --anyx | 388 | 2 | 0 | 958 | 0.2 | 0.2 | 0.0 | 0.1 | 0.08 | 6.02e+04 | 1.16e+03 | 7e+07 |
-| common_anyx_kl5_kr5 | 5 | 5 | 1 | --common --anyx | 464 | 3 | 1 | 880 | 2.2 | 2.2 | 0.0 | 2.0 | 0.08 | 6.02e+04 | 1.46e+04 | 8.8e+08 |
-| common_anyx_kl5_kr6 | 5 | 6 | 1 | --common --anyx | 482 | 4 | 1 | 861 | 2.6 | 2.6 | 0.2 | 2.2 | 0.09 | 6.7e+05 | 1.46e+04 | 9.8e+09 |
-| common_anyx_kl6_kr6 | 6 | 6 | 1 | --common --anyx | 507 | 4 | 0 | 837 | 34.9 | 34.8 | 0.2 | 34.6 | 0.09 | 6.7e+05 | 1.77e+05 | 1.2e+11 |
-| common_anyx_kl6_kr7 | 6 | 7 | 1 | --common --anyx | 513 | 7 | 0 | 828 | 41.4 | 41.2 | 2.9 | 38.1 | 0.41 | 7.45e+06 | 1.77e+05 | 1.3e+12 |
-| common_anyx_kl7_kr7 | 7 | 7 | 1 | --common --anyx | 539 | 8 | 0 | 801 | 763.2 | 761.3 | 2.9 | 810.5 | 0.41 | 7.45e+06 | 4.04e+06 | 3e+13 |
-| common_anyx_kl7_kr8 | 7 | 8 | 1 | --common --anyx | 542 | 40 | 0 | 766 | 1236.7 | 1233.5 | 67.2 | 1250.5 | 4.55 | 8.53e+07 | 4.04e+06 | 3.4e+14 |
+| any-x_kl4_kr4 | 4 | 4 | 1 | --any-x | 423 | 3 | 0 | 922 | 0.8 | 0.8 | 0.0 | 0.7 | 0.08 | 5.33e+04 | 6.29e+03 | 3.4e+08 |
+| any-x_kl4_kr5 | 4 | 5 | 1 | --any-x | 451 | 3 | 0 | 894 | 1.1 | 1.1 | 0.2 | 0.8 | 0.09 | 1.05e+06 | 6.29e+03 | 6.6e+09 |
+| any-x_kl5_kr4 | 5 | 4 | 1 | --any-x | 501 | 4 | 1 | 842 | 15.7 | 15.6 | 0.0 | 14.6 | 0.08 | 5.33e+04 | 1.32e+05 | 7e+09 |
+| any-x_kl5_kr5 | 5 | 5 | 1 | --any-x | 530 | 6 | 1 | 811 | 17.7 | 17.7 | 0.2 | 16.5 | 0.09 | 1.05e+06 | 1.32e+05 | 1.4e+11 |
+| any-x_kl5_kr6 | 5 | 6 | 1 | --any-x | 550 | 9 | 0 | 789 | 27.0 | 26.9 | 4.1 | 21.6 | 0.56 | 2.13e+07 | 1.32e+05 | 2.8e+12 |
+| common_any-x_kl4_kr5 | 4 | 5 | 1 | --common --any-x | 388 | 2 | 0 | 958 | 0.2 | 0.2 | 0.0 | 0.1 | 0.08 | 6.02e+04 | 1.16e+03 | 7e+07 |
+| common_any-x_kl5_kr5 | 5 | 5 | 1 | --common --any-x | 464 | 3 | 1 | 880 | 2.2 | 2.2 | 0.0 | 2.0 | 0.08 | 6.02e+04 | 1.46e+04 | 8.8e+08 |
+| common_any-x_kl5_kr6 | 5 | 6 | 1 | --common --any-x | 482 | 4 | 1 | 861 | 2.6 | 2.6 | 0.2 | 2.2 | 0.09 | 6.7e+05 | 1.46e+04 | 9.8e+09 |
+| common_any-x_kl6_kr6 | 6 | 6 | 1 | --common --any-x | 507 | 4 | 0 | 837 | 34.9 | 34.8 | 0.2 | 34.6 | 0.09 | 6.7e+05 | 1.77e+05 | 1.2e+11 |
+| common_any-x_kl6_kr7 | 6 | 7 | 1 | --common --any-x | 513 | 7 | 0 | 828 | 41.4 | 41.2 | 2.9 | 38.1 | 0.41 | 7.45e+06 | 1.77e+05 | 1.3e+12 |
+| common_any-x_kl7_kr7 | 7 | 7 | 1 | --common --any-x | 539 | 8 | 0 | 801 | 763.2 | 761.3 | 2.9 | 810.5 | 0.41 | 7.45e+06 | 4.04e+06 | 3e+13 |
+| common_any-x_kl7_kr8 | 7 | 8 | 1 | --common --any-x | 542 | 40 | 0 | 766 | 1236.7 | 1233.5 | 67.2 | 1250.5 | 4.55 | 8.53e+07 | 4.04e+06 | 3.4e+14 |
 | kl5_kr6_kmin0.1 | 5 | 6 | 1 | --kappa-min 0.1 | 531 | 8 | 0 | 809 | 25.9 | 25.8 | 4.1 | 19.8 | 0.56 | 2.13e+07 | 1.21e+05 | 2.6e+12 |
 | kl5_kr6_kmin0.3 | 5 | 6 | 1 | --kappa-min 0.3 | 530 | 7 | 0 | 811 | 23.1 | 23.1 | 4.1 | 16.7 | 0.59 | 2.13e+07 | 1.04e+05 | 2.2e+12 |
 | kl5_kr6_kmin1e-2 | 5 | 6 | 1 | --kappa-min 1e-2 | 530 | 11 | 0 | 807 | 27.3 | 27.1 | 4.1 | 21.9 | 0.56 | 2.13e+07 | 1.32e+05 | 2.8e+12 |
@@ -245,7 +245,7 @@ What RIES finds and MITM (x once) does not are mostly equations with x several t
 formula: x^x = e, x^(1/x) = 1/e, x - 1/x^2 = 1 (plastic constant and other polynomial roots), Lambert W values;
 the rest is depth (e.g. 3x - ln 2 = pi/sqrt 3 needs |L| = 6).
 
-With x any number of times (`--anyx`, RIES's semantics) the number of left sides of length <= 5 hardly grows
+With x any number of times (`--any-x`, RIES's semantics) the number of left sides of length <= 5 hardly grows
 (1.32e5 instead of 1.29e5 distinct per constant: a short code rarely has room for a second x), the times are the
 same, but implicit equations come in (x^x = e, x / arccos x = 1, polynomial roots):
 
@@ -318,7 +318,7 @@ deeper.
 
 Both tools with exactly the same buttons, the symbols CALC4 shares with RIES's defaults (1..9, pi, e, phi; ln,
 exp, 1/x, sqrt, x^2; + - * / ^, i.e. `ries -S123456789pefrqslE+-*/^`), and the same semantics (x any number of
-times on the left side): MITM `--common --anyx`, RIES with `run_ries_v0.py --symbols ...` (12 processes, CPU time
+times on the left side): MITM `--common --any-x`, RIES with `run_ries_v0.py --symbols ...` (12 processes, CPU time
 = 12 x wall time).
 
 | method | exact | false pos. | time | CPU time |
@@ -447,7 +447,7 @@ Two more guards after the first tests of the page:
   defaults have nth roots, logarithms to a base, sin(pi x), atan2, negation, and no Gamma. Exact counts between
   MITM (CALC4) and RIES (defaults) compare tools, not algorithms; the same-grammar comparison is above.
 - **x once vs. any.** The default (x once) is what makes explicit formulas possible; it cannot express x^x = e.
-  `--anyx` can, at a higher cost per constant.
+  `--any-x` can, at a higher cost per constant.
 - **Times.** RIES and CR CPU ran as 12 single-threaded processes (WASM for CR), MITM in one process. The CPU
   times compare work; the wall times compare what a user waits for. RIES's per-call startup is included in its
   times (small at -l4/-l5).

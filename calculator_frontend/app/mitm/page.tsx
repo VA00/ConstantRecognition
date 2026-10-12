@@ -49,7 +49,7 @@ export default function MitmPage() {
   // the table is rebuilt at the first search after any button change; on one thread (the default buttons) it takes
   // 16 ms at |R| <= 4, 0.2 s at 5 and 5 s at 6, so 5 keeps button changes quick; 6 on request
   const [kr, setKr] = useState(5);
-  const [anyx, setAnyx] = useState(false);
+  const [anyX, setAnyX] = useState(false);
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
   const [exactTolEps, setExactTolEps] = useState(16);
@@ -184,7 +184,7 @@ export default function MitmPage() {
       setTable(tableRef.current);
     }
     setPhase({ kind: 'searching', start: Date.now() });
-    const r = await request({ type: 'search', T, tolrel, kl, anyx, listCap: LIST_CAP }) as unknown as SearchResponse & { type: string };
+    const r = await request({ type: 'search', T, tolrel, kl, anyX, listCap: LIST_CAP }) as unknown as SearchResponse & { type: string };
     setPhase({ kind: 'idle' });
     if (r.type === 'error' || !r.ok) {
       if (r.error !== 'aborted') setError(`Search: ${r.error ?? 'failed'}`);
@@ -236,8 +236,8 @@ export default function MitmPage() {
         setKl={setKl}
         kr={kr}
         setKr={setKr}
-        anyx={anyx}
-        setAnyx={setAnyx}
+        anyX={anyX}
+        setAnyX={setAnyX}
         est={est}
         table={table}
         tableCurrent={tableCurrent}

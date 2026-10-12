@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     if (!berr.empty()) { fprintf(stderr, "%s\n", berr.c_str()); return 2; }
     const std::string gerr = make_grammar(c.g, o.consts, o.funcs, o.ops);
     if (!gerr.empty()) { fprintf(stderr, "buttons: %s\n", gerr.c_str()); return 2; }
-    o.anyx = !A.once;
+    o.any_x = !A.once;
     o.tol_eps = A.tol_eps;
     o.tolrel = A.tolrel;
     o.kappa_max = 2 * (o.tolrel > 0 ? o.tolrel / DBL_EPSILON : o.tol_eps);
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 
     double cl[10] = {0}, cr[10] = {0};
     for (int k = 1; k <= 9; k++) {
-        if (k <= 8) { const auto fs = left_forms(c.g, k, o.anyx); cl[k] = fs.empty() ? 0.0 : (double)(fs.back().offset + fs.back().count); }
+        if (k <= 8) { const auto fs = left_forms(c.g, k, o.any_x); cl[k] = fs.empty() ? 0.0 : (double)(fs.back().offset + fs.back().count); }
         const auto fs = right_forms(c.g, k);
         cr[k] = fs.empty() ? 0.0 : (double)(fs.back().offset + fs.back().count);
     }

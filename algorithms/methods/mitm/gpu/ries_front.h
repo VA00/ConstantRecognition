@@ -79,7 +79,7 @@ static std::string ries_parse(int argc, char** argv, RiesArgs& A)
         if (a.rfind("--", 0) == 0) {
             auto next = [&]() -> std::string { return i + 1 < argc ? argv[++i] : ""; };
             if (a == "--once") A.once = true;
-            else if (a == "--anyx") A.once = false;
+            else if (a == "--any-x" || a == "--anyx") A.once = false;
             else if (a == "--kl") A.kl = atoi(next().c_str());
             else if (a == "--kr") A.kr = atoi(next().c_str());
             else if (a == "--tol") A.tol_eps = atof(next().c_str());
@@ -378,7 +378,7 @@ static void ries_print(const Ctx& c, const RiesArgs& A, const TargetResult& res,
         printf("\n  NOTE: -l%g is beyond the largest search that fits (left %d, right %d symbols); that one was run.\n",
                A.level, c.o.kl, c.o.kr);
     printf("\n  {n} = number of symbols (2 x: three); x may appear %s\n",
-           c.o.anyx ? "any number of times" : "only once");
+           c.o.any_x ? "any number of times" : "only once");
     std::vector<std::string> legend;
     if (shown.find("phi") != std::string::npos) legend.push_back("phi = the golden ratio, (1+sqrt(5))/2");
     if (shown.find("Gamma") != std::string::npos) legend.push_back("Gamma(x) = the gamma function");

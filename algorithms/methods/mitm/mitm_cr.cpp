@@ -58,7 +58,7 @@
 // Build: icx /O3 /fp:precise /std:c++17 /EHsc mitm_cr.cpp   (or cl /O2 ..., g++ -O3 -std=c++17 -pthread ...)
 //        IEEE semantics are required (non-finite values are tested): never build with fast-math.
 //        WebAssembly: mitm_wasm.cpp includes this file with MITM_LIBRARY defined (no main), see build_mitm_wasm.bat.
-// Usage: mitm_cr [--kl 5] [--kr 6] [--common] [--consts LIST --funcs LIST --ops LIST] [--anyx] [--tol 16]
+// Usage: mitm_cr [--kl 5] [--kr 6] [--common] [--consts LIST --funcs LIST --ops LIST] [--any-x] [--tol 16]
 //                [--tolrel r] [--kappa-min 0.03125] [--kappa-max 2*tol] [--errcap 1e-12] [--maxtry 32] [--periodic-max 32]
 //                [--threads 1] [--memcap 16] [--chunk 1048576] [--list] < targets
 //                (targets: lines "id value"; tol in DBL_EPSILON, tolrel relative; --list prints every accepted
@@ -359,9 +359,9 @@ static std::vector<Form> right_forms(const Grammar& g, int KR)
     return out;
 }
 
-// x exactly once: one form per shape and leaf j (x at j, radix 1). anyx: leaf j is the first x, the leaves after
+// x exactly once: one form per shape and leaf j (x at j, radix 1). any-x: leaf j is the first x, the leaves after
 // it may be x too (digit nc), so every code with at least one x is enumerated once.
-static std::vector<Form> left_forms(const Grammar& g, int KL, bool anyx)
+static std::vector<Form> left_forms(const Grammar& g, int KL, bool any_x)
 {
     std::vector<Form> out;
     uint64_t off = 0;
@@ -374,8 +374,8 @@ static std::vector<Form> left_forms(const Grammar& g, int KL, bool anyx)
                 f.xpos = j;
                 for (int i = 0; i < K; i++) {
                     if (f.ar[i] == 0) {
-                        f.radix[i] = i == j ? 1 : (anyx && i > j) ? g.nc + 1 : g.nc;
-                        f.dual[i] = i == j || (anyx && i > j);
+                        f.radix[i] = i == j ? 1 : (any_x && i > j) ? g.nc + 1 : g.nc;
+                        f.dual[i] = i == j || (any_x && i > j);
                     } else {
                         f.radix[i] = f.ar[i] == 1 ? g.nu : g.nb;
                         f.dual[i] = f.dual[f.c1[i]] || (f.c2[i] >= 0 && f.dual[f.c2[i]]);
@@ -694,7 +694,7 @@ static void parallel_for(int nthreads, size_t n, F&& f)
 
 struct Options {
     int kl = 5, kr = 6, threads = 1;
-    bool anyx = false, list = false, bench = false;
+    bool any_x = false, list = false, bench = false;
     double tol_eps = 16, tolrel = 0, kappa_min = 1.0 / 32, kappa_max = -1, errcap = 1e-12, memcap_gb = 16;
     double periodic_max = 32;                                   // sin, cos, tan on the path of x: |argument| <= 32
     double bench_T = 0, bench_tol = 0;
@@ -768,7 +768,7 @@ static void setup_right(Ctx& c)
 
 static void setup_left(Ctx& c)
 {
-    c.Lf = left_forms(c.g, c.o.kl, c.o.anyx);
+    c.Lf = left_forms(c.g, c.o.kl, c.o.any_x);
     c.Lbeg.assign(c.o.kl + 2, c.Lf.size());
     for (size_t i = c.Lf.size(); i-- > 0;) c.Lbeg[c.Lf[i].K] = i;
     for (int a = c.o.kl; a >= 1; a--) if (c.Lbeg[a] > c.Lbeg[a + 1]) c.Lbeg[a] = c.Lbeg[a + 1];
@@ -1186,7 +1186,7 @@ struct Worker {
         hint.assign(c.o.kr + 1, 0);
         listing.clear();
         const double t0 = now(), f0 = t_in_flush;
-        const bool xonce = !c.o.anyx;
+        const bool xonce = !c.o.any_x;
         for (a = 1; a <= c.o.kl; a++) {
             if (!c.o.list && res.best.total <= a + 1) break;      // no shorter equation possible any more
             for (size_t fi = c.Lbeg[a]; fi < c.Lbeg[a + 1]; fi++)
@@ -1322,7 +1322,7 @@ int main(int argc, char** argv)
         else if (a == "--consts") o.consts = next();
         else if (a == "--funcs") o.funcs = next();
         else if (a == "--ops") o.ops = next();
-        else if (a == "--anyx") o.anyx = true;
+        else if (a == "--any-x" || a == "--anyx") o.any_x = true;
         else if (a == "--list") o.list = true;
         else if (a == "--tol") o.tol_eps = atof(next());
         else if (a == "--tolrel") o.tolrel = atof(next());
@@ -1334,7 +1334,7 @@ int main(int argc, char** argv)
         else if (a == "--threads") o.threads = atoi(next());
         else if (a == "--memcap") o.memcap_gb = atof(next());
         else if (a == "--chunk") o.chunk = (size_t)atof(next());
-        else if (a == "--bench") { o.bench = true; o.anyx = true; g_subnormal_ok = true; o.bench_T = atof(next()); o.bench_tol = atof(next()); }
+        else if (a == "--bench") { o.bench = true; o.any_x = true; g_subnormal_ok = true; o.bench_T = atof(next()); o.bench_tol = atof(next()); }
         else if (a == "--eval") { eval_code = next(); eval_x = atof(next()); }
         else { fprintf(stderr, "unknown option %s (see the header of mitm_cr.cpp)\n", a.c_str()); return 2; }
     }
@@ -1350,7 +1350,7 @@ int main(int argc, char** argv)
     const uint64_t nLcodes = c.Lf.empty() ? 0 : c.Lf.back().offset + c.Lf.back().count;
     fprintf(stderr, "grammar: %d constants, %d functions, %d operators; left sides: x %s, length <= %d, %llu codes "
             "per target; tol %g, kappa %g..%g, errcap %g, maxtry %zu, %d thread(s)\n",
-            c.g.nc, c.g.nu, c.g.nb, o.anyx ? "any number of times" : "exactly once", o.kl, (unsigned long long)nLcodes,
+            c.g.nc, c.g.nu, c.g.nb, o.any_x ? "any number of times" : "exactly once", o.kl, (unsigned long long)nLcodes,
             o.tolrel > 0 ? o.tolrel : o.tol_eps * DBL_EPSILON, o.kappa_min, o.kappa_max, o.errcap, o.maxtry, o.threads);
 
     if (!build_R(c)) { fprintf(stderr, "%s (cap %.1f GB)\n", c.stats.error.c_str(), o.memcap_gb); return 3; }

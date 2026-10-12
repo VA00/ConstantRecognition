@@ -39,8 +39,8 @@ interface MitmSidebarProps {
   setKl: (n: number) => void;
   kr: number;
   setKr: (n: number) => void;
-  anyx: boolean;
-  setAnyx: (v: boolean) => void;
+  anyX: boolean;
+  setAnyX: (v: boolean) => void;
   est: Estimate;
   table: TableInfo | null;
   tableCurrent: boolean;   // the table matches the buttons and |R|
@@ -222,11 +222,11 @@ export function MitmSidebar(p: MitmSidebarProps) {
                   <button
                     key={label}
                     type="button"
-                    onClick={() => p.setAnyx(v)}
+                    onClick={() => p.setAnyX(v)}
                     disabled={p.busy}
-                    aria-pressed={p.anyx === v}
+                    aria-pressed={p.anyX === v}
                     className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed
-                      ${p.anyx === v
+                      ${p.anyX === v
                         ? 'bg-white text-[#0066cc] shadow-xs dark:bg-[#1a1a1d]'
                         : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'}`}
                   >
@@ -235,7 +235,7 @@ export function MitmSidebar(p: MitmSidebarProps) {
                 ))}
               </div>
               <p className="text-[10px] text-gray-400">
-                {p.anyx
+                {p.anyX
                   ? 'Also implicit equations such as x^x = e (RIES-like); no explicit formula then.'
                   : 'Every equation can be solved for x: an explicit formula is shown.'}
               </p>

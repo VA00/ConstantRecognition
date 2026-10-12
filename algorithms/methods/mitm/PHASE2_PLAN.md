@@ -46,10 +46,10 @@ What the GPU can and cannot buy, from Phase 1:
   |---|---|---|---|---|
   | \|L\|<=4, \|R\|<=5 | 444 / 3 | 1.1 s | - | 0.16 s |
   | \|L\|<=5, \|R\|<=6 | 532 / 8 | 27 s | 5.3 s | 4.1 s, 21 M values, 0.24 GB |
-  | \|L\|<=5, \|R\|<=6, --anyx | 550 / 9 | 27 s | - | 4.1 s |
+  | \|L\|<=5, \|R\|<=6, --any-x | 550 / 9 | 27 s | - | 4.1 s |
   | \|L\|<=6, \|R\|<=6 | 557 / 52 | 9.7 min | 2.5 min | 4.1 s |
   | \|L\|<=5, \|R\|<=7, --tol 2 | 548 / 11 | 4.0 min | - | 197 s, 444 M values, 5.3 GB |
-  | --common --anyx \|L\|<=7, \|R\|<=7 | 539 / 8 | 12.7 min | - | 2.9 s |
+  | --common --any-x \|L\|<=7, \|R\|<=7 | 539 / 8 | 12.7 min | - | 2.9 s |
   | \|L\|<=6, \|R\|<=7, --tol 2 | 569 / 158 | - | 4.2 min | 26 s |
 
   (5/6 and 6/6 counts after the periodic guard of 2026-10-04; the other rows predate it.)
@@ -60,7 +60,7 @@ What the GPU can and cannot buy, from Phase 1:
 
 Directory `algorithms/methods/mitm/gpu/`, binary `mitm_gpu`:
 
-- **Same command line and output as `mitm_cr`**: the same options (`--kl --kr --anyx --common --consts --funcs
+- **Same command line and output as `mitm_cr`**: the same options (`--kl --kr --any-x --common --consts --funcs
   --ops --tol --tolrel --kappa-min --kappa-max --errcap --periodic-max --maxtry --memcap --bench`; accept and
   ignore `--threads`, or use it for host-side verification), targets `id value` on stdin, the same stdout line
   per target, and the stderr summary lines that `run_mitm_v0.py` and `summarize_mitm.py` parse. Add new stderr
@@ -143,7 +143,7 @@ up to 1e±308. Count how many right and left sides this removes, and report it.
    - **Keys:** Phase 1's `key_of` (orderable bits) for double. For df64, the orderable bits of hi shifted left
      by 32, OR the orderable bits of lo. This orders normalized pairs correctly.
 2. **Left sides**, per target, all targets of the batch in parallel:
-   - Enumerate the codes of length 1..KL with x once (or any number of times with `--anyx`) at T, with their
+   - Enumerate the codes of length 1..KL with x once (or any number of times with `--any-x`) at T, with their
      derivatives (dual numbers).
    - Apply the guards of `enum_L`: kappa at every node that depends on x, the periodic guard, usable values.
    - Keep (value, derivative, rank, target).
@@ -209,7 +209,7 @@ up to 1e±308. Count how many right and left sides this removes, and report it.
 1. **CPU baseline on this machine:**
    - Build `mitm_cr` and run `--bench 0.0072973525643 1e-12 --kl 7 --kr 7 --common`. Windows gave 2 310 973
      pairs with MSVC's libm and 2 310 800 with icx's.
-   - Run v0 `--kl 4 --kr 5`, `--kl 5 --kr 6` and `--kl 5 --kr 6 --anyx`, on one thread and on all cores.
+   - Run v0 `--kl 4 --kr 5`, `--kl 5 --kr 6` and `--kl 5 --kr 6 --any-x`, on one thread and on all cores.
    - Compare with the Phase 1 counts, and list the constants that differ (libm).
 2. **df64 library** and its tests, on the CPU first, then the same tests in a Metal kernel and a CUDA kernel:
    bit-identical to the CPU.
@@ -221,7 +221,7 @@ up to 1e±308. Count how many right and left sides this removes, and report it.
    - First one target, then batches.
    - `--bench` pair counts against the CPU.
    - `test_planted.py --exe gpu/mitm_gpu`.
-   - Known identities: pi, e, the lemniscate constant; with `--anyx` the Dottie number and the omega constant.
+   - Known identities: pi, e, the lemniscate constant; with `--any-x` the Dottie number and the omega constant.
 5. **v0 runs** (matrix below) with `run_mitm_v0.py --exe ... --tag <machine>_<backend>_<config>`.
 6. **`PHASE2_RESULTS.md`.**
 
@@ -231,10 +231,10 @@ up to 1e±308. Count how many right and left sides this removes, and report it.
 |---|---|---|
 | kl4_kr5 | `--kl 4 --kr 5` | small: launch and transfer overheads |
 | kl5_kr6 | `--kl 5 --kr 6` | the main configuration |
-| anyx_kl5_kr6 | `--kl 5 --kr 6 --anyx` | RIES's semantics |
+| any-x_kl5_kr6 | `--kl 5 --kr 6 --any-x` | RIES's semantics |
 | kl6_kr6 | `--kl 6 --kr 6` | long left sides, where the CPU is slow |
 | kl5_kr7_tol2 | `--kl 5 --kr 7 --tol 2` | the 5 GB table (skip if it does not fit) |
-| common_anyx_kl7_kr7 | `--common --anyx --kl 7 --kr 7` | the grammar shared with RIES |
+| common_any-x_kl7_kr7 | `--common --any-x --kl 7 --kr 7` | the grammar shared with RIES |
 | kl6_kr7_tol2 | `--kl 6 --kr 7 --tol 2` | 1.5e15 equations per constant, the precision limit |
 
 **For every run, record:**
