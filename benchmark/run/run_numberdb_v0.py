@@ -34,6 +34,7 @@ Writes results/v0_numberdb.tsv and prints a summary.
 """
 import csv
 import json
+import math
 import os
 import re
 import sys
@@ -129,6 +130,9 @@ def value_of(text):
         return None
     tok = m.group(0)
     sig = len((m.group(2) + m.group(3)).lstrip('0')) if '.' in tok else 999     # an integer is exact
+    e = re.match(r'\s*\+/-\s*(\d*\.?\d*(?:[eE][-+]?\d+)?)', s[len(tok):])      # a ball: digits as far as its radius
+    if e and mp.mpf(tok) != 0 and mp.mpf(e.group(1)) != 0:
+        sig = min(sig, max(0, int(-mp.log10(mp.mpf(e.group(1)) / abs(mp.mpf(tok))))))
     return mp.mpf(tok), sig
 
 
@@ -138,25 +142,40 @@ def agree(v, ref, digits):
     return float(min(-mp.log10(abs(v - ref) / abs(ref)) if ref != 0 else -mp.log10(abs(v)), digits))
 
 
-def main():
-    sys.stdout.reconfigure(encoding='utf-8')
-    bench = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+def double(value):
+    """the nearest double of a decimal string, or None out of the double range (inf, or 0 for a nonzero value)"""
+    x = float(value)
+    return None if math.isinf(x) or (x == 0 and Decimal(value) != 0) else x
+
+
+def run(constants, raw_path, out_path, prefill=None):
+    """look up every constant of constants (a .tsv) with >= 17 digits, appending to raw_path (resumable), and
+    score into out_path; prefill: {id: answer record} taken without asking (the same input asked before)"""
+    bench = [r for r in csv.DictReader(open(constants, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
     raw = {}
-    if os.path.exists(RAW):
-        for line in open(RAW, encoding='utf-8'):
+    if os.path.exists(raw_path):
+        for line in open(raw_path, encoding='utf-8'):
             if line.strip():
                 d = json.loads(line)
                 raw[d['id']] = d
+    reuse = {i: d for i, d in (prefill or {}).items() if i not in raw}
+    with open(raw_path, 'a', encoding='utf-8', newline='\n') as fo:      # reused answers, and no double input
+        for b in bench:
+            d = reuse.get(b['id']) or ({'id': b['id'], 'x': None, 'matches': []} if double(b['value']) is None
+                                       else None)
+            if d and b['id'] not in raw:
+                raw[b['id']] = d
+                fo.write(json.dumps(d, ensure_ascii=False) + '\n')
     todo = [b for b in bench if b['id'] not in raw]
-    print(f'{len(bench)} constants, {len(raw)} already looked up, {len(todo)} to look up')
+    print(f'{len(bench)} constants, {len(raw)} already looked up ({len(reuse)} reused), {len(todo)} to look up')
     t0, done = time.time(), 0
-    for recs in batches([float(b['value']) for b in todo]):
+    for recs in batches([double(b['value']) for b in todo]):
         part = todo[done:done + len(recs)]
         t1 = time.time()
         found = lookup(recs)
-        with open(RAW, 'a', encoding='utf-8', newline='\n') as fo:
+        with open(raw_path, 'a', encoding='utf-8', newline='\n') as fo:
             for j, b in enumerate(part):
-                d = {'id': b['id'], 'x': repr(float(b['value'])), 'matches': found.get(j, [])}
+                d = {'id': b['id'], 'x': repr(double(b['value'])), 'matches': found.get(j, [])}
                 raw[b['id']] = d
                 fo.write(json.dumps(d, ensure_ascii=False) + '\n')
         done += len(recs)
@@ -169,13 +188,19 @@ def main():
     fields = ['id', 'name', 'class', 'digits', 'verdict', 'numberdb', 'tid', 'param', 'url', 'matches', 'agree',
               'entry_digits', 'formula']
     counts = {}
-    with open(os.path.join(RESULTS, 'v0_numberdb.tsv'), 'w', encoding='utf-8', newline='') as fo:
+    with open(out_path, 'w', encoding='utf-8', newline='') as fo:
         w = csv.DictWriter(fo, fieldnames=fields, delimiter='\t', lineterminator='\n')
         w.writeheader()
         for b in bench:
-            d, x = raw[b['id']], mp.mpf(raw[b['id']]['x'])
+            d = raw[b['id']]
             row = {'id': b['id'], 'name': b['name'], 'class': b['class'], 'digits': b['digits'], 'formula': b['formula'],
                    'matches': len(d['matches'])}
+            if d['x'] is None:                  # no double input: out of the range of doubles
+                row['verdict'] = 'not representable'
+                counts['not representable'] = counts.get('not representable', 0) + 1
+                w.writerow(row)
+                continue
+            x = mp.mpf(d['x'])
             cand = [(m, value_of(m['text'])) for m in d['matches']]
             cand.sort(key=lambda mv: (int(abs(mv[1][0] - x) / ((abs(x) or 1) * EPS)) if mv[1] else 10 ** 9,
                                       -mv[1][1] if mv[1] else 0, mv[0]['table_size'] or 10 ** 9,
@@ -201,6 +226,11 @@ def main():
             counts[verdict] = counts.get(verdict, 0) + 1
             w.writerow(row)
     print(f'{len(bench)} constants:', ', '.join(f'{k} {n}' for k, n in sorted(counts.items())))
+
+
+def main():
+    sys.stdout.reconfigure(encoding='utf-8')
+    run(CONSTANTS, RAW, os.path.join(RESULTS, 'v0_numberdb.tsv'))
 
 
 if __name__ == '__main__':

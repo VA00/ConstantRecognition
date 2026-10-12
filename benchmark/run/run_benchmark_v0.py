@@ -25,7 +25,7 @@ or natively (Linux, macOS): make vsearch_batch, and pass --engine ./vsearch_batc
 
 Usage:
   python run_benchmark_v0.py --engine <path to vsearch_batch.js or vsearch_batch> [--maxk 5] [--jobs 24]
-Writes results/v0_K<MaxK>.tsv and prints a summary.
+Writes results/v0_K<MaxK>.tsv and prints a summary. run_benchmark_v1.py does the same over benchmark v1.
 """
 import argparse
 import collections
@@ -40,9 +40,7 @@ import time
 
 import mpmath as mp
 
-BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
-RESULTS = os.path.join(BENCH, 'results')
+from benchmarks import NOT_REPRESENTABLE, RESULTS, constants
 
 mp.mp.dps = 80
 CONST = {'PI': mp.pi, 'EULER': mp.e, 'NEG': mp.mpf(-1), 'GOLDENRATIO': mp.phi, 'ONE': mp.mpf(1), 'TWO': mp.mpf(2),
@@ -91,14 +89,14 @@ def agree(v, ref, digits):
     return float(min(d, digits))
 
 
-def main():
+def main(benchmark='v0'):
     ap = argparse.ArgumentParser()
     ap.add_argument('--engine', required=True)
     ap.add_argument('--maxk', type=int, default=5)
     ap.add_argument('--jobs', type=int, default=os.cpu_count())
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows, beyond = constants(benchmark)
     t0 = time.time()
     with concurrent.futures.ThreadPoolExecutor(a.jobs) as pool:
         outs = list(pool.map(lambda r: run(a.engine, float(r['value']), a.maxk), rows))
@@ -115,8 +113,10 @@ def main():
         else:
             verdict = 'false negative' if d >= min(30, digits - 1) else 'not found'
         results.append({**r, **o, 'agree': d, 'verdict': verdict})
+    results += [{**r, 'result': '', 'RPN': '', 'K': '', 'REL_ERR': float('nan'), 'CR': '', 'evaluations': 0,
+                 'agree': float('nan'), 'verdict': NOT_REPRESENTABLE} for r in beyond]
     os.makedirs(RESULTS, exist_ok=True)
-    path = f'{RESULTS}/v0_K{a.maxk}.tsv'
+    path = f'{RESULTS}/{benchmark}_K{a.maxk}.tsv'
     cols = ['id', 'name', 'class', 'digits', 'verdict', 'K', 'RPN', 'REL_ERR', 'CR', 'agree', 'formula']
     with open(path, 'w', encoding='utf-8', newline='') as f:
         f.write('\t'.join(cols) + '\n')
@@ -129,7 +129,7 @@ def main():
     print(f'  exact           {tally["exact"]:5d}  ({100 * tally["exact"] / n:.1f}%)')
     print(f'  false positive  {tally["false positive"]:5d}')
     print(f'  false negative  {tally["false negative"]:5d}')
-    print(f'  not found       {tally["not found"]:5d}\n')
+    print(f'  not found       {tally["not found"]:5d}' + (f'\n  {NOT_REPRESENTABLE} {tally[NOT_REPRESENTABLE]:3d}' if beyond else '') + '\n')
     print('by class:           n   exact  false+  false-  not found')
     for c in ('rational', 'algebraic', 'elementary', 'special', 'none'):
         xs = [x for x in results if x['class'] == c]

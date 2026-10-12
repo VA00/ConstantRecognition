@@ -24,7 +24,7 @@ as Neg(x)). It is used here as the minimal example of recognition by table looku
      formula of the same key, and is unverifiable when there is none (Decimal(...) data are not formulas).
 
 Usage:  python run_ordner_v0.py [--cache DIR] [--refresh] [--check-all]
-Writes results/v0_ordner.tsv and prints the times of the steps.
+Writes results/v0_ordner.tsv and prints the times of the steps. run_ordner_v1.py does the same over benchmark v1.
 """
 import argparse
 import csv
@@ -39,10 +39,9 @@ import urllib.request
 
 import mpmath as mp
 
+from benchmarks import BENCH, NOT_REPRESENTABLE, RESULTS, constants
+
 mp.mp.dps = 80
-BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
-RESULTS = os.path.join(BENCH, 'results')
 URL = 'https://fungrim.org/ordner/'
 EXACT = 30
 TOL = 16 * 2.0 ** -52
@@ -301,7 +300,7 @@ def candidates(con, x):
     return sorted(rows, key=lambda r: (abs(r[2] - a), -r[3]))     # nearest; equally near: the more frequent
 
 
-def main():
+def main(benchmark='v0'):
     sys.stdout.reconfigure(encoding='utf-8')
     ap = argparse.ArgumentParser()
     ap.add_argument('--cache', default=os.path.join(BENCH, 'run', 'ordner_cache'))
@@ -319,7 +318,7 @@ def main():
     print(f'Ordner: {n_keys} keys, {n_expr} expressions (stated: {n_stated}, {e_stated}); '
           f'pages read in {t1 - t0:.1f} s, database built in {t2 - t1:.2f} s')
 
-    bench = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='	') if int(r['digits']) >= 17]
+    bench, beyond = constants(benchmark)
     t3 = time.perf_counter()
     hits = [(b, float(b['value']), candidates(con, float(b['value']))) for b in bench]
     t4 = time.perf_counter()
@@ -335,7 +334,7 @@ def main():
 
     fields = ['id', 'name', 'class', 'digits', 'verdict', 'ordner', 'key', 'keys', 'agree', 'checked_with', 'formula']
     counts = {}
-    with open(os.path.join(RESULTS, 'v0_ordner.tsv'), 'w', encoding='utf-8', newline='') as fo:
+    with open(os.path.join(RESULTS, f'{benchmark}_ordner.tsv'), 'w', encoding='utf-8', newline='') as fo:
         w = csv.DictWriter(fo, fieldnames=fields, delimiter='\t', lineterminator='\n')
         w.writeheader()
         for b, x, cand in hits:
@@ -354,13 +353,18 @@ def main():
                     if (nid, e) in verified and 'Decimal(' not in e:
                         a, used = agree(sign * verified[nid, e], mp.mpf(b['value'])), e
                         break
-                verdict = 'unverifiable' if a is None else 'exact' if a >= EXACT else 'false positive'
+                need = min(EXACT, int(b['digits']) - 1)     # as the other tools: >= 30 digits, or all known
+                verdict = 'unverifiable' if a is None else 'exact' if a >= need else 'false positive'
                 row.update({'ordner': answer, 'key': key, 'agree': '' if a is None else f'{a:.1f}',
                             'checked_with': '' if used in (None, ex[0]) else used})
             row['verdict'] = verdict
             counts[verdict] = counts.get(verdict, 0) + 1
             w.writerow(row)
-    print(f'{len(bench)} constants:', ', '.join(f'{k} {n}' for k, n in sorted(counts.items())))
+        for b in beyond:
+            w.writerow({'id': b['id'], 'name': b['name'], 'class': b['class'], 'digits': b['digits'],
+                        'formula': b['formula'], 'keys': 0, 'verdict': NOT_REPRESENTABLE})
+            counts[NOT_REPRESENTABLE] = counts.get(NOT_REPRESENTABLE, 0) + 1
+    print(f'{len(bench) + len(beyond)} constants:', ', '.join(f'{k} {n}' for k, n in sorted(counts.items())))
 
 
 if __name__ == '__main__':

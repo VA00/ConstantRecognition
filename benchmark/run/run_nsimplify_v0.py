@@ -21,7 +21,7 @@ right in double precision. Only the 64 digits of the benchmark tell them apart.
 
 Usage:  python run_nsimplify_v0.py [--jobs 12]
 Writes results/v0_nsimplify.tsv, and compares with the Constant Recognition results given by
---compare (default results/v0_K5.tsv).
+--compare (default results/v0_K5.tsv). run_nsimplify_v1.py does the same over benchmark v1.
 """
 import argparse
 import collections
@@ -31,9 +31,7 @@ import os
 import sys
 import time
 
-BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
-RESULTS = os.path.join(BENCH, 'results')
+from benchmarks import NOT_REPRESENTABLE, RESULTS, constants
 
 TIMEOUT = 60
 
@@ -49,16 +47,16 @@ def work(args):
         return '', 0, time.time() - t, f'{type(e).__name__}: {e}'[:80]
 
 
-def main():
+def main(benchmark='v0'):
     ap = argparse.ArgumentParser()
     ap.add_argument('--jobs', type=int, default=12)
-    ap.add_argument('--compare', default=os.path.join(RESULTS, 'v0_K5.tsv'), help='engine results of run_benchmark_v0.py')
+    ap.add_argument('--compare', default=os.path.join(RESULTS, f'{benchmark}_K5.tsv'), help='engine results of run_benchmark_v0.py')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
     import mpmath as mp
     import sympy as sp
     mp.mp.dps = 80
-    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows, beyond = constants(benchmark)
     t0 = time.time()
     with multiprocessing.Pool(a.jobs) as pool:
         pending = [pool.apply_async(work, (r['value'],)) for r in rows]
@@ -85,8 +83,10 @@ def main():
         else:
             verdict = 'rational fallback' if sp.sympify(expr).is_Rational else 'false positive'
         results.append({**r, 'nsimplify': expr, 'ops': ops, 'time': dt, 'agree': d, 'verdict': verdict, 'error': err or ''})
+    results += [{**r, 'nsimplify': '', 'ops': 0, 'time': 0.0, 'agree': float('nan'), 'verdict': NOT_REPRESENTABLE,
+                 'error': ''} for r in beyond]
     os.makedirs(RESULTS, exist_ok=True)
-    with open(os.path.join(RESULTS, 'v0_nsimplify.tsv'), 'w', encoding='utf-8', newline='') as f:
+    with open(os.path.join(RESULTS, f'{benchmark}_nsimplify.tsv'), 'w', encoding='utf-8', newline='') as f:
         cols = ['id', 'name', 'class', 'digits', 'verdict', 'ops', 'nsimplify', 'agree', 'time', 'error', 'formula']
         f.write('\t'.join(cols) + '\n')
         for x in results:
@@ -95,8 +95,8 @@ def main():
     n = len(results)
     tally = collections.Counter(x['verdict'] for x in results)
     print(f'{n} constants with >= 17 digits, nsimplify(x, [pi, E, GoldenRatio]), sympy {sp.__version__}, '
-          f'{elapsed:.0f} s on {a.jobs} jobs; written results/v0_nsimplify.tsv\n')
-    for v in ('exact', 'false positive', 'rational fallback', 'not found'):
+          f'{elapsed:.0f} s on {a.jobs} jobs; written results/{benchmark}_nsimplify.tsv\n')
+    for v in ('exact', 'false positive', 'rational fallback', 'not found') + ((NOT_REPRESENTABLE,) if beyond else ()):
         print(f'  {v:18s} {tally[v]:5d}  ({100 * tally[v] / n:.1f}%)')
     print('\nby class:           n   exact  false+  rational  not found')
     for c in ('rational', 'algebraic', 'elementary', 'special', 'none'):
@@ -111,7 +111,7 @@ def main():
         eng = {r['id']: r for r in csv.DictReader(open(a.compare, encoding='utf-8'), delimiter='\t')}
         both = collections.Counter()
         for x in results:
-            e = eng[x['id']]['verdict'] == 'exact'
+            e = x['id'] in eng and eng[x['id']]['verdict'] == 'exact'
             s = x['verdict'] == 'exact'
             both[(e, s)] += 1
         print(f'\ncompared with Constant Recognition ({a.compare}):')

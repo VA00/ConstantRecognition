@@ -22,7 +22,7 @@ Usage:
   python run_mitm_v0.py --exe <path to mitm_cr> [--kl 5] [--kr 6] [--threads 1] [--opts "--kappa-min 1e-4 ..."]
                         [--tag NAME] [--mem-cap 16] [--time-limit 36000]
 Writes results/v0_mitm_<tag>.tsv (default tag: kl<KL>_kr<KR>) and the process output results/v0_mitm_<tag>_raw.txt,
-and prints a summary.
+and prints a summary. run_mitm_v1.py does the same over benchmark v1.
 """
 import argparse
 import collections
@@ -34,11 +34,9 @@ import sys
 
 import mpmath as mp
 
+from benchmarks import BENCH, NOT_REPRESENTABLE, RESULTS, constants
 from run_benchmark_v0 import CONST, UNARY, BINARY, agree
 
-BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
-RESULTS = os.path.join(BENCH, 'results')
 sys.path.insert(0, os.path.join(BENCH, 'depth'))
 import monitor  # noqa: E402
 
@@ -127,7 +125,7 @@ def classify(rows, out):
     return results
 
 
-def main():
+def main(benchmark='v0'):
     ap = argparse.ArgumentParser()
     ap.add_argument('--exe', required=True)
     ap.add_argument('--kl', type=int, default=5)
@@ -139,21 +137,21 @@ def main():
     ap.add_argument('--time-limit', type=float, default=36000.0, help='seconds')
     ap.add_argument('--limit', type=int, default=0, help='only the first N constants (tests)')
     argv = sys.argv[1:]
-    if '--opts' in argv[:-1]:              # "--opts --anyx": the value starts with "--", argparse would take it as an option
+    if '--opts' in argv[:-1]:              # "--opts --any-x": the value starts with "--", argparse would take it as an option
         i = argv.index('--opts')
         argv[i:i + 2] = [f'--opts={argv[i + 1]}']
     a = ap.parse_args(argv)
     sys.stdout.reconfigure(encoding='utf-8')
     tag = a.tag or f'kl{a.kl}_kr{a.kr}'
-    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows, beyond = constants(benchmark)
     if a.limit:
-        rows = rows[:a.limit]
+        rows, beyond = rows[:a.limit], []
     targets = ''.join(f'{r["id"]} {repr(float(r["value"]))}\n' for r in rows)
     cmd = [a.exe, '--kl', str(a.kl), '--kr', str(a.kr), '--threads', str(a.threads),
            '--memcap', str(a.mem_cap * 0.9)] + shlex.split(a.opts)
     run = monitor.run(cmd, stdin_text=targets, mem_cap_gb=a.mem_cap, time_limit=a.time_limit)
     os.makedirs(RESULTS, exist_ok=True)
-    raw = f'{RESULTS}/v0_mitm_{tag}_raw.txt'
+    raw = f'{RESULTS}/{benchmark}_mitm_{tag}_raw.txt'
     with open(raw, 'w', encoding='utf-8', newline='') as f:
         f.write(f'# command: {" ".join(cmd)}\n# wall {run["seconds"]:.1f} s, peak memory {run["peak_gb"]:.2f} GB, '
                 f'killed: {run["killed"]}, probe max {run["probe_max_s"]}\n')
@@ -169,7 +167,9 @@ def main():
         print(f'{len(missing)} constants without output, e.g. {missing[:5]}')
         return 1
     results = classify(rows, out)
-    path = f'{RESULTS}/v0_mitm_{tag}.tsv'
+    results += [{**r, 'result': '', 'total': '', 'LHS': '', 'RHS': '', 'REL_ERR': float('nan'), 'candidates': '',
+                 'ms': '', 'agree': float('nan'), 'solved': False, 'verdict': NOT_REPRESENTABLE} for r in beyond]
+    path = f'{RESULTS}/{benchmark}_mitm_{tag}.tsv'
     cols = ['id', 'name', 'class', 'digits', 'verdict', 'total', 'LHS', 'RHS', 'REL_ERR', 'candidates', 'ms', 'agree',
             'solved', 'formula']
     with open(path, 'w', encoding='utf-8', newline='') as f:
@@ -185,7 +185,7 @@ def main():
     print(f'{n} constants with >= 17 digits, mitm_cr KL = {a.kl}, KR = {a.kr}, {a.threads} thread(s), options '
           f'"{a.opts}": {run["seconds"]:.1f} s wall (right-side table {rbuild.group(1) if rbuild else "?"} s), '
           f'CPU {cpu.group(1) if cpu else "?"} s, peak memory {run["peak_gb"]:.2f} GB; written {path}\n')
-    for v in ('exact', 'false positive', 'false negative', 'not found'):
+    for v in ('exact', 'false positive', 'false negative', 'not found') + ((NOT_REPRESENTABLE,) if beyond else ()):
         print(f'  {v:15s} {tally[v]:5d}')
     print(f'  (SUCCESS whose equation could not be solved at 80 digits: '
           f'{sum(1 for x in results if x["result"] == "SUCCESS" and not x["solved"])})')
@@ -196,8 +196,8 @@ def main():
     print('\nexact, by total length:', dict(sorted(collections.Counter(x['total'] for x in results if x['verdict'] == 'exact').items())))
     print('false positive, by total length:',
           dict(sorted(collections.Counter(x['total'] for x in results if x['verdict'] == 'false positive').items())))
-    for name, other in (('CR CPU K<=7', 'v0_K7.tsv'), ('CR GPU K<=8', 'v0_cuda_K8.tsv'), ('RIES -l5', 'v0_ries_l5.tsv')):
-        p = f'{RESULTS}/{other}'
+    for name, other in (('CR CPU K<=7', 'K7.tsv'), ('CR GPU K<=8', 'cuda_K8.tsv'), ('RIES -l5', 'ries_l5.tsv')):
+        p = f'{RESULTS}/{benchmark}_{other}'
         if os.path.exists(p):
             c = {r['id']: r['verdict'] for r in csv.DictReader(open(p, encoding='utf-8'), delimiter='\t')}
             both = collections.Counter((c.get(x['id']) == 'exact', x['verdict'] == 'exact') for x in results)

@@ -20,7 +20,8 @@ Build (Windows, from algorithms/methods/gpu_cuda/ or with its build_benchmark.ba
   nvcc -O3 -arch=sm_120 constant_gpu_benchmark.cu -o constant_gpu_benchmark
 Usage:
   python run_cuda_v0.py --exe <path to constant_gpu_benchmark> [--maxk 7] [--threshold 64]
-Writes results/v0_cuda_K<MaxK>.tsv and prints a summary.
+Writes results/v0_cuda_K<MaxK>.tsv (and the engine's output, results/v0_cuda_K<MaxK>_raw.tsv, kept per chunk of
+targets so that an interrupted run resumes) and prints a summary. run_cuda_v1.py does the same over benchmark v1.
 """
 import argparse
 import collections
@@ -32,13 +33,11 @@ import time
 
 import mpmath as mp
 
+from benchmarks import NOT_REPRESENTABLE, RESULTS, constants
 from run_benchmark_v0 import CONST, UNARY, agree
 
-BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
-RESULTS = os.path.join(BENCH, 'results')
-
 mp.mp.dps = 80
+CHUNK = 500     # targets per process; the output of every finished chunk is kept, so an interrupted run resumes
 # this kernel applies f(second, top): "a, b, SUBTRACT" is a - b, "a, b, POWER" is a^b
 BINARY = {'PLUS': lambda s, t: s + t, 'TIMES': lambda s, t: s * t, 'SUBTRACT': lambda s, t: s - t,
           'DIVIDE': lambda s, t: s / t, 'POWER': lambda s, t: s ** t}
@@ -60,24 +59,42 @@ def rpn_value(rpn):
     return v
 
 
-def main():
+def main(benchmark='v0'):
     ap = argparse.ArgumentParser()
     ap.add_argument('--exe', required=True)
     ap.add_argument('--maxk', type=int, default=7)
     ap.add_argument('--threshold', type=float, default=64.0, help='FP32 candidate threshold in FLT_EPSILON')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
-    targets = ''.join(f'{r["id"]} {repr(float(r["value"]))}\n' for r in rows)
+    rows, beyond = constants(benchmark)
+    raw_path = f'{RESULTS}/{benchmark}_cuda_K{a.maxk}_raw.tsv'
+
+    def parse(text):
+        out = {}
+        for line in text.splitlines():
+            f = line.split('\t')
+            if len(f) >= 8:
+                out[f[0]] = {'result': f[1], 'K': int(f[2]), 'RPN': f[3], 'REL_ERR': float(f[4]),
+                             'candidates': int(f[5]), 'overflow': int(f[6]), 'ms': float(f[7])}
+        return out
+    out = parse(open(raw_path, encoding='utf-8').read()) if os.path.exists(raw_path) else {}
+    todo = [r for r in rows if r['id'] not in out]
+    print(f'{len(rows)} constants, {len(out)} done, {len(todo)} to search', flush=True)
     t0 = time.time()
-    p = subprocess.run([a.exe, str(a.maxk), str(a.threshold)], input=targets, capture_output=True, text=True)
+    for i in range(0, len(todo), CHUNK):
+        part = todo[i:i + CHUNK]
+        targets = ''.join(f'{r["id"]} {repr(float(r["value"]))}\n' for r in part)
+        p = subprocess.run([a.exe, str(a.maxk), str(a.threshold)], input=targets, capture_output=True, text=True)
+        sys.stderr.write(p.stderr)
+        got = parse(p.stdout)
+        if len(got) != len(part):
+            print(f'chunk {i // CHUNK}: {len(part) - len(got)} targets without output (exit code {p.returncode}); stopped')
+            return 1
+        with open(raw_path, 'a', encoding='utf-8', newline='\n') as f:
+            f.write(''.join(line + '\n' for line in p.stdout.splitlines() if line.split('\t')[0] in got))
+        out.update(got)
+        print(f'  {min(i + CHUNK, len(todo))} of {len(todo)}, {time.time() - t0:.0f} s', flush=True)
     elapsed = time.time() - t0
-    sys.stderr.write(p.stderr)
-    out = {}
-    for line in p.stdout.splitlines():
-        f = line.split('\t')
-        out[f[0]] = {'result': f[1], 'K': int(f[2]), 'RPN': f[3], 'REL_ERR': float(f[4]), 'candidates': int(f[5]),
-                     'overflow': int(f[6]), 'ms': float(f[7])}
     results = []
     for r in rows:
         o = out[r['id']]
@@ -92,19 +109,24 @@ def main():
             verdict = 'false negative' if d >= min(30, digits - 1) else 'not found'
         results.append({**r, **o, 'agree': d, 'verdict': verdict})
     os.makedirs(RESULTS, exist_ok=True)
-    path = f'{RESULTS}/v0_cuda_K{a.maxk}.tsv'
+    path = f'{RESULTS}/{benchmark}_cuda_K{a.maxk}.tsv'
     cols = ['id', 'name', 'class', 'digits', 'verdict', 'K', 'RPN', 'REL_ERR', 'candidates', 'overflow', 'ms', 'agree', 'formula']
     with open(path, 'w', encoding='utf-8', newline='') as f:
         f.write('\t'.join(cols) + '\n')
         for x in results:
             f.write('\t'.join(f'{x[c]:.1f}' if c == 'agree' else f'{x[c]:.3e}' if c == 'REL_ERR' else str(x[c]) for c in cols) + '\n')
 
+    ms = sorted(x['ms'] for x in results)
+    results += [{**r, 'result': '', 'K': '', 'RPN': '', 'REL_ERR': float('nan'), 'candidates': '', 'overflow': 0,
+                 'ms': '', 'agree': float('nan'), 'verdict': NOT_REPRESENTABLE} for r in beyond]
+    with open(path, 'a', encoding='utf-8', newline='') as f:
+        for x in results[len(results) - len(beyond):]:
+            f.write('\t'.join(f'{x[c]:.1f}' if c == 'agree' else f'{x[c]:.3e}' if c == 'REL_ERR' else str(x[c]) for c in cols) + '\n')
     n = len(results)
     tally = collections.Counter(x['verdict'] for x in results)
-    ms = sorted(x['ms'] for x in results)
     print(f'{n} constants with >= 17 digits, GPU hybrid FP32/FP64, MaxK = {a.maxk}, threshold {a.threshold:g} FLT_EPSILON: '
-          f'{elapsed:.0f} s in total, median {ms[n // 2]:.0f} ms, max {ms[-1]:.0f} ms per constant; written {path}\n')
-    for v in ('exact', 'false positive', 'false negative', 'not found'):
+          f'{elapsed:.0f} s for this run, median {ms[len(ms) // 2]:.0f} ms, max {ms[-1]:.0f} ms per constant; written {path}\n')
+    for v in ('exact', 'false positive', 'false negative', 'not found') + ((NOT_REPRESENTABLE,) if beyond else ()):
         print(f'  {v:15s} {tally[v]:5d}')
     print(f'  (candidate buffer overflows: {sum(x["overflow"] for x in results)})')
     print('\nby class:           n   exact  false+  false-  not found')
@@ -115,7 +137,7 @@ def main():
         if x['verdict'] in ('false positive', 'false negative'):
             print(f'  {x["verdict"]}: {x["name"][:50]}  {x["RPN"]}  FP64 error {x["REL_ERR"]:.2e}, agrees to {x["agree"]:.1f} digits')
     print('\nexact, by K:', dict(sorted(collections.Counter(x['K'] for x in results if x['verdict'] == 'exact').items())))
-    cpu = f'{RESULTS}/v0_K{a.maxk}.tsv'
+    cpu = f'{RESULTS}/{benchmark}_K{a.maxk}.tsv'
     if os.path.exists(cpu):
         c = {r['id']: r['verdict'] for r in csv.DictReader(open(cpu, encoding='utf-8'), delimiter='\t')}
         both = collections.Counter((c.get(x['id']) == 'exact', x['verdict'] == 'exact') for x in results)

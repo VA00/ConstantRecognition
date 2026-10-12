@@ -12,42 +12,43 @@ the tool did not claim), and not found; then per constant class, the overlaps be
 tools, and how many constants no tool recognizes. Wolfram|Alpha's "likely exact" (agreeing
 to all ~20 digits it shows, without an expression to check) is listed separately.
 
-Usage:  python compare_results_v0.py
+Usage:  python compare_results_v0.py        (compare_results_v1.py: the same over benchmark v1)
 """
 import collections
 import csv
 import os
 import sys
 
-BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
-RESULTS = os.path.join(BENCH, 'results')
+from benchmarks import NOT_REPRESENTABLE, RESULTS, constants_path
 
-TOOLS = [  # label, results file
-    ('Constant Recognition K<=5', os.path.join(RESULTS, 'v0_K5.tsv')),
-    ('Constant Recognition K<=6', os.path.join(RESULTS, 'v0_K6.tsv')),
-    ('Constant Recognition K<=7', os.path.join(RESULTS, 'v0_K7.tsv')),
-    ('CR GPU K<=7', os.path.join(RESULTS, 'v0_cuda_K7.tsv')),
-    ('CR GPU K<=8', os.path.join(RESULTS, 'v0_cuda_K8.tsv')),
-    ('nsimplify', os.path.join(RESULTS, 'v0_nsimplify.tsv')),
-    ('Maple identify', os.path.join(RESULTS, 'v0_maple_identify.tsv')),
-    ('Wolfram|Alpha', os.path.join(RESULTS, 'v0_wolframalpha.tsv')),
-    ('AskConstants', os.path.join(RESULTS, 'v0_askconstants.tsv')),
-    ('RIES -l2', os.path.join(RESULTS, 'v0_ries_l2.tsv')),
-    ('RIES -l4', os.path.join(RESULTS, 'v0_ries_l4.tsv')),
-    ('RIES -l5', os.path.join(RESULTS, 'v0_ries_l5.tsv')),
-    ('MESearch length<=5', os.path.join(RESULTS, 'v0_mesearch_l5.tsv')),
-    ('Ordner (lookup table)', os.path.join(RESULTS, 'v0_ordner.tsv')),
-    ('NumberDB (lookup table)', os.path.join(RESULTS, 'v0_numberdb.tsv')),
+TOOLS = [  # label, results file without the benchmark's prefix (v0_, v1_); runs not done are left out
+    ('Constant Recognition K<=5', 'K5.tsv'),
+    ('Constant Recognition K<=6', 'K6.tsv'),
+    ('Constant Recognition K<=7', 'K7.tsv'),
+    ('CR GPU K<=7', 'cuda_K7.tsv'),
+    ('CR GPU K<=8', 'cuda_K8.tsv'),
+    ('MITM |L|<=5, |R|<=6', 'mitm_kl5_kr6.tsv'),
+    ('nsimplify', 'nsimplify.tsv'),
+    ('Maple identify', 'maple_identify.tsv'),
+    ('Wolfram|Alpha', 'wolframalpha.tsv'),
+    ('AskConstants', 'askconstants.tsv'),
+    ('RIES -l2', 'ries_l2.tsv'),
+    ('RIES -l4', 'ries_l4.tsv'),
+    ('RIES -l5', 'ries_l5.tsv'),
+    ('MESearch length<=5', 'mesearch_l5.tsv'),
+    ('Ordner (lookup table)', 'ordner.tsv'),
+    ('NumberDB (lookup table)', 'numberdb.tsv'),
 ]
 WRONG = ('false positive', 'rational fallback')
 
 
-def main():
+def main(benchmark='v0'):
     sys.stdout.reconfigure(encoding='utf-8')
-    consts = {r['id']: r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17}
+    consts = {r['id']: r for r in csv.DictReader(open(constants_path(benchmark), encoding='utf-8'), delimiter='\t')
+              if int(r['digits']) >= 17}
     runs = {}
-    for label, path in TOOLS:
+    for label, name in TOOLS:
+        path = os.path.join(RESULTS, f'{benchmark}_{name}')
         if os.path.exists(path):
             v = {r['id']: r['verdict'] for r in csv.DictReader(open(path, encoding='utf-8'), delimiter='\t')}
             missing = set(consts) - set(v)
@@ -61,7 +62,7 @@ def main():
     for label, v in runs.items():
         t = collections.Counter(v.values())
         bycls = '/'.join(str(sum(1 for i in consts if consts[i]['class'] == c and v[i] == 'exact')) for c in classes)
-        print(f'{label:26s} {t["exact"]:7d} {t["likely exact"]:7d} {sum(t[w] for w in WRONG):7d} {t["false negative"]:7d} {t["not found"] + t["unverifiable"]:10d}   {bycls}')
+        print(f'{label:26s} {t["exact"]:7d} {t["likely exact"]:7d} {sum(t[w] for w in WRONG):7d} {t["false negative"]:7d} {t["not found"] + t["unverifiable"] + t[NOT_REPRESENTABLE]:10d}   {bycls}')
     print('\nconstants recognized exactly by the row tool but not by the column tool:')
     labels = [l for l in runs]
     print('(columns: CR = Constant Recognition)')

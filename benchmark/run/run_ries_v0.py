@@ -28,6 +28,7 @@ Usage:
   python run_ries_v0.py --ries <path to ries> [--level 2] [--jobs 12] [--symbols 123456789pefrqslE+-*/^ --tag common_l4]
   (--symbols: RIES's -S, only these symbols; --tag: name of the result files instead of l<level>)
 Writes results/v0_ries_l<level>.tsv (and the raw RIES output, results/v0_ries_l<level>_raw.tsv) and prints a summary.
+run_ries_v1.py does the same over benchmark v1 (results/v1_ries_*).
 """
 import argparse
 import collections
@@ -43,9 +44,7 @@ import time
 
 import mpmath as mp
 
-BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONSTANTS = os.path.join(BENCH, 'data', 'v0', 'constants_v0.tsv')
-RESULTS = os.path.join(BENCH, 'results')
+from benchmarks import NOT_REPRESENTABLE, RESULTS, constants
 
 mp.mp.dps = 80
 
@@ -121,17 +120,17 @@ def agree(v, ref, digits):
     return float(min(-mp.log10(abs(v - ref) / abs(ref)) if ref != 0 else -mp.log10(abs(v)), digits))
 
 
-def main():
+def main(benchmark='v0'):
     ap = argparse.ArgumentParser()
     ap.add_argument('--ries', required=True)
     ap.add_argument('--level', default='2')
     ap.add_argument('--jobs', type=int, default=12)
     ap.add_argument('--limit', type=int, default=0)
     ap.add_argument('--symbols', default='', help="RIES -S symbol set, e.g. 123456789pefrqslE+-*/^")
-    ap.add_argument('--tag', default='', help='result files v0_ries_<tag>.tsv (default l<level>)')
+    ap.add_argument('--tag', default='', help=f'result files {benchmark}_ries_<tag>.tsv (default l<level>)')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    rows = [r for r in csv.DictReader(open(CONSTANTS, encoding='utf-8'), delimiter='\t') if int(r['digits']) >= 17]
+    rows, beyond = constants(benchmark)
     if a.limit:
         rows = rows[:a.limit]
     t0 = time.time()
@@ -139,7 +138,7 @@ def main():
     # and an interrupted run resumes
     os.makedirs(RESULTS, exist_ok=True)
     tag = a.tag or f'l{a.level}'
-    raw_path = f'{RESULTS}/v0_ries_{tag}_raw.tsv'
+    raw_path = f'{RESULTS}/{benchmark}_ries_{tag}_raw.tsv'
     raw = {}
     if os.path.exists(raw_path):
         for line in open(raw_path, encoding='utf-8'):
@@ -180,8 +179,10 @@ def main():
             verdict = 'false negative' if d >= min(30, digits - 1) else 'not found'
         results.append({**r, 'verdict': verdict, 'equation': eq['text'] if eq else '', 'complexity': eq['complexity'] if eq else '',
                         'agree': d, 'solved': root is not None, 'n_equations': len(eqs)})
+    results += [{**r, 'verdict': NOT_REPRESENTABLE, 'equation': '', 'complexity': '', 'agree': float('nan'),
+                 'solved': False, 'n_equations': 0} for r in ([] if a.limit else beyond)]
     os.makedirs(RESULTS, exist_ok=True)
-    path = f'{RESULTS}/v0_ries_{tag}.tsv'
+    path = f'{RESULTS}/{benchmark}_ries_{tag}.tsv'
     cols = ['id', 'name', 'class', 'digits', 'verdict', 'equation', 'complexity', 'agree', 'solved', 'formula']
     with open(path, 'w', encoding='utf-8', newline='') as f:
         f.write('\t'.join(cols) + '\n')
@@ -190,10 +191,10 @@ def main():
     n = len(results)
     tally = collections.Counter(x['verdict'] for x in results)
     print(f'{n} constants with >= 17 digits, RIES -l{a.level}{" -S" + a.symbols if a.symbols else ""}, {elapsed:.0f} s on {a.jobs} jobs; written {path}\n')
-    for v in ('exact', 'false positive', 'false negative', 'not found'):
+    for v in ('exact', 'false positive', 'false negative', 'not found') + ((NOT_REPRESENTABLE,) if tally[NOT_REPRESENTABLE] else ()):
         print(f'  {v:15s} {tally[v]:5d}')
     print(f'  (equations not solved numerically: {sum(1 for x in results if x["equation"] and not x["solved"])}, '
-          f'no equation at all: {sum(1 for x in results if not x["equation"])})')
+          f'no equation at all: {sum(1 for x in results if not x["equation"] and x["verdict"] != NOT_REPRESENTABLE)})')
     print('\nby class:           n   exact  false+  false-  not found')
     for c in ('rational', 'algebraic', 'elementary', 'special', 'none'):
         t = collections.Counter(x['verdict'] for x in results if x['class'] == c)
