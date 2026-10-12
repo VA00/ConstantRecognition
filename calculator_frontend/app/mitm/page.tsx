@@ -15,8 +15,8 @@ import {
 import { CALC4_CONSTS, CALC4_FUNCS, CALC4_OPS, EXTRA_CONSTS, EXTRA_FUNCS, EXTRA_OPS } from '../calculator/lib/taskQueue';
 import { InputBar } from '../calculator/components/InputBar';
 import { Latex } from '../calculator/components/Latex';
-import { formatDuration } from '../calculator/lib/estimate';
-import { MitmSidebar, TableInfo } from './components/MitmSidebar';
+import { formatCount, formatDuration } from '../calculator/lib/estimate';
+import { MitmSidebar, TableInfo, MAX_LEFT, MAX_RIGHT } from './components/MitmSidebar';
 import { MitmResultCard, MitmResultsTable, MitmRow, buildRows } from './components/MitmResults';
 import { SearchResponse, BuildResponse, estimate, UNSUPPORTED_TOKENS } from './lib/mitm';
 
@@ -39,6 +39,9 @@ interface Outcome {
   rows: MitmRow[];
   nR: number[];
   input: string;
+  key: string;   // number and settings of this search (searchKey): "search deeper" continues it only while unchanged
+  kl: number;
+  kr: number;
 }
 
 export default function MitmPage() {
@@ -165,26 +168,33 @@ export default function MitmPage() {
     : null;
 
   // ------------------------------------------------------------------ search
-  const runSearch = async () => {
+  const searchKey = JSON.stringify({ lists, anyX, inputValue, errorMode, manualError, exactTolEps });
+
+  // depth: the sliders' values, or one level deeper on one side ("search deeper", which moves that slider)
+  const runSearch = async (depth?: { kl: number; kr: number }) => {
     if (!canSearch || !parsed || !deltaInfo || 'error' in deltaInfo) return;
+    const KL = depth?.kl ?? kl;
+    const KR = depth?.kr ?? kr;
+    const key = JSON.stringify({ ...lists, kr: KR });
     const T = parsed.re;
     const relDelta = T !== 0 ? deltaInfo.delta / Math.abs(T) : deltaInfo.delta;
     const tolrel = deltaInfo.delta > 0 ? Math.max(relDelta, exactTolEps * EPS) : exactTolEps * EPS;
     setError(null);
-    if (!tableRef.current || tableRef.current.key !== tableKey) {
-      setPhase({ kind: 'building', start: Date.now(), seconds: est.buildSeconds });
-      const b = await request({ type: 'build', ...{ consts: lists.consts.join(','), funcs: lists.funcs.join(','), ops: lists.ops.join(',') }, kr, memcapGB: MEMCAP_GB }) as unknown as BuildResponse & { type: string };
+    if (!tableRef.current || tableRef.current.key !== key) {
+      const seconds = estimate(KL, KR, lists.consts.length, lists.funcs.length, lists.ops.length).buildSeconds;
+      setPhase({ kind: 'building', start: Date.now(), seconds });
+      const b = await request({ type: 'build', ...{ consts: lists.consts.join(','), funcs: lists.funcs.join(','), ops: lists.ops.join(',') }, kr: KR, memcapGB: MEMCAP_GB }) as unknown as BuildResponse & { type: string };
       if (b.type === 'error' || !b.ok) {
         if (b.error !== 'aborted') setError(`Right-side table: ${b.error ?? 'failed'}`);
         if (b.type === 'error' && b.error !== 'aborted') restartWorker();   // the module may be broken (out of memory)
         setPhase({ kind: 'idle' });
         return;
       }
-      tableRef.current = { key: tableKey, kr, sizes: b.sizes ?? [], gb: b.gb ?? 0, ms: b.ms ?? 0 };
+      tableRef.current = { key, kr: KR, sizes: b.sizes ?? [], gb: b.gb ?? 0, ms: b.ms ?? 0 };
       setTable(tableRef.current);
     }
     setPhase({ kind: 'searching', start: Date.now() });
-    const r = await request({ type: 'search', T, tolrel, kl, anyX, listCap: LIST_CAP }) as unknown as SearchResponse & { type: string };
+    const r = await request({ type: 'search', T, tolrel, kl: KL, anyX, listCap: LIST_CAP }) as unknown as SearchResponse & { type: string };
     setPhase({ kind: 'idle' });
     if (r.type === 'error' || !r.ok) {
       if (r.error !== 'aborted') setError(`Search: ${r.error ?? 'failed'}`);
@@ -193,9 +203,25 @@ export default function MitmPage() {
     const nR = tableRef.current?.sizes ?? [];
     const nL = r.nL ?? [];
     setOutcome({
-      response: r, T, relDelta, delta: deltaInfo.delta, nR, input: inputValue,
+      response: r, T, relDelta, delta: deltaInfo.delta, nR, input: inputValue, key: searchKey, kl: KL, kr: KR,
       rows: buildRows(r.matches ?? [], r.approx ?? [], T, relDelta, nL, nR),
     });
+  };
+
+  // After a failed search, while the number and the settings are unchanged: one level deeper on the left (the
+  // same table, more left sides per number) or on the right (a new table, kept for further numbers)
+  const sameSearch = outcome !== null && outcome.response.status !== 'SUCCESS' && outcome.key === searchKey
+    && outcome.kl === kl && outcome.kr === kr;
+  const deeperLeft = sameSearch && kl < MAX_LEFT
+    ? estimate(kl + 1, kr, lists.consts.length, lists.funcs.length, lists.ops.length) : null;
+  const deeperRightEst = sameSearch && kr < MAX_RIGHT
+    ? estimate(kl, kr + 1, lists.consts.length, lists.funcs.length, lists.ops.length) : null;
+  const deeperRight = deeperRightEst && !deeperRightEst.tooBig ? deeperRightEst : null;
+  const searchDeeper = (side: 'left' | 'right') => {
+    const depth = side === 'left' ? { kl: kl + 1, kr } : { kl, kr: kr + 1 };
+    setKl(depth.kl);
+    setKr(depth.kr);
+    void runSearch(depth);
   };
 
   const abort = () => {
@@ -258,7 +284,7 @@ export default function MitmPage() {
           canCalculate={canSearch}
           cannotCalculateReason={reason}
           hint={hint}
-          onCalculate={runSearch}
+          onCalculate={() => void runSearch()}
           onReset={reset}
           onAbort={abort}
         />
@@ -291,8 +317,30 @@ export default function MitmPage() {
                 {' '}in {took}
               </div>
             ) : (
-              <div className="bg-red-500 text-white py-2 px-4 text-center text-sm">
-                Found {outcome.rows.length} approximation{outcome.rows.length !== 1 ? 's' : ''} in {took}, none within the tolerance
+              <div className="bg-red-500 text-white py-2 px-4 text-sm flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+                <span>
+                  Found {outcome.rows.length} approximation{outcome.rows.length !== 1 ? 's' : ''} in {took}, none within the tolerance
+                </span>
+                {!busy && deeperLeft && (
+                  <button
+                    type="button"
+                    onClick={() => searchDeeper('left')}
+                    title={`Search again with left sides up to length ${kl + 1}; the right-side table is kept`}
+                    className="rounded-md bg-white px-3 py-1 font-medium text-red-600 hover:bg-red-50"
+                  >
+                    Deeper left side: |L| ≤ {kl + 1}, ≈ {formatCount(deeperLeft.leftCodes)} left sides, {formatDuration(deeperLeft.searchSeconds)}
+                  </button>
+                )}
+                {!busy && deeperRight && (
+                  <button
+                    type="button"
+                    onClick={() => searchDeeper('right')}
+                    title={`Rebuild the right-side table up to length ${kr + 1} (kept for further numbers), then search again`}
+                    className="rounded-md bg-white px-3 py-1 font-medium text-red-600 hover:bg-red-50"
+                  >
+                    Deeper right side: |R| ≤ {kr + 1}, new table ≈ {formatCount(deeperRight.rightCodes)} codes, {formatDuration(deeperRight.buildSeconds + deeperRight.searchSeconds)}
+                  </button>
+                )}
               </div>
             )}
             <MitmResultCard row={best} rows={outcome.rows} />
