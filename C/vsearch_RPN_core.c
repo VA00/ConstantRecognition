@@ -232,9 +232,10 @@ static double compute_single_error(double computed, double target, ErrorMetric m
 
 static int is_exact_match(double err, double computed, double target, double delta, int K, int n_total, double cr_threshold) {
     if (err <= EPS_MAX * DBL_EPSILON) return 1;
-    if (delta > 0) {
+    /* distance first: the compression ratio (two log10) for every finite formula took 33-44 % of the search */
+    if (delta > 0 && fabs(computed - target) <= 2.0 * delta) {
         double compression = (err > 0) ? -log10(err) / (K * log10(n_total)) : 10.0;
-        if (fabs(computed - target) <= 2.0 * delta && compression >= cr_threshold) return 1;
+        if (compression >= cr_threshold) return 1;
     }
     return 0;
 }
