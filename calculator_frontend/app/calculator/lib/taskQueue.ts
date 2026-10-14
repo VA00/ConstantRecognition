@@ -26,13 +26,16 @@
 //    by exact leaf weight, so big slices start while there is still plenty
 //    of other work to run alongside them.
 //
-// Deep levels of small calculators are handled differently. With only a few
+// Levels of small calculators are handled differently. With only a few
 // buttons the number of valid structures explodes (Motzkin numbers: 2188 at
-// K=11, 310572 at K=16) while each structure carries very little work, so
-// one-task-per-structure would drown in message overhead. Such levels are
-// cut into a fixed number of contiguous index ranges instead; the engine's
-// pruned depth-first enumeration skips the invalid indices inside a range
-// cheaply, and with a small alphabet the work per range is nearly uniform.
+// K=11, 310572 at K=16) while each structure carries very little work, and
+// the page spends a few ms of main-thread work on every task, so one task
+// per structure would leave the workers waiting for the page. Such levels
+// are cut into contiguous index ranges instead, sized for about TASK_WORK
+// formulas per task; the engine's pruned depth-first enumeration skips the
+// invalid indices inside a range cheaply. Most equal ranges hold no valid
+// structure at all (441 of 512 at K=13): rangeWeights gives the exact work of
+// every range, empty ones are dropped and the rest run heaviest first.
 //
 // The queue also supports a user-restricted calculator (button palette):
 // pass the enabled subsets and every task carries explicit const/func/op
@@ -43,7 +46,7 @@ export interface SearchTask {
   maxK: number;      // MaxCodeLength passed to WASM for this slice
   taskId: number;    // passed to WASM as cpuId  (slice index within level)
   taskCount: number; // passed to WASM as ncpus  (total slices of this level)
-  weight: number;    // leaf count of this slice (exact for structures, average for ranges)
+  weight: number;    // exact leaf count of this slice (0 for the bundle of shallow levels)
   // When set, the worker calls search_RPN_custom with these exact lists
   // instead of the full-calculator entry point. NOTE: the C parser treats an
   // empty string as "zero ops", which matches "user disabled all of them" —
@@ -113,7 +116,14 @@ export const CHAIN_SPLIT_MIN_K = 6;
 // ranges instead of one task per structure.
 export const MAX_STRUCTURE_TASKS = 1500;
 
-// Number of contiguous ranges a deep level is cut into.
+// Formulas per range task the queue aims at: about 0.3 s of one worker.
+export const TASK_WORK = 2e7;
+
+// Levels whose structures carry fewer formulas than this on average (a few
+// ms of work, less than the page spends per task) are cut into ranges too.
+export const MIN_STRUCTURE_WORK = TASK_WORK / 64;
+
+// Most contiguous ranges a level is cut into.
 export const RANGE_TASKS_PER_LEVEL = 512;
 
 // Number of syntactically valid ternary structures of length K: the Motzkin
@@ -189,6 +199,43 @@ export function chainIndex(K: number): number {
   return (Math.pow(3, K - 1) - 1) / 2;
 }
 
+// Exact leaf count of each of `count` contiguous index ranges of level K,
+// cut as the engine cuts them: chunk = ceil(3^K / count). Walks the tree of
+// structure prefixes down to the first prefix whose indices all lie in one
+// range, so the cost is O(count * K) even where the structures are far too
+// many to list (the game searches up to K=24).
+export function rangeWeights(K: number, count: number, nc: number, nu: number, nb: number): number[] {
+  // ends[r][d]: leaf count of the valid endings of r tokens that take the
+  // stack from depth d to 1
+  const ends: number[][] = [];
+  for (let r = 0; r <= K; r++) {
+    ends.push(new Array(K + 2).fill(0));
+    for (let d = 0; d <= K; d++) {
+      ends[r][d] = r === 0 ? (d === 1 ? 1 : 0)
+        : nc * ends[r - 1][d + 1] + (d >= 1 ? nu * ends[r - 1][d] : 0) + (d >= 2 ? nb * ends[r - 1][d - 1] : 0);
+    }
+  }
+  const chunk = Math.ceil(Math.pow(3, K) / count);
+  const w = new Array(count).fill(0);
+  // A prefix of pos tokens: indices [lo, lo + 3^(K-pos)), stack depth d,
+  // leaf count pw. Digit 0 (constant) turns slowest, as in structureWeight.
+  const visit = (pos: number, lo: number, d: number, pw: number) => {
+    const rest = ends[K - pos][d];
+    if (pw === 0 || rest === 0) return;
+    const size = Math.pow(3, K - pos);
+    const j = Math.floor(lo / chunk);
+    if (j === Math.floor((lo + size - 1) / chunk)) {
+      w[j] += pw * rest;
+      return;
+    }
+    visit(pos + 1, lo, d + 1, pw * nc);
+    if (d >= 1) visit(pos + 1, lo + size / 3, d, pw * nu);
+    if (d >= 2) visit(pos + 1, lo + 2 * size / 3, d - 1, pw * nb);
+  };
+  visit(0, 0, 0, 1);
+  return w;
+}
+
 // Tasks for levels startK..searchDepth. startK > 1 continues a finished
 // search one level deeper without repeating the levels already done.
 export function buildTaskQueue(
@@ -221,15 +268,20 @@ export function buildTaskQueue(
 
   for (let K = Math.max(bundleMax + 1, startK); K <= searchDepth; K++) {
     const N = Math.pow(3, K);
+    const structures = validStructureCount(K);
+    const work = levelWork(K, nc, nu, nb);
 
-    if (validStructureCount(K) > MAX_STRUCTURE_TASKS) {
-      // Deep level of a small calculator: contiguous index ranges. Ranges
-      // are equal in index count, and with few buttons nearly equal in work.
-      const count = Math.min(RANGE_TASKS_PER_LEVEL, N);
-      const perTask = levelWork(K, nc, nu, nb) / count;
-      for (let j = 0; j < count; j++) {
-        tasks.push({ minK: K, maxK: K, taskId: j, taskCount: count, weight: perTask, ...lists });
-      }
+    if (structures > MAX_STRUCTURE_TASKS || work < structures * MIN_STRUCTURE_WORK) {
+      // Contiguous index ranges, 7 per TASK_WORK formulas: about one in 7
+      // holds valid structures (71 of 512 at K=13), so a task averages
+      // about TASK_WORK.
+      const count = Math.max(1, Math.min(RANGE_TASKS_PER_LEVEL, N, Math.ceil(7 * work / TASK_WORK)));
+      const level: SearchTask[] = [];
+      rangeWeights(K, count, nc, nu, nb).forEach((w, j) => {
+        if (w > 0) level.push({ minK: K, maxK: K, taskId: j, taskCount: count, weight: w, ...lists });
+      });
+      level.sort((a, b) => b.weight - a.weight);
+      tasks.push(...level);
       continue;
     }
 

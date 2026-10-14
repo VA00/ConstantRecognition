@@ -128,22 +128,25 @@ describe('buildTaskQueue with a restricted calculator (button palette)', () => {
   });
 
   it('computes weights from subset sizes and covers the level total', () => {
-    const tasks = buildTaskQueue(7, subset);
+    // all 18 functions: structures heavy enough for one task each (with three
+    // functions level 7 is cut into ranges, taskQueueDeep.test.ts)
+    const heavy: CalculatorSelection = { ...subset, funcs: CALC4_FUNCS };
+    const tasks = buildTaskQueue(7, heavy);
     const chain = chainIndex(7);
     const chainTasks = tasks.filter(t => t.minK === 7 && t.taskId === chain && t.taskCount === Math.pow(3, 7));
     // chain split into one task per enabled constant, each nu^(K-1)
-    expect(chainTasks.length).toBe(subset.consts.length);
-    for (const t of chainTasks) expect(t.weight).toBe(Math.pow(subset.funcs.length, 6));
-    // level total matches brute-force enumeration with (3,3,2)
+    expect(chainTasks.length).toBe(heavy.consts.length);
+    for (const t of chainTasks) expect(t.weight).toBe(Math.pow(heavy.funcs.length, 6));
+    // level total matches brute-force enumeration with (3,18,2)
     const level7 = tasks.filter(t => t.minK === 7);
     const total = level7.reduce((s, t) => s + t.weight, 0);
     let expected = 0;
-    for (let k = 0; k < Math.pow(3, 7); k++) expected += structureWeight(k, 7, 3, 3, 2);
+    for (let k = 0; k < Math.pow(3, 7); k++) expected += structureWeight(k, 7, 3, 18, 2);
     expect(total).toBe(expected);
   });
 
   it('does not split the chain for a single constant', () => {
-    const tasks = buildTaskQueue(7, { consts: ['PI'], funcs: ['LOG'], ops: ['PLUS'] });
+    const tasks = buildTaskQueue(7, { consts: ['PI'], funcs: CALC4_FUNCS, ops: CALC4_OPS });
     const chainTasks = tasks.filter(t => t.minK === 7 && t.taskId === chainIndex(7));
     expect(chainTasks.length).toBe(1); // splitting into 1 piece is pointless
   });
