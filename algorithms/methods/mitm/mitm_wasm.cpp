@@ -59,10 +59,10 @@ EMSCRIPTEN_KEEPALIVE char* mitm_build(const char* consts, const char* funcs, con
     c.o.memcap_gb = memcap_gb > 0 ? memcap_gb : 2.0;
     c.o.chunk = 1 << 18;
     const std::string err = make_grammar(c.g, consts, funcs, ops);
-    if (!err.empty() || KR < 1 || KR > 8) {
+    if (!err.empty() || KR < 1 || KR > MAXK) {
         delete G;
         G = nullptr;
-        return to_c("{\"ok\":0,\"error\":\"" + (err.empty() ? std::string("right-side length must be 1..8") : err) + "\"}");
+        return to_c("{\"ok\":0,\"error\":\"" + (err.empty() ? "right-side length must be 1.." + std::to_string(MAXK) : err) + "\"}");
     }
     setup_right(c);
     if (!build_R(c)) {
@@ -89,7 +89,7 @@ EMSCRIPTEN_KEEPALIVE char* mitm_search(double T, double tolrel, int KL, int any_
 {
     if (!G) return to_c("{\"ok\":0,\"error\":\"no right-side table: call mitm_build first\"}");
     Ctx& c = *G;
-    if (KL < 1 || KL > 8) return to_c("{\"ok\":0,\"error\":\"left-side length must be 1..8\"}");
+    if (KL < 1 || KL > MAXK) return to_c("{\"ok\":0,\"error\":\"left-side length must be 1.." + std::to_string(MAXK) + "\"}");
     if (KL != c.o.kl || (any_x != 0) != c.o.any_x) {
         c.o.kl = KL;
         c.o.any_x = any_x != 0;

@@ -74,15 +74,18 @@ const cumulative = (a: number[], K: number) => a.slice(1, K + 1).reduce((s, x) =
 const NS_PER_RIGHT_CODE = 80;
 const DISTINCT_FRACTION = 0.3;
 const NS_PER_LEFT_CODE = 120;
-export const MEMORY_LIMIT_GB = 1.5;   // larger tables are not built in the browser
+export const MEMORY_LIMIT_GB = 1.5;     // larger tables are not built in the browser
+export const TIME_LIMIT_SECONDS = 600;  // longer searches are not started (the left sides, on one thread)
 
 export interface Estimate {
   rightCodes: number;   // codes of length <= KR
   tableGB: number;      // estimated memory of the right-side table
+  peakGB: number;       // estimated memory while the table is built
   buildSeconds: number;
   leftCodes: number;    // left sides per target (x once; any x: somewhat more)
   searchSeconds: number;
-  tooBig: boolean;
+  tooBig: boolean;      // peakGB > MEMORY_LIMIT_GB
+  tooLong: boolean;     // searchSeconds > TIME_LIMIT_SECONDS
 }
 
 export function estimate(KL: number, KR: number, nc: number, nu: number, nb: number): Estimate {
@@ -92,13 +95,16 @@ export function estimate(KL: number, KR: number, nc: number, nu: number, nb: num
   const tableGB = rightCodes * DISTINCT_FRACTION * 12 / 2 ** 30;
   // the build also holds a buffer of 16 bytes per surviving code
   const peakGB = tableGB + rightCodes * 0.4 * 16 / 2 ** 30;
+  const searchSeconds = leftCodes * NS_PER_LEFT_CODE * 1e-9;
   return {
     rightCodes,
     tableGB,
+    peakGB,
     buildSeconds: rightCodes * NS_PER_RIGHT_CODE * 1e-9,
     leftCodes,
-    searchSeconds: leftCodes * NS_PER_LEFT_CODE * 1e-9,
+    searchSeconds,
     tooBig: peakGB > MEMORY_LIMIT_GB,
+    tooLong: searchSeconds > TIME_LIMIT_SECONDS,
   };
 }
 

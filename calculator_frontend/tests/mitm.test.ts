@@ -15,6 +15,19 @@ describe('code counts (as in the engine and PHASE1_RESULTS.md)', () => {
     expect(estimate(5, 6, 13, 18, 5).tooBig).toBe(false);   // 8.7e7 codes, 0.24 GB measured
     expect(estimate(5, 7, 13, 18, 5).tooBig).toBe(true);    // 2.4e9 codes, 5 GB measured
   });
+
+  it('limits the memory of the build, which exceeds the table', () => {
+    const e = estimate(5, 11, 4, 2, 3);   // {e, 1, 5, 7, sin, cos, +, *, /}: 4.4e8 codes
+    expect(e.tableGB).toBeLessThan(1.5);
+    expect(e.peakGB).toBeGreaterThan(1.5);
+    expect(e.tooBig).toBe(true);
+  });
+
+  it('marks a search too long for the browser', () => {
+    expect(estimate(7, 5, 13, 18, 5).tooLong).toBe(false);   // 3.8e8 left sides, ~46 s
+    expect(estimate(8, 5, 13, 18, 5).tooLong).toBe(true);    // 1.2e10 left sides, ~24 min
+    expect(estimate(12, 5, 4, 2, 3).tooLong).toBe(false);    // 4.4e9 left sides, ~9 min
+  });
 });
 
 describe('evaluation with x (engine order: "a, b, SUBTRACT" = b - a)', () => {

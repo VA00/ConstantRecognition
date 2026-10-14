@@ -7,10 +7,12 @@ import { formatCount, formatDuration } from '../../calculator/lib/estimate';
 import { assetPath } from '../../calculator/lib/basePath';
 import { getCalculatorById, DEFAULT_CALCULATOR_ID } from '../../calculator/lib/calculators';
 import { CalculatorPalette } from '../../calculator/components/CalculatorPalette';
-import { Estimate } from '../lib/mitm';
+import { Estimate, MEMORY_LIMIT_GB, TIME_LIMIT_SECONDS } from '../lib/mitm';
 
-export const MAX_LEFT = 7;
-export const MAX_RIGHT = 7;
+// The engine's limit (MAXK in mitm_cr.cpp). Most button sets reach the memory limit of the table (est.tooBig) or
+// the time limit of the search (est.tooLong) earlier; the search button is then disabled.
+export const MAX_LEFT = 12;
+export const MAX_RIGHT = 12;
 
 // The table the worker holds, if any
 export interface TableInfo {
@@ -91,8 +93,8 @@ export function MitmSidebar(p: MitmSidebarProps) {
 
   const tableNote = p.est.tooBig ? (
     <p className="text-[11px] text-red-600 dark:text-red-400">
-      ≈ {formatCount(p.est.rightCodes)} codes, about {fmtGB(p.est.tableGB)}: too large for the browser. Shorten the right
-      side or switch buttons off.
+      ≈ {formatCount(p.est.rightCodes)} codes, about {fmtGB(p.est.peakGB)} while the table is built: over the browser
+      limit of {MEMORY_LIMIT_GB} GB. Shorten the right side or switch buttons off.
     </p>
   ) : p.table && p.tableCurrent ? (
     <p className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
@@ -200,11 +202,16 @@ export function MitmSidebar(p: MitmSidebarProps) {
               max={MAX_LEFT}
               onChange={p.setKl}
               disabled={p.busy}
-              note={
+              note={p.est.tooLong ? (
+                <p className="text-[11px] text-red-600 dark:text-red-400">
+                  ≈ {formatCount(p.est.leftCodes)} left sides per number, up to {formatDuration(p.est.searchSeconds)}: over
+                  the browser limit of {TIME_LIMIT_SECONDS / 60} min. Shorten the left side or switch buttons off.
+                </p>
+              ) : (
                 <p className={`text-[10px] font-mono ${tone(p.est.searchSeconds)}`}>
                   ≈ {formatCount(p.est.leftCodes)} left sides per number · up to {formatDuration(p.est.searchSeconds)}
                 </p>
-              }
+              )}
             />
             <Slider
               label="Right side length (shared table)"

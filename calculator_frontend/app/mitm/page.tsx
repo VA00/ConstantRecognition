@@ -160,6 +160,7 @@ export default function MitmPage() {
     : deltaError ? deltaError
     : lists.consts.length === 0 ? 'Enable at least one constant'
     : est.tooBig && !tableCurrent ? 'The right-side table would be too large: shorten the right side'
+    : est.tooLong ? 'The search would take too long: shorten the left side'
     : !workerReady ? 'Loading the engine…'
     : undefined;
   const canSearch = reason === undefined;
@@ -212,8 +213,9 @@ export default function MitmPage() {
   // same table, more left sides per number) or on the right (a new table, kept for further numbers)
   const sameSearch = outcome !== null && outcome.response.status !== 'SUCCESS' && outcome.key === searchKey
     && outcome.kl === kl && outcome.kr === kr;
-  const deeperLeft = sameSearch && kl < MAX_LEFT
+  const deeperLeftEst = sameSearch && kl < MAX_LEFT
     ? estimate(kl + 1, kr, lists.consts.length, lists.funcs.length, lists.ops.length) : null;
+  const deeperLeft = deeperLeftEst && !deeperLeftEst.tooLong ? deeperLeftEst : null;
   const deeperRightEst = sameSearch && kr < MAX_RIGHT
     ? estimate(kl, kr + 1, lists.consts.length, lists.funcs.length, lists.ops.length) : null;
   const deeperRight = deeperRightEst && !deeperRightEst.tooBig ? deeperRightEst : null;
