@@ -7,12 +7,11 @@ import { formatCount, formatDuration } from '../../calculator/lib/estimate';
 import { assetPath } from '../../calculator/lib/basePath';
 import { getCalculatorById, DEFAULT_CALCULATOR_ID } from '../../calculator/lib/calculators';
 import { CalculatorPalette } from '../../calculator/components/CalculatorPalette';
-import { Estimate, MEMORY_LIMIT_GB, TIME_LIMIT_SECONDS } from '../lib/mitm';
+import { Engine, EngineChoice, Estimate, MEMORY_LIMIT_GB, TIME_LIMIT_SECONDS } from '../lib/mitm';
 
-// The engine's limit (MAXK in mitm_cr.cpp). Most button sets reach the memory limit of the table (est.tooBig) or
-// the time limit of the search (est.tooLong) earlier; the search button is then disabled.
-export const MAX_LEFT = 12;
-export const MAX_RIGHT = 12;
+// The sliders go up to the engine's limit (maxLength: 12 for every code, MAXK in mitm_cr.cpp; 20 for distinct
+// values). Most button sets reach the memory limit of the table (est.tooBig) or the time limit of the search
+// (est.tooLong) earlier; the search button is then disabled.
 
 // The table the worker holds, if any
 export interface TableInfo {
@@ -43,7 +42,12 @@ interface MitmSidebarProps {
   setKr: (n: number) => void;
   anyX: boolean;
   setAnyX: (v: boolean) => void;
-  est: Estimate;
+  engineChoice: EngineChoice;
+  setEngineChoice: (c: EngineChoice) => void;
+  engine: Engine;          // the engine of the next search (automatic: chosen by the estimates)
+  repeatShare: number;     // share of the codes of the longest probed length that repeat a value
+  maxLength: number;       // slider maximum
+  est: Estimate;           // of the engine of the next search
   table: TableInfo | null;
   tableCurrent: boolean;   // the table matches the buttons and |R|
   // uncertainty
@@ -91,10 +95,12 @@ export function MitmSidebar(p: MitmSidebarProps) {
   const tone = (s: number) => (s < 5 ? 'text-emerald-600 dark:text-emerald-400' : s < 60 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400');
   const fmtGB = (gb: number) => (gb < 0.1 ? `${Math.max(1, Math.round(gb * 1024))} MB` : `${gb.toFixed(2)} GB`);
 
+  const unit = p.est.unit;   // codes, or distinct values
   const tableNote = p.est.tooBig ? (
     <p className="text-[11px] text-red-600 dark:text-red-400">
-      ≈ {formatCount(p.est.rightCodes)} codes, about {fmtGB(p.est.peakGB)} while the table is built: over the browser
-      limit of {MEMORY_LIMIT_GB} GB. Shorten the right side or switch buttons off.
+      ≈ {formatCount(p.est.rightCodes)} {unit}, about {fmtGB(p.est.peakGB)}{' '}
+      {unit === 'values' ? 'at the peak (building the table or searching)' : 'while the table is built'}: over the browser
+      limit of {MEMORY_LIMIT_GB} GB. Shorten the {unit === 'values' ? 'sides' : 'right side'} or switch buttons off.
     </p>
   ) : p.table && p.tableCurrent ? (
     <p className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
@@ -103,10 +109,19 @@ export function MitmSidebar(p: MitmSidebarProps) {
     </p>
   ) : (
     <p className={`text-[10px] font-mono ${tone(p.est.buildSeconds)}`}>
-      Table built at the next search: ≈ {formatCount(p.est.rightCodes)} codes, ≈ {fmtGB(p.est.tableGB)}, ≈{' '}
+      Table built at the next search: ≈ {formatCount(p.est.rightCodes)} {unit}, ≈ {fmtGB(p.est.tableGB)}, ≈{' '}
       {formatDuration(p.est.buildSeconds)}
     </p>
   );
+  const engineNote = p.anyX
+    ? 'x any number of times: all codes (distinct values take x once only).'
+    : p.engineChoice === 'automatic'
+      ? `Automatic: ${p.engine === 'distinct' ? 'distinct values' : 'all codes'} for these buttons and lengths` +
+        (p.repeatShare > 0.5 ? ` (${Math.round(100 * p.repeatShare)}% of the codes repeat a shorter or earlier value).` : '.')
+      : p.engineChoice === 'codes'
+        ? 'Every code is evaluated; sides of up to 12 symbols.'
+        : 'Each length is made only from the distinct values of shorter lengths: the same equations, far faster when ' +
+          'few buttons make most codes repeat a value; about twice the memory per value; sides of up to 20 symbols.';
 
   return (
     <>
@@ -199,17 +214,19 @@ export function MitmSidebar(p: MitmSidebarProps) {
               label="Left side length (with x)"
               value={p.kl}
               min={1}
-              max={MAX_LEFT}
+              max={p.maxLength}
               onChange={p.setKl}
               disabled={p.busy}
               note={p.est.tooLong ? (
                 <p className="text-[11px] text-red-600 dark:text-red-400">
-                  ≈ {formatCount(p.est.leftCodes)} left sides per number, up to {formatDuration(p.est.searchSeconds)}: over
-                  the browser limit of {TIME_LIMIT_SECONDS / 60} min. Shorten the left side or switch buttons off.
+                  ≈ {formatCount(p.est.leftCodes)} left {unit === 'values' ? 'values' : 'sides'} per number, up to{' '}
+                  {formatDuration(p.est.searchSeconds)}: over the browser limit of {TIME_LIMIT_SECONDS / 60} min. Shorten
+                  the left side or switch buttons off.
                 </p>
               ) : (
                 <p className={`text-[10px] font-mono ${tone(p.est.searchSeconds)}`}>
-                  ≈ {formatCount(p.est.leftCodes)} left sides per number · up to {formatDuration(p.est.searchSeconds)}
+                  ≈ {formatCount(p.est.leftCodes)} left {unit === 'values' ? 'values' : 'sides'} per number · up to{' '}
+                  {formatDuration(p.est.searchSeconds)}
                 </p>
               )}
             />
@@ -217,7 +234,7 @@ export function MitmSidebar(p: MitmSidebarProps) {
               label="Right side length (shared table)"
               value={p.kr}
               min={1}
-              max={MAX_RIGHT}
+              max={p.maxLength}
               onChange={p.setKr}
               disabled={p.busy}
               note={tableNote}
@@ -246,6 +263,28 @@ export function MitmSidebar(p: MitmSidebarProps) {
                   ? 'Also implicit equations such as x^x = e (RIES-like); no explicit formula then.'
                   : 'Every equation can be solved for x: an explicit formula is shown.'}
               </p>
+            </div>
+            <div className="space-y-1">
+              <Label>Engine</Label>
+              <div className="grid grid-cols-3 gap-1 rounded-lg bg-gray-100 p-1 dark:bg-[#111113]">
+                {([['automatic', 'Automatic'], ['codes', 'All codes'], ['distinct', 'Distinct values']] as [EngineChoice, string][]).map(([v, label]) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => p.setEngineChoice(v)}
+                    disabled={p.busy || (v === 'distinct' && p.anyX)}
+                    aria-pressed={p.engineChoice === v}
+                    title={v === 'distinct' && p.anyX ? 'Distinct values: x once only' : undefined}
+                    className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50
+                      ${p.engineChoice === v
+                        ? 'bg-white text-[#0066cc] shadow-xs dark:bg-[#1a1a1d]'
+                        : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-gray-400">{engineNote}</p>
             </div>
           </div>
 

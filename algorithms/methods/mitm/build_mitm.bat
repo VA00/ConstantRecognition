@@ -1,5 +1,5 @@
 @echo off
-REM build_mitm.bat - build mitm_cr.exe on Windows
+REM build_mitm.bat - build mitm_cr.exe (every code) and mitm_distinct.exe (distinct values) on Windows
 REM
 REM Default: Intel icx (most accurate libm, see benchmark/README.md); argument "cl" for MSVC.
 REM IEEE semantics are required (non-finite values are tested): /fp:precise, never fast-math.
@@ -13,9 +13,9 @@ call "%VS%\VC\Auxiliary\Build\vcvars64.bat" >nul
 if "%CC%"=="icx" (
   set "PATH=C:\Program Files (x86)\Intel\oneAPI\compiler\2025.3\bin;%PATH%"
   set "LIB=C:\Program Files (x86)\Intel\oneAPI\compiler\2025.3\lib;%LIB%"
-  icx /nologo /O3 /fp:precise /std:c++17 /EHsc mitm_cr.cpp /Fe:mitm_cr.exe
+  icx /nologo /O3 /fp:precise /std:c++17 /EHsc mitm_cr.cpp /Fe:mitm_cr.exe && icx /nologo /O3 /fp:precise /std:c++17 /EHsc mitm_distinct.cpp /Fe:mitm_distinct.exe
 ) else (
-  cl /nologo /O2 /fp:precise /std:c++17 /EHsc mitm_cr.cpp /Fe:mitm_cr_cl.exe
+  cl /nologo /O2 /fp:precise /std:c++17 /EHsc mitm_cr.cpp /Fe:mitm_cr_cl.exe && cl /nologo /O2 /fp:precise /std:c++17 /EHsc mitm_distinct.cpp /Fe:mitm_distinct_cl.exe
 )
 if errorlevel 1 exit /b 1
 echo built with %CC%

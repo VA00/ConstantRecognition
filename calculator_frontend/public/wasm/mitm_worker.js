@@ -3,10 +3,11 @@
 // Loads mitm.js / mitm.wasm (algorithms/methods/mitm/mitm_wasm.cpp). One worker keeps the right-side table in its
 // memory for the whole session: "build" makes the table for a button set, every "search" reuses it. The page
 // loads this file as mitm_worker.js?v=<hash>; the query is forwarded to mitm.js and mitm.wasm (cache busting, as
-// in worker.js).
+// in worker.js). engine: 'codes' (every code, mitm_cr.cpp; the default) or 'distinct' (distinct values,
+// mitm_distinct.cpp; x once only); a build with one engine frees the other's table.
 //
-// Messages in:  {type: 'build', id, consts, funcs, ops, kr, memcapGB}
-//               {type: 'search', id, T, tolrel, kl, anyX, listCap}
+// Messages in:  {type: 'build', id, engine, consts, funcs, ops, kr, memcapGB}
+//               {type: 'search', id, engine, T, tolrel, kl, anyX, listCap}
 // Messages out: {type: 'ready'} once, then {type: 'built' | 'result', id, ...JSON of the engine}
 //               or {type: 'error', id, error}
 var wasmQuery = (typeof self !== 'undefined' && self.location && self.location.search) ? self.location.search : '';
@@ -36,17 +37,21 @@ function call(name, argTypes, args) {
 
 function handle(msg) {
     try {
+        var distinct = msg.engine === 'distinct';
         if (msg.type === 'build') {
             var t0 = performance.now();
-            var b = call('mitm_build', ['string', 'string', 'string', 'number', 'number'],
+            var b = call(distinct ? 'mitm_distinct_build' : 'mitm_build', ['string', 'string', 'string', 'number', 'number'],
                          [msg.consts, msg.funcs, msg.ops, msg.kr, msg.memcapGB || 1.5]);
             b.ms = performance.now() - t0;
             b.type = 'built';
             b.id = msg.id;
             postMessage(b);
         } else if (msg.type === 'search') {
-            var r = call('mitm_search', ['number', 'number', 'number', 'number', 'number'],
-                         [msg.T, msg.tolrel || 0, msg.kl, msg.anyX ? 1 : 0, msg.listCap || 0]);
+            var r = distinct
+                ? call('mitm_distinct_search', ['number', 'number', 'number', 'number'],
+                       [msg.T, msg.tolrel || 0, msg.kl, msg.listCap || 0])
+                : call('mitm_search', ['number', 'number', 'number', 'number', 'number'],
+                       [msg.T, msg.tolrel || 0, msg.kl, msg.anyX ? 1 : 0, msg.listCap || 0]);
             r.type = 'result';
             r.id = msg.id;
             postMessage(r);

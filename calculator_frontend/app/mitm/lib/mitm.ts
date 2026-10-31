@@ -41,6 +41,10 @@ export interface SearchResponse {
   approx?: Equation[];   // closest pair of every total length (not accepted)
   matches?: Equation[];  // accepted equations, shortest first
   nL?: number[];         // distinct left values tested per length 1..KL
+  // distinct values only: left levels kept (the longer left sides made on the fly), and false if the memory limit
+  // stopped the left sides short of KL
+  kept?: number;
+  complete?: boolean;
 }
 
 // Buttons the engine does not take: i (the search is real)
@@ -78,9 +82,10 @@ export const MEMORY_LIMIT_GB = 1.5;     // larger tables are not built in the br
 export const TIME_LIMIT_SECONDS = 600;  // longer searches are not started (the left sides, on one thread)
 
 export interface Estimate {
-  rightCodes: number;   // codes of length <= KR
+  unit: 'codes' | 'values';   // what rightCodes and leftCodes count: codes (every code), or distinct values
+  rightCodes: number;   // codes of length <= KR (distinct values: of length <= max(KR, KL - 2))
   tableGB: number;      // estimated memory of the right-side table
-  peakGB: number;       // estimated memory while the table is built
+  peakGB: number;       // estimated memory while the table is built (distinct values: or while a number is searched)
   buildSeconds: number;
   leftCodes: number;    // left sides per target (x once; any x: somewhat more)
   searchSeconds: number;
@@ -97,6 +102,7 @@ export function estimate(KL: number, KR: number, nc: number, nu: number, nb: num
   const peakGB = tableGB + rightCodes * 0.4 * 16 / 2 ** 30;
   const searchSeconds = leftCodes * NS_PER_LEFT_CODE * 1e-9;
   return {
+    unit: 'codes',
     rightCodes,
     tableGB,
     peakGB,
@@ -106,6 +112,177 @@ export function estimate(KL: number, KR: number, nc: number, nu: number, nb: num
     tooBig: peakGB > MEMORY_LIMIT_GB,
     tooLong: searchSeconds > TIME_LIMIT_SECONDS,
   };
+}
+
+// ---------------------------------------------------------------------------------------------- engines
+
+/**
+ * The two engines of mitm.wasm (algorithms/methods/mitm), with the same equations: 'codes' evaluates every code
+ * (mitm_cr.cpp, sides of up to 12 symbols); 'distinct' makes every length only from the distinct values of shorter
+ * lengths (mitm_distinct.cpp): far less work when few buttons make most codes repeat a value (e, pi, sqr, +, *, ^
+ * at 12 + 12 symbols: 0.6 s instead of 7 s), about twice the memory per value, x once only. The page offers the
+ * distinct-value engine up to 20 symbols per side (the engine takes 30).
+ */
+export type Engine = 'codes' | 'distinct';
+export type EngineChoice = 'automatic' | Engine;
+export const MAX_LENGTH: Record<Engine, number> = { codes: 12, distinct: 20 };
+
+const SMALLEST_NORMAL = 2.2250738585072014e-308;
+const usableValue = (v: number) => Number.isFinite(v) && (v === 0 || Math.abs(v) >= SMALLEST_NORMAL);
+const COMMUTATIVE = new Set(['PLUS', 'TIMES']);
+
+function mergeSorted(a: Float64Array, b: Float64Array): Float64Array {
+  const out = new Float64Array(a.length + b.length);
+  let i = 0, j = 0, k = 0;
+  while (i < a.length && j < b.length) out[k++] = a[i] <= b[j] ? a[i++] : b[j++];
+  while (i < a.length) out[k++] = a[i++];
+  while (j < b.length) out[k++] = b[j++];
+  return out;
+}
+
+/**
+ * Distinct right values of each length 1, 2, ... (index 0 unused), made as the distinct-value engine makes them
+ * (double precision, the engine's operand order), while a length costs at most maxOps operations: the measured
+ * start of the growth that estimateDistinct extrapolates. Milliseconds (e, pi, sqr, +, *, ^: 11 lengths; the
+ * default buttons: 4). JavaScript's Math differs from the engine's libm in the last bits of some values, which
+ * changes the counts slightly.
+ */
+export function probeDistinct(consts: string[], funcs: string[], ops: string[], maxOps = 400000): number[] {
+  const cv = consts.map(c => (numConstants[c] !== undefined ? numConstants[c] : parseFloat(c))).filter(usableValue);
+  const fs = funcs.map(f => numFunctions[f]).filter(Boolean);
+  const os = ops.filter(o => numOperators[o]);
+  const levels: Float64Array[] = [new Float64Array(0)];
+  const sizes = [0];
+  let seen: Float64Array = new Float64Array(0);
+  for (let k = 1; k <= MAX_LENGTH.distinct; k++) {
+    let n = k === 1 ? cv.length : levels[k - 1].length * fs.length;
+    if (k > 1)
+      for (const o of os)
+        for (let i = 1; i <= k - 2; i++) {
+          const j = k - 1 - i, a = levels[i].length, b = levels[j].length;
+          n += !COMMUTATIVE.has(o) ? a * b : i < j ? a * b : i === j ? (a * (a + 1)) / 2 : 0;
+        }
+    if (n > maxOps) break;
+    const cand = new Float64Array(n);
+    let m = 0;
+    if (k === 1) for (const v of cv) cand[m++] = v + 0;
+    else {
+      const P = levels[k - 1];
+      for (const f of fs)
+        for (let a = 0; a < P.length; a++) {
+          const r = f(P[a]);
+          if (usableValue(r)) cand[m++] = r + 0;
+        }
+      for (const o of os) {
+        const op = numOperators[o], comm = COMMUTATIVE.has(o);
+        for (let i = 1; i <= k - 2; i++) {
+          const j = k - 1 - i;
+          if (comm && i > j) continue;
+          const A = levels[i], B = levels[j];
+          for (let ia = 0; ia < A.length; ia++)
+            for (let jb = comm && i === j ? ia : 0; jb < B.length; jb++) {
+              const r = op(A[ia], B[jb]);
+              if (usableValue(r)) cand[m++] = r + 0;
+            }
+        }
+      }
+    }
+    const sorted = cand.subarray(0, m).sort();
+    const out: number[] = [];
+    let p = 0;
+    for (let i = 0; i < m; i++) {
+      const v = sorted[i];
+      if (i > 0 && v === sorted[i - 1]) continue;
+      while (p < seen.length && seen[p] < v) p++;
+      if (p < seen.length && seen[p] === v) continue;
+      out.push(v);
+    }
+    const level = Float64Array.from(out);
+    levels.push(level);
+    sizes.push(level.length);
+    seen = mergeSorted(seen, level);
+  }
+  return sizes;
+}
+
+/**
+ * Estimated distinct values per length 1..K (index 0 unused): the probe's counts where measured; beyond, the code
+ * counts times the fraction of distinct values, extrapolated geometrically from the last two measured lengths
+ * (the fraction falls with the length: e, pi, sqr, +, *, ^ keep 10% of the codes of length 10, 6% at 11, and the
+ * extrapolation gives 1.8% at 14, measured 1.8%). Left sides (x once): the left codes times 0.55 of that fraction
+ * (e, pi, sqr, +, *, ^: 0.51 measured up to length 11).
+ */
+export function distinctSizes(K: number, probe: number[], nc: number, nu: number, nb: number): { right: number[]; left: number[] } {
+  const c = codeCounts(Math.max(K, 1), nc, nu, nb);
+  const frac: number[] = new Array(K + 1).fill(1);
+  const measured: number[] = [];
+  for (let k = 1; k < probe.length && k <= K; k++) if (c.right[k] > 0 && probe[k] > 0) measured.push(k);
+  for (let k = 1; k <= K; k++) {
+    if (k < probe.length && c.right[k] > 0) { frac[k] = Math.min(1, probe[k] / c.right[k]); continue; }
+    const n = measured.length;
+    if (n === 0) { frac[k] = 1; continue; }
+    const k1 = measured[n - 1], f1 = probe[k1] / c.right[k1];
+    if (n === 1) { frac[k] = f1; continue; }
+    const k0 = measured[n - 2], f0 = probe[k0] / c.right[k0];
+    frac[k] = Math.min(1, f1 * Math.pow(Math.min(1, f1 / f0), (k - k1) / (k1 - k0)));
+  }
+  const right = c.right.map((x, k) => (k === 0 ? 0 : k < probe.length ? probe[k] : x * frac[k]));
+  const left = c.left.map((x, k) => (k === 0 ? 0 : Math.min(x, Math.max(1, 0.55 * x * frac[k]))));
+  return { right, left };
+}
+
+// Measured in WebAssembly (Node, one thread, e, pi, sqr, +, *, ^): the table about 330 ns per distinct value (made,
+// sorted, merged), a left side about 350 ns per estimated value (made, merged, matched: 0.4 s at |L| <= 12,
+// 5.6 s at 14, 27 s at 15; the default buttons at |L| <= 7 natively 11 s against 20 s for every code, as the ratio
+// of the two estimates). Kept values: 24 bytes on the right, 28 on the left; the engine works in passes within the
+// memory limit, about a third of it for a pass.
+const NS_PER_RIGHT_VALUE = 330;
+const NS_PER_LEFT_VALUE = 350;
+
+export function estimateDistinct(KL: number, KR: number, probe: number[], nc: number, nu: number, nb: number): Estimate {
+  const KT = Math.max(KR, KL - 2);   // right levels kept: the matched ones, and the constants of the left sides
+  const s = distinctSizes(Math.max(KT, KL), probe, nc, nu, nb);
+  const rightValues = cumulative(s.right, KT);
+  const tableGB = (rightValues * 24) / 2 ** 30;
+  const pass = (n: number) => Math.min((n * 1.3 * 64) / 2 ** 30, MEMORY_LIMIT_GB / 3);
+  // the longest right level while it is made: the shorter levels, one pass, and the level counted twice, as the
+  // engine counts a level made in several passes (its parts and the level joined from them; make_level), so that
+  // the page offers no table that the engine refuses
+  const buildGB = ((rightValues - (s.right[KT] ?? 0)) * 24 + 2 * (s.right[KT] ?? 0) * 24) / 2 ** 30 + pass(s.right[KT] ?? 0);
+  const kept = cumulative(s.left, KL - 1);
+  const leftValues = kept + 1.2 * (s.left[KL] ?? 0);
+  const searchGB = tableGB + (kept * 28) / 2 ** 30 + pass(s.left[KL - 1] ?? 0) + 0.03;
+  const peakGB = Math.max(buildGB, searchGB);
+  const searchSeconds = leftValues * NS_PER_LEFT_VALUE * 1e-9;
+  return {
+    unit: 'values',
+    rightCodes: rightValues,
+    tableGB,
+    peakGB,
+    buildSeconds: rightValues * NS_PER_RIGHT_VALUE * 1e-9,
+    leftCodes: leftValues,
+    searchSeconds,
+    tooBig: peakGB > MEMORY_LIMIT_GB,
+    tooLong: searchSeconds > TIME_LIMIT_SECONDS,
+  };
+}
+
+/**
+ * The engine of a search. 'automatic': x any number of times, or no probe yet, every code; a side longer than the
+ * codes engine takes, distinct values; otherwise the one within the browser's limits, and if both are, distinct
+ * values when its first search (table and one number) is estimated at least 30% shorter (every code needs half the
+ * memory per value).
+ */
+export function chooseEngine(choice: EngineChoice, anyX: boolean, kl: number, kr: number, codes: Estimate,
+                             distinct: Estimate | null): Engine {
+  if (anyX) return 'codes';
+  if (choice !== 'automatic') return choice;
+  if (!distinct) return 'codes';
+  if (kl > MAX_LENGTH.codes || kr > MAX_LENGTH.codes) return 'distinct';
+  const fits = (e: Estimate) => !e.tooBig && !e.tooLong;
+  if (fits(distinct) !== fits(codes)) return fits(distinct) ? 'distinct' : 'codes';
+  const time = (e: Estimate) => e.buildSeconds + e.searchSeconds;
+  return time(distinct) < 0.7 * time(codes) ? 'distinct' : 'codes';
 }
 
 // ---------------------------------------------------------------------------------------------- evaluation

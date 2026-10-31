@@ -3,7 +3,9 @@
 // Equation search: the meet-in-the-middle engine (algorithms/methods/mitm, PHASE1_RESULTS.md) in the browser.
 // Same buttons, input and uncertainty rules as the formula search (app/calculator), but the engine looks for
 // equations L(x) = R. The right sides are a table that depends only on the buttons and |R|: one worker builds it
-// once and keeps it, so every further number costs only its left sides (milliseconds).
+// once and keeps it, so every further number costs only its left sides (milliseconds). Two engines give the same
+// equations: every code (mitm_cr.cpp), or every distinct value (mitm_distinct.cpp, far faster when few buttons make
+// most codes repeat a value); "automatic" picks by the estimates (lib/mitm.ts, chooseEngine).
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ErrorMode, examples } from '../calculator/lib/types';
@@ -16,9 +18,12 @@ import { CALC4_CONSTS, CALC4_FUNCS, CALC4_OPS, EXTRA_CONSTS, EXTRA_FUNCS, EXTRA_
 import { InputBar } from '../calculator/components/InputBar';
 import { Latex } from '../calculator/components/Latex';
 import { formatCount, formatDuration } from '../calculator/lib/estimate';
-import { MitmSidebar, TableInfo, MAX_LEFT, MAX_RIGHT } from './components/MitmSidebar';
+import { MitmSidebar, TableInfo } from './components/MitmSidebar';
 import { MitmResultCard, MitmResultsTable, MitmRow, buildRows } from './components/MitmResults';
-import { SearchResponse, BuildResponse, estimate, UNSUPPORTED_TOKENS } from './lib/mitm';
+import {
+  SearchResponse, BuildResponse, Engine, EngineChoice, Estimate, MAX_LENGTH, estimate, estimateDistinct, chooseEngine,
+  probeDistinct, codeCounts, UNSUPPORTED_TOKENS,
+} from './lib/mitm';
 
 const CALCULATOR = getCalculatorById(DEFAULT_CALCULATOR_ID);
 const DEFAULT_TOKENS = defaultEnabledTokens(CALCULATOR);
@@ -42,6 +47,7 @@ interface Outcome {
   key: string;   // number and settings of this search (searchKey): "search deeper" continues it only while unchanged
   kl: number;
   kr: number;
+  engine: Engine;
 }
 
 export default function MitmPage() {
@@ -53,6 +59,7 @@ export default function MitmPage() {
   // 16 ms at |R| <= 4, 0.2 s at 5 and 5 s at 6, so 5 keeps button changes quick; 6 on request
   const [kr, setKr] = useState(5);
   const [anyX, setAnyX] = useState(false);
+  const [engineChoice, setEngineChoice] = useState<EngineChoice>('automatic');
   const [errorMode, setErrorMode] = useState<ErrorMode>('automatic');
   const [manualError, setManualError] = useState('');
   const [exactTolEps, setExactTolEps] = useState(16);
@@ -138,11 +145,30 @@ export default function MitmPage() {
     ];
     return { consts, funcs: ALL_FUNCS.filter(t => enabledTokens.includes(t)), ops: ALL_OPS.filter(t => enabledTokens.includes(t)) };
   }, [enabledTokens, customInt]);
-  const tableKey = JSON.stringify({ ...lists, kr });
-  const est = useMemo(
-    () => estimate(kl, kr, lists.consts.length, lists.funcs.length, lists.ops.length),
-    [kl, kr, lists]
-  );
+  // distinct right values of the first lengths (milliseconds): the start of the growth the estimates extrapolate
+  const probe = useMemo(() => probeDistinct(lists.consts, lists.funcs, lists.ops), [lists]);
+  // the engine and its estimate for given lengths
+  const plan = (KL: number, KR: number): { engine: Engine; est: Estimate } => {
+    const [nc, nu, nb] = [lists.consts.length, lists.funcs.length, lists.ops.length];
+    const codes = estimate(KL, KR, nc, nu, nb);
+    const distinct = estimateDistinct(KL, KR, probe, nc, nu, nb);
+    const engine = chooseEngine(engineChoice, anyX, KL, KR, codes, distinct);
+    return { engine, est: engine === 'distinct' ? distinct : codes };
+  };
+  const { engine, est } = plan(kl, kr);
+  const maxLength = anyX || engineChoice === 'codes' ? MAX_LENGTH.codes : MAX_LENGTH.distinct;
+  // all codes (also with x any number of times): sides of up to 12 symbols
+  const clampLengths = (max: number) => { setKl(k => Math.min(k, max)); setKr(k => Math.min(k, max)); };
+  const changeAnyX = (v: boolean) => { setAnyX(v); if (v) clampLengths(MAX_LENGTH.codes); };
+  const changeEngineChoice = (c: EngineChoice) => { setEngineChoice(c); if (c === 'codes') clampLengths(MAX_LENGTH.codes); };
+  // share of the codes of the longest probed length whose value a shorter or earlier code already has
+  const repeatShare = useMemo(() => {
+    const n = probe.length - 1;
+    if (n < 2) return 0;
+    const codes = codeCounts(n, lists.consts.length, lists.funcs.length, lists.ops.length).right[n];
+    return codes > 0 ? Math.max(0, 1 - probe[n] / codes) : 0;
+  }, [probe, lists]);
+  const tableKey = JSON.stringify({ ...lists, kr, engine });
   const tableCurrent = table !== null && table.key === tableKey;
 
   // ------------------------------------------------------------------ target
@@ -169,55 +195,70 @@ export default function MitmPage() {
     : null;
 
   // ------------------------------------------------------------------ search
-  const searchKey = JSON.stringify({ lists, anyX, inputValue, errorMode, manualError, exactTolEps });
+  const searchKey = JSON.stringify({ lists, anyX, engineChoice, inputValue, errorMode, manualError, exactTolEps });
 
   // depth: the sliders' values, or one level deeper on one side ("search deeper", which moves that slider)
   const runSearch = async (depth?: { kl: number; kr: number }) => {
     if (!canSearch || !parsed || !deltaInfo || 'error' in deltaInfo) return;
     const KL = depth?.kl ?? kl;
     const KR = depth?.kr ?? kr;
-    const key = JSON.stringify({ ...lists, kr: KR });
+    const { engine: E, est: P } = plan(KL, KR);
+    const key = JSON.stringify({ ...lists, kr: KR, engine: E });
     const T = parsed.re;
     const relDelta = T !== 0 ? deltaInfo.delta / Math.abs(T) : deltaInfo.delta;
     const tolrel = deltaInfo.delta > 0 ? Math.max(relDelta, exactTolEps * EPS) : exactTolEps * EPS;
     setError(null);
-    if (!tableRef.current || tableRef.current.key !== key) {
-      const seconds = estimate(KL, KR, lists.consts.length, lists.funcs.length, lists.ops.length).buildSeconds;
-      setPhase({ kind: 'building', start: Date.now(), seconds });
-      const b = await request({ type: 'build', ...{ consts: lists.consts.join(','), funcs: lists.funcs.join(','), ops: lists.ops.join(',') }, kr: KR, memcapGB: MEMCAP_GB }) as unknown as BuildResponse & { type: string };
-      if (b.type === 'error' || !b.ok) {
-        if (b.error !== 'aborted') setError(`Right-side table: ${b.error ?? 'failed'}`);
-        if (b.type === 'error' && b.error !== 'aborted') restartWorker();   // the module may be broken (out of memory)
-        setPhase({ kind: 'idle' });
+    // a second attempt only if the module turned out to hold no table: it is built again
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (!tableRef.current || tableRef.current.key !== key) {
+        setPhase({ kind: 'building', start: Date.now(), seconds: P.buildSeconds });
+        const b = await request({ type: 'build', engine: E, ...{ consts: lists.consts.join(','), funcs: lists.funcs.join(','), ops: lists.ops.join(',') }, kr: KR, memcapGB: MEMCAP_GB }) as unknown as BuildResponse & { type: string };
+        if (b.type === 'error' || !b.ok) {
+          // the module frees the table it holds before it builds another: after a failed build it has none
+          tableRef.current = null;
+          setTable(null);
+          if (b.error !== 'aborted') setError(`Right-side table: ${b.error ?? 'failed'}`);
+          if (b.type === 'error' && b.error !== 'aborted') restartWorker();   // the module may be broken (out of memory)
+          setPhase({ kind: 'idle' });
+          return;
+        }
+        tableRef.current = { key, kr: KR, sizes: b.sizes ?? [], gb: b.gb ?? 0, ms: b.ms ?? 0 };
+        setTable(tableRef.current);
+      }
+      setPhase({ kind: 'searching', start: Date.now() });
+      const r = await request({ type: 'search', engine: E, T, tolrel, kl: KL, anyX, listCap: LIST_CAP }) as unknown as SearchResponse & { type: string };
+      setPhase({ kind: 'idle' });
+      if (r.type === 'error' || !r.ok) {
+        if (attempt === 0 && /no right-side table/.test(r.error ?? '')) {
+          tableRef.current = null;
+          setTable(null);
+          continue;
+        }
+        if (r.error !== 'aborted') setError(`Search: ${r.error ?? 'failed'}`);
         return;
       }
-      tableRef.current = { key, kr: KR, sizes: b.sizes ?? [], gb: b.gb ?? 0, ms: b.ms ?? 0 };
-      setTable(tableRef.current);
-    }
-    setPhase({ kind: 'searching', start: Date.now() });
-    const r = await request({ type: 'search', T, tolrel, kl: KL, anyX, listCap: LIST_CAP }) as unknown as SearchResponse & { type: string };
-    setPhase({ kind: 'idle' });
-    if (r.type === 'error' || !r.ok) {
-      if (r.error !== 'aborted') setError(`Search: ${r.error ?? 'failed'}`);
+      if (r.complete === false)
+        setError(`Left sides searched up to length ${r.kept} only: |L| ≤ ${KL} needs more memory than the browser limit`);
+      const nR = tableRef.current?.sizes ?? [];
+      const nL = r.nL ?? [];
+      setOutcome({
+        response: r, T, relDelta, delta: deltaInfo.delta, nR, input: inputValue, key: searchKey, kl: KL, kr: KR, engine: E,
+        rows: buildRows(r.matches ?? [], r.approx ?? [], T, relDelta, nL, nR),
+      });
       return;
     }
-    const nR = tableRef.current?.sizes ?? [];
-    const nL = r.nL ?? [];
-    setOutcome({
-      response: r, T, relDelta, delta: deltaInfo.delta, nR, input: inputValue, key: searchKey, kl: KL, kr: KR,
-      rows: buildRows(r.matches ?? [], r.approx ?? [], T, relDelta, nL, nR),
-    });
   };
 
   // After a failed search, while the number and the settings are unchanged: one level deeper on the left (the
   // same table, more left sides per number) or on the right (a new table, kept for further numbers)
   const sameSearch = outcome !== null && outcome.response.status !== 'SUCCESS' && outcome.key === searchKey
     && outcome.kl === kl && outcome.kr === kr;
-  const deeperLeftEst = sameSearch && kl < MAX_LEFT
-    ? estimate(kl + 1, kr, lists.consts.length, lists.funcs.length, lists.ops.length) : null;
-  const deeperLeft = deeperLeftEst && !deeperLeftEst.tooLong ? deeperLeftEst : null;
-  const deeperRightEst = sameSearch && kr < MAX_RIGHT
-    ? estimate(kl, kr + 1, lists.consts.length, lists.funcs.length, lists.ops.length) : null;
+  const deeperLeftPlan = sameSearch && kl < maxLength ? plan(kl + 1, kr) : null;
+  const deeperLeftEst = deeperLeftPlan?.est ?? null;
+  const deeperLeft = deeperLeftEst && !deeperLeftEst.tooLong && !deeperLeftEst.tooBig ? deeperLeftEst : null;
+  // automatic: one more symbol on the left can change the engine, and then the table is built again
+  const deeperLeftNewTable = deeperLeftPlan !== null && deeperLeftPlan.engine !== outcome?.engine;
+  const deeperRightEst = sameSearch && kr < maxLength ? plan(kl, kr + 1).est : null;
   const deeperRight = deeperRightEst && !deeperRightEst.tooBig ? deeperRightEst : null;
   const searchDeeper = (side: 'left' | 'right') => {
     const depth = side === 'left' ? { kl: kl + 1, kr } : { kl, kr: kr + 1 };
@@ -265,7 +306,12 @@ export default function MitmPage() {
         kr={kr}
         setKr={setKr}
         anyX={anyX}
-        setAnyX={setAnyX}
+        setAnyX={changeAnyX}
+        engineChoice={engineChoice}
+        setEngineChoice={changeEngineChoice}
+        engine={engine}
+        repeatShare={repeatShare}
+        maxLength={maxLength}
         est={est}
         table={table}
         tableCurrent={tableCurrent}
@@ -316,21 +362,24 @@ export default function MitmPage() {
             {success ? (
               <div className="bg-green-500 text-white py-2 px-4 text-center text-sm">
                 {outcome.delta === 0 ? 'Exact equation selected' : `Equation selected within ±${outcome.delta.toExponential(2)}`}
-                {' '}in {took}
+                {' '}in {took}{outcome.engine === 'distinct' && ' · distinct values'}
               </div>
             ) : (
               <div className="bg-red-500 text-white py-2 px-4 text-sm flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
                 <span>
-                  Found {outcome.rows.length} approximation{outcome.rows.length !== 1 ? 's' : ''} in {took}, none within the tolerance
+                  Found {outcome.rows.length} approximation{outcome.rows.length !== 1 ? 's' : ''} in {took}
+                  {outcome.engine === 'distinct' && ' (distinct values)'}, none within the tolerance
                 </span>
                 {!busy && deeperLeft && (
                   <button
                     type="button"
                     onClick={() => searchDeeper('left')}
-                    title={`Search again with left sides up to length ${kl + 1}; the right-side table is kept`}
+                    title={deeperLeftNewTable
+                      ? `Search again with left sides up to length ${kl + 1}, with ${deeperLeftPlan?.engine === 'distinct' ? 'distinct values' : 'all codes'}: the right-side table is built again`
+                      : `Search again with left sides up to length ${kl + 1}; the right-side table is kept`}
                     className="rounded-md bg-white px-3 py-1 font-medium text-red-600 hover:bg-red-50"
                   >
-                    Deeper left side: |L| ≤ {kl + 1}, ≈ {formatCount(deeperLeft.leftCodes)} left sides, {formatDuration(deeperLeft.searchSeconds)}
+                    Deeper left side: |L| ≤ {kl + 1}, ≈ {formatCount(deeperLeft.leftCodes)} left {deeperLeft.unit === 'values' ? 'values' : 'sides'}, {formatDuration(deeperLeft.searchSeconds + (deeperLeftNewTable ? deeperLeft.buildSeconds : 0))}
                   </button>
                 )}
                 {!busy && deeperRight && (
@@ -340,7 +389,7 @@ export default function MitmPage() {
                     title={`Rebuild the right-side table up to length ${kr + 1} (kept for further numbers), then search again`}
                     className="rounded-md bg-white px-3 py-1 font-medium text-red-600 hover:bg-red-50"
                   >
-                    Deeper right side: |R| ≤ {kr + 1}, new table ≈ {formatCount(deeperRight.rightCodes)} codes, {formatDuration(deeperRight.buildSeconds + deeperRight.searchSeconds)}
+                    Deeper right side: |R| ≤ {kr + 1}, new table ≈ {formatCount(deeperRight.rightCodes)} {deeperRight.unit}, {formatDuration(deeperRight.buildSeconds + deeperRight.searchSeconds)}
                   </button>
                 )}
               </div>

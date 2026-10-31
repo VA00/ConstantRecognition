@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   codeCounts, estimate, evalRPN, tokens, solveForX, explicitFormula, equationLatex, equationsUpTo, equationCR,
-  equationChance, Equation,
+  equationChance, Equation, probeDistinct, distinctSizes, estimateDistinct, chooseEngine,
 } from '../app/mitm/lib/mitm';
 
 describe('code counts (as in the engine and PHASE1_RESULTS.md)', () => {
@@ -103,5 +103,54 @@ describe('inexact targets', () => {
     expect(equationChance(e, 1.6e-6, [1e3, 1e4], [1e3, 1e3])).toBeGreaterThan(0.99);
     // an exact match among 605 equations: about 605 * 1.1e-16
     expect(equationChance({ ...e, total: 4, err: 0 }, 0, [1, 10], [5, 50])).toBeCloseTo(605 * 1.1e-16, 20);
+  });
+});
+
+describe('engines: all codes or distinct values (mitm_distinct.cpp)', () => {
+  const SIX: [string[], string[], string[]] = [['PI', 'EULER'], ['SQR'], ['PLUS', 'TIMES', 'POWER']];
+  const CALC4: [string[], string[], string[]] = [
+    'PI,EULER,NEG,GOLDENRATIO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE'.split(','),
+    'LOG,EXP,INV,GAMMA,SQRT,SQR,SIN,ARCSIN,COS,ARCCOS,TAN,ARCTAN,SINH,ARCSINH,COSH,ARCCOSH,TANH,ARCTANH'.split(','),
+    'PLUS,TIMES,SUBTRACT,DIVIDE,POWER'.split(','),
+  ];
+
+  it('probes the distinct values per length as the engine makes them', () => {
+    // mitm_distinct.cpp: 2 2 10 24 94 317 1196 4125 14792 51073 176911 (JavaScript's Math differs in some last bits)
+    const p = probeDistinct(...SIX);
+    expect(p.slice(1, 5)).toEqual([2, 2, 10, 24]);
+    expect(p.length - 1).toBe(11);
+    expect(p[11] / 176911).toBeCloseTo(1, 1);
+  });
+
+  it('extrapolates the distinct values of longer lengths', () => {
+    const s = distinctSizes(14, probeDistinct(...SIX), 2, 1, 3);
+    const total = s.right.slice(1).reduce((a, b) => a + b, 0);
+    expect(total / 9948131).toBeGreaterThan(0.8);   // measured at |R| <= 14
+    expect(total / 9948131).toBeLessThan(1.25);
+  });
+
+  it('estimates the distinct-value engine as measured in WebAssembly', () => {
+    const p = probeDistinct(...SIX);
+    const d = estimateDistinct(15, 14, p, 2, 1, 3);   // 3.6 s + 27 s measured, 1.56 GB of WebAssembly memory
+    expect(d.buildSeconds + d.searchSeconds).toBeGreaterThan(15);
+    expect(d.buildSeconds + d.searchSeconds).toBeLessThan(60);
+    expect(d.tooBig).toBe(false);
+    expect(estimateDistinct(16, 15, p, 2, 1, 3).tooBig).toBe(true);   // 5.6 GB natively
+  });
+
+  it('chooses the engine', () => {
+    const p6 = probeDistinct(...SIX), p4 = probeDistinct(...CALC4);
+    const six = (kl: number, kr: number) =>
+      chooseEngine('automatic', false, kl, kr, estimate(kl, kr, 2, 1, 3), estimateDistinct(kl, kr, p6, 2, 1, 3));
+    const calc4 = (kl: number, kr: number, anyX = false) =>
+      chooseEngine('automatic', anyX, kl, kr, estimate(kl, kr, 13, 18, 5), estimateDistinct(kl, kr, p4, 13, 18, 5));
+    expect(six(12, 12)).toBe('distinct');      // 0.6 s against 7 s in WebAssembly
+    expect(calc4(5, 6)).toBe('codes');         // about the same time, half the memory
+    expect(calc4(7, 5)).toBe('distinct');      // 11 s against 20 s natively
+    expect(calc4(7, 5, true)).toBe('codes');   // x any number of times: all codes
+    expect(calc4(13, 5)).toBe('distinct');     // all codes stop at 12 symbols
+    const e = estimate(12, 12, 2, 1, 3), d = estimateDistinct(12, 12, p6, 2, 1, 3);
+    expect(chooseEngine('codes', false, 12, 12, e, d)).toBe('codes');
+    expect(chooseEngine('distinct', true, 12, 12, e, d)).toBe('codes');
   });
 });
