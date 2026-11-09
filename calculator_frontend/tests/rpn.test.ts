@@ -44,7 +44,15 @@ describe('numeric-literal constants', () => {
     expect(rpnToLatex('29, SQRT')).toBe('\\sqrt{29}');
     expect(rpnToMathematica('11, TWO, POWER')).toBe('(2 ^ 11)');
     expect(rpnToInfix('-2.5, SQR')).toBe('sqr((-2.5))');
-    expect(rpnToMathematica('-2.5, SQR')).toBe('((-2.5))^2');
+    expect(rpnToMathematica('-2.5, SQR')).toBe('((-2.5)^2)');
+    expect(rpnToMathematica('1.5e-3, PI, TIMES')).toBe('(Pi * 1.5*^-3)');   // 1.5e-3 would be 1.5 E - 3
+  });
+
+  it('keeps 1/x and x^2 whole as operands of ^ in Mathematica', () => {
+    // Cosh[ArcSinh[GoldenRatio^(1/4)]] = Sqrt[1 + Sqrt[GoldenRatio]]; "GoldenRatio ^ 1/(4)" was GoldenRatio/4
+    expect(rpnToMathematica('FOUR, INV, GOLDENRATIO, POWER, ARCSINH, COSH')).toBe('Cosh[ArcSinh[(GoldenRatio ^ (1/4))]]');
+    expect(rpnToMathematica('TWO, PI, SQR, POWER')).toBe('((Pi^2) ^ 2)');   // not Pi^(2^2)
+    expect(rpnToMathematica('PI, INV, INV')).toBe('(1/(1/Pi))');
   });
 });
 

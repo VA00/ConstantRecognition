@@ -271,10 +271,12 @@ export function rpnToMathematica(rpn: string | string[]): string {
     "TANH": "Tanh", "ARCTANH": "ArcTanh", "SQRT": "Sqrt", "GAMMA": "Gamma",
     "MINUS": "Minus", "RE": "Re", "IM": "Im", "ABS": "Abs", "ARG": "Arg"
   };
+  // Every result is an atom, Name[...] or in parentheses, so it can be any operand: "x ^ 1/(4)" would be
+  // (x^1)/4 in Mathematica, and "(x)^2 ^ y" would be x^(2^y)
   const mmaUnnamed: Record<string, (x: string) => string> = {
-    "SQR": x => `(${x})^2`,
+    "SQR": x => `(${x}^2)`,
     "FRAC": x => `Mod[${x}, 1]`,   // x - Floor[x]; FractionalPart differs for x < 0
-    "INV": x => `1/(${x})`,
+    "INV": x => `(1/${x})`,
     "MINUS": x => `(-${x})`
   };
   const mmaOperators: Record<string, string> = {
@@ -303,7 +305,7 @@ export function rpnToMathematica(rpn: string | string[]): string {
         stack.push(`(${lhs} ${mmaOperators[token]} ${rhs})`);
       }
     } else if (isNumericLiteral(token)) {
-      stack.push(literalText(token));
+      stack.push(literalText(token).replace(/[eE]/, '*^'));   // Mathematica reads 1e-5 as 1*e - 5
     } else if (token) {
       // Unknown token - push as-is
       stack.push(token);

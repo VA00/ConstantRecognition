@@ -105,7 +105,7 @@ describe('removals, undo and identities', () => {
     const sqrt = identityOf({ button: 'SQRT', rpn: 'TWO, INV, CATALAN, POWER', K: 4 });
     expect(sqrt.lhs).toBe('\\sqrt{x}');
     expect(sqrt.rhs).toBe('{x}^{\\frac{1}{2}}');
-    expect(sqrt.mathematica).toBe('Sqrt[x] == (x ^ 1/(2))');
+    expect(sqrt.mathematica).toBe('Sqrt[x] == (x ^ (1/2))');
     const plus = identityOf({ button: 'PLUS', rpn: 'EULERGAMMA, MINUS, CATALAN, SUBTRACT', K: 4 });
     expect(plus.lhs).toBe('x + y');
     expect(plus.rhs).toBe('x - (-y)');
